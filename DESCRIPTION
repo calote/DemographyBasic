@@ -21,7 +21,8 @@ Depends:
     ggthemes,
     glue,
     mapSpain,
-    kableExtra
+    kableExtra,
+    LexisPlotR
 URL: https://github.com/calote/DemographyBasic
 BugReports: https://github.com/calote/DemographyBasic/issues
 Suggests: 
