@@ -1,0 +1,1288 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="es" xml:lang="es"><head>
+
+<meta charset="utf-8">
+<meta name="generator" content="quarto-1.6.32">
+
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+
+
+<title>Práctica 2: Parte 1 (Importar datos: csv, RData y xlsx)</title>
+<style>
+code{white-space: pre-wrap;}
+span.smallcaps{font-variant: small-caps;}
+div.columns{display: flex; gap: min(4vw, 1.5em);}
+div.column{flex: auto; overflow-x: auto;}
+div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+ul.task-list{list-style: none;}
+ul.task-list li input[type="checkbox"] {
+  width: 0.8em;
+  margin: 0 0.8em 0.2em -1em; /* quarto-specific, see https://github.com/quarto-dev/quarto-cli/issues/4556 */ 
+  vertical-align: middle;
+}
+/* CSS for syntax highlighting */
+pre > code.sourceCode { white-space: pre; position: relative; }
+pre > code.sourceCode > span { line-height: 1.25; }
+pre > code.sourceCode > span:empty { height: 1.2em; }
+.sourceCode { overflow: visible; }
+code.sourceCode > span { color: inherit; text-decoration: inherit; }
+div.sourceCode { margin: 1em 0; }
+pre.sourceCode { margin: 0; }
+@media screen {
+div.sourceCode { overflow: auto; }
+}
+@media print {
+pre > code.sourceCode { white-space: pre-wrap; }
+pre > code.sourceCode > span { display: inline-block; text-indent: -5em; padding-left: 5em; }
+}
+pre.numberSource code
+  { counter-reset: source-line 0; }
+pre.numberSource code > span
+  { position: relative; left: -4em; counter-increment: source-line; }
+pre.numberSource code > span > a:first-child::before
+  { content: counter(source-line);
+    position: relative; left: -1em; text-align: right; vertical-align: baseline;
+    border: none; display: inline-block;
+    -webkit-touch-callout: none; -webkit-user-select: none;
+    -khtml-user-select: none; -moz-user-select: none;
+    -ms-user-select: none; user-select: none;
+    padding: 0 4px; width: 4em;
+  }
+pre.numberSource { margin-left: 3em;  padding-left: 4px; }
+div.sourceCode
+  {   }
+@media screen {
+pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
+}
+</style>
+
+
+<script src="practica02a_files/libs/clipboard/clipboard.min.js"></script>
+<script src="practica02a_files/libs/quarto-html/quarto.js"></script>
+<script src="practica02a_files/libs/quarto-html/popper.min.js"></script>
+<script src="practica02a_files/libs/quarto-html/tippy.umd.min.js"></script>
+<script src="practica02a_files/libs/quarto-html/anchor.min.js"></script>
+<link href="practica02a_files/libs/quarto-html/tippy.css" rel="stylesheet">
+<link href="practica02a_files/libs/quarto-html/quarto-syntax-highlighting-2486e1f0a3ee9ee1fc393803a1361cdb.css" rel="stylesheet" id="quarto-text-highlighting-styles">
+<script src="practica02a_files/libs/bootstrap/bootstrap.min.js"></script>
+<link href="practica02a_files/libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
+<link href="practica02a_files/libs/bootstrap/bootstrap-677b520d69fcc55ab41b4b425631e74d.min.css" rel="stylesheet" append-hash="true" id="quarto-bootstrap" data-mode="light">
+
+
+</head>
+
+<body>
+
+<div id="quarto-content" class="page-columns page-rows-contents page-layout-article">
+<div id="quarto-margin-sidebar" class="sidebar margin-sidebar">
+  <nav id="TOC" role="doc-toc" class="toc-active">
+    <h2 id="toc-title">Tabla de contenidos</h2>
+   
+  <ul>
+  <li><a href="#descargas-de-ficheros-de-internet-download.file" id="toc-descargas-de-ficheros-de-internet-download.file" class="nav-link active" data-scroll-target="#descargas-de-ficheros-de-internet-download.file"><span class="header-section-number">1</span> Descargas de ficheros de internet: <code>download.file()</code></a></li>
+  <li><a href="#importar-datos-desde-ficheros-csv" id="toc-importar-datos-desde-ficheros-csv" class="nav-link" data-scroll-target="#importar-datos-desde-ficheros-csv"><span class="header-section-number">2</span> Importar datos desde ficheros csv</a>
+  <ul>
+  <li><a href="#ejemplo-importar-ficheros-csv" id="toc-ejemplo-importar-ficheros-csv" class="nav-link" data-scroll-target="#ejemplo-importar-ficheros-csv"><span class="header-section-number">2.1</span> Ejemplo: importar ficheros csv</a></li>
+  <li><a href="#ejemplo-importar-ficheros-csv-con-el-paquete-readr" id="toc-ejemplo-importar-ficheros-csv-con-el-paquete-readr" class="nav-link" data-scroll-target="#ejemplo-importar-ficheros-csv-con-el-paquete-readr"><span class="header-section-number">2.2</span> Ejemplo: importar ficheros csv con el paquete “readr”</a></li>
+  </ul></li>
+  <li><a href="#datos-en-un-fichero-rdata" id="toc-datos-en-un-fichero-rdata" class="nav-link" data-scroll-target="#datos-en-un-fichero-rdata"><span class="header-section-number">3</span> Datos en un fichero RData</a>
+  <ul>
+  <li><a href="#ejemplo" id="toc-ejemplo" class="nav-link" data-scroll-target="#ejemplo"><span class="header-section-number">3.1</span> Ejemplo</a></li>
+  <li><a href="#guardar-varios-objetos-r-importados-en-ficheros-rdata" id="toc-guardar-varios-objetos-r-importados-en-ficheros-rdata" class="nav-link" data-scroll-target="#guardar-varios-objetos-r-importados-en-ficheros-rdata"><span class="header-section-number">3.2</span> Guardar varios objetos R importados en ficheros RData</a></li>
+  </ul></li>
+  <li><a href="#importar-datos-desde-excel.-paquetes-readxl" id="toc-importar-datos-desde-excel.-paquetes-readxl" class="nav-link" data-scroll-target="#importar-datos-desde-excel.-paquetes-readxl"><span class="header-section-number">4</span> Importar datos desde excel. Paquetes readxl</a>
+  <ul>
+  <li><a href="#ejemplo-1" id="toc-ejemplo-1" class="nav-link" data-scroll-target="#ejemplo-1"><span class="header-section-number">4.1</span> Ejemplo:</a></li>
+  <li><a href="#ejemplo-otras-opciones-al-leer-ficheros-excel" id="toc-ejemplo-otras-opciones-al-leer-ficheros-excel" class="nav-link" data-scroll-target="#ejemplo-otras-opciones-al-leer-ficheros-excel"><span class="header-section-number">4.2</span> Ejemplo: otras opciones al leer ficheros Excel</a></li>
+  <li><a href="#ejemplo-importar-ficheros-excel-con-el-paquete-rio" id="toc-ejemplo-importar-ficheros-excel-con-el-paquete-rio" class="nav-link" data-scroll-target="#ejemplo-importar-ficheros-excel-con-el-paquete-rio"><span class="header-section-number">4.3</span> Ejemplo: importar ficheros Excel con el paquete “rio”</a></li>
+  </ul></li>
+  </ul>
+<div class="quarto-alternate-formats"><h2>Otros formatos</h2><ul><li><a href="practica02a.pdf"><i class="bi bi-file-pdf"></i>PDF</a></li></ul></div></nav>
+</div>
+<main class="content" id="quarto-document-content">
+
+<header id="title-block-header" class="quarto-title-block default">
+<div class="quarto-title">
+<div class="quarto-title-block"><div><h1 class="title">Práctica 2: Parte 1 (Importar datos: csv, RData y xlsx)</h1><button type="button" class="btn code-tools-button" id="quarto-code-tools-source"><i class="bi"></i> Código</button></div></div>
+</div>
+
+
+
+<div class="quarto-title-meta">
+
+    
+  
+    
+  </div>
+  
+
+
+</header>
+
+
+<section id="descargas-de-ficheros-de-internet-download.file" class="level1" data-number="1">
+<h1 data-number="1"><span class="header-section-number">1</span> Descargas de ficheros de internet: <code>download.file()</code></h1>
+<p>Habitualmente se necesitará descargar ficheros de las páginas web de instituciones oficiales, que contienen la información necesaria, y para ello, será conveniente recordar la existencia en R de la función:</p>
+<div class="sourceCode" id="cb1"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="fu">download.file</span>(url, destfile, method, <span class="at">quiet =</span> <span class="cn">FALSE</span>, <span class="at">mode =</span> <span class="st">"w"</span>,</span>
+<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a>              <span class="at">cacheOK =</span> <span class="cn">TRUE</span>,</span>
+<span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a>              <span class="at">extra =</span> <span class="fu">getOption</span>(<span class="st">"download.file.extra"</span>), ...)</span></code><button title="Copiar al portapapeles" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<p>La forma más utilizada de usar esta función es indicando la “url” de descarga y el nombre que tendrá el fichero de destino, “destfile”, como puede verse en el siguiente ejemplo:</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb2"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a><span class="fu">download.file</span>(<span class="at">url=</span><span class="st">"http://destio.us.es/calvo/descargas/datos_ordenadores.csv"</span>,</span>
+<span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a>              <span class="at">destfile =</span> <span class="st">"datos_ordenadores.csv"</span>)</span></code><button title="Copiar al portapapeles" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<p>En este caso se podría haber indicado un camino relativo para el fichero de destino, por ejemplo, “datos/datos_ordenadores.csv”, copiará el fichero en la subcarpeta “datos” (respecto al directorio de trabajo actual).</p>
+<p>El uso de esta función puede ser muy útil para hacer el código reproducible y no será necesario escribir el camino en un navegador para llegar a obtener ese fichero. En el INE, muchas veces el enlace de descarga puede obtenerse utilizando el menú flotante que se activa al pulsar sobre el enlace con el botón derecho del ratón.</p>
+<p>Por ejemplo, en la siguiente página web del INE: <a href="https://www.ine.es/jaxiT3/Tabla.htm?t=24379&amp;L=0" class="uri">https://www.ine.es/jaxiT3/Tabla.htm?t=24379&amp;L=0</a>, aparece a la derecha de la página un botón de “descarga” y si pulsamos sobre el se abre una ventana flotante que nos permite elegir entre diferentes formatos de ficheros para descargar toda la información. Si acercamos el ratón sobre cualquiera de ellos y pulsamos el botón derecho, se podrá copiar el enlace de descarga.</p>
+<div class="cell" data-layout-align="center">
+<div class="cell-output-display">
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure">
+<p><img src="imagenes/enlacesine.png" class="img-fluid quarto-figure quarto-figure-center figure-img" style="width:90.0%"></p>
+</figure>
+</div>
+</div>
+</div>
+<p>A continuación se muestran los enlaces que se han podido copiar:</p>
+<table class="caption-top table">
+<thead>
+<tr class="header">
+<th>Formato</th>
+<th>url</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>“px”</td>
+<td><a href="https://www.ine.es/jaxiT3/files/t/es/px/24379.px?nocab=1" class="uri">https://www.ine.es/jaxiT3/files/t/es/px/24379.px?nocab=1</a></td>
+</tr>
+<tr class="even">
+<td>“excel”</td>
+<td><a href="https://www.ine.es/jaxiT3/files/t/es/xlsx/24379.xlsx?nocab=1" class="uri">https://www.ine.es/jaxiT3/files/t/es/xlsx/24379.xlsx?nocab=1</a></td>
+</tr>
+<tr class="odd">
+<td>“csv, por tabuladores”</td>
+<td><a href="https://www.ine.es/jaxiT3/files/t/es/csv/24379.csv?nocab=1" class="uri">https://www.ine.es/jaxiT3/files/t/es/csv/24379.csv?nocab=1</a></td>
+</tr>
+<tr class="even">
+<td>“csv, separado por ‘,’”</td>
+<td><a href="https://www.ine.es/jaxiT3/files/t/es/csv_c/24379.csv?nocab=1" class="uri">https://www.ine.es/jaxiT3/files/t/es/csv_c/24379.csv?nocab=1</a></td>
+</tr>
+<tr class="odd">
+<td>“csv, separado por ‘;’”</td>
+<td><a href="https://www.ine.es/jaxiT3/files/t/es/csv_sc/24379.csv?nocab=1" class="uri">https://www.ine.es/jaxiT3/files/t/es/csv_sc/24379.csv?nocab=1</a></td>
+</tr>
+<tr class="even">
+<td>“json”</td>
+<td><a href="https://servicios.ine.es/wstempus/js/es/DATOS_TABLA/24379?tip=AM" class="uri">https://servicios.ine.es/wstempus/js/es/DATOS_TABLA/24379?tip=AM</a></td>
+</tr>
+</tbody>
+</table>
+<p><strong>Nota</strong>. Es interesante observar las ligeras diferencias que existen en las urls de los distintos formatos de ficheros.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb3"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a><span class="fu">download.file</span>(</span>
+<span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a>  <span class="at">url =</span> <span class="st">"https://www.ine.es/jaxiT3/files/t/es/csv/24379.csv?nocab=1"</span>,</span>
+<span id="cb3-3"><a href="#cb3-3" aria-hidden="true" tabindex="-1"></a>  <span class="at">destfile =</span> <span class="st">"24379.csv"</span>)</span></code><button title="Copiar al portapapeles" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<p><strong>Nota</strong>. Cuando se descargan ficheros excel desde el sistema operativo Windows, se debe añadir la opción <code>mode = "wb"</code> en la llamada a la función: <code>download.file()</code>.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb4"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a><span class="fu">download.file</span>(</span>
+<span id="cb4-2"><a href="#cb4-2" aria-hidden="true" tabindex="-1"></a>  <span class="at">url =</span> <span class="st">"https://www.ine.es/jaxiT3/files/t/es/xlsx/24379.xlsx?nocab=1"</span>,</span>
+<span id="cb4-3"><a href="#cb4-3" aria-hidden="true" tabindex="-1"></a>  <span class="at">destfile =</span> <span class="st">"24379.xlsx"</span>, <span class="at">mode =</span> <span class="st">"wb"</span>)</span></code><button title="Copiar al portapapeles" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+</section>
+<section id="importar-datos-desde-ficheros-csv" class="level1" data-number="2">
+<h1 data-number="2"><span class="header-section-number">2</span> Importar datos desde ficheros csv</h1>
+<p>Los ficheros “csv” se pueden importar con las funciones del sistema base:</p>
+<ul>
+<li><code>read.table()</code></li>
+<li><code>read.csv()</code></li>
+<li><code>read.csv2()</code></li>
+</ul>
+<p>La función <code>read.table()</code> es la más general y versátil:</p>
+<div class="sourceCode" id="cb5"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a><span class="fu">read.table</span>(file, <span class="at">header =</span> <span class="cn">FALSE</span>, <span class="at">sep =</span> <span class="st">""</span>, <span class="at">quote =</span> <span class="st">"</span><span class="sc">\"</span><span class="st">'"</span>,</span>
+<span id="cb5-2"><a href="#cb5-2" aria-hidden="true" tabindex="-1"></a>           <span class="at">dec =</span> <span class="st">"."</span>, <span class="at">numerals =</span> <span class="fu">c</span>(<span class="st">"allow.loss"</span>, <span class="st">"warn.loss"</span>, <span class="st">"no.loss"</span>),</span>
+<span id="cb5-3"><a href="#cb5-3" aria-hidden="true" tabindex="-1"></a>           row.names, col.names, <span class="at">as.is =</span> <span class="sc">!</span>stringsAsFactors,</span>
+<span id="cb5-4"><a href="#cb5-4" aria-hidden="true" tabindex="-1"></a>           <span class="at">na.strings =</span> <span class="st">"NA"</span>, <span class="at">colClasses =</span> <span class="cn">NA</span>, <span class="at">nrows =</span> <span class="sc">-</span><span class="dv">1</span>,</span>
+<span id="cb5-5"><a href="#cb5-5" aria-hidden="true" tabindex="-1"></a>           <span class="at">skip =</span> <span class="dv">0</span>, <span class="at">check.names =</span> <span class="cn">TRUE</span>, <span class="at">fill =</span> <span class="sc">!</span>blank.lines.skip,</span>
+<span id="cb5-6"><a href="#cb5-6" aria-hidden="true" tabindex="-1"></a>           <span class="at">strip.white =</span> <span class="cn">FALSE</span>, <span class="at">blank.lines.skip =</span> <span class="cn">TRUE</span>,</span>
+<span id="cb5-7"><a href="#cb5-7" aria-hidden="true" tabindex="-1"></a>           <span class="at">comment.char =</span> <span class="st">"#"</span>,</span>
+<span id="cb5-8"><a href="#cb5-8" aria-hidden="true" tabindex="-1"></a>           <span class="at">allowEscapes =</span> <span class="cn">FALSE</span>, <span class="at">flush =</span> <span class="cn">FALSE</span>,</span>
+<span id="cb5-9"><a href="#cb5-9" aria-hidden="true" tabindex="-1"></a>           <span class="at">stringsAsFactors =</span> <span class="fu">default.stringsAsFactors</span>(),</span>
+<span id="cb5-10"><a href="#cb5-10" aria-hidden="true" tabindex="-1"></a>           <span class="at">fileEncoding =</span> <span class="st">""</span>, <span class="at">encoding =</span> <span class="st">"unknown"</span>, text, <span class="at">skipNul =</span> <span class="cn">FALSE</span>)</span></code><button title="Copiar al portapapeles" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<section id="ejemplo-importar-ficheros-csv" class="level2" data-number="2.1">
+<h2 data-number="2.1" class="anchored" data-anchor-id="ejemplo-importar-ficheros-csv"><span class="header-section-number">2.1</span> Ejemplo: importar ficheros csv</h2>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb6"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a>datos.csv <span class="ot">=</span> <span class="fu">read.table</span>(<span class="at">file =</span> <span class="st">"datosPractica01.csv"</span>, <span class="at">header =</span> <span class="cn">TRUE</span>, <span class="at">sep =</span> <span class="st">","</span>)</span></code><button title="Copiar al portapapeles" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb7"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a><span class="fu">head</span>(datos.csv,<span class="dv">10</span>)</span></code><button title="Copiar al portapapeles" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<div class="kable-table">
+<table class="caption-top table table-sm table-striped small">
+<colgroup>
+<col style="width: 4%">
+<col style="width: 27%">
+<col style="width: 34%">
+<col style="width: 11%">
+<col style="width: 11%">
+<col style="width: 11%">
+</colgroup>
+<thead>
+<tr class="header">
+<th style="text-align: right;">X</th>
+<th style="text-align: left;">Provincia</th>
+<th style="text-align: left;">CCAA</th>
+<th style="text-align: right;">TOTAL</th>
+<th style="text-align: right;">Varon</th>
+<th style="text-align: right;">Mujer</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td style="text-align: right;">1</td>
+<td style="text-align: left;">01-Álava</td>
+<td style="text-align: left;">País Vasco</td>
+<td style="text-align: right;">286387</td>
+<td style="text-align: right;">142036</td>
+<td style="text-align: right;">144351</td>
+</tr>
+<tr class="even">
+<td style="text-align: right;">2</td>
+<td style="text-align: left;">02-Albacete</td>
+<td style="text-align: left;">Castilla-La Mancha</td>
+<td style="text-align: right;">364835</td>
+<td style="text-align: right;">181461</td>
+<td style="text-align: right;">183374</td>
+</tr>
+<tr class="odd">
+<td style="text-align: right;">3</td>
+<td style="text-align: left;">03-Alicante/Alacant</td>
+<td style="text-align: left;">Comunidad Valenciana</td>
+<td style="text-align: right;">1461925</td>
+<td style="text-align: right;">722162</td>
+<td style="text-align: right;">739763</td>
+</tr>
+<tr class="even">
+<td style="text-align: right;">4</td>
+<td style="text-align: left;">04-Almería</td>
+<td style="text-align: left;">Andalucía</td>
+<td style="text-align: right;">536731</td>
+<td style="text-align: right;">272023</td>
+<td style="text-align: right;">264708</td>
+</tr>
+<tr class="odd">
+<td style="text-align: right;">5</td>
+<td style="text-align: left;">33-Asturias</td>
+<td style="text-align: left;">Asturias (Principado de)</td>
+<td style="text-align: right;">1062998</td>
+<td style="text-align: right;">508995</td>
+<td style="text-align: right;">554003</td>
+</tr>
+<tr class="even">
+<td style="text-align: right;">6</td>
+<td style="text-align: left;">05-Ávila</td>
+<td style="text-align: left;">Castilla y León</td>
+<td style="text-align: right;">163442</td>
+<td style="text-align: right;">81850</td>
+<td style="text-align: right;">81592</td>
+</tr>
+<tr class="odd">
+<td style="text-align: right;">7</td>
+<td style="text-align: left;">06-Badajoz</td>
+<td style="text-align: left;">Extremadura</td>
+<td style="text-align: right;">654882</td>
+<td style="text-align: right;">323541</td>
+<td style="text-align: right;">331341</td>
+</tr>
+<tr class="even">
+<td style="text-align: right;">8</td>
+<td style="text-align: left;">07-Balears (Illes)</td>
+<td style="text-align: left;">Balears (Illes)</td>
+<td style="text-align: right;">841669</td>
+<td style="text-align: right;">417314</td>
+<td style="text-align: right;">424355</td>
+</tr>
+<tr class="odd">
+<td style="text-align: right;">9</td>
+<td style="text-align: left;">08-Barcelona</td>
+<td style="text-align: left;">Cataluña</td>
+<td style="text-align: right;">4805927</td>
+<td style="text-align: right;">2341592</td>
+<td style="text-align: right;">2464335</td>
+</tr>
+<tr class="even">
+<td style="text-align: right;">10</td>
+<td style="text-align: left;">09-Burgos</td>
+<td style="text-align: left;">Castilla y León</td>
+<td style="text-align: right;">348934</td>
+<td style="text-align: right;">174576</td>
+<td style="text-align: right;">174358</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+</div>
+</section>
+<section id="ejemplo-importar-ficheros-csv-con-el-paquete-readr" class="level2" data-number="2.2">
+<h2 data-number="2.2" class="anchored" data-anchor-id="ejemplo-importar-ficheros-csv-con-el-paquete-readr"><span class="header-section-number">2.2</span> Ejemplo: importar ficheros csv con el paquete “readr”</h2>
+<p><strong>Nota:</strong> Hacerlo con el paso a paso de RStudio.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb8"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(readr)</span>
+<span id="cb8-2"><a href="#cb8-2" aria-hidden="true" tabindex="-1"></a>datosPractica01 <span class="ot">&lt;-</span> <span class="fu">read_csv</span>(<span class="st">"datosPractica01.csv"</span>,</span>
+<span id="cb8-3"><a href="#cb8-3" aria-hidden="true" tabindex="-1"></a>                            <span class="at">col_types =</span> <span class="fu">cols</span>(<span class="at">...1 =</span> <span class="fu">col_skip</span>()))</span></code><button title="Copiar al portapapeles" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stderr">
+<pre><code>New names:
+• `` -&gt; `...1`</code></pre>
+</div>
+</div>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb10"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb10-1"><a href="#cb10-1" aria-hidden="true" tabindex="-1"></a><span class="fu">head</span>(datosPractica01,<span class="dv">10</span>)</span></code><button title="Copiar al portapapeles" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<div class="kable-table">
+<table class="caption-top table table-sm table-striped small">
+<colgroup>
+<col style="width: 28%">
+<col style="width: 36%">
+<col style="width: 11%">
+<col style="width: 11%">
+<col style="width: 11%">
+</colgroup>
+<thead>
+<tr class="header">
+<th style="text-align: left;">Provincia</th>
+<th style="text-align: left;">CCAA</th>
+<th style="text-align: right;">TOTAL</th>
+<th style="text-align: right;">Varon</th>
+<th style="text-align: right;">Mujer</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td style="text-align: left;">01-Álava</td>
+<td style="text-align: left;">País Vasco</td>
+<td style="text-align: right;">286387</td>
+<td style="text-align: right;">142036</td>
+<td style="text-align: right;">144351</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">02-Albacete</td>
+<td style="text-align: left;">Castilla-La Mancha</td>
+<td style="text-align: right;">364835</td>
+<td style="text-align: right;">181461</td>
+<td style="text-align: right;">183374</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">03-Alicante/Alacant</td>
+<td style="text-align: left;">Comunidad Valenciana</td>
+<td style="text-align: right;">1461925</td>
+<td style="text-align: right;">722162</td>
+<td style="text-align: right;">739763</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">04-Almería</td>
+<td style="text-align: left;">Andalucía</td>
+<td style="text-align: right;">536731</td>
+<td style="text-align: right;">272023</td>
+<td style="text-align: right;">264708</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">33-Asturias</td>
+<td style="text-align: left;">Asturias (Principado de)</td>
+<td style="text-align: right;">1062998</td>
+<td style="text-align: right;">508995</td>
+<td style="text-align: right;">554003</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">05-Ávila</td>
+<td style="text-align: left;">Castilla y León</td>
+<td style="text-align: right;">163442</td>
+<td style="text-align: right;">81850</td>
+<td style="text-align: right;">81592</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">06-Badajoz</td>
+<td style="text-align: left;">Extremadura</td>
+<td style="text-align: right;">654882</td>
+<td style="text-align: right;">323541</td>
+<td style="text-align: right;">331341</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">07-Balears (Illes)</td>
+<td style="text-align: left;">Balears (Illes)</td>
+<td style="text-align: right;">841669</td>
+<td style="text-align: right;">417314</td>
+<td style="text-align: right;">424355</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">08-Barcelona</td>
+<td style="text-align: left;">Cataluña</td>
+<td style="text-align: right;">4805927</td>
+<td style="text-align: right;">2341592</td>
+<td style="text-align: right;">2464335</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">09-Burgos</td>
+<td style="text-align: left;">Castilla y León</td>
+<td style="text-align: right;">348934</td>
+<td style="text-align: right;">174576</td>
+<td style="text-align: right;">174358</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+</div>
+</section>
+</section>
+<section id="datos-en-un-fichero-rdata" class="level1" data-number="3">
+<h1 data-number="3"><span class="header-section-number">3</span> Datos en un fichero RData</h1>
+<p>Los datos bien definidos que contiene el objeto “datos2_mej” podría guardarse en un fichero con formato “RData” para poder utilizarlo en cualquier estudio posterior sobre ellos. Se podría hacer llamando a la función <code>save()</code> del siguiente modo:</p>
+<div class="sourceCode" id="cb11"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb11-1"><a href="#cb11-1" aria-hidden="true" tabindex="-1"></a><span class="fu">save</span>(datos2_mej,<span class="at">file=</span><span class="st">"datos2_mej.RData"</span>)</span></code><button title="Copiar al portapapeles" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<p>Podría cargarse con ayuda de la función <code>load()</code> del siguiente modo:</p>
+<div class="sourceCode" id="cb12"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb12-1"><a href="#cb12-1" aria-hidden="true" tabindex="-1"></a><span class="fu">load</span>(<span class="st">"datos2_mej.RData"</span>)</span></code><button title="Copiar al portapapeles" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<section id="ejemplo" class="level2" data-number="3.1">
+<h2 data-number="3.1" class="anchored" data-anchor-id="ejemplo"><span class="header-section-number">3.1</span> Ejemplo</h2>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb13"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb13-1"><a href="#cb13-1" aria-hidden="true" tabindex="-1"></a><span class="fu">load</span>(<span class="at">file =</span> <span class="st">"datosPractica01.RData"</span>, <span class="at">verbose =</span> <span class="cn">TRUE</span>)</span></code><button title="Copiar al portapapeles" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>Loading objects:
+  datos</code></pre>
+</div>
+<div class="sourceCode cell-code" id="cb15"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb15-1"><a href="#cb15-1" aria-hidden="true" tabindex="-1"></a>datos.RData <span class="ot">=</span> datos</span>
+<span id="cb15-2"><a href="#cb15-2" aria-hidden="true" tabindex="-1"></a><span class="fu">str</span>(datos.RData)</span></code><button title="Copiar al portapapeles" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>'data.frame':   52 obs. of  5 variables:
+ $ Provincia: chr  "01-Álava" "02-Albacete" "03-Alicante/Alacant" "04-Almería" ...
+ $ CCAA     : chr  "País Vasco" "Castilla-La Mancha" "Comunidad Valenciana" "Andalucía" ...
+ $ TOTAL    : num  286387 364835 1461925 536731 1062998 ...
+ $ Varon    : num  142036 181461 722162 272023 508995 ...
+ $ Mujer    : num  144351 183374 739763 264708 554003 ...</code></pre>
+</div>
+</div>
+<p><strong>Nota:</strong> Hacerlo desde RStudio con ratón.</p>
+</section>
+<section id="guardar-varios-objetos-r-importados-en-ficheros-rdata" class="level2" data-number="3.2">
+<h2 data-number="3.2" class="anchored" data-anchor-id="guardar-varios-objetos-r-importados-en-ficheros-rdata"><span class="header-section-number">3.2</span> Guardar varios objetos R importados en ficheros RData</h2>
+<p>Se puede guardar más de un objeto R al ir separándolos por comas.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb17"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb17-1"><a href="#cb17-1" aria-hidden="true" tabindex="-1"></a><span class="fu">save</span>(datos.csv, datosPractica01, datos.RData,  </span>
+<span id="cb17-2"><a href="#cb17-2" aria-hidden="true" tabindex="-1"></a>     <span class="at">file =</span> <span class="st">"datosPractica01grabados.RData"</span>)</span>
+<span id="cb17-3"><a href="#cb17-3" aria-hidden="true" tabindex="-1"></a><span class="co"># para recuperarlos</span></span>
+<span id="cb17-4"><a href="#cb17-4" aria-hidden="true" tabindex="-1"></a><span class="co"># load(file = "datosPractica01grabados.RData", verbose = T)  </span></span></code><button title="Copiar al portapapeles" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+</section>
+</section>
+<section id="importar-datos-desde-excel.-paquetes-readxl" class="level1" data-number="4">
+<h1 data-number="4"><span class="header-section-number">4</span> Importar datos desde excel. Paquetes readxl</h1>
+<p>Para importar datos contenidos en un fichero excel utilizaremos el paquete “readxl”, cuya función principal es: <code>read_excel()</code> (otras variantes con la misma sintaxis son: <code>read_xlsx()</code> y <code>read_xls()</code>). Los datos importados son del tipo “tibble” (data.frame mejorados).</p>
+<p>Su uso es muy sencillo cuando se quiere leer el contenido completo de una hoja en un fichero Excel:</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb18"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb18-1"><a href="#cb18-1" aria-hidden="true" tabindex="-1"></a>datos <span class="ot">=</span> <span class="fu">read_excel</span>(<span class="st">"ficheroexcel.xlsx"</span>) <span class="co"># equivalente a:</span></span>
+<span id="cb18-2"><a href="#cb18-2" aria-hidden="true" tabindex="-1"></a>datos <span class="ot">=</span> <span class="fu">read_excel</span>(<span class="st">"ficheroexcel.xlsx"</span>,<span class="at">sheet =</span> <span class="dv">1</span>) </span></code><button title="Copiar al portapapeles" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<p>Su sintaxis completa es la siguiente:</p>
+<div class="sourceCode" id="cb19"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb19-1"><a href="#cb19-1" aria-hidden="true" tabindex="-1"></a><span class="fu">read_excel</span>(path, <span class="at">sheet =</span> <span class="cn">NULL</span>, <span class="at">range =</span> <span class="cn">NULL</span>, <span class="at">col_names =</span> <span class="cn">TRUE</span>,</span>
+<span id="cb19-2"><a href="#cb19-2" aria-hidden="true" tabindex="-1"></a>  <span class="at">col_types =</span> <span class="cn">NULL</span>, <span class="at">na =</span> <span class="st">""</span>, <span class="at">trim_ws =</span> <span class="cn">TRUE</span>, <span class="at">skip =</span> <span class="dv">0</span>,</span>
+<span id="cb19-3"><a href="#cb19-3" aria-hidden="true" tabindex="-1"></a>  <span class="at">n_max =</span> <span class="cn">Inf</span>, <span class="at">guess_max =</span> <span class="fu">min</span>(<span class="dv">1000</span>, n_max),</span>
+<span id="cb19-4"><a href="#cb19-4" aria-hidden="true" tabindex="-1"></a>  <span class="at">progress =</span> <span class="fu">readxl_progress</span>(), <span class="at">.name_repair =</span> <span class="st">"unique"</span>)</span></code><button title="Copiar al portapapeles" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<section id="ejemplo-1" class="level2" data-number="4.1">
+<h2 data-number="4.1" class="anchored" data-anchor-id="ejemplo-1"><span class="header-section-number">4.1</span> Ejemplo:</h2>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb20"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb20-1"><a href="#cb20-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(readxl)</span>
+<span id="cb20-2"><a href="#cb20-2" aria-hidden="true" tabindex="-1"></a>datos.xlsx <span class="ot">=</span> readxl<span class="sc">::</span><span class="fu">read_xlsx</span>(<span class="at">path =</span> <span class="st">"datosPractica01.xlsx"</span>)</span>
+<span id="cb20-3"><a href="#cb20-3" aria-hidden="true" tabindex="-1"></a><span class="fu">str</span>(datos.xlsx)</span></code><button title="Copiar al portapapeles" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>tibble [52 × 5] (S3: tbl_df/tbl/data.frame)
+ $ Provincia: chr [1:52] "01-Álava" "02-Albacete" "03-Alicante/Alacant" "04-Almería" ...
+ $ CCAA     : chr [1:52] "País Vasco" "Castilla-La Mancha" "Comunidad Valenciana" "Andalucía" ...
+ $ TOTAL    : num [1:52] 286387 364835 1461925 536731 1062998 ...
+ $ Varon    : num [1:52] 142036 181461 722162 272023 508995 ...
+ $ Mujer    : num [1:52] 144351 183374 739763 264708 554003 ...</code></pre>
+</div>
+</div>
+</section>
+<section id="ejemplo-otras-opciones-al-leer-ficheros-excel" class="level2" data-number="4.2">
+<h2 data-number="4.2" class="anchored" data-anchor-id="ejemplo-otras-opciones-al-leer-ficheros-excel"><span class="header-section-number">4.2</span> Ejemplo: otras opciones al leer ficheros Excel</h2>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb22"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb22-1"><a href="#cb22-1" aria-hidden="true" tabindex="-1"></a>datos.xlsx<span class="fl">.2</span> <span class="ot">=</span> readxl<span class="sc">::</span><span class="fu">read_xlsx</span>(<span class="at">path =</span> <span class="st">"datosPractica01.xlsx"</span>, </span>
+<span id="cb22-2"><a href="#cb22-2" aria-hidden="true" tabindex="-1"></a>                                 <span class="at">sheet =</span> <span class="dv">1</span>, <span class="at">range =</span> <span class="st">"A1:C20"</span>)</span>
+<span id="cb22-3"><a href="#cb22-3" aria-hidden="true" tabindex="-1"></a><span class="fu">head</span>(datos.xlsx<span class="fl">.2</span>)</span></code><button title="Copiar al portapapeles" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<div class="kable-table">
+<table class="caption-top table table-sm table-striped small">
+<thead>
+<tr class="header">
+<th style="text-align: left;">Provincia</th>
+<th style="text-align: left;">CCAA</th>
+<th style="text-align: right;">TOTAL</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td style="text-align: left;">01-Álava</td>
+<td style="text-align: left;">País Vasco</td>
+<td style="text-align: right;">286387</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">02-Albacete</td>
+<td style="text-align: left;">Castilla-La Mancha</td>
+<td style="text-align: right;">364835</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">03-Alicante/Alacant</td>
+<td style="text-align: left;">Comunidad Valenciana</td>
+<td style="text-align: right;">1461925</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">04-Almería</td>
+<td style="text-align: left;">Andalucía</td>
+<td style="text-align: right;">536731</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">33-Asturias</td>
+<td style="text-align: left;">Asturias (Principado de)</td>
+<td style="text-align: right;">1062998</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">05-Ávila</td>
+<td style="text-align: left;">Castilla y León</td>
+<td style="text-align: right;">163442</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+</div>
+</section>
+<section id="ejemplo-importar-ficheros-excel-con-el-paquete-rio" class="level2" data-number="4.3">
+<h2 data-number="4.3" class="anchored" data-anchor-id="ejemplo-importar-ficheros-excel-con-el-paquete-rio"><span class="header-section-number">4.3</span> Ejemplo: importar ficheros Excel con el paquete “rio”</h2>
+<p>Otra opción equivalente es usar la función “<code>import()</code>” del paquete R: “rio”.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb23"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb23-1"><a href="#cb23-1" aria-hidden="true" tabindex="-1"></a>datos.xlsx<span class="fl">.3</span> <span class="ot">=</span> rio<span class="sc">::</span><span class="fu">import</span>(<span class="at">file =</span> <span class="st">"datosPractica01.xlsx"</span>, <span class="at">sheet =</span> <span class="dv">1</span>)</span></code><button title="Copiar al portapapeles" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<!-- -->
+
+</section>
+</section>
+
+</main>
+<!-- /main column -->
+<script id="quarto-html-after-body" type="application/javascript">
+window.document.addEventListener("DOMContentLoaded", function (event) {
+  const toggleBodyColorMode = (bsSheetEl) => {
+    const mode = bsSheetEl.getAttribute("data-mode");
+    const bodyEl = window.document.querySelector("body");
+    if (mode === "dark") {
+      bodyEl.classList.add("quarto-dark");
+      bodyEl.classList.remove("quarto-light");
+    } else {
+      bodyEl.classList.add("quarto-light");
+      bodyEl.classList.remove("quarto-dark");
+    }
+  }
+  const toggleBodyColorPrimary = () => {
+    const bsSheetEl = window.document.querySelector("link#quarto-bootstrap");
+    if (bsSheetEl) {
+      toggleBodyColorMode(bsSheetEl);
+    }
+  }
+  toggleBodyColorPrimary();  
+  const icon = "";
+  const anchorJS = new window.AnchorJS();
+  anchorJS.options = {
+    placement: 'right',
+    icon: icon
+  };
+  anchorJS.add('.anchored');
+  const isCodeAnnotation = (el) => {
+    for (const clz of el.classList) {
+      if (clz.startsWith('code-annotation-')) {                     
+        return true;
+      }
+    }
+    return false;
+  }
+  const onCopySuccess = function(e) {
+    // button target
+    const button = e.trigger;
+    // don't keep focus
+    button.blur();
+    // flash "checked"
+    button.classList.add('code-copy-button-checked');
+    var currentTitle = button.getAttribute("title");
+    button.setAttribute("title", "Copiado");
+    let tooltip;
+    if (window.bootstrap) {
+      button.setAttribute("data-bs-toggle", "tooltip");
+      button.setAttribute("data-bs-placement", "left");
+      button.setAttribute("data-bs-title", "Copiado");
+      tooltip = new bootstrap.Tooltip(button, 
+        { trigger: "manual", 
+          customClass: "code-copy-button-tooltip",
+          offset: [0, -8]});
+      tooltip.show();    
+    }
+    setTimeout(function() {
+      if (tooltip) {
+        tooltip.hide();
+        button.removeAttribute("data-bs-title");
+        button.removeAttribute("data-bs-toggle");
+        button.removeAttribute("data-bs-placement");
+      }
+      button.setAttribute("title", currentTitle);
+      button.classList.remove('code-copy-button-checked');
+    }, 1000);
+    // clear code selection
+    e.clearSelection();
+  }
+  const getTextToCopy = function(trigger) {
+      const codeEl = trigger.previousElementSibling.cloneNode(true);
+      for (const childEl of codeEl.children) {
+        if (isCodeAnnotation(childEl)) {
+          childEl.remove();
+        }
+      }
+      return codeEl.innerText;
+  }
+  const clipboard = new window.ClipboardJS('.code-copy-button:not([data-in-quarto-modal])', {
+    text: getTextToCopy
+  });
+  clipboard.on('success', onCopySuccess);
+  if (window.document.getElementById('quarto-embedded-source-code-modal')) {
+    // For code content inside modals, clipBoardJS needs to be initialized with a container option
+    // TODO: Check when it could be a function (https://github.com/zenorocha/clipboard.js/issues/860)
+    const clipboardModal = new window.ClipboardJS('.code-copy-button[data-in-quarto-modal]', {
+      text: getTextToCopy,
+      container: window.document.getElementById('quarto-embedded-source-code-modal')
+    });
+    clipboardModal.on('success', onCopySuccess);
+  }
+  const viewSource = window.document.getElementById('quarto-view-source') ||
+                     window.document.getElementById('quarto-code-tools-source');
+  if (viewSource) {
+    const sourceUrl = viewSource.getAttribute("data-quarto-source-url");
+    viewSource.addEventListener("click", function(e) {
+      if (sourceUrl) {
+        // rstudio viewer pane
+        if (/\bcapabilities=\b/.test(window.location)) {
+          window.open(sourceUrl);
+        } else {
+          window.location.href = sourceUrl;
+        }
+      } else {
+        const modal = new bootstrap.Modal(document.getElementById('quarto-embedded-source-code-modal'));
+        modal.show();
+      }
+      return false;
+    });
+  }
+  function toggleCodeHandler(show) {
+    return function(e) {
+      const detailsSrc = window.document.querySelectorAll(".cell > details > .sourceCode");
+      for (let i=0; i<detailsSrc.length; i++) {
+        const details = detailsSrc[i].parentElement;
+        if (show) {
+          details.open = true;
+        } else {
+          details.removeAttribute("open");
+        }
+      }
+      const cellCodeDivs = window.document.querySelectorAll(".cell > .sourceCode");
+      const fromCls = show ? "hidden" : "unhidden";
+      const toCls = show ? "unhidden" : "hidden";
+      for (let i=0; i<cellCodeDivs.length; i++) {
+        const codeDiv = cellCodeDivs[i];
+        if (codeDiv.classList.contains(fromCls)) {
+          codeDiv.classList.remove(fromCls);
+          codeDiv.classList.add(toCls);
+        } 
+      }
+      return false;
+    }
+  }
+  const hideAllCode = window.document.getElementById("quarto-hide-all-code");
+  if (hideAllCode) {
+    hideAllCode.addEventListener("click", toggleCodeHandler(false));
+  }
+  const showAllCode = window.document.getElementById("quarto-show-all-code");
+  if (showAllCode) {
+    showAllCode.addEventListener("click", toggleCodeHandler(true));
+  }
+    var localhostRegex = new RegExp(/^(?:http|https):\/\/localhost\:?[0-9]*\//);
+    var mailtoRegex = new RegExp(/^mailto:/);
+      var filterRegex = new RegExp('/' + window.location.host + '/');
+    var isInternal = (href) => {
+        return filterRegex.test(href) || localhostRegex.test(href) || mailtoRegex.test(href);
+    }
+    // Inspect non-navigation links and adorn them if external
+ 	var links = window.document.querySelectorAll('a[href]:not(.nav-link):not(.navbar-brand):not(.toc-action):not(.sidebar-link):not(.sidebar-item-toggle):not(.pagination-link):not(.no-external):not([aria-hidden]):not(.dropdown-item):not(.quarto-navigation-tool):not(.about-link)');
+    for (var i=0; i<links.length; i++) {
+      const link = links[i];
+      if (!isInternal(link.href)) {
+        // undo the damage that might have been done by quarto-nav.js in the case of
+        // links that we want to consider external
+        if (link.dataset.originalHref !== undefined) {
+          link.href = link.dataset.originalHref;
+        }
+      }
+    }
+  function tippyHover(el, contentFn, onTriggerFn, onUntriggerFn) {
+    const config = {
+      allowHTML: true,
+      maxWidth: 500,
+      delay: 100,
+      arrow: false,
+      appendTo: function(el) {
+          return el.parentElement;
+      },
+      interactive: true,
+      interactiveBorder: 10,
+      theme: 'quarto',
+      placement: 'bottom-start',
+    };
+    if (contentFn) {
+      config.content = contentFn;
+    }
+    if (onTriggerFn) {
+      config.onTrigger = onTriggerFn;
+    }
+    if (onUntriggerFn) {
+      config.onUntrigger = onUntriggerFn;
+    }
+    window.tippy(el, config); 
+  }
+  const noterefs = window.document.querySelectorAll('a[role="doc-noteref"]');
+  for (var i=0; i<noterefs.length; i++) {
+    const ref = noterefs[i];
+    tippyHover(ref, function() {
+      // use id or data attribute instead here
+      let href = ref.getAttribute('data-footnote-href') || ref.getAttribute('href');
+      try { href = new URL(href).hash; } catch {}
+      const id = href.replace(/^#\/?/, "");
+      const note = window.document.getElementById(id);
+      if (note) {
+        return note.innerHTML;
+      } else {
+        return "";
+      }
+    });
+  }
+  const xrefs = window.document.querySelectorAll('a.quarto-xref');
+  const processXRef = (id, note) => {
+    // Strip column container classes
+    const stripColumnClz = (el) => {
+      el.classList.remove("page-full", "page-columns");
+      if (el.children) {
+        for (const child of el.children) {
+          stripColumnClz(child);
+        }
+      }
+    }
+    stripColumnClz(note)
+    if (id === null || id.startsWith('sec-')) {
+      // Special case sections, only their first couple elements
+      const container = document.createElement("div");
+      if (note.children && note.children.length > 2) {
+        container.appendChild(note.children[0].cloneNode(true));
+        for (let i = 1; i < note.children.length; i++) {
+          const child = note.children[i];
+          if (child.tagName === "P" && child.innerText === "") {
+            continue;
+          } else {
+            container.appendChild(child.cloneNode(true));
+            break;
+          }
+        }
+        if (window.Quarto?.typesetMath) {
+          window.Quarto.typesetMath(container);
+        }
+        return container.innerHTML
+      } else {
+        if (window.Quarto?.typesetMath) {
+          window.Quarto.typesetMath(note);
+        }
+        return note.innerHTML;
+      }
+    } else {
+      // Remove any anchor links if they are present
+      const anchorLink = note.querySelector('a.anchorjs-link');
+      if (anchorLink) {
+        anchorLink.remove();
+      }
+      if (window.Quarto?.typesetMath) {
+        window.Quarto.typesetMath(note);
+      }
+      // TODO in 1.5, we should make sure this works without a callout special case
+      if (note.classList.contains("callout")) {
+        return note.outerHTML;
+      } else {
+        return note.innerHTML;
+      }
+    }
+  }
+  for (var i=0; i<xrefs.length; i++) {
+    const xref = xrefs[i];
+    tippyHover(xref, undefined, function(instance) {
+      instance.disable();
+      let url = xref.getAttribute('href');
+      let hash = undefined; 
+      if (url.startsWith('#')) {
+        hash = url;
+      } else {
+        try { hash = new URL(url).hash; } catch {}
+      }
+      if (hash) {
+        const id = hash.replace(/^#\/?/, "");
+        const note = window.document.getElementById(id);
+        if (note !== null) {
+          try {
+            const html = processXRef(id, note.cloneNode(true));
+            instance.setContent(html);
+          } finally {
+            instance.enable();
+            instance.show();
+          }
+        } else {
+          // See if we can fetch this
+          fetch(url.split('#')[0])
+          .then(res => res.text())
+          .then(html => {
+            const parser = new DOMParser();
+            const htmlDoc = parser.parseFromString(html, "text/html");
+            const note = htmlDoc.getElementById(id);
+            if (note !== null) {
+              const html = processXRef(id, note);
+              instance.setContent(html);
+            } 
+          }).finally(() => {
+            instance.enable();
+            instance.show();
+          });
+        }
+      } else {
+        // See if we can fetch a full url (with no hash to target)
+        // This is a special case and we should probably do some content thinning / targeting
+        fetch(url)
+        .then(res => res.text())
+        .then(html => {
+          const parser = new DOMParser();
+          const htmlDoc = parser.parseFromString(html, "text/html");
+          const note = htmlDoc.querySelector('main.content');
+          if (note !== null) {
+            // This should only happen for chapter cross references
+            // (since there is no id in the URL)
+            // remove the first header
+            if (note.children.length > 0 && note.children[0].tagName === "HEADER") {
+              note.children[0].remove();
+            }
+            const html = processXRef(null, note);
+            instance.setContent(html);
+          } 
+        }).finally(() => {
+          instance.enable();
+          instance.show();
+        });
+      }
+    }, function(instance) {
+    });
+  }
+      let selectedAnnoteEl;
+      const selectorForAnnotation = ( cell, annotation) => {
+        let cellAttr = 'data-code-cell="' + cell + '"';
+        let lineAttr = 'data-code-annotation="' +  annotation + '"';
+        const selector = 'span[' + cellAttr + '][' + lineAttr + ']';
+        return selector;
+      }
+      const selectCodeLines = (annoteEl) => {
+        const doc = window.document;
+        const targetCell = annoteEl.getAttribute("data-target-cell");
+        const targetAnnotation = annoteEl.getAttribute("data-target-annotation");
+        const annoteSpan = window.document.querySelector(selectorForAnnotation(targetCell, targetAnnotation));
+        const lines = annoteSpan.getAttribute("data-code-lines").split(",");
+        const lineIds = lines.map((line) => {
+          return targetCell + "-" + line;
+        })
+        let top = null;
+        let height = null;
+        let parent = null;
+        if (lineIds.length > 0) {
+            //compute the position of the single el (top and bottom and make a div)
+            const el = window.document.getElementById(lineIds[0]);
+            top = el.offsetTop;
+            height = el.offsetHeight;
+            parent = el.parentElement.parentElement;
+          if (lineIds.length > 1) {
+            const lastEl = window.document.getElementById(lineIds[lineIds.length - 1]);
+            const bottom = lastEl.offsetTop + lastEl.offsetHeight;
+            height = bottom - top;
+          }
+          if (top !== null && height !== null && parent !== null) {
+            // cook up a div (if necessary) and position it 
+            let div = window.document.getElementById("code-annotation-line-highlight");
+            if (div === null) {
+              div = window.document.createElement("div");
+              div.setAttribute("id", "code-annotation-line-highlight");
+              div.style.position = 'absolute';
+              parent.appendChild(div);
+            }
+            div.style.top = top - 2 + "px";
+            div.style.height = height + 4 + "px";
+            div.style.left = 0;
+            let gutterDiv = window.document.getElementById("code-annotation-line-highlight-gutter");
+            if (gutterDiv === null) {
+              gutterDiv = window.document.createElement("div");
+              gutterDiv.setAttribute("id", "code-annotation-line-highlight-gutter");
+              gutterDiv.style.position = 'absolute';
+              const codeCell = window.document.getElementById(targetCell);
+              const gutter = codeCell.querySelector('.code-annotation-gutter');
+              gutter.appendChild(gutterDiv);
+            }
+            gutterDiv.style.top = top - 2 + "px";
+            gutterDiv.style.height = height + 4 + "px";
+          }
+          selectedAnnoteEl = annoteEl;
+        }
+      };
+      const unselectCodeLines = () => {
+        const elementsIds = ["code-annotation-line-highlight", "code-annotation-line-highlight-gutter"];
+        elementsIds.forEach((elId) => {
+          const div = window.document.getElementById(elId);
+          if (div) {
+            div.remove();
+          }
+        });
+        selectedAnnoteEl = undefined;
+      };
+        // Handle positioning of the toggle
+    window.addEventListener(
+      "resize",
+      throttle(() => {
+        elRect = undefined;
+        if (selectedAnnoteEl) {
+          selectCodeLines(selectedAnnoteEl);
+        }
+      }, 10)
+    );
+    function throttle(fn, ms) {
+    let throttle = false;
+    let timer;
+      return (...args) => {
+        if(!throttle) { // first call gets through
+            fn.apply(this, args);
+            throttle = true;
+        } else { // all the others get throttled
+            if(timer) clearTimeout(timer); // cancel #2
+            timer = setTimeout(() => {
+              fn.apply(this, args);
+              timer = throttle = false;
+            }, ms);
+        }
+      };
+    }
+      // Attach click handler to the DT
+      const annoteDls = window.document.querySelectorAll('dt[data-target-cell]');
+      for (const annoteDlNode of annoteDls) {
+        annoteDlNode.addEventListener('click', (event) => {
+          const clickedEl = event.target;
+          if (clickedEl !== selectedAnnoteEl) {
+            unselectCodeLines();
+            const activeEl = window.document.querySelector('dt[data-target-cell].code-annotation-active');
+            if (activeEl) {
+              activeEl.classList.remove('code-annotation-active');
+            }
+            selectCodeLines(clickedEl);
+            clickedEl.classList.add('code-annotation-active');
+          } else {
+            // Unselect the line
+            unselectCodeLines();
+            clickedEl.classList.remove('code-annotation-active');
+          }
+        });
+      }
+  const findCites = (el) => {
+    const parentEl = el.parentElement;
+    if (parentEl) {
+      const cites = parentEl.dataset.cites;
+      if (cites) {
+        return {
+          el,
+          cites: cites.split(' ')
+        };
+      } else {
+        return findCites(el.parentElement)
+      }
+    } else {
+      return undefined;
+    }
+  };
+  var bibliorefs = window.document.querySelectorAll('a[role="doc-biblioref"]');
+  for (var i=0; i<bibliorefs.length; i++) {
+    const ref = bibliorefs[i];
+    const citeInfo = findCites(ref);
+    if (citeInfo) {
+      tippyHover(citeInfo.el, function() {
+        var popup = window.document.createElement('div');
+        citeInfo.cites.forEach(function(cite) {
+          var citeDiv = window.document.createElement('div');
+          citeDiv.classList.add('hanging-indent');
+          citeDiv.classList.add('csl-entry');
+          var biblioDiv = window.document.getElementById('ref-' + cite);
+          if (biblioDiv) {
+            citeDiv.innerHTML = biblioDiv.innerHTML;
+          }
+          popup.appendChild(citeDiv);
+        });
+        return popup.innerHTML;
+      });
+    }
+  }
+});
+</script><div class="modal fade" id="quarto-embedded-source-code-modal" tabindex="-1" aria-labelledby="quarto-embedded-source-code-modal-label" aria-hidden="true"><div class="modal-dialog modal-dialog-scrollable"><div class="modal-content"><div class="modal-header"><h5 class="modal-title" id="quarto-embedded-source-code-modal-label">Ejecutar el código</h5><button class="btn-close" data-bs-dismiss="modal"></button></div><div class="modal-body"><div class="">
+<div class="sourceCode" id="cb24" data-shortcodes="false"><pre class="sourceCode markdown code-with-copy"><code class="sourceCode markdown"><span id="cb24-1"><a href="#cb24-1" aria-hidden="true" tabindex="-1"></a><span class="co">---</span></span>
+<span id="cb24-2"><a href="#cb24-2" aria-hidden="true" tabindex="-1"></a><span class="an">title:</span><span class="co"> "Práctica 2: Parte 1 (Importar datos: csv, RData y xlsx)"</span></span>
+<span id="cb24-3"><a href="#cb24-3" aria-hidden="true" tabindex="-1"></a><span class="an">lang:</span><span class="co"> es</span></span>
+<span id="cb24-4"><a href="#cb24-4" aria-hidden="true" tabindex="-1"></a><span class="an">toc:</span><span class="co"> true</span></span>
+<span id="cb24-5"><a href="#cb24-5" aria-hidden="true" tabindex="-1"></a><span class="an">toc-depth:</span><span class="co"> 4</span></span>
+<span id="cb24-6"><a href="#cb24-6" aria-hidden="true" tabindex="-1"></a><span class="an">number-sections:</span><span class="co"> true</span></span>
+<span id="cb24-7"><a href="#cb24-7" aria-hidden="true" tabindex="-1"></a><span class="an">df-print:</span><span class="co"> kable</span></span>
+<span id="cb24-8"><a href="#cb24-8" aria-hidden="true" tabindex="-1"></a><span class="an">format:</span></span>
+<span id="cb24-9"><a href="#cb24-9" aria-hidden="true" tabindex="-1"></a><span class="co">  html:</span></span>
+<span id="cb24-10"><a href="#cb24-10" aria-hidden="true" tabindex="-1"></a><span class="co">    code-tools: true</span></span>
+<span id="cb24-11"><a href="#cb24-11" aria-hidden="true" tabindex="-1"></a><span class="co">    #code-fold: true</span></span>
+<span id="cb24-12"><a href="#cb24-12" aria-hidden="true" tabindex="-1"></a><span class="co">  pdf: default</span></span>
+<span id="cb24-13"><a href="#cb24-13" aria-hidden="true" tabindex="-1"></a><span class="an">execute:</span><span class="co"> </span></span>
+<span id="cb24-14"><a href="#cb24-14" aria-hidden="true" tabindex="-1"></a><span class="co">  echo: true</span></span>
+<span id="cb24-15"><a href="#cb24-15" aria-hidden="true" tabindex="-1"></a><span class="co">  warnings: false</span></span>
+<span id="cb24-16"><a href="#cb24-16" aria-hidden="true" tabindex="-1"></a><span class="co">---</span></span>
+<span id="cb24-17"><a href="#cb24-17" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb24-18"><a href="#cb24-18" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb24-19"><a href="#cb24-19" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb24-20"><a href="#cb24-20" aria-hidden="true" tabindex="-1"></a>\bigskip</span>
+<span id="cb24-21"><a href="#cb24-21" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb24-22"><a href="#cb24-22" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb24-23"><a href="#cb24-23" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb24-24"><a href="#cb24-24" aria-hidden="true" tabindex="-1"></a><span class="fu"># Descargas de ficheros de internet: `download.file()`</span></span>
+<span id="cb24-25"><a href="#cb24-25" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb24-26"><a href="#cb24-26" aria-hidden="true" tabindex="-1"></a>Habitualmente se necesitará descargar ficheros de las páginas web de instituciones oficiales, que contienen la información necesaria, y para ello, será conveniente recordar la existencia en R de la función:</span>
+<span id="cb24-27"><a href="#cb24-27" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb24-28"><a href="#cb24-28" aria-hidden="true" tabindex="-1"></a><span class="in">```r</span></span>
+<span id="cb24-29"><a href="#cb24-29" aria-hidden="true" tabindex="-1"></a><span class="fu">download.file</span>(url, destfile, method, <span class="at">quiet =</span> <span class="cn">FALSE</span>, <span class="at">mode =</span> <span class="st">"w"</span>,</span>
+<span id="cb24-30"><a href="#cb24-30" aria-hidden="true" tabindex="-1"></a>              <span class="at">cacheOK =</span> <span class="cn">TRUE</span>,</span>
+<span id="cb24-31"><a href="#cb24-31" aria-hidden="true" tabindex="-1"></a>              <span class="at">extra =</span> <span class="fu">getOption</span>(<span class="st">"download.file.extra"</span>), ...)</span>
+<span id="cb24-32"><a href="#cb24-32" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
+<span id="cb24-33"><a href="#cb24-33" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb24-34"><a href="#cb24-34" aria-hidden="true" tabindex="-1"></a>La forma más utilizada de usar esta función es indicando la "url" de descarga y el nombre que tendrá el fichero de destino, "destfile", como puede verse en el siguiente ejemplo:</span>
+<span id="cb24-35"><a href="#cb24-35" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb24-36"><a href="#cb24-36" aria-hidden="true" tabindex="-1"></a><span class="in">```{r eval=FALSE}</span></span>
+<span id="cb24-37"><a href="#cb24-37" aria-hidden="true" tabindex="-1"></a><span class="in">download.file(url="http://destio.us.es/calvo/descargas/datos_ordenadores.csv",</span></span>
+<span id="cb24-38"><a href="#cb24-38" aria-hidden="true" tabindex="-1"></a><span class="in">              destfile = "datos_ordenadores.csv")</span></span>
+<span id="cb24-39"><a href="#cb24-39" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
+<span id="cb24-40"><a href="#cb24-40" aria-hidden="true" tabindex="-1"></a>En este caso se podría haber indicado un camino relativo para el fichero de destino, por ejemplo, "datos/datos_ordenadores.csv", copiará el fichero en la subcarpeta "datos" (respecto al directorio de trabajo actual).</span>
+<span id="cb24-41"><a href="#cb24-41" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb24-42"><a href="#cb24-42" aria-hidden="true" tabindex="-1"></a>El uso de esta función puede ser muy útil para hacer el código reproducible y no será necesario escribir el camino en un navegador para llegar a obtener ese fichero. En el INE, muchas veces el enlace de descarga puede obtenerse utilizando el menú flotante que se activa al pulsar sobre el enlace con el botón derecho del ratón.</span>
+<span id="cb24-43"><a href="#cb24-43" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb24-44"><a href="#cb24-44" aria-hidden="true" tabindex="-1"></a>Por ejemplo, en la siguiente página web del INE: <span class="ot">&lt;https://www.ine.es/jaxiT3/Tabla.htm?t=24379&amp;L=0&gt;</span>, aparece a la derecha de la página un botón de "descarga" y si pulsamos sobre el se abre una ventana flotante que nos permite elegir entre diferentes formatos de ficheros para descargar toda la información. Si acercamos el ratón sobre cualquiera de ellos y pulsamos el botón derecho, se podrá copiar el enlace de descarga.</span>
+<span id="cb24-45"><a href="#cb24-45" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb24-46"><a href="#cb24-46" aria-hidden="true" tabindex="-1"></a><span class="in">```{r echo=FALSE,out.width="90%",fig.align='center'}</span></span>
+<span id="cb24-47"><a href="#cb24-47" aria-hidden="true" tabindex="-1"></a><span class="in">knitr::include_graphics("imagenes/enlacesine.png")</span></span>
+<span id="cb24-48"><a href="#cb24-48" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
+<span id="cb24-49"><a href="#cb24-49" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb24-50"><a href="#cb24-50" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb24-51"><a href="#cb24-51" aria-hidden="true" tabindex="-1"></a>A continuación se muestran los enlaces que se han podido copiar:</span>
+<span id="cb24-52"><a href="#cb24-52" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb24-53"><a href="#cb24-53" aria-hidden="true" tabindex="-1"></a>\small</span>
+<span id="cb24-54"><a href="#cb24-54" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb24-55"><a href="#cb24-55" aria-hidden="true" tabindex="-1"></a>Formato | url</span>
+<span id="cb24-56"><a href="#cb24-56" aria-hidden="true" tabindex="-1"></a>--------|--------------------</span>
+<span id="cb24-57"><a href="#cb24-57" aria-hidden="true" tabindex="-1"></a>"px" | <span class="ot">&lt;https://www.ine.es/jaxiT3/files/t/es/px/24379.px?nocab=1&gt;</span>  </span>
+<span id="cb24-58"><a href="#cb24-58" aria-hidden="true" tabindex="-1"></a>"excel" | <span class="ot">&lt;https://www.ine.es/jaxiT3/files/t/es/xlsx/24379.xlsx?nocab=1&gt;</span>  </span>
+<span id="cb24-59"><a href="#cb24-59" aria-hidden="true" tabindex="-1"></a>"csv, por tabuladores" | <span class="ot">&lt;https://www.ine.es/jaxiT3/files/t/es/csv/24379.csv?nocab=1&gt;</span></span>
+<span id="cb24-60"><a href="#cb24-60" aria-hidden="true" tabindex="-1"></a>"csv, separado por ','" | <span class="ot">&lt;https://www.ine.es/jaxiT3/files/t/es/csv_c/24379.csv?nocab=1&gt;</span> </span>
+<span id="cb24-61"><a href="#cb24-61" aria-hidden="true" tabindex="-1"></a>"csv, separado por ';'" | <span class="ot">&lt;https://www.ine.es/jaxiT3/files/t/es/csv_sc/24379.csv?nocab=1&gt;</span> </span>
+<span id="cb24-62"><a href="#cb24-62" aria-hidden="true" tabindex="-1"></a>"json" | <span class="ot">&lt;https://servicios.ine.es/wstempus/js/es/DATOS_TABLA/24379?tip=AM&gt;</span></span>
+<span id="cb24-63"><a href="#cb24-63" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb24-64"><a href="#cb24-64" aria-hidden="true" tabindex="-1"></a>\normalsize</span>
+<span id="cb24-65"><a href="#cb24-65" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb24-66"><a href="#cb24-66" aria-hidden="true" tabindex="-1"></a>**Nota**. Es interesante observar las ligeras diferencias que existen en las urls de los distintos formatos de ficheros.</span>
+<span id="cb24-67"><a href="#cb24-67" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb24-68"><a href="#cb24-68" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb24-71"><a href="#cb24-71" aria-hidden="true" tabindex="-1"></a><span class="in">```{r}</span></span>
+<span id="cb24-72"><a href="#cb24-72" aria-hidden="true" tabindex="-1"></a><span class="fu">download.file</span>(</span>
+<span id="cb24-73"><a href="#cb24-73" aria-hidden="true" tabindex="-1"></a>  <span class="at">url =</span> <span class="st">"https://www.ine.es/jaxiT3/files/t/es/csv/24379.csv?nocab=1"</span>,</span>
+<span id="cb24-74"><a href="#cb24-74" aria-hidden="true" tabindex="-1"></a>  <span class="at">destfile =</span> <span class="st">"24379.csv"</span>)</span>
+<span id="cb24-75"><a href="#cb24-75" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
+<span id="cb24-76"><a href="#cb24-76" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb24-77"><a href="#cb24-77" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb24-78"><a href="#cb24-78" aria-hidden="true" tabindex="-1"></a>**Nota**. Cuando se descargan ficheros excel desde el sistema operativo Windows, se debe añadir la opción <span class="in">`mode = "wb"`</span> en la llamada a la función: <span class="in">`download.file()`</span>.</span>
+<span id="cb24-79"><a href="#cb24-79" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb24-80"><a href="#cb24-80" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb24-83"><a href="#cb24-83" aria-hidden="true" tabindex="-1"></a><span class="in">```{r}</span></span>
+<span id="cb24-84"><a href="#cb24-84" aria-hidden="true" tabindex="-1"></a><span class="fu">download.file</span>(</span>
+<span id="cb24-85"><a href="#cb24-85" aria-hidden="true" tabindex="-1"></a>  <span class="at">url =</span> <span class="st">"https://www.ine.es/jaxiT3/files/t/es/xlsx/24379.xlsx?nocab=1"</span>,</span>
+<span id="cb24-86"><a href="#cb24-86" aria-hidden="true" tabindex="-1"></a>  <span class="at">destfile =</span> <span class="st">"24379.xlsx"</span>, <span class="at">mode =</span> <span class="st">"wb"</span>)</span>
+<span id="cb24-87"><a href="#cb24-87" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
+<span id="cb24-88"><a href="#cb24-88" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb24-89"><a href="#cb24-89" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb24-90"><a href="#cb24-90" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb24-91"><a href="#cb24-91" aria-hidden="true" tabindex="-1"></a><span class="fu"># Importar datos desde ficheros csv</span></span>
+<span id="cb24-92"><a href="#cb24-92" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb24-93"><a href="#cb24-93" aria-hidden="true" tabindex="-1"></a>Los ficheros "csv" se pueden importar con las funciones del sistema base:</span>
+<span id="cb24-94"><a href="#cb24-94" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb24-95"><a href="#cb24-95" aria-hidden="true" tabindex="-1"></a><span class="ss">- </span><span class="in">`read.table()`</span></span>
+<span id="cb24-96"><a href="#cb24-96" aria-hidden="true" tabindex="-1"></a><span class="ss">- </span><span class="in">`read.csv()`</span></span>
+<span id="cb24-97"><a href="#cb24-97" aria-hidden="true" tabindex="-1"></a><span class="ss">- </span><span class="in">`read.csv2()`</span></span>
+<span id="cb24-98"><a href="#cb24-98" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb24-99"><a href="#cb24-99" aria-hidden="true" tabindex="-1"></a>La función <span class="in">`read.table()`</span> es la más general y versátil:</span>
+<span id="cb24-100"><a href="#cb24-100" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb24-101"><a href="#cb24-101" aria-hidden="true" tabindex="-1"></a><span class="in">```r</span></span>
+<span id="cb24-102"><a href="#cb24-102" aria-hidden="true" tabindex="-1"></a><span class="fu">read.table</span>(file, <span class="at">header =</span> <span class="cn">FALSE</span>, <span class="at">sep =</span> <span class="st">""</span>, <span class="at">quote =</span> <span class="st">"</span><span class="sc">\"</span><span class="st">'"</span>,</span>
+<span id="cb24-103"><a href="#cb24-103" aria-hidden="true" tabindex="-1"></a>           <span class="at">dec =</span> <span class="st">"."</span>, <span class="at">numerals =</span> <span class="fu">c</span>(<span class="st">"allow.loss"</span>, <span class="st">"warn.loss"</span>, <span class="st">"no.loss"</span>),</span>
+<span id="cb24-104"><a href="#cb24-104" aria-hidden="true" tabindex="-1"></a>           row.names, col.names, <span class="at">as.is =</span> <span class="sc">!</span>stringsAsFactors,</span>
+<span id="cb24-105"><a href="#cb24-105" aria-hidden="true" tabindex="-1"></a>           <span class="at">na.strings =</span> <span class="st">"NA"</span>, <span class="at">colClasses =</span> <span class="cn">NA</span>, <span class="at">nrows =</span> <span class="sc">-</span><span class="dv">1</span>,</span>
+<span id="cb24-106"><a href="#cb24-106" aria-hidden="true" tabindex="-1"></a>           <span class="at">skip =</span> <span class="dv">0</span>, <span class="at">check.names =</span> <span class="cn">TRUE</span>, <span class="at">fill =</span> <span class="sc">!</span>blank.lines.skip,</span>
+<span id="cb24-107"><a href="#cb24-107" aria-hidden="true" tabindex="-1"></a>           <span class="at">strip.white =</span> <span class="cn">FALSE</span>, <span class="at">blank.lines.skip =</span> <span class="cn">TRUE</span>,</span>
+<span id="cb24-108"><a href="#cb24-108" aria-hidden="true" tabindex="-1"></a>           <span class="at">comment.char =</span> <span class="st">"#"</span>,</span>
+<span id="cb24-109"><a href="#cb24-109" aria-hidden="true" tabindex="-1"></a>           <span class="at">allowEscapes =</span> <span class="cn">FALSE</span>, <span class="at">flush =</span> <span class="cn">FALSE</span>,</span>
+<span id="cb24-110"><a href="#cb24-110" aria-hidden="true" tabindex="-1"></a>           <span class="at">stringsAsFactors =</span> <span class="fu">default.stringsAsFactors</span>(),</span>
+<span id="cb24-111"><a href="#cb24-111" aria-hidden="true" tabindex="-1"></a>           <span class="at">fileEncoding =</span> <span class="st">""</span>, <span class="at">encoding =</span> <span class="st">"unknown"</span>, text, <span class="at">skipNul =</span> <span class="cn">FALSE</span>)</span>
+<span id="cb24-112"><a href="#cb24-112" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
+<span id="cb24-113"><a href="#cb24-113" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb24-114"><a href="#cb24-114" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb24-115"><a href="#cb24-115" aria-hidden="true" tabindex="-1"></a><span class="fu">## Ejemplo: importar ficheros csv</span></span>
+<span id="cb24-116"><a href="#cb24-116" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb24-119"><a href="#cb24-119" aria-hidden="true" tabindex="-1"></a><span class="in">```{r}</span></span>
+<span id="cb24-120"><a href="#cb24-120" aria-hidden="true" tabindex="-1"></a>datos.csv <span class="ot">=</span> <span class="fu">read.table</span>(<span class="at">file =</span> <span class="st">"datosPractica01.csv"</span>, <span class="at">header =</span> <span class="cn">TRUE</span>, <span class="at">sep =</span> <span class="st">","</span>)</span>
+<span id="cb24-121"><a href="#cb24-121" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
+<span id="cb24-122"><a href="#cb24-122" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb24-125"><a href="#cb24-125" aria-hidden="true" tabindex="-1"></a><span class="in">```{r}</span></span>
+<span id="cb24-126"><a href="#cb24-126" aria-hidden="true" tabindex="-1"></a><span class="fu">head</span>(datos.csv,<span class="dv">10</span>)</span>
+<span id="cb24-127"><a href="#cb24-127" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
+<span id="cb24-128"><a href="#cb24-128" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb24-129"><a href="#cb24-129" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb24-130"><a href="#cb24-130" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb24-131"><a href="#cb24-131" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb24-132"><a href="#cb24-132" aria-hidden="true" tabindex="-1"></a><span class="fu">## Ejemplo: importar ficheros csv con el paquete "readr"</span></span>
+<span id="cb24-133"><a href="#cb24-133" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb24-134"><a href="#cb24-134" aria-hidden="true" tabindex="-1"></a>**Nota:** Hacerlo con el paso a paso de RStudio.</span>
+<span id="cb24-135"><a href="#cb24-135" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb24-136"><a href="#cb24-136" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb24-139"><a href="#cb24-139" aria-hidden="true" tabindex="-1"></a><span class="in">```{r}</span></span>
+<span id="cb24-140"><a href="#cb24-140" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(readr)</span>
+<span id="cb24-141"><a href="#cb24-141" aria-hidden="true" tabindex="-1"></a>datosPractica01 <span class="ot">&lt;-</span> <span class="fu">read_csv</span>(<span class="st">"datosPractica01.csv"</span>,</span>
+<span id="cb24-142"><a href="#cb24-142" aria-hidden="true" tabindex="-1"></a>                            <span class="at">col_types =</span> <span class="fu">cols</span>(<span class="at">...1 =</span> <span class="fu">col_skip</span>()))</span>
+<span id="cb24-143"><a href="#cb24-143" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
+<span id="cb24-144"><a href="#cb24-144" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb24-145"><a href="#cb24-145" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb24-148"><a href="#cb24-148" aria-hidden="true" tabindex="-1"></a><span class="in">```{r}</span></span>
+<span id="cb24-149"><a href="#cb24-149" aria-hidden="true" tabindex="-1"></a><span class="fu">head</span>(datosPractica01,<span class="dv">10</span>)</span>
+<span id="cb24-150"><a href="#cb24-150" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
+<span id="cb24-151"><a href="#cb24-151" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb24-152"><a href="#cb24-152" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb24-153"><a href="#cb24-153" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb24-154"><a href="#cb24-154" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb24-155"><a href="#cb24-155" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb24-156"><a href="#cb24-156" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb24-157"><a href="#cb24-157" aria-hidden="true" tabindex="-1"></a><span class="fu"># Datos en un fichero RData</span></span>
+<span id="cb24-158"><a href="#cb24-158" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb24-159"><a href="#cb24-159" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb24-160"><a href="#cb24-160" aria-hidden="true" tabindex="-1"></a>Los datos bien definidos que contiene el objeto "datos2_mej" podría guardarse en un fichero con formato "RData" para poder utilizarlo en cualquier estudio posterior sobre ellos. Se podría hacer llamando a la función <span class="in">`save()`</span> del siguiente modo:</span>
+<span id="cb24-161"><a href="#cb24-161" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb24-162"><a href="#cb24-162" aria-hidden="true" tabindex="-1"></a><span class="in">```r</span></span>
+<span id="cb24-163"><a href="#cb24-163" aria-hidden="true" tabindex="-1"></a><span class="fu">save</span>(datos2_mej,<span class="at">file=</span><span class="st">"datos2_mej.RData"</span>)</span>
+<span id="cb24-164"><a href="#cb24-164" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
+<span id="cb24-165"><a href="#cb24-165" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb24-166"><a href="#cb24-166" aria-hidden="true" tabindex="-1"></a>Podría cargarse con ayuda de la función <span class="in">`load()`</span> del siguiente modo:</span>
+<span id="cb24-167"><a href="#cb24-167" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb24-168"><a href="#cb24-168" aria-hidden="true" tabindex="-1"></a><span class="in">```r</span></span>
+<span id="cb24-169"><a href="#cb24-169" aria-hidden="true" tabindex="-1"></a><span class="fu">load</span>(<span class="st">"datos2_mej.RData"</span>)</span>
+<span id="cb24-170"><a href="#cb24-170" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
+<span id="cb24-171"><a href="#cb24-171" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb24-172"><a href="#cb24-172" aria-hidden="true" tabindex="-1"></a><span class="in">```{r include = FALSE}</span></span>
+<span id="cb24-173"><a href="#cb24-173" aria-hidden="true" tabindex="-1"></a><span class="in">load("datos2_mej.RData")</span></span>
+<span id="cb24-174"><a href="#cb24-174" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
+<span id="cb24-175"><a href="#cb24-175" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb24-176"><a href="#cb24-176" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb24-177"><a href="#cb24-177" aria-hidden="true" tabindex="-1"></a><span class="fu">## Ejemplo</span></span>
+<span id="cb24-178"><a href="#cb24-178" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb24-181"><a href="#cb24-181" aria-hidden="true" tabindex="-1"></a><span class="in">```{r}</span></span>
+<span id="cb24-182"><a href="#cb24-182" aria-hidden="true" tabindex="-1"></a><span class="fu">load</span>(<span class="at">file =</span> <span class="st">"datosPractica01.RData"</span>, <span class="at">verbose =</span> <span class="cn">TRUE</span>)</span>
+<span id="cb24-183"><a href="#cb24-183" aria-hidden="true" tabindex="-1"></a>datos.RData <span class="ot">=</span> datos</span>
+<span id="cb24-184"><a href="#cb24-184" aria-hidden="true" tabindex="-1"></a><span class="fu">str</span>(datos.RData)</span>
+<span id="cb24-185"><a href="#cb24-185" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
+<span id="cb24-186"><a href="#cb24-186" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb24-187"><a href="#cb24-187" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb24-188"><a href="#cb24-188" aria-hidden="true" tabindex="-1"></a>**Nota:** Hacerlo desde RStudio con ratón.</span>
+<span id="cb24-189"><a href="#cb24-189" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb24-190"><a href="#cb24-190" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb24-191"><a href="#cb24-191" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb24-192"><a href="#cb24-192" aria-hidden="true" tabindex="-1"></a><span class="fu">## Guardar varios objetos R importados en ficheros RData</span></span>
+<span id="cb24-193"><a href="#cb24-193" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb24-194"><a href="#cb24-194" aria-hidden="true" tabindex="-1"></a>Se puede guardar más de un objeto R al ir separándolos por comas.</span>
+<span id="cb24-195"><a href="#cb24-195" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb24-198"><a href="#cb24-198" aria-hidden="true" tabindex="-1"></a><span class="in">```{r}</span></span>
+<span id="cb24-199"><a href="#cb24-199" aria-hidden="true" tabindex="-1"></a><span class="fu">save</span>(datos.csv, datosPractica01, datos.RData,  </span>
+<span id="cb24-200"><a href="#cb24-200" aria-hidden="true" tabindex="-1"></a>     <span class="at">file =</span> <span class="st">"datosPractica01grabados.RData"</span>)</span>
+<span id="cb24-201"><a href="#cb24-201" aria-hidden="true" tabindex="-1"></a><span class="co"># para recuperarlos</span></span>
+<span id="cb24-202"><a href="#cb24-202" aria-hidden="true" tabindex="-1"></a><span class="co"># load(file = "datosPractica01grabados.RData", verbose = T)  </span></span>
+<span id="cb24-203"><a href="#cb24-203" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
+<span id="cb24-204"><a href="#cb24-204" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb24-205"><a href="#cb24-205" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb24-206"><a href="#cb24-206" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb24-207"><a href="#cb24-207" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb24-208"><a href="#cb24-208" aria-hidden="true" tabindex="-1"></a><span class="fu"># Importar datos desde excel. Paquetes readxl</span></span>
+<span id="cb24-209"><a href="#cb24-209" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb24-210"><a href="#cb24-210" aria-hidden="true" tabindex="-1"></a>Para importar datos contenidos en un fichero excel utilizaremos  el paquete "readxl", cuya función principal es: <span class="in">`read_excel()`</span> (otras variantes con la misma sintaxis son: <span class="in">`read_xlsx()`</span> y <span class="in">`read_xls()`</span>). Los datos importados son del tipo "tibble" (data.frame mejorados).</span>
+<span id="cb24-211"><a href="#cb24-211" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb24-212"><a href="#cb24-212" aria-hidden="true" tabindex="-1"></a>Su uso es muy sencillo cuando se quiere leer el contenido completo de una hoja en un fichero Excel:</span>
+<span id="cb24-213"><a href="#cb24-213" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb24-214"><a href="#cb24-214" aria-hidden="true" tabindex="-1"></a><span class="in">```{r eval=FALSE}</span></span>
+<span id="cb24-215"><a href="#cb24-215" aria-hidden="true" tabindex="-1"></a><span class="in">datos = read_excel("ficheroexcel.xlsx") # equivalente a:</span></span>
+<span id="cb24-216"><a href="#cb24-216" aria-hidden="true" tabindex="-1"></a><span class="in">datos = read_excel("ficheroexcel.xlsx",sheet = 1) </span></span>
+<span id="cb24-217"><a href="#cb24-217" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
+<span id="cb24-218"><a href="#cb24-218" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb24-219"><a href="#cb24-219" aria-hidden="true" tabindex="-1"></a>Su sintaxis completa es la siguiente:</span>
+<span id="cb24-220"><a href="#cb24-220" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb24-221"><a href="#cb24-221" aria-hidden="true" tabindex="-1"></a><span class="in">```r</span></span>
+<span id="cb24-222"><a href="#cb24-222" aria-hidden="true" tabindex="-1"></a><span class="fu">read_excel</span>(path, <span class="at">sheet =</span> <span class="cn">NULL</span>, <span class="at">range =</span> <span class="cn">NULL</span>, <span class="at">col_names =</span> <span class="cn">TRUE</span>,</span>
+<span id="cb24-223"><a href="#cb24-223" aria-hidden="true" tabindex="-1"></a>  <span class="at">col_types =</span> <span class="cn">NULL</span>, <span class="at">na =</span> <span class="st">""</span>, <span class="at">trim_ws =</span> <span class="cn">TRUE</span>, <span class="at">skip =</span> <span class="dv">0</span>,</span>
+<span id="cb24-224"><a href="#cb24-224" aria-hidden="true" tabindex="-1"></a>  <span class="at">n_max =</span> <span class="cn">Inf</span>, <span class="at">guess_max =</span> <span class="fu">min</span>(<span class="dv">1000</span>, n_max),</span>
+<span id="cb24-225"><a href="#cb24-225" aria-hidden="true" tabindex="-1"></a>  <span class="at">progress =</span> <span class="fu">readxl_progress</span>(), <span class="at">.name_repair =</span> <span class="st">"unique"</span>)</span>
+<span id="cb24-226"><a href="#cb24-226" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
+<span id="cb24-227"><a href="#cb24-227" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb24-228"><a href="#cb24-228" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb24-229"><a href="#cb24-229" aria-hidden="true" tabindex="-1"></a><span class="fu">## Ejemplo: </span></span>
+<span id="cb24-230"><a href="#cb24-230" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb24-233"><a href="#cb24-233" aria-hidden="true" tabindex="-1"></a><span class="in">```{r}</span></span>
+<span id="cb24-234"><a href="#cb24-234" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(readxl)</span>
+<span id="cb24-235"><a href="#cb24-235" aria-hidden="true" tabindex="-1"></a>datos.xlsx <span class="ot">=</span> readxl<span class="sc">::</span><span class="fu">read_xlsx</span>(<span class="at">path =</span> <span class="st">"datosPractica01.xlsx"</span>)</span>
+<span id="cb24-236"><a href="#cb24-236" aria-hidden="true" tabindex="-1"></a><span class="fu">str</span>(datos.xlsx)</span>
+<span id="cb24-237"><a href="#cb24-237" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
+<span id="cb24-238"><a href="#cb24-238" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb24-239"><a href="#cb24-239" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb24-240"><a href="#cb24-240" aria-hidden="true" tabindex="-1"></a><span class="fu">## Ejemplo: otras opciones al leer ficheros Excel</span></span>
+<span id="cb24-241"><a href="#cb24-241" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb24-242"><a href="#cb24-242" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb24-245"><a href="#cb24-245" aria-hidden="true" tabindex="-1"></a><span class="in">```{r}</span></span>
+<span id="cb24-246"><a href="#cb24-246" aria-hidden="true" tabindex="-1"></a>datos.xlsx<span class="fl">.2</span> <span class="ot">=</span> readxl<span class="sc">::</span><span class="fu">read_xlsx</span>(<span class="at">path =</span> <span class="st">"datosPractica01.xlsx"</span>, </span>
+<span id="cb24-247"><a href="#cb24-247" aria-hidden="true" tabindex="-1"></a>                                 <span class="at">sheet =</span> <span class="dv">1</span>, <span class="at">range =</span> <span class="st">"A1:C20"</span>)</span>
+<span id="cb24-248"><a href="#cb24-248" aria-hidden="true" tabindex="-1"></a><span class="fu">head</span>(datos.xlsx<span class="fl">.2</span>)</span>
+<span id="cb24-249"><a href="#cb24-249" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
+<span id="cb24-250"><a href="#cb24-250" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb24-251"><a href="#cb24-251" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb24-252"><a href="#cb24-252" aria-hidden="true" tabindex="-1"></a><span class="fu">## Ejemplo: importar ficheros Excel con el paquete "rio"</span></span>
+<span id="cb24-253"><a href="#cb24-253" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb24-254"><a href="#cb24-254" aria-hidden="true" tabindex="-1"></a>Otra opción equivalente es usar la función "<span class="in">`import()`</span>" del paquete R: "rio".</span>
+<span id="cb24-255"><a href="#cb24-255" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb24-258"><a href="#cb24-258" aria-hidden="true" tabindex="-1"></a><span class="in">```{r}</span></span>
+<span id="cb24-259"><a href="#cb24-259" aria-hidden="true" tabindex="-1"></a>datos.xlsx<span class="fl">.3</span> <span class="ot">=</span> rio<span class="sc">::</span><span class="fu">import</span>(<span class="at">file =</span> <span class="st">"datosPractica01.xlsx"</span>, <span class="at">sheet =</span> <span class="dv">1</span>)</span>
+<span id="cb24-260"><a href="#cb24-260" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
+</code><button title="Copiar al portapapeles" class="code-copy-button" data-in-quarto-modal=""><i class="bi"></i></button></pre></div>
+</div></div></div></div></div>
+</div> <!-- /content -->
+
+
+
+
+</body></html>

@@ -1,0 +1,188 @@
+---
+title: "Práctica 2: Parte 4 (Presentar tablas mejorado)"
+lang: es
+toc: true
+toc-depth: 4
+number-sections: true
+format:
+  html:
+    code-tools: true
+    #code-fold: true
+    df-print: paged
+  pdf: 
+    df-print: kable
+    #keep-tex: true
+    #header-includes:
+    #  - \usepackage[graphicx]{realboxes}
+    #  - \usepackage{booktabs}
+    # documentclass: scrbook
+    # classoption: ["oneside"]
+    # template-partials: ["partials/before-body.tex"]
+    # toc: true
+    # toc-depth: 2
+    # lof: true
+    # lot: true
+    # include-in-header: 
+    #   - partials/inheader.tex
+    # geometry:
+    #   - left=.75in
+    #   - textwidth=4.5in
+    #   - marginparsep=.25in
+    #   - marginparwidth=2.25in
+  
+execute: 
+  echo: true
+  warnings: false
+  message: false
+knitr:
+  opts_chunk:
+    out.width: 90%
+    collapse: true
+    comment: "#>"
+---
+
+
+\bigskip
+
+**Ver la cabecera yaml de este documento, contiene muchas opciones avanzadas**.
+
+\bigskip
+
+```{r}
+suppressWarnings(suppressMessages(library(DemographyBasic)))
+```
+
+En la cabecera yaml de este documento Quarto se han añadido las opciones
+
+- `df-print: paged` ("html"). Las tablas de información en la salida html aparecerán paginadas de un modo especial para que no se tenga que realizar "scroll" en la página web.
+
+- `df-print: kable` ("pdf"). Como se ha visto usa: "`knitr::kable()`" para salidas pdf.
+
+
+# Tablas con la función `func_salida_tablas()` definida en "funciones_tablas.R"
+
+Importamos el fichero csv: "datosPractica01.csv" con `read.table()`:
+
+```{r}
+datos.csv = read.table(file = "datosPractica01.csv", header = TRUE, sep = ",")
+```
+
+
+En el paquete "DemographyBasic" se encuentra definida la función:
+
+```r
+
+DemBas_presentadf = function(datos1,scaption = NULL,
+                              apaisadalatex=FALSE,
+                              variaspaginas=TRUE,
+                              fuentesize=NULL,  # 8, 2, 12, ...
+                              CompletaAncho = FALSE)   
+```
+
+
+
+**Nota importante**: usa el paquete "kableExtra".
+
+**Referencias** para obtener más información:
+
+- [Libro: Cómo crear Tablas de información en R Markdown](http://destio.us.es/calvo/ficheros/ComoCrearTablasRMarkdown_PedroLuque_2019Sep_librodigital.pdf){target="_blank"}
+
+- [Chuleta sobre kableExtra](http://destio.us.es/calvo//ficheros/chuleta_kableExtra_ComoCrearTablasRMarkdown_PedroLuque_2019Sep_librodigital.pdf){target="_blank"}
+
+- [Cómo incluir una tabla o cuadro con información](http://destio.us.es/calvo/Qtutoriales/SobrePlantillaTFE/CuestionesPracticasSobrePlantillaTFE.html#cómo-incluir-una-tabla-o-cuadro-con-información){target="_blank"}
+
+
+## Ejemplo: básico
+
+Al cargar el fichero de funciones: "funciones_tablas.R" se carga el paquete R "kableExtra" y las salidas son diferentes a las que se obtienen sin cargar este paquete. En la salida pdf, se ve en este ejemplo que no usa el modo multipágina.
+
+```{r}
+datos.csv
+```
+Sin embargo, la siguiente no tiene el problema mencionado anteriormente.
+```{r}
+DemBas_presentadf(datos.csv)
+```
+
+## Ejemplo: básico (presenta las 6 primeras filas)
+
+```{r}
+DemBas_presentadf(head(datos.csv))
+```
+
+
+## Ejemplo: básico con leyenda (scaption)
+
+```{r}
+DemBas_presentadf(datos.csv, scaption = "Datos de España")
+```
+
+
+Se podrían utilizar sobre data.frame mayores creados, por ejemplo con `rbind()`:
+```{{r}}
+DemBas_presentadf(rbind(datos.csv,datos.csv), 
+                   scaption = "Tabla con kableExtra",
+                   variaspaginas = T)
+```
+
+
+## Ejemplo: básico
+
+
+
+Importamos el fichero csv: "datosPractica01.csv"
+
+```{r}
+library(readr)
+datosPractica01 <- read_csv("datosPractica01.csv",
+                            col_types = cols(...1 = col_skip()))
+```
+
+```{r}
+DemBas_presentadf(head(datosPractica01,20), scaption = "Tabla nueva")
+```
+
+## Ejemplo: se modifican las anchuras de algunas columnas
+
+```{r}
+DemBas_presentadf(head(datosPractica01,20), 
+                   scaption = "Nueva Tabla 2") |> 
+      column_spec(c(1), width = "2cm") |> 
+      column_spec(c(2), width = "3cm")
+```
+
+
+\newpage
+
+## Ejemplo: tabla apaisada (pdf). Importar ficheros xlsx
+
+```{r}
+library(readxl)
+datos1 = read_xlsx("2852.xlsx",sheet=1,range="A8:U61")
+names(datos1)[1] = "Provincias"
+```
+
+
+Cuando se intenta presentar en un fichero pdf una tabla que necesita un ancho que supera los 21cm de un papel en formato a4 (los ficheros html no presentan limitación de ancho porque no está pensado inicialmente para imprimirse en papel), se puede utilizar la función definida `func_salida_tablas()`, indicando los argumentos `apaisadalatex = TRUE,variaspaginas=FALSE`:
+
+
+```{r}
+DemBas_presentadf(datos1,
+                   scaption = "Tabla apaisada en una página",
+                   apaisadalatex = TRUE,
+                   variaspaginas=FALSE)
+```
+
+
+## Ejemplo: tabla apaisada varias páginas (pdf): reduciendo el número de columnas que se muestran
+
+```{r}
+DemBas_presentadf(datos1[,1:9],
+                   scaption = "Tabla apaisada en varias páginas",
+                   apaisadalatex = TRUE,
+                   variaspaginas=TRUE,
+                   fuentesize = 10)
+```
+
+
+

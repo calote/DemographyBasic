@@ -1,0 +1,1149 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="es" xml:lang="es"><head>
+
+<meta charset="utf-8">
+<meta name="generator" content="quarto-1.6.32">
+
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+
+
+<title>Práctica 3: Parte 2 (Tidyverse: paquete tidyr)</title>
+<style>
+code{white-space: pre-wrap;}
+span.smallcaps{font-variant: small-caps;}
+div.columns{display: flex; gap: min(4vw, 1.5em);}
+div.column{flex: auto; overflow-x: auto;}
+div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+ul.task-list{list-style: none;}
+ul.task-list li input[type="checkbox"] {
+  width: 0.8em;
+  margin: 0 0.8em 0.2em -1em; /* quarto-specific, see https://github.com/quarto-dev/quarto-cli/issues/4556 */ 
+  vertical-align: middle;
+}
+/* CSS for syntax highlighting */
+pre > code.sourceCode { white-space: pre; position: relative; }
+pre > code.sourceCode > span { line-height: 1.25; }
+pre > code.sourceCode > span:empty { height: 1.2em; }
+.sourceCode { overflow: visible; }
+code.sourceCode > span { color: inherit; text-decoration: inherit; }
+div.sourceCode { margin: 1em 0; }
+pre.sourceCode { margin: 0; }
+@media screen {
+div.sourceCode { overflow: auto; }
+}
+@media print {
+pre > code.sourceCode { white-space: pre-wrap; }
+pre > code.sourceCode > span { display: inline-block; text-indent: -5em; padding-left: 5em; }
+}
+pre.numberSource code
+  { counter-reset: source-line 0; }
+pre.numberSource code > span
+  { position: relative; left: -4em; counter-increment: source-line; }
+pre.numberSource code > span > a:first-child::before
+  { content: counter(source-line);
+    position: relative; left: -1em; text-align: right; vertical-align: baseline;
+    border: none; display: inline-block;
+    -webkit-touch-callout: none; -webkit-user-select: none;
+    -khtml-user-select: none; -moz-user-select: none;
+    -ms-user-select: none; user-select: none;
+    padding: 0 4px; width: 4em;
+  }
+pre.numberSource { margin-left: 3em;  padding-left: 4px; }
+div.sourceCode
+  {   }
+@media screen {
+pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
+}
+</style>
+
+
+<script src="practica03b_files/libs/clipboard/clipboard.min.js"></script>
+<script src="practica03b_files/libs/quarto-html/quarto.js"></script>
+<script src="practica03b_files/libs/quarto-html/popper.min.js"></script>
+<script src="practica03b_files/libs/quarto-html/tippy.umd.min.js"></script>
+<script src="practica03b_files/libs/quarto-html/anchor.min.js"></script>
+<link href="practica03b_files/libs/quarto-html/tippy.css" rel="stylesheet">
+<link href="practica03b_files/libs/quarto-html/quarto-syntax-highlighting-2486e1f0a3ee9ee1fc393803a1361cdb.css" rel="stylesheet" id="quarto-text-highlighting-styles">
+<script src="practica03b_files/libs/bootstrap/bootstrap.min.js"></script>
+<link href="practica03b_files/libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
+<link href="practica03b_files/libs/bootstrap/bootstrap-677b520d69fcc55ab41b4b425631e74d.min.css" rel="stylesheet" append-hash="true" id="quarto-bootstrap" data-mode="light">
+
+
+</head>
+
+<body>
+
+<div id="quarto-content" class="page-columns page-rows-contents page-layout-article">
+<div id="quarto-margin-sidebar" class="sidebar margin-sidebar">
+  <nav id="TOC" role="doc-toc" class="toc-active">
+    <h2 id="toc-title">Tabla de contenidos</h2>
+   
+  <ul>
+  <li><a href="#uso-del-paquete-tidyr" id="toc-uso-del-paquete-tidyr" class="nav-link active" data-scroll-target="#uso-del-paquete-tidyr"><span class="header-section-number">1</span> Uso del paquete “tidyr”</a>
+  <ul>
+  <li><a href="#formato-largo-formato-ancho" id="toc-formato-largo-formato-ancho" class="nav-link" data-scroll-target="#formato-largo-formato-ancho"><span class="header-section-number">1.1</span> Formato largo-formato ancho</a></li>
+  <li><a href="#formato-ancho-a-formato-largo-o-combinación-pivot_longer-o-gather" id="toc-formato-ancho-a-formato-largo-o-combinación-pivot_longer-o-gather" class="nav-link" data-scroll-target="#formato-ancho-a-formato-largo-o-combinación-pivot_longer-o-gather"><span class="header-section-number">1.2</span> Formato ancho a formato largo o combinación: pivot_longer o gather</a></li>
+  <li><a href="#formato-largo-a-formato-ancho-o-extensión-pivot_wider-o-spread" id="toc-formato-largo-a-formato-ancho-o-extensión-pivot_wider-o-spread" class="nav-link" data-scroll-target="#formato-largo-a-formato-ancho-o-extensión-pivot_wider-o-spread"><span class="header-section-number">1.3</span> Formato largo a formato ancho o extensión: pivot_wider o spread</a></li>
+  <li><a href="#algunas-curiosidades-del-paquete-tidyr-separate-y-unite" id="toc-algunas-curiosidades-del-paquete-tidyr-separate-y-unite" class="nav-link" data-scroll-target="#algunas-curiosidades-del-paquete-tidyr-separate-y-unite"><span class="header-section-number">1.4</span> Algunas curiosidades del paquete tidyr: separate() y unite()</a></li>
+  </ul></li>
+  </ul>
+<div class="quarto-alternate-formats"><h2>Otros formatos</h2><ul><li><a href="practica03b.pdf"><i class="bi bi-file-pdf"></i>PDF</a></li></ul></div></nav>
+</div>
+<main class="content" id="quarto-document-content">
+
+<header id="title-block-header" class="quarto-title-block default">
+<div class="quarto-title">
+<div class="quarto-title-block"><div><h1 class="title">Práctica 3: Parte 2 (Tidyverse: paquete tidyr)</h1><button type="button" class="btn code-tools-button" id="quarto-code-tools-source"><i class="bi"></i> Código</button></div></div>
+</div>
+
+
+
+<div class="quarto-title-meta">
+
+    
+  
+    
+  </div>
+  
+
+
+</header>
+
+
+<section id="uso-del-paquete-tidyr" class="level1" data-number="1">
+<h1 data-number="1"><span class="header-section-number">1</span> Uso del paquete “tidyr”</h1>
+<section id="formato-largo-formato-ancho" class="level2" data-number="1.1">
+<h2 data-number="1.1" class="anchored" data-anchor-id="formato-largo-formato-ancho"><span class="header-section-number">1.1</span> Formato largo-formato ancho</h2>
+<p>Esta configuración de miniherramientas que usa el paquete <strong>dplyr</strong> invita a otros paquetes a extenderlo. Uno de tales paquetes es el paquete <strong>tidyr</strong> que forma parte del sistema “tidyverse”.</p>
+<p>En general, el sistema <strong>tidyverse</strong> supone que cada fila es una observación, y cada columna es una variable. A esta disposición se la conoce como <strong>FORMATO LARGO</strong>.</p>
+<p>En el siguiente ejemplo se presenta una situación diferente que aparece habitualmente. Hay una variable, lluvia o cantidad de precipitación, que se extiende sobre tres columnas (“lluvia_estacion01” a “lluvia_estacion03”). Esta disposición de los datos se conoce como <strong>FORMATO ANCHO</strong>.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb1"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="fu">set.seed</span>(<span class="dv">24</span>)</span>
+<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a>dat <span class="ot">=</span> <span class="fu">data.frame</span>(<span class="at">temper =</span> <span class="fu">runif</span>(<span class="dv">3</span>, <span class="dv">15</span>, <span class="dv">25</span>), </span>
+<span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a>                 <span class="at">lluvia_estacion01 =</span> <span class="fu">runif</span>(<span class="dv">3</span>, <span class="dv">1</span>, <span class="dv">3</span>), </span>
+<span id="cb1-4"><a href="#cb1-4" aria-hidden="true" tabindex="-1"></a>                 <span class="at">lluvia_estacion02 =</span> <span class="fu">runif</span>(<span class="dv">3</span>, <span class="dv">1</span>, <span class="dv">3</span>),</span>
+<span id="cb1-5"><a href="#cb1-5" aria-hidden="true" tabindex="-1"></a>                 <span class="at">lluvia_estacion03 =</span> <span class="fu">runif</span>(<span class="dv">3</span>, <span class="dv">1</span>, <span class="dv">3</span>))</span>
+<span id="cb1-6"><a href="#cb1-6" aria-hidden="true" tabindex="-1"></a>dat</span></code><button title="Copiar al portapapeles" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<div class="kable-table">
+<table class="caption-top table table-sm table-striped small">
+<thead>
+<tr class="header">
+<th style="text-align: right;">temper</th>
+<th style="text-align: right;">lluvia_estacion01</th>
+<th style="text-align: right;">lluvia_estacion02</th>
+<th style="text-align: right;">lluvia_estacion03</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td style="text-align: right;">17.92574</td>
+<td style="text-align: right;">2.037794</td>
+<td style="text-align: right;">1.559471</td>
+<td style="text-align: right;">1.509450</td>
+</tr>
+<tr class="even">
+<td style="text-align: right;">17.24891</td>
+<td style="text-align: right;">2.325239</td>
+<td style="text-align: right;">2.527641</td>
+<td style="text-align: right;">2.209778</td>
+</tr>
+<tr class="odd">
+<td style="text-align: right;">22.04223</td>
+<td style="text-align: right;">2.840888</td>
+<td style="text-align: right;">2.603261</td>
+<td style="text-align: right;">1.741470</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+</div>
+<p>Como se ha comentado anteriormente, el sistema tidyverse espera que los datos se encuentren en “formato largo”. En algunas situaciones se necesita transformar los datos de “formato ancho” a “formato largo”. Es decir, en estos datos se necesita reunir todos los valores de precipitaciones en una única columna, y añadir una columna de identificación adicional que especifique la estación a la que pertenece.</p>
+</section>
+<section id="formato-ancho-a-formato-largo-o-combinación-pivot_longer-o-gather" class="level2" data-number="1.2">
+<h2 data-number="1.2" class="anchored" data-anchor-id="formato-ancho-a-formato-largo-o-combinación-pivot_longer-o-gather"><span class="header-section-number">1.2</span> Formato ancho a formato largo o combinación: pivot_longer o gather</h2>
+<p>La <strong>operación de combinación</strong> que convierte datos <strong>de formato ancho a formato largo</strong> puede realizarse usando la función <strong><code>pivot_longer()</code></strong> o también con <strong><code>gather()</code></strong>.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb2"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a><span class="fu">pivot_longer</span>(</span>
+<span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a>  data,</span>
+<span id="cb2-3"><a href="#cb2-3" aria-hidden="true" tabindex="-1"></a>  cols,</span>
+<span id="cb2-4"><a href="#cb2-4" aria-hidden="true" tabindex="-1"></a>  <span class="at">names_to =</span> <span class="st">"name"</span>,</span>
+<span id="cb2-5"><a href="#cb2-5" aria-hidden="true" tabindex="-1"></a>  <span class="at">values_to =</span> <span class="st">"value"</span>,</span>
+<span id="cb2-6"><a href="#cb2-6" aria-hidden="true" tabindex="-1"></a>  <span class="co"># más argumentos</span></span>
+<span id="cb2-7"><a href="#cb2-7" aria-hidden="true" tabindex="-1"></a>  ...</span>
+<span id="cb2-8"><a href="#cb2-8" aria-hidden="true" tabindex="-1"></a>)</span>
+<span id="cb2-9"><a href="#cb2-9" aria-hidden="true" tabindex="-1"></a><span class="co">#gather(data, key, value, ...)</span></span></code><button title="Copiar al portapapeles" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<p>donde:</p>
+<ul>
+<li><code>data</code>, es el data.frame de entrada.</li>
+<li><code>names_to</code> (<code>key</code>), el nombre de la columna con la identificación en el data.frame resultante.</li>
+<li><code>values_to</code> (<code>value</code>), el nombre de la columna con los valores (precipitacion en nuestro ejemplo) en el data.frame resultante.</li>
+<li><code>cols</code> (<code>...</code>), especificación de qué columnas deberían ser reunidas/combinadas. Se pueden usar nombres de columnas con un menos delante para excluir esas columnas de la combinación.</li>
+</ul>
+<p>El siguiente código llama a <strong><code>pivot_longer()</code></strong> para transformar los datos del ejemplo anterior (aparece comentada el modo equivalente de hacerlo con la función: <strong><code>gather()</code></strong>).</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb3"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(tidyr)</span>
+<span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a>dat_nuevos <span class="ot">=</span> dat <span class="sc">%&gt;%</span></span>
+<span id="cb3-3"><a href="#cb3-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">pivot_longer</span>(<span class="at">cols =</span> <span class="sc">-</span>temper,</span>
+<span id="cb3-4"><a href="#cb3-4" aria-hidden="true" tabindex="-1"></a>               <span class="at">names_to =</span> <span class="st">"id_estacion"</span>,</span>
+<span id="cb3-5"><a href="#cb3-5" aria-hidden="true" tabindex="-1"></a>               <span class="at">values_to =</span> <span class="st">"precipitacion"</span>)</span>
+<span id="cb3-6"><a href="#cb3-6" aria-hidden="true" tabindex="-1"></a><span class="co"># dat_nuevos = gather(dat, key = id_estacion, value = precipitacion, -temper)</span></span>
+<span id="cb3-7"><a href="#cb3-7" aria-hidden="true" tabindex="-1"></a><span class="fu">head</span>(dat_nuevos)</span></code><button title="Copiar al portapapeles" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<div class="kable-table">
+<table class="caption-top table table-sm table-striped small">
+<thead>
+<tr class="header">
+<th style="text-align: right;">temper</th>
+<th style="text-align: left;">id_estacion</th>
+<th style="text-align: right;">precipitacion</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td style="text-align: right;">17.92574</td>
+<td style="text-align: left;">lluvia_estacion01</td>
+<td style="text-align: right;">2.037794</td>
+</tr>
+<tr class="even">
+<td style="text-align: right;">17.92574</td>
+<td style="text-align: left;">lluvia_estacion02</td>
+<td style="text-align: right;">1.559471</td>
+</tr>
+<tr class="odd">
+<td style="text-align: right;">17.92574</td>
+<td style="text-align: left;">lluvia_estacion03</td>
+<td style="text-align: right;">1.509450</td>
+</tr>
+<tr class="even">
+<td style="text-align: right;">17.24891</td>
+<td style="text-align: left;">lluvia_estacion01</td>
+<td style="text-align: right;">2.325239</td>
+</tr>
+<tr class="odd">
+<td style="text-align: right;">17.24891</td>
+<td style="text-align: left;">lluvia_estacion02</td>
+<td style="text-align: right;">2.527641</td>
+</tr>
+<tr class="even">
+<td style="text-align: right;">17.24891</td>
+<td style="text-align: left;">lluvia_estacion03</td>
+<td style="text-align: right;">2.209778</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+</div>
+</section>
+<section id="formato-largo-a-formato-ancho-o-extensión-pivot_wider-o-spread" class="level2" data-number="1.3">
+<h2 data-number="1.3" class="anchored" data-anchor-id="formato-largo-a-formato-ancho-o-extensión-pivot_wider-o-spread"><span class="header-section-number">1.3</span> Formato largo a formato ancho o extensión: pivot_wider o spread</h2>
+<p>La <strong>operación contraria de extensión</strong> se realiza usando la función <strong><code>pivot_wider()</code></strong> o la función <strong><code>spread()</code></strong>, las cuales convierten de <strong>formato largo a formato ancho</strong>. En el siguiente ejemplo, se transforman a formato ancho los datos en formato largo creados en el apartado anterior: “dat_nuevos”.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb4"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a><span class="fu">pivot_wider</span>(dat_nuevos,</span>
+<span id="cb4-2"><a href="#cb4-2" aria-hidden="true" tabindex="-1"></a>            <span class="at">names_from =</span> <span class="st">"id_estacion"</span>,</span>
+<span id="cb4-3"><a href="#cb4-3" aria-hidden="true" tabindex="-1"></a>            <span class="at">values_from =</span> <span class="st">"precipitacion"</span>)</span></code><button title="Copiar al portapapeles" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<div class="kable-table">
+<table class="caption-top table table-sm table-striped small">
+<thead>
+<tr class="header">
+<th style="text-align: right;">temper</th>
+<th style="text-align: right;">lluvia_estacion01</th>
+<th style="text-align: right;">lluvia_estacion02</th>
+<th style="text-align: right;">lluvia_estacion03</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td style="text-align: right;">17.92574</td>
+<td style="text-align: right;">2.037794</td>
+<td style="text-align: right;">1.559471</td>
+<td style="text-align: right;">1.509450</td>
+</tr>
+<tr class="even">
+<td style="text-align: right;">17.24891</td>
+<td style="text-align: right;">2.325239</td>
+<td style="text-align: right;">2.527641</td>
+<td style="text-align: right;">2.209778</td>
+</tr>
+<tr class="odd">
+<td style="text-align: right;">22.04223</td>
+<td style="text-align: right;">2.840888</td>
+<td style="text-align: right;">2.603261</td>
+<td style="text-align: right;">1.741470</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+<div class="sourceCode cell-code" id="cb5"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a><span class="co">#spread(dat_nuevos,key = id_estacion, value = precipitacion)</span></span></code><button title="Copiar al portapapeles" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+</section>
+<section id="algunas-curiosidades-del-paquete-tidyr-separate-y-unite" class="level2" data-number="1.4">
+<h2 data-number="1.4" class="anchored" data-anchor-id="algunas-curiosidades-del-paquete-tidyr-separate-y-unite"><span class="header-section-number">1.4</span> Algunas curiosidades del paquete tidyr: separate() y unite()</h2>
+<p>La función <code>separate()</code> permite obtener nuevas columnas a partir de una columna de partida, al indicar una cadena de texto como separador. Por ejemplo, tenemos una columna fecha y queremos separarla en 3 columnas nuevas: día, mes y año.</p>
+<p>Su complementario es <code>unite()</code>, que construye una nueva columna a partir de unir varias columnas con un separador que indiquemos.</p>
+<p><strong>Ejemplo</strong>. En la columna “Provincia” del conjunto de datos de población del censo de 2001 empleado anteriormente, aparece el código junto al nombre de la provincia separado por un guión.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb6"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a><span class="fu">load</span>(<span class="st">"datosPobEspCenso2001.RData"</span>,<span class="at">verbose =</span> <span class="cn">TRUE</span>)</span></code><button title="Copiar al portapapeles" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>Loading objects:
+  datos</code></pre>
+</div>
+<div class="sourceCode cell-code" id="cb8"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a><span class="fu">head</span>(datos)</span></code><button title="Copiar al portapapeles" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<div class="kable-table">
+<table class="caption-top table table-sm table-striped small">
+<colgroup>
+<col style="width: 29%">
+<col style="width: 37%">
+<col style="width: 11%">
+<col style="width: 10%">
+<col style="width: 10%">
+</colgroup>
+<thead>
+<tr class="header">
+<th style="text-align: left;">Provincia</th>
+<th style="text-align: left;">CCAA</th>
+<th style="text-align: right;">TOTAL</th>
+<th style="text-align: right;">Varon</th>
+<th style="text-align: right;">Mujer</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td style="text-align: left;">01-Álava</td>
+<td style="text-align: left;">País Vasco</td>
+<td style="text-align: right;">286387</td>
+<td style="text-align: right;">142036</td>
+<td style="text-align: right;">144351</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">02-Albacete</td>
+<td style="text-align: left;">Castilla-La Mancha</td>
+<td style="text-align: right;">364835</td>
+<td style="text-align: right;">181461</td>
+<td style="text-align: right;">183374</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">03-Alicante/Alacant</td>
+<td style="text-align: left;">Comunidad Valenciana</td>
+<td style="text-align: right;">1461925</td>
+<td style="text-align: right;">722162</td>
+<td style="text-align: right;">739763</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">04-Almería</td>
+<td style="text-align: left;">Andalucía</td>
+<td style="text-align: right;">536731</td>
+<td style="text-align: right;">272023</td>
+<td style="text-align: right;">264708</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">33-Asturias</td>
+<td style="text-align: left;">Asturias (Principado de)</td>
+<td style="text-align: right;">1062998</td>
+<td style="text-align: right;">508995</td>
+<td style="text-align: right;">554003</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">05-Ávila</td>
+<td style="text-align: left;">Castilla y León</td>
+<td style="text-align: right;">163442</td>
+<td style="text-align: right;">81850</td>
+<td style="text-align: right;">81592</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+</div>
+<p>Para separarlo en dos columnas, se haría del siguiente modo:</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb9"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb9-1"><a href="#cb9-1" aria-hidden="true" tabindex="-1"></a>datos_sep <span class="ot">=</span> datos <span class="sc">%&gt;%</span> </span>
+<span id="cb9-2"><a href="#cb9-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">separate</span>(<span class="at">col =</span> Provincia,<span class="at">into =</span> <span class="fu">c</span>(<span class="st">"Codigo"</span>,<span class="st">"Provincia"</span>),<span class="at">sep=</span><span class="st">"-"</span>)</span>
+<span id="cb9-3"><a href="#cb9-3" aria-hidden="true" tabindex="-1"></a><span class="fu">head</span>(datos_sep)</span></code><button title="Copiar al portapapeles" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<div class="kable-table">
+<table class="caption-top table table-sm table-striped small">
+<colgroup>
+<col style="width: 9%">
+<col style="width: 23%">
+<col style="width: 35%">
+<col style="width: 11%">
+<col style="width: 9%">
+<col style="width: 9%">
+</colgroup>
+<thead>
+<tr class="header">
+<th style="text-align: left;">Codigo</th>
+<th style="text-align: left;">Provincia</th>
+<th style="text-align: left;">CCAA</th>
+<th style="text-align: right;">TOTAL</th>
+<th style="text-align: right;">Varon</th>
+<th style="text-align: right;">Mujer</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td style="text-align: left;">01</td>
+<td style="text-align: left;">Álava</td>
+<td style="text-align: left;">País Vasco</td>
+<td style="text-align: right;">286387</td>
+<td style="text-align: right;">142036</td>
+<td style="text-align: right;">144351</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">02</td>
+<td style="text-align: left;">Albacete</td>
+<td style="text-align: left;">Castilla-La Mancha</td>
+<td style="text-align: right;">364835</td>
+<td style="text-align: right;">181461</td>
+<td style="text-align: right;">183374</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">03</td>
+<td style="text-align: left;">Alicante/Alacant</td>
+<td style="text-align: left;">Comunidad Valenciana</td>
+<td style="text-align: right;">1461925</td>
+<td style="text-align: right;">722162</td>
+<td style="text-align: right;">739763</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">04</td>
+<td style="text-align: left;">Almería</td>
+<td style="text-align: left;">Andalucía</td>
+<td style="text-align: right;">536731</td>
+<td style="text-align: right;">272023</td>
+<td style="text-align: right;">264708</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">33</td>
+<td style="text-align: left;">Asturias</td>
+<td style="text-align: left;">Asturias (Principado de)</td>
+<td style="text-align: right;">1062998</td>
+<td style="text-align: right;">508995</td>
+<td style="text-align: right;">554003</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">05</td>
+<td style="text-align: left;">Ávila</td>
+<td style="text-align: left;">Castilla y León</td>
+<td style="text-align: right;">163442</td>
+<td style="text-align: right;">81850</td>
+<td style="text-align: right;">81592</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+</div>
+<p>Por defecto, elimina la columna de partida, pero esto podría cambiarse (consultar la sintaxis de la función).</p>
+<p>Ahora podría ordenarse por código o por el nombre de la provincia.</p>
+<p><strong>Ejemplo</strong>. Con <code>unite()</code> podríamos volver a unirla, pero por ejemplo, poniendo el código detrás, del siguiente modo:</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb10"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb10-1"><a href="#cb10-1" aria-hidden="true" tabindex="-1"></a>datos_sep <span class="sc">%&gt;%</span> </span>
+<span id="cb10-2"><a href="#cb10-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">unite</span>(<span class="at">col=</span><span class="st">"Provincia"</span>,<span class="at">sep=</span><span class="st">"-"</span>, Provincia,Codigo) <span class="sc">%&gt;%</span> </span>
+<span id="cb10-3"><a href="#cb10-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">head</span>()</span></code><button title="Copiar al portapapeles" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<div class="kable-table">
+<table class="caption-top table table-sm table-striped small">
+<colgroup>
+<col style="width: 29%">
+<col style="width: 37%">
+<col style="width: 11%">
+<col style="width: 10%">
+<col style="width: 10%">
+</colgroup>
+<thead>
+<tr class="header">
+<th style="text-align: left;">Provincia</th>
+<th style="text-align: left;">CCAA</th>
+<th style="text-align: right;">TOTAL</th>
+<th style="text-align: right;">Varon</th>
+<th style="text-align: right;">Mujer</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td style="text-align: left;">Álava-01</td>
+<td style="text-align: left;">País Vasco</td>
+<td style="text-align: right;">286387</td>
+<td style="text-align: right;">142036</td>
+<td style="text-align: right;">144351</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Albacete-02</td>
+<td style="text-align: left;">Castilla-La Mancha</td>
+<td style="text-align: right;">364835</td>
+<td style="text-align: right;">181461</td>
+<td style="text-align: right;">183374</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">Alicante/Alacant-03</td>
+<td style="text-align: left;">Comunidad Valenciana</td>
+<td style="text-align: right;">1461925</td>
+<td style="text-align: right;">722162</td>
+<td style="text-align: right;">739763</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Almería-04</td>
+<td style="text-align: left;">Andalucía</td>
+<td style="text-align: right;">536731</td>
+<td style="text-align: right;">272023</td>
+<td style="text-align: right;">264708</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">Asturias-33</td>
+<td style="text-align: left;">Asturias (Principado de)</td>
+<td style="text-align: right;">1062998</td>
+<td style="text-align: right;">508995</td>
+<td style="text-align: right;">554003</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Ávila-05</td>
+<td style="text-align: left;">Castilla y León</td>
+<td style="text-align: right;">163442</td>
+<td style="text-align: right;">81850</td>
+<td style="text-align: right;">81592</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+</div>
+<!-- -->
+
+</section>
+</section>
+
+</main>
+<!-- /main column -->
+<script id="quarto-html-after-body" type="application/javascript">
+window.document.addEventListener("DOMContentLoaded", function (event) {
+  const toggleBodyColorMode = (bsSheetEl) => {
+    const mode = bsSheetEl.getAttribute("data-mode");
+    const bodyEl = window.document.querySelector("body");
+    if (mode === "dark") {
+      bodyEl.classList.add("quarto-dark");
+      bodyEl.classList.remove("quarto-light");
+    } else {
+      bodyEl.classList.add("quarto-light");
+      bodyEl.classList.remove("quarto-dark");
+    }
+  }
+  const toggleBodyColorPrimary = () => {
+    const bsSheetEl = window.document.querySelector("link#quarto-bootstrap");
+    if (bsSheetEl) {
+      toggleBodyColorMode(bsSheetEl);
+    }
+  }
+  toggleBodyColorPrimary();  
+  const icon = "";
+  const anchorJS = new window.AnchorJS();
+  anchorJS.options = {
+    placement: 'right',
+    icon: icon
+  };
+  anchorJS.add('.anchored');
+  const isCodeAnnotation = (el) => {
+    for (const clz of el.classList) {
+      if (clz.startsWith('code-annotation-')) {                     
+        return true;
+      }
+    }
+    return false;
+  }
+  const onCopySuccess = function(e) {
+    // button target
+    const button = e.trigger;
+    // don't keep focus
+    button.blur();
+    // flash "checked"
+    button.classList.add('code-copy-button-checked');
+    var currentTitle = button.getAttribute("title");
+    button.setAttribute("title", "Copiado");
+    let tooltip;
+    if (window.bootstrap) {
+      button.setAttribute("data-bs-toggle", "tooltip");
+      button.setAttribute("data-bs-placement", "left");
+      button.setAttribute("data-bs-title", "Copiado");
+      tooltip = new bootstrap.Tooltip(button, 
+        { trigger: "manual", 
+          customClass: "code-copy-button-tooltip",
+          offset: [0, -8]});
+      tooltip.show();    
+    }
+    setTimeout(function() {
+      if (tooltip) {
+        tooltip.hide();
+        button.removeAttribute("data-bs-title");
+        button.removeAttribute("data-bs-toggle");
+        button.removeAttribute("data-bs-placement");
+      }
+      button.setAttribute("title", currentTitle);
+      button.classList.remove('code-copy-button-checked');
+    }, 1000);
+    // clear code selection
+    e.clearSelection();
+  }
+  const getTextToCopy = function(trigger) {
+      const codeEl = trigger.previousElementSibling.cloneNode(true);
+      for (const childEl of codeEl.children) {
+        if (isCodeAnnotation(childEl)) {
+          childEl.remove();
+        }
+      }
+      return codeEl.innerText;
+  }
+  const clipboard = new window.ClipboardJS('.code-copy-button:not([data-in-quarto-modal])', {
+    text: getTextToCopy
+  });
+  clipboard.on('success', onCopySuccess);
+  if (window.document.getElementById('quarto-embedded-source-code-modal')) {
+    // For code content inside modals, clipBoardJS needs to be initialized with a container option
+    // TODO: Check when it could be a function (https://github.com/zenorocha/clipboard.js/issues/860)
+    const clipboardModal = new window.ClipboardJS('.code-copy-button[data-in-quarto-modal]', {
+      text: getTextToCopy,
+      container: window.document.getElementById('quarto-embedded-source-code-modal')
+    });
+    clipboardModal.on('success', onCopySuccess);
+  }
+  const viewSource = window.document.getElementById('quarto-view-source') ||
+                     window.document.getElementById('quarto-code-tools-source');
+  if (viewSource) {
+    const sourceUrl = viewSource.getAttribute("data-quarto-source-url");
+    viewSource.addEventListener("click", function(e) {
+      if (sourceUrl) {
+        // rstudio viewer pane
+        if (/\bcapabilities=\b/.test(window.location)) {
+          window.open(sourceUrl);
+        } else {
+          window.location.href = sourceUrl;
+        }
+      } else {
+        const modal = new bootstrap.Modal(document.getElementById('quarto-embedded-source-code-modal'));
+        modal.show();
+      }
+      return false;
+    });
+  }
+  function toggleCodeHandler(show) {
+    return function(e) {
+      const detailsSrc = window.document.querySelectorAll(".cell > details > .sourceCode");
+      for (let i=0; i<detailsSrc.length; i++) {
+        const details = detailsSrc[i].parentElement;
+        if (show) {
+          details.open = true;
+        } else {
+          details.removeAttribute("open");
+        }
+      }
+      const cellCodeDivs = window.document.querySelectorAll(".cell > .sourceCode");
+      const fromCls = show ? "hidden" : "unhidden";
+      const toCls = show ? "unhidden" : "hidden";
+      for (let i=0; i<cellCodeDivs.length; i++) {
+        const codeDiv = cellCodeDivs[i];
+        if (codeDiv.classList.contains(fromCls)) {
+          codeDiv.classList.remove(fromCls);
+          codeDiv.classList.add(toCls);
+        } 
+      }
+      return false;
+    }
+  }
+  const hideAllCode = window.document.getElementById("quarto-hide-all-code");
+  if (hideAllCode) {
+    hideAllCode.addEventListener("click", toggleCodeHandler(false));
+  }
+  const showAllCode = window.document.getElementById("quarto-show-all-code");
+  if (showAllCode) {
+    showAllCode.addEventListener("click", toggleCodeHandler(true));
+  }
+    var localhostRegex = new RegExp(/^(?:http|https):\/\/localhost\:?[0-9]*\//);
+    var mailtoRegex = new RegExp(/^mailto:/);
+      var filterRegex = new RegExp('/' + window.location.host + '/');
+    var isInternal = (href) => {
+        return filterRegex.test(href) || localhostRegex.test(href) || mailtoRegex.test(href);
+    }
+    // Inspect non-navigation links and adorn them if external
+ 	var links = window.document.querySelectorAll('a[href]:not(.nav-link):not(.navbar-brand):not(.toc-action):not(.sidebar-link):not(.sidebar-item-toggle):not(.pagination-link):not(.no-external):not([aria-hidden]):not(.dropdown-item):not(.quarto-navigation-tool):not(.about-link)');
+    for (var i=0; i<links.length; i++) {
+      const link = links[i];
+      if (!isInternal(link.href)) {
+        // undo the damage that might have been done by quarto-nav.js in the case of
+        // links that we want to consider external
+        if (link.dataset.originalHref !== undefined) {
+          link.href = link.dataset.originalHref;
+        }
+      }
+    }
+  function tippyHover(el, contentFn, onTriggerFn, onUntriggerFn) {
+    const config = {
+      allowHTML: true,
+      maxWidth: 500,
+      delay: 100,
+      arrow: false,
+      appendTo: function(el) {
+          return el.parentElement;
+      },
+      interactive: true,
+      interactiveBorder: 10,
+      theme: 'quarto',
+      placement: 'bottom-start',
+    };
+    if (contentFn) {
+      config.content = contentFn;
+    }
+    if (onTriggerFn) {
+      config.onTrigger = onTriggerFn;
+    }
+    if (onUntriggerFn) {
+      config.onUntrigger = onUntriggerFn;
+    }
+    window.tippy(el, config); 
+  }
+  const noterefs = window.document.querySelectorAll('a[role="doc-noteref"]');
+  for (var i=0; i<noterefs.length; i++) {
+    const ref = noterefs[i];
+    tippyHover(ref, function() {
+      // use id or data attribute instead here
+      let href = ref.getAttribute('data-footnote-href') || ref.getAttribute('href');
+      try { href = new URL(href).hash; } catch {}
+      const id = href.replace(/^#\/?/, "");
+      const note = window.document.getElementById(id);
+      if (note) {
+        return note.innerHTML;
+      } else {
+        return "";
+      }
+    });
+  }
+  const xrefs = window.document.querySelectorAll('a.quarto-xref');
+  const processXRef = (id, note) => {
+    // Strip column container classes
+    const stripColumnClz = (el) => {
+      el.classList.remove("page-full", "page-columns");
+      if (el.children) {
+        for (const child of el.children) {
+          stripColumnClz(child);
+        }
+      }
+    }
+    stripColumnClz(note)
+    if (id === null || id.startsWith('sec-')) {
+      // Special case sections, only their first couple elements
+      const container = document.createElement("div");
+      if (note.children && note.children.length > 2) {
+        container.appendChild(note.children[0].cloneNode(true));
+        for (let i = 1; i < note.children.length; i++) {
+          const child = note.children[i];
+          if (child.tagName === "P" && child.innerText === "") {
+            continue;
+          } else {
+            container.appendChild(child.cloneNode(true));
+            break;
+          }
+        }
+        if (window.Quarto?.typesetMath) {
+          window.Quarto.typesetMath(container);
+        }
+        return container.innerHTML
+      } else {
+        if (window.Quarto?.typesetMath) {
+          window.Quarto.typesetMath(note);
+        }
+        return note.innerHTML;
+      }
+    } else {
+      // Remove any anchor links if they are present
+      const anchorLink = note.querySelector('a.anchorjs-link');
+      if (anchorLink) {
+        anchorLink.remove();
+      }
+      if (window.Quarto?.typesetMath) {
+        window.Quarto.typesetMath(note);
+      }
+      // TODO in 1.5, we should make sure this works without a callout special case
+      if (note.classList.contains("callout")) {
+        return note.outerHTML;
+      } else {
+        return note.innerHTML;
+      }
+    }
+  }
+  for (var i=0; i<xrefs.length; i++) {
+    const xref = xrefs[i];
+    tippyHover(xref, undefined, function(instance) {
+      instance.disable();
+      let url = xref.getAttribute('href');
+      let hash = undefined; 
+      if (url.startsWith('#')) {
+        hash = url;
+      } else {
+        try { hash = new URL(url).hash; } catch {}
+      }
+      if (hash) {
+        const id = hash.replace(/^#\/?/, "");
+        const note = window.document.getElementById(id);
+        if (note !== null) {
+          try {
+            const html = processXRef(id, note.cloneNode(true));
+            instance.setContent(html);
+          } finally {
+            instance.enable();
+            instance.show();
+          }
+        } else {
+          // See if we can fetch this
+          fetch(url.split('#')[0])
+          .then(res => res.text())
+          .then(html => {
+            const parser = new DOMParser();
+            const htmlDoc = parser.parseFromString(html, "text/html");
+            const note = htmlDoc.getElementById(id);
+            if (note !== null) {
+              const html = processXRef(id, note);
+              instance.setContent(html);
+            } 
+          }).finally(() => {
+            instance.enable();
+            instance.show();
+          });
+        }
+      } else {
+        // See if we can fetch a full url (with no hash to target)
+        // This is a special case and we should probably do some content thinning / targeting
+        fetch(url)
+        .then(res => res.text())
+        .then(html => {
+          const parser = new DOMParser();
+          const htmlDoc = parser.parseFromString(html, "text/html");
+          const note = htmlDoc.querySelector('main.content');
+          if (note !== null) {
+            // This should only happen for chapter cross references
+            // (since there is no id in the URL)
+            // remove the first header
+            if (note.children.length > 0 && note.children[0].tagName === "HEADER") {
+              note.children[0].remove();
+            }
+            const html = processXRef(null, note);
+            instance.setContent(html);
+          } 
+        }).finally(() => {
+          instance.enable();
+          instance.show();
+        });
+      }
+    }, function(instance) {
+    });
+  }
+      let selectedAnnoteEl;
+      const selectorForAnnotation = ( cell, annotation) => {
+        let cellAttr = 'data-code-cell="' + cell + '"';
+        let lineAttr = 'data-code-annotation="' +  annotation + '"';
+        const selector = 'span[' + cellAttr + '][' + lineAttr + ']';
+        return selector;
+      }
+      const selectCodeLines = (annoteEl) => {
+        const doc = window.document;
+        const targetCell = annoteEl.getAttribute("data-target-cell");
+        const targetAnnotation = annoteEl.getAttribute("data-target-annotation");
+        const annoteSpan = window.document.querySelector(selectorForAnnotation(targetCell, targetAnnotation));
+        const lines = annoteSpan.getAttribute("data-code-lines").split(",");
+        const lineIds = lines.map((line) => {
+          return targetCell + "-" + line;
+        })
+        let top = null;
+        let height = null;
+        let parent = null;
+        if (lineIds.length > 0) {
+            //compute the position of the single el (top and bottom and make a div)
+            const el = window.document.getElementById(lineIds[0]);
+            top = el.offsetTop;
+            height = el.offsetHeight;
+            parent = el.parentElement.parentElement;
+          if (lineIds.length > 1) {
+            const lastEl = window.document.getElementById(lineIds[lineIds.length - 1]);
+            const bottom = lastEl.offsetTop + lastEl.offsetHeight;
+            height = bottom - top;
+          }
+          if (top !== null && height !== null && parent !== null) {
+            // cook up a div (if necessary) and position it 
+            let div = window.document.getElementById("code-annotation-line-highlight");
+            if (div === null) {
+              div = window.document.createElement("div");
+              div.setAttribute("id", "code-annotation-line-highlight");
+              div.style.position = 'absolute';
+              parent.appendChild(div);
+            }
+            div.style.top = top - 2 + "px";
+            div.style.height = height + 4 + "px";
+            div.style.left = 0;
+            let gutterDiv = window.document.getElementById("code-annotation-line-highlight-gutter");
+            if (gutterDiv === null) {
+              gutterDiv = window.document.createElement("div");
+              gutterDiv.setAttribute("id", "code-annotation-line-highlight-gutter");
+              gutterDiv.style.position = 'absolute';
+              const codeCell = window.document.getElementById(targetCell);
+              const gutter = codeCell.querySelector('.code-annotation-gutter');
+              gutter.appendChild(gutterDiv);
+            }
+            gutterDiv.style.top = top - 2 + "px";
+            gutterDiv.style.height = height + 4 + "px";
+          }
+          selectedAnnoteEl = annoteEl;
+        }
+      };
+      const unselectCodeLines = () => {
+        const elementsIds = ["code-annotation-line-highlight", "code-annotation-line-highlight-gutter"];
+        elementsIds.forEach((elId) => {
+          const div = window.document.getElementById(elId);
+          if (div) {
+            div.remove();
+          }
+        });
+        selectedAnnoteEl = undefined;
+      };
+        // Handle positioning of the toggle
+    window.addEventListener(
+      "resize",
+      throttle(() => {
+        elRect = undefined;
+        if (selectedAnnoteEl) {
+          selectCodeLines(selectedAnnoteEl);
+        }
+      }, 10)
+    );
+    function throttle(fn, ms) {
+    let throttle = false;
+    let timer;
+      return (...args) => {
+        if(!throttle) { // first call gets through
+            fn.apply(this, args);
+            throttle = true;
+        } else { // all the others get throttled
+            if(timer) clearTimeout(timer); // cancel #2
+            timer = setTimeout(() => {
+              fn.apply(this, args);
+              timer = throttle = false;
+            }, ms);
+        }
+      };
+    }
+      // Attach click handler to the DT
+      const annoteDls = window.document.querySelectorAll('dt[data-target-cell]');
+      for (const annoteDlNode of annoteDls) {
+        annoteDlNode.addEventListener('click', (event) => {
+          const clickedEl = event.target;
+          if (clickedEl !== selectedAnnoteEl) {
+            unselectCodeLines();
+            const activeEl = window.document.querySelector('dt[data-target-cell].code-annotation-active');
+            if (activeEl) {
+              activeEl.classList.remove('code-annotation-active');
+            }
+            selectCodeLines(clickedEl);
+            clickedEl.classList.add('code-annotation-active');
+          } else {
+            // Unselect the line
+            unselectCodeLines();
+            clickedEl.classList.remove('code-annotation-active');
+          }
+        });
+      }
+  const findCites = (el) => {
+    const parentEl = el.parentElement;
+    if (parentEl) {
+      const cites = parentEl.dataset.cites;
+      if (cites) {
+        return {
+          el,
+          cites: cites.split(' ')
+        };
+      } else {
+        return findCites(el.parentElement)
+      }
+    } else {
+      return undefined;
+    }
+  };
+  var bibliorefs = window.document.querySelectorAll('a[role="doc-biblioref"]');
+  for (var i=0; i<bibliorefs.length; i++) {
+    const ref = bibliorefs[i];
+    const citeInfo = findCites(ref);
+    if (citeInfo) {
+      tippyHover(citeInfo.el, function() {
+        var popup = window.document.createElement('div');
+        citeInfo.cites.forEach(function(cite) {
+          var citeDiv = window.document.createElement('div');
+          citeDiv.classList.add('hanging-indent');
+          citeDiv.classList.add('csl-entry');
+          var biblioDiv = window.document.getElementById('ref-' + cite);
+          if (biblioDiv) {
+            citeDiv.innerHTML = biblioDiv.innerHTML;
+          }
+          popup.appendChild(citeDiv);
+        });
+        return popup.innerHTML;
+      });
+    }
+  }
+});
+</script><div class="modal fade" id="quarto-embedded-source-code-modal" tabindex="-1" aria-labelledby="quarto-embedded-source-code-modal-label" aria-hidden="true"><div class="modal-dialog modal-dialog-scrollable"><div class="modal-content"><div class="modal-header"><h5 class="modal-title" id="quarto-embedded-source-code-modal-label">Ejecutar el código</h5><button class="btn-close" data-bs-dismiss="modal"></button></div><div class="modal-body"><div class="">
+<div class="sourceCode" id="cb11" data-shortcodes="false"><pre class="sourceCode markdown code-with-copy"><code class="sourceCode markdown"><span id="cb11-1"><a href="#cb11-1" aria-hidden="true" tabindex="-1"></a><span class="co">---</span></span>
+<span id="cb11-2"><a href="#cb11-2" aria-hidden="true" tabindex="-1"></a><span class="an">title:</span><span class="co"> "Práctica 3: Parte 2 (Tidyverse: paquete tidyr)"</span></span>
+<span id="cb11-3"><a href="#cb11-3" aria-hidden="true" tabindex="-1"></a><span class="an">lang:</span><span class="co"> es</span></span>
+<span id="cb11-4"><a href="#cb11-4" aria-hidden="true" tabindex="-1"></a><span class="an">toc:</span><span class="co"> true</span></span>
+<span id="cb11-5"><a href="#cb11-5" aria-hidden="true" tabindex="-1"></a><span class="an">toc-depth:</span><span class="co"> 4</span></span>
+<span id="cb11-6"><a href="#cb11-6" aria-hidden="true" tabindex="-1"></a><span class="an">number-sections:</span><span class="co"> true</span></span>
+<span id="cb11-7"><a href="#cb11-7" aria-hidden="true" tabindex="-1"></a><span class="an">format:</span></span>
+<span id="cb11-8"><a href="#cb11-8" aria-hidden="true" tabindex="-1"></a><span class="co">  html:</span></span>
+<span id="cb11-9"><a href="#cb11-9" aria-hidden="true" tabindex="-1"></a><span class="co">    df-print: kable # paged</span></span>
+<span id="cb11-10"><a href="#cb11-10" aria-hidden="true" tabindex="-1"></a><span class="co">    code-tools: true</span></span>
+<span id="cb11-11"><a href="#cb11-11" aria-hidden="true" tabindex="-1"></a><span class="co">    #code-fold: true</span></span>
+<span id="cb11-12"><a href="#cb11-12" aria-hidden="true" tabindex="-1"></a><span class="co">    code-summary: "Muestre el código"</span></span>
+<span id="cb11-13"><a href="#cb11-13" aria-hidden="true" tabindex="-1"></a><span class="co">  pdf: </span></span>
+<span id="cb11-14"><a href="#cb11-14" aria-hidden="true" tabindex="-1"></a><span class="co">    df-print: kable</span></span>
+<span id="cb11-15"><a href="#cb11-15" aria-hidden="true" tabindex="-1"></a><span class="an">execute:</span><span class="co"> </span></span>
+<span id="cb11-16"><a href="#cb11-16" aria-hidden="true" tabindex="-1"></a><span class="co">  echo: true</span></span>
+<span id="cb11-17"><a href="#cb11-17" aria-hidden="true" tabindex="-1"></a><span class="co">  warnings: false</span></span>
+<span id="cb11-18"><a href="#cb11-18" aria-hidden="true" tabindex="-1"></a><span class="co">---</span></span>
+<span id="cb11-19"><a href="#cb11-19" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb11-20"><a href="#cb11-20" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb11-21"><a href="#cb11-21" aria-hidden="true" tabindex="-1"></a>\newcommand{\bcenter}{\begin{center}} </span>
+<span id="cb11-22"><a href="#cb11-22" aria-hidden="true" tabindex="-1"></a>\newcommand{\ecenter}{\end{center}}</span>
+<span id="cb11-23"><a href="#cb11-23" aria-hidden="true" tabindex="-1"></a>\renewcommand{\footnotesize}{}</span>
+<span id="cb11-24"><a href="#cb11-24" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb11-25"><a href="#cb11-25" aria-hidden="true" tabindex="-1"></a>\bigskip</span>
+<span id="cb11-26"><a href="#cb11-26" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb11-27"><a href="#cb11-27" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb11-28"><a href="#cb11-28" aria-hidden="true" tabindex="-1"></a><span class="fu"># Uso del paquete "tidyr"</span></span>
+<span id="cb11-29"><a href="#cb11-29" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb11-30"><a href="#cb11-30" aria-hidden="true" tabindex="-1"></a><span class="fu">## Formato largo-formato ancho</span></span>
+<span id="cb11-31"><a href="#cb11-31" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb11-32"><a href="#cb11-32" aria-hidden="true" tabindex="-1"></a>Esta configuración de miniherramientas que usa el paquete **dplyr** invita a otros paquetes a extenderlo. Uno de tales paquetes es el paquete **tidyr** que forma parte del sistema "tidyverse".</span>
+<span id="cb11-33"><a href="#cb11-33" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb11-34"><a href="#cb11-34" aria-hidden="true" tabindex="-1"></a>En general, el sistema **tidyverse** supone que cada fila es una observación, y cada columna es una variable. A esta disposición se la conoce como **FORMATO LARGO**.</span>
+<span id="cb11-35"><a href="#cb11-35" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb11-36"><a href="#cb11-36" aria-hidden="true" tabindex="-1"></a>En el siguiente ejemplo se presenta una situación diferente que aparece habitualmente. Hay una variable, lluvia o cantidad de precipitación, que se extiende sobre tres columnas ("lluvia_estacion01" a "lluvia_estacion03"). Esta disposición de los datos se conoce como  **FORMATO ANCHO**.</span>
+<span id="cb11-37"><a href="#cb11-37" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb11-38"><a href="#cb11-38" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb11-39"><a href="#cb11-39" aria-hidden="true" tabindex="-1"></a>\footnotesize</span>
+<span id="cb11-42"><a href="#cb11-42" aria-hidden="true" tabindex="-1"></a><span class="in">```{r}</span></span>
+<span id="cb11-43"><a href="#cb11-43" aria-hidden="true" tabindex="-1"></a><span class="fu">set.seed</span>(<span class="dv">24</span>)</span>
+<span id="cb11-44"><a href="#cb11-44" aria-hidden="true" tabindex="-1"></a>dat <span class="ot">=</span> <span class="fu">data.frame</span>(<span class="at">temper =</span> <span class="fu">runif</span>(<span class="dv">3</span>, <span class="dv">15</span>, <span class="dv">25</span>), </span>
+<span id="cb11-45"><a href="#cb11-45" aria-hidden="true" tabindex="-1"></a>                 <span class="at">lluvia_estacion01 =</span> <span class="fu">runif</span>(<span class="dv">3</span>, <span class="dv">1</span>, <span class="dv">3</span>), </span>
+<span id="cb11-46"><a href="#cb11-46" aria-hidden="true" tabindex="-1"></a>                 <span class="at">lluvia_estacion02 =</span> <span class="fu">runif</span>(<span class="dv">3</span>, <span class="dv">1</span>, <span class="dv">3</span>),</span>
+<span id="cb11-47"><a href="#cb11-47" aria-hidden="true" tabindex="-1"></a>                 <span class="at">lluvia_estacion03 =</span> <span class="fu">runif</span>(<span class="dv">3</span>, <span class="dv">1</span>, <span class="dv">3</span>))</span>
+<span id="cb11-48"><a href="#cb11-48" aria-hidden="true" tabindex="-1"></a>dat</span>
+<span id="cb11-49"><a href="#cb11-49" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
+<span id="cb11-50"><a href="#cb11-50" aria-hidden="true" tabindex="-1"></a>\normalsize</span>
+<span id="cb11-51"><a href="#cb11-51" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb11-52"><a href="#cb11-52" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb11-53"><a href="#cb11-53" aria-hidden="true" tabindex="-1"></a>Como se ha comentado anteriormente, el sistema tidyverse espera que los datos se encuentren en "formato largo". En algunas situaciones se necesita transformar los datos de "formato ancho" a "formato largo". Es decir, en estos datos se necesita reunir todos los valores de precipitaciones en una única columna, y añadir una columna de identificación adicional que especifique la estación a la que pertenece. </span>
+<span id="cb11-54"><a href="#cb11-54" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb11-55"><a href="#cb11-55" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb11-56"><a href="#cb11-56" aria-hidden="true" tabindex="-1"></a><span class="fu">## Formato ancho a formato largo o combinación:  pivot_longer o gather</span></span>
+<span id="cb11-57"><a href="#cb11-57" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb11-58"><a href="#cb11-58" aria-hidden="true" tabindex="-1"></a>La **operación de combinación** que convierte datos **de formato ancho a formato largo**</span>
+<span id="cb11-59"><a href="#cb11-59" aria-hidden="true" tabindex="-1"></a>puede realizarse usando la función **`pivot_longer()`** o también con **`gather()`**.</span>
+<span id="cb11-60"><a href="#cb11-60" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb11-61"><a href="#cb11-61" aria-hidden="true" tabindex="-1"></a>\footnotesize</span>
+<span id="cb11-62"><a href="#cb11-62" aria-hidden="true" tabindex="-1"></a><span class="in">```{r eval=FALSE}</span></span>
+<span id="cb11-63"><a href="#cb11-63" aria-hidden="true" tabindex="-1"></a><span class="in">pivot_longer(</span></span>
+<span id="cb11-64"><a href="#cb11-64" aria-hidden="true" tabindex="-1"></a><span class="in">  data,</span></span>
+<span id="cb11-65"><a href="#cb11-65" aria-hidden="true" tabindex="-1"></a><span class="in">  cols,</span></span>
+<span id="cb11-66"><a href="#cb11-66" aria-hidden="true" tabindex="-1"></a><span class="in">  names_to = "name",</span></span>
+<span id="cb11-67"><a href="#cb11-67" aria-hidden="true" tabindex="-1"></a><span class="in">  values_to = "value",</span></span>
+<span id="cb11-68"><a href="#cb11-68" aria-hidden="true" tabindex="-1"></a><span class="in">  # más argumentos</span></span>
+<span id="cb11-69"><a href="#cb11-69" aria-hidden="true" tabindex="-1"></a><span class="in">  ...</span></span>
+<span id="cb11-70"><a href="#cb11-70" aria-hidden="true" tabindex="-1"></a><span class="in">)</span></span>
+<span id="cb11-71"><a href="#cb11-71" aria-hidden="true" tabindex="-1"></a><span class="in">#gather(data, key, value, ...)</span></span>
+<span id="cb11-72"><a href="#cb11-72" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
+<span id="cb11-73"><a href="#cb11-73" aria-hidden="true" tabindex="-1"></a>\normalsize</span>
+<span id="cb11-74"><a href="#cb11-74" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb11-75"><a href="#cb11-75" aria-hidden="true" tabindex="-1"></a>donde:</span>
+<span id="cb11-76"><a href="#cb11-76" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb11-77"><a href="#cb11-77" aria-hidden="true" tabindex="-1"></a><span class="ss">- </span><span class="in">`data`</span>, es el data.frame de entrada.</span>
+<span id="cb11-78"><a href="#cb11-78" aria-hidden="true" tabindex="-1"></a><span class="ss">- </span><span class="in">`names_to`</span> (<span class="in">`key`</span>), el nombre de la columna con la identificación en el data.frame resultante.</span>
+<span id="cb11-79"><a href="#cb11-79" aria-hidden="true" tabindex="-1"></a><span class="ss">- </span><span class="in">`values_to`</span> (<span class="in">`value`</span>), el nombre de la columna con los valores (precipitacion en nuestro ejemplo) en el data.frame resultante.</span>
+<span id="cb11-80"><a href="#cb11-80" aria-hidden="true" tabindex="-1"></a><span class="ss">- </span><span class="in">`cols`</span> (<span class="in">`...`</span>), especificación de qué columnas deberían ser reunidas/combinadas. Se pueden usar nombres de columnas con un menos delante para excluir esas columnas de la combinación. </span>
+<span id="cb11-81"><a href="#cb11-81" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb11-82"><a href="#cb11-82" aria-hidden="true" tabindex="-1"></a>El siguiente código llama a **`pivot_longer()`** para transformar los datos del ejemplo anterior (aparece comentada el modo equivalente de hacerlo con la función: **`gather()`**).</span>
+<span id="cb11-83"><a href="#cb11-83" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb11-84"><a href="#cb11-84" aria-hidden="true" tabindex="-1"></a>\footnotesize</span>
+<span id="cb11-85"><a href="#cb11-85" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb11-88"><a href="#cb11-88" aria-hidden="true" tabindex="-1"></a><span class="in">```{r}</span></span>
+<span id="cb11-89"><a href="#cb11-89" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(tidyr)</span>
+<span id="cb11-90"><a href="#cb11-90" aria-hidden="true" tabindex="-1"></a>dat_nuevos <span class="ot">=</span> dat <span class="sc">%&gt;%</span></span>
+<span id="cb11-91"><a href="#cb11-91" aria-hidden="true" tabindex="-1"></a>  <span class="fu">pivot_longer</span>(<span class="at">cols =</span> <span class="sc">-</span>temper,</span>
+<span id="cb11-92"><a href="#cb11-92" aria-hidden="true" tabindex="-1"></a>               <span class="at">names_to =</span> <span class="st">"id_estacion"</span>,</span>
+<span id="cb11-93"><a href="#cb11-93" aria-hidden="true" tabindex="-1"></a>               <span class="at">values_to =</span> <span class="st">"precipitacion"</span>)</span>
+<span id="cb11-94"><a href="#cb11-94" aria-hidden="true" tabindex="-1"></a><span class="co"># dat_nuevos = gather(dat, key = id_estacion, value = precipitacion, -temper)</span></span>
+<span id="cb11-95"><a href="#cb11-95" aria-hidden="true" tabindex="-1"></a><span class="fu">head</span>(dat_nuevos)</span>
+<span id="cb11-96"><a href="#cb11-96" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
+<span id="cb11-97"><a href="#cb11-97" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb11-98"><a href="#cb11-98" aria-hidden="true" tabindex="-1"></a>\normalsize</span>
+<span id="cb11-99"><a href="#cb11-99" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb11-100"><a href="#cb11-100" aria-hidden="true" tabindex="-1"></a><span class="fu">## Formato largo a formato ancho o extensión: pivot_wider o spread</span></span>
+<span id="cb11-101"><a href="#cb11-101" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb11-102"><a href="#cb11-102" aria-hidden="true" tabindex="-1"></a>La **operación contraria de extensión** se realiza usando la función **`pivot_wider()`** o la función **`spread()`**, las cuales convierten de **formato largo a formato ancho**. En el siguiente ejemplo, se transforman a formato ancho los datos en formato largo creados en el apartado anterior: "dat_nuevos".</span>
+<span id="cb11-103"><a href="#cb11-103" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb11-104"><a href="#cb11-104" aria-hidden="true" tabindex="-1"></a>\footnotesize</span>
+<span id="cb11-105"><a href="#cb11-105" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb11-108"><a href="#cb11-108" aria-hidden="true" tabindex="-1"></a><span class="in">```{r}</span></span>
+<span id="cb11-109"><a href="#cb11-109" aria-hidden="true" tabindex="-1"></a><span class="fu">pivot_wider</span>(dat_nuevos,</span>
+<span id="cb11-110"><a href="#cb11-110" aria-hidden="true" tabindex="-1"></a>            <span class="at">names_from =</span> <span class="st">"id_estacion"</span>,</span>
+<span id="cb11-111"><a href="#cb11-111" aria-hidden="true" tabindex="-1"></a>            <span class="at">values_from =</span> <span class="st">"precipitacion"</span>)</span>
+<span id="cb11-112"><a href="#cb11-112" aria-hidden="true" tabindex="-1"></a><span class="co">#spread(dat_nuevos,key = id_estacion, value = precipitacion)</span></span>
+<span id="cb11-113"><a href="#cb11-113" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
+<span id="cb11-114"><a href="#cb11-114" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb11-115"><a href="#cb11-115" aria-hidden="true" tabindex="-1"></a>\normalsize</span>
+<span id="cb11-116"><a href="#cb11-116" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb11-117"><a href="#cb11-117" aria-hidden="true" tabindex="-1"></a><span class="fu">## Algunas curiosidades del paquete tidyr: separate() y unite()</span></span>
+<span id="cb11-118"><a href="#cb11-118" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb11-119"><a href="#cb11-119" aria-hidden="true" tabindex="-1"></a>La función <span class="in">`separate()`</span> permite obtener nuevas columnas a partir de una columna de partida, al indicar una cadena de texto como separador. Por ejemplo, tenemos una columna fecha y queremos separarla en 3 columnas nuevas: día, mes y año. </span>
+<span id="cb11-120"><a href="#cb11-120" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb11-121"><a href="#cb11-121" aria-hidden="true" tabindex="-1"></a>Su complementario es <span class="in">`unite()`</span>, que construye una nueva columna a partir de unir varias columnas con un separador que indiquemos.</span>
+<span id="cb11-122"><a href="#cb11-122" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb11-123"><a href="#cb11-123" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb11-124"><a href="#cb11-124" aria-hidden="true" tabindex="-1"></a>**Ejemplo**. En la columna "Provincia" del conjunto de datos de población del censo de 2001 empleado anteriormente, aparece el código junto al nombre de la provincia separado por un guión.</span>
+<span id="cb11-127"><a href="#cb11-127" aria-hidden="true" tabindex="-1"></a><span class="in">```{r}</span></span>
+<span id="cb11-128"><a href="#cb11-128" aria-hidden="true" tabindex="-1"></a><span class="fu">load</span>(<span class="st">"datosPobEspCenso2001.RData"</span>,<span class="at">verbose =</span> <span class="cn">TRUE</span>)</span>
+<span id="cb11-129"><a href="#cb11-129" aria-hidden="true" tabindex="-1"></a><span class="fu">head</span>(datos)</span>
+<span id="cb11-130"><a href="#cb11-130" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
+<span id="cb11-131"><a href="#cb11-131" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb11-132"><a href="#cb11-132" aria-hidden="true" tabindex="-1"></a>Para separarlo en dos columnas, se haría del siguiente modo:</span>
+<span id="cb11-135"><a href="#cb11-135" aria-hidden="true" tabindex="-1"></a><span class="in">```{r}</span></span>
+<span id="cb11-136"><a href="#cb11-136" aria-hidden="true" tabindex="-1"></a>datos_sep <span class="ot">=</span> datos <span class="sc">%&gt;%</span> </span>
+<span id="cb11-137"><a href="#cb11-137" aria-hidden="true" tabindex="-1"></a>  <span class="fu">separate</span>(<span class="at">col =</span> Provincia,<span class="at">into =</span> <span class="fu">c</span>(<span class="st">"Codigo"</span>,<span class="st">"Provincia"</span>),<span class="at">sep=</span><span class="st">"-"</span>)</span>
+<span id="cb11-138"><a href="#cb11-138" aria-hidden="true" tabindex="-1"></a><span class="fu">head</span>(datos_sep)</span>
+<span id="cb11-139"><a href="#cb11-139" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
+<span id="cb11-140"><a href="#cb11-140" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb11-141"><a href="#cb11-141" aria-hidden="true" tabindex="-1"></a>Por defecto, elimina la columna de partida, pero esto podría cambiarse (consultar la sintaxis de la función).</span>
+<span id="cb11-142"><a href="#cb11-142" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb11-143"><a href="#cb11-143" aria-hidden="true" tabindex="-1"></a>Ahora podría ordenarse por código o por el nombre de la provincia.</span>
+<span id="cb11-144"><a href="#cb11-144" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb11-145"><a href="#cb11-145" aria-hidden="true" tabindex="-1"></a>**Ejemplo**. Con <span class="in">`unite()`</span> podríamos volver a unirla, pero por ejemplo, poniendo el código detrás, del siguiente modo:</span>
+<span id="cb11-146"><a href="#cb11-146" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb11-149"><a href="#cb11-149" aria-hidden="true" tabindex="-1"></a><span class="in">```{r}</span></span>
+<span id="cb11-150"><a href="#cb11-150" aria-hidden="true" tabindex="-1"></a>datos_sep <span class="sc">%&gt;%</span> </span>
+<span id="cb11-151"><a href="#cb11-151" aria-hidden="true" tabindex="-1"></a>  <span class="fu">unite</span>(<span class="at">col=</span><span class="st">"Provincia"</span>,<span class="at">sep=</span><span class="st">"-"</span>, Provincia,Codigo) <span class="sc">%&gt;%</span> </span>
+<span id="cb11-152"><a href="#cb11-152" aria-hidden="true" tabindex="-1"></a>  <span class="fu">head</span>()</span>
+<span id="cb11-153"><a href="#cb11-153" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
+<span id="cb11-154"><a href="#cb11-154" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb11-155"><a href="#cb11-155" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb11-156"><a href="#cb11-156" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb11-157"><a href="#cb11-157" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb11-158"><a href="#cb11-158" aria-hidden="true" tabindex="-1"></a></span>
+</code><button title="Copiar al portapapeles" class="code-copy-button" data-in-quarto-modal=""><i class="bi"></i></button></pre></div>
+</div></div></div></div></div>
+</div> <!-- /content -->
+
+
+
+
+</body></html>

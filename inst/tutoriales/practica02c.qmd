@@ -1,0 +1,195 @@
+---
+title: "Práctica 2: Parte 3 (Presentar tablas)"
+lang: es
+toc: true
+toc-depth: 4
+number-sections: true
+df-print: kable
+format:
+  html:
+    code-tools: true
+    #code-fold: true
+  pdf: default
+execute: 
+  echo: true
+  warning: false
+---
+
+
+
+# Presentación de información en forma de tabla con "kable" del paquete "knitr"
+
+Importamos el fichero csv: "datosPractica01.csv" con `read.table()`:
+
+```{r}
+datos.csv = read.table(file = "datosPractica01.csv", 
+                       header = TRUE, sep = ",")
+```
+
+:::{.callout-note}
+En la cabecera yaml de este documento se ha añadido la opción: `df-print: kable`, que le indica a Quarto que cada vez que se le pida en el código R de este documento que se muestre un "data.frame" o un "tibble", se use: `knitr::kable()` con las opciones `booktabs=TRUE, longtable = TRUE` seleccionadas.
+:::
+
+Si se escribe el nombre de un data.frame (o tibble) en el código R se mostrarán todas sus filas y columnas. En este caso, Quarto las presenta en un formato amigable con `knitr::kable()`. En la salida pdf, eso significa que construye una tabla multipágina, repitiendo en cada página la fila cabecera. En html, la presentación multipágina no tiene el mismo sentido que un pdf.
+
+```{r}
+datos.csv
+```
+
+En este caso, el anterior código es equivalente a las siguientes dos variantes:
+
+```{{r}}
+library(knitr)
+kable(datos.csv)
+```
+
+```{{r}}
+knitr::kable(datos.csv)
+```
+
+
+:::{.callout-note}
+## Nota Importante
+
+Cuando el conjunto de datos (data.frame o tibble) o dataset es de más de 20 filas no es necesario presentar todas las filas en el documento, generalmente será suficiente mostrar las primeras 5 a 10 filas. 
+
+Puede haber situaciones específicas en las que sí sea importante mostrar todas las filas y columnas del dataset.
+:::
+
+Una forma de mostrar las seis primeras filas (más la fila cabecera) sería con la función `head()`:
+```{r}
+knitr::kable(head(datos.csv))
+```
+
+:::{.callout-note}
+## Nota Importante
+
+Generalmente, se aconseja que todas las tablas de información tengan una leyenda en la que se explique dicha información. Se puede hacer con la opción `caption` de la función `kable()`.
+:::
+
+```{r}
+library(knitr)
+kable(datos.csv[1:10,], caption = "Datos de España")
+```
+
+
+
+
+El formato de la salida siguiente es equivalente al del ejemplo anterior: `booktabs=TRUE` hace una presentación bonita de los datos, y `longtable = TRUE` activa el modo multipágina. Obsérvese también cómo se han seleccionado las filas que se muestran
+
+```{r}
+kable(rbind(datos.csv[1:5,],datos.csv[45:52,]), # datos.csv[c(1:545:52),]
+      caption = "Tabla", 
+      booktabs=TRUE, longtable = TRUE)
+```
+
+# Tablas con el paquete kableExtra
+
+Si se carga el paquete R kableExtra, no se comporta igual no poner en la función kable(): `booktabs=TRUE, longtable = TRUE`, que sí ponerlo (se ve más bonito incluyéndolos).
+
+
+```{r}
+library(kableExtra)
+kable(datos.csv[1:5,])
+```
+
+
+```{r}
+library(kableExtra)
+kable(datos.csv[1:5,],
+      booktabs=TRUE, longtable = TRUE)
+```
+
+El paquete "kableExtra" (ver: [Documentación de kableExtra](http://haozhu233.github.io/kableExtra/){target="_blank"}) añade nuevas funcionalidades a la función "`knitr::kable()`" con funciones adicionales como:
+
+- `kable_styling()`
+- `column_spec()`, etc
+
+
+## Tabla apaisada
+
+A continuación se muestra una ejemplo para presentar una tabla de forma apaisada. Generalmente, las tablas apaisadas se necesitan en situaciones en las que se quieren mostrar muchas columnas o variables simultáneamente.
+
+```{r warning=FALSE}
+library(kableExtra)
+kable(rbind(datos.csv,datos.csv), 
+      caption = "Tabla con kableExtra", 
+      booktabs=TRUE, longtable = TRUE) |> 
+  kable_styling(
+    bootstrap_options = c("striped","hover","condensed"),
+    #latex_options = c("striped"),
+    #latex_options = c("striped","condensed", "HOLD_position")
+    latex_options = c("striped",  "repeat_header", "HOLD_position"),
+    repeat_header_text="(contin\\'ua)",
+    font_size = 6
+    )  |> # basic, striped
+  landscape()
+```
+
+
+
+
+
+
+Importamos el fichero csv: "datosPractica01.csv"
+
+```{r}
+library(readr)
+datosPractica01 <- read_csv("datosPractica01.csv",
+                            col_types = cols(...1 = col_skip()))
+```
+
+Y presentamos una tabla en formato multipágina, pero añadimos características adicionales:
+
+```{r}
+kable(head(datosPractica01,50), booktabs = T, 
+      longtable = T, caption = "Tabla nueva") |> 
+  kable_styling(bootstrap_options = c("striped","hover","condensed"), 
+                latex_options = c("striped","HOLD_position", "repeat_header"),
+                repeat_header_text = "(continúa)"
+  )
+```
+
+
+{{< pagebreak >}}
+
+# Crear funciones R para facilitar la tarea de presentar tablas
+
+En este apartado se van a crear funciones R para que nos simplifique la presentación de tablas de información, que es una tarea que se realizará frecuentemente. Estas funciones R generalmente se recopilan en ficheros de código R que se pueden cargar en cualquier cálculo con ayuda de la función R: `source("ficheroconfunciones.R")` colocada antes de las líneas de código que las usarán.
+
+La primera que se crea es una función muy sencilla y que nos ahorraría teclear mucho código.
+
+```{r}
+func_Tabla = function(datos, scaption = "Tabla ...") {
+ kable(datos, booktabs = T, longtable = T, caption = scaption) |> 
+  kable_styling(bootstrap_options = c("striped","hover","condensed"), 
+                latex_options = c("striped","HOLD_position", "repeat_header"),
+                repeat_header_text = "(continúa)"
+  )
+}
+```
+
+Una vez creada, su uso es muy sencillo (RStudio también nos mostrará sus argumentos).
+
+```{r}
+func_Tabla(head(datosPractica01,20), "Nueva Tabla 2")
+```
+
+## Función Mejorada para html y latex simultáneamente
+
+La siguiente función `DemBas_presen()` contiene muchas más posibilidades como se muestra en el siguiente código. Se puede observar la ventaja de que algunos argumentos de esta función tienen ya definidos unos valores por defecto que no se necesitarían introducir al llamarla si coinciden con nuestros requisitos.
+
+```{r}
+suppressWarnings(suppressMessages(library(DemographyBasic)))
+DemBas_presentadf
+
+```
+
+Esta función se ha incluido en el paquete: "`DemographyBasic`" para facilitar su uso.
+
+Una vez definida se puede usar como se muestra a continuación.
+```{r}
+DemBas_presentadf(datosPractica01)
+```
+
+

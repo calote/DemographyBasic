@@ -1,0 +1,239 @@
+---
+title: "Práctica 2: Parte 1 (Importar datos: csv, RData y xlsx)"
+lang: es
+toc: true
+toc-depth: 4
+number-sections: true
+df-print: kable
+format:
+  html:
+    code-tools: true
+    #code-fold: true
+  pdf: default
+execute: 
+  echo: true
+  warnings: false
+---
+
+
+
+\bigskip
+
+
+
+# Descargas de ficheros de internet: `download.file()`
+
+Habitualmente se necesitará descargar ficheros de las páginas web de instituciones oficiales, que contienen la información necesaria, y para ello, será conveniente recordar la existencia en R de la función:
+
+```r
+download.file(url, destfile, method, quiet = FALSE, mode = "w",
+              cacheOK = TRUE,
+              extra = getOption("download.file.extra"), ...)
+```
+
+La forma más utilizada de usar esta función es indicando la "url" de descarga y el nombre que tendrá el fichero de destino, "destfile", como puede verse en el siguiente ejemplo:
+
+```{r eval=FALSE}
+download.file(url="http://destio.us.es/calvo/descargas/datos_ordenadores.csv",
+              destfile = "datos_ordenadores.csv")
+```
+En este caso se podría haber indicado un camino relativo para el fichero de destino, por ejemplo, "datos/datos_ordenadores.csv", copiará el fichero en la subcarpeta "datos" (respecto al directorio de trabajo actual).
+
+El uso de esta función puede ser muy útil para hacer el código reproducible y no será necesario escribir el camino en un navegador para llegar a obtener ese fichero. En el INE, muchas veces el enlace de descarga puede obtenerse utilizando el menú flotante que se activa al pulsar sobre el enlace con el botón derecho del ratón.
+
+Por ejemplo, en la siguiente página web del INE: <https://www.ine.es/jaxiT3/Tabla.htm?t=24379&L=0>, aparece a la derecha de la página un botón de "descarga" y si pulsamos sobre el se abre una ventana flotante que nos permite elegir entre diferentes formatos de ficheros para descargar toda la información. Si acercamos el ratón sobre cualquiera de ellos y pulsamos el botón derecho, se podrá copiar el enlace de descarga.
+
+```{r echo=FALSE,out.width="90%",fig.align='center'}
+knitr::include_graphics("imagenes/enlacesine.png")
+```
+
+
+A continuación se muestran los enlaces que se han podido copiar:
+
+\small
+
+Formato | url
+--------|--------------------
+"px" | <https://www.ine.es/jaxiT3/files/t/es/px/24379.px?nocab=1>  
+"excel" | <https://www.ine.es/jaxiT3/files/t/es/xlsx/24379.xlsx?nocab=1>  
+"csv, por tabuladores" | <https://www.ine.es/jaxiT3/files/t/es/csv/24379.csv?nocab=1>
+"csv, separado por ','" | <https://www.ine.es/jaxiT3/files/t/es/csv_c/24379.csv?nocab=1> 
+"csv, separado por ';'" | <https://www.ine.es/jaxiT3/files/t/es/csv_sc/24379.csv?nocab=1> 
+"json" | <https://servicios.ine.es/wstempus/js/es/DATOS_TABLA/24379?tip=AM>
+
+\normalsize
+
+**Nota**. Es interesante observar las ligeras diferencias que existen en las urls de los distintos formatos de ficheros.
+
+
+```{r}
+download.file(
+  url = "https://www.ine.es/jaxiT3/files/t/es/csv/24379.csv?nocab=1",
+  destfile = "24379.csv")
+```
+
+
+**Nota**. Cuando se descargan ficheros excel desde el sistema operativo Windows, se debe añadir la opción `mode = "wb"` en la llamada a la función: `download.file()`.
+
+
+```{r}
+download.file(
+  url = "https://www.ine.es/jaxiT3/files/t/es/xlsx/24379.xlsx?nocab=1",
+  destfile = "24379.xlsx", mode = "wb")
+```
+
+
+
+# Importar datos desde ficheros csv
+
+Los ficheros "csv" se pueden importar con las funciones del sistema base:
+
+- `read.table()`
+- `read.csv()`
+- `read.csv2()`
+
+La función `read.table()` es la más general y versátil:
+
+```r
+read.table(file, header = FALSE, sep = "", quote = "\"'",
+           dec = ".", numerals = c("allow.loss", "warn.loss", "no.loss"),
+           row.names, col.names, as.is = !stringsAsFactors,
+           na.strings = "NA", colClasses = NA, nrows = -1,
+           skip = 0, check.names = TRUE, fill = !blank.lines.skip,
+           strip.white = FALSE, blank.lines.skip = TRUE,
+           comment.char = "#",
+           allowEscapes = FALSE, flush = FALSE,
+           stringsAsFactors = default.stringsAsFactors(),
+           fileEncoding = "", encoding = "unknown", text, skipNul = FALSE)
+```
+
+
+## Ejemplo: importar ficheros csv
+
+```{r}
+datos.csv = read.table(file = "datosPractica01.csv", header = TRUE, sep = ",")
+```
+
+```{r}
+head(datos.csv,10)
+```
+
+
+
+
+## Ejemplo: importar ficheros csv con el paquete "readr"
+
+**Nota:** Hacerlo con el paso a paso de RStudio.
+
+
+```{r}
+library(readr)
+datosPractica01 <- read_csv("datosPractica01.csv",
+                            col_types = cols(...1 = col_skip()))
+```
+
+
+```{r}
+head(datosPractica01,10)
+```
+
+
+
+
+
+
+# Datos en un fichero RData
+
+
+Los datos bien definidos que contiene el objeto "datos2_mej" podría guardarse en un fichero con formato "RData" para poder utilizarlo en cualquier estudio posterior sobre ellos. Se podría hacer llamando a la función `save()` del siguiente modo:
+
+```r
+save(datos2_mej,file="datos2_mej.RData")
+```
+
+Podría cargarse con ayuda de la función `load()` del siguiente modo:
+
+```r
+load("datos2_mej.RData")
+```
+
+```{r include = FALSE}
+load("datos2_mej.RData")
+```
+
+
+## Ejemplo
+
+```{r}
+load(file = "datosPractica01.RData", verbose = TRUE)
+datos.RData = datos
+str(datos.RData)
+```
+
+
+**Nota:** Hacerlo desde RStudio con ratón.
+
+
+
+## Guardar varios objetos R importados en ficheros RData
+
+Se puede guardar más de un objeto R al ir separándolos por comas.
+
+```{r}
+save(datos.csv, datosPractica01, datos.RData,  
+     file = "datosPractica01grabados.RData")
+# para recuperarlos
+# load(file = "datosPractica01grabados.RData", verbose = T)  
+```
+
+
+
+
+# Importar datos desde excel. Paquetes readxl
+
+Para importar datos contenidos en un fichero excel utilizaremos  el paquete "readxl", cuya función principal es: `read_excel()` (otras variantes con la misma sintaxis son: `read_xlsx()` y `read_xls()`). Los datos importados son del tipo "tibble" (data.frame mejorados).
+
+Su uso es muy sencillo cuando se quiere leer el contenido completo de una hoja en un fichero Excel:
+
+```{r eval=FALSE}
+datos = read_excel("ficheroexcel.xlsx") # equivalente a:
+datos = read_excel("ficheroexcel.xlsx",sheet = 1) 
+```
+
+Su sintaxis completa es la siguiente:
+
+```r
+read_excel(path, sheet = NULL, range = NULL, col_names = TRUE,
+  col_types = NULL, na = "", trim_ws = TRUE, skip = 0,
+  n_max = Inf, guess_max = min(1000, n_max),
+  progress = readxl_progress(), .name_repair = "unique")
+```
+
+
+## Ejemplo: 
+
+```{r}
+library(readxl)
+datos.xlsx = readxl::read_xlsx(path = "datosPractica01.xlsx")
+str(datos.xlsx)
+```
+
+
+## Ejemplo: otras opciones al leer ficheros Excel
+
+
+```{r}
+datos.xlsx.2 = readxl::read_xlsx(path = "datosPractica01.xlsx", 
+                                 sheet = 1, range = "A1:C20")
+head(datos.xlsx.2)
+```
+
+
+## Ejemplo: importar ficheros Excel con el paquete "rio"
+
+Otra opción equivalente es usar la función "`import()`" del paquete R: "rio".
+
+```{r}
+datos.xlsx.3 = rio::import(file = "datosPractica01.xlsx", sheet = 1)
+```
+

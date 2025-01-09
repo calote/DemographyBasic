@@ -1,0 +1,2271 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="es" xml:lang="es"><head>
+
+<meta charset="utf-8">
+<meta name="generator" content="quarto-1.6.32">
+
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+
+
+<title>Práctica 3: Parte 1 (Tidyverse: Principios y uso de dplyr)</title>
+<style>
+code{white-space: pre-wrap;}
+span.smallcaps{font-variant: small-caps;}
+div.columns{display: flex; gap: min(4vw, 1.5em);}
+div.column{flex: auto; overflow-x: auto;}
+div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+ul.task-list{list-style: none;}
+ul.task-list li input[type="checkbox"] {
+  width: 0.8em;
+  margin: 0 0.8em 0.2em -1em; /* quarto-specific, see https://github.com/quarto-dev/quarto-cli/issues/4556 */ 
+  vertical-align: middle;
+}
+/* CSS for syntax highlighting */
+pre > code.sourceCode { white-space: pre; position: relative; }
+pre > code.sourceCode > span { line-height: 1.25; }
+pre > code.sourceCode > span:empty { height: 1.2em; }
+.sourceCode { overflow: visible; }
+code.sourceCode > span { color: inherit; text-decoration: inherit; }
+div.sourceCode { margin: 1em 0; }
+pre.sourceCode { margin: 0; }
+@media screen {
+div.sourceCode { overflow: auto; }
+}
+@media print {
+pre > code.sourceCode { white-space: pre-wrap; }
+pre > code.sourceCode > span { display: inline-block; text-indent: -5em; padding-left: 5em; }
+}
+pre.numberSource code
+  { counter-reset: source-line 0; }
+pre.numberSource code > span
+  { position: relative; left: -4em; counter-increment: source-line; }
+pre.numberSource code > span > a:first-child::before
+  { content: counter(source-line);
+    position: relative; left: -1em; text-align: right; vertical-align: baseline;
+    border: none; display: inline-block;
+    -webkit-touch-callout: none; -webkit-user-select: none;
+    -khtml-user-select: none; -moz-user-select: none;
+    -ms-user-select: none; user-select: none;
+    padding: 0 4px; width: 4em;
+  }
+pre.numberSource { margin-left: 3em;  padding-left: 4px; }
+div.sourceCode
+  {   }
+@media screen {
+pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
+}
+</style>
+
+
+<script src="practica03a_files/libs/clipboard/clipboard.min.js"></script>
+<script src="practica03a_files/libs/quarto-html/quarto.js"></script>
+<script src="practica03a_files/libs/quarto-html/popper.min.js"></script>
+<script src="practica03a_files/libs/quarto-html/tippy.umd.min.js"></script>
+<script src="practica03a_files/libs/quarto-html/anchor.min.js"></script>
+<link href="practica03a_files/libs/quarto-html/tippy.css" rel="stylesheet">
+<link href="practica03a_files/libs/quarto-html/quarto-syntax-highlighting-2486e1f0a3ee9ee1fc393803a1361cdb.css" rel="stylesheet" id="quarto-text-highlighting-styles">
+<script src="practica03a_files/libs/bootstrap/bootstrap.min.js"></script>
+<link href="practica03a_files/libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
+<link href="practica03a_files/libs/bootstrap/bootstrap-677b520d69fcc55ab41b4b425631e74d.min.css" rel="stylesheet" append-hash="true" id="quarto-bootstrap" data-mode="light">
+<link href="practica03a_files/libs/pagedtable-1.1/css/pagedtable.css" rel="stylesheet">
+<script src="practica03a_files/libs/pagedtable-1.1/js/pagedtable.js"></script>
+
+
+</head>
+
+<body>
+
+<div id="quarto-content" class="page-columns page-rows-contents page-layout-article">
+<div id="quarto-margin-sidebar" class="sidebar margin-sidebar">
+  <nav id="TOC" role="doc-toc" class="toc-active">
+    <h2 id="toc-title">Tabla de contenidos</h2>
+   
+  <ul>
+  <li><a href="#el-sistema-tidyverse-dplyr-tidyr-etc" id="toc-el-sistema-tidyverse-dplyr-tidyr-etc" class="nav-link active" data-scroll-target="#el-sistema-tidyverse-dplyr-tidyr-etc"><span class="header-section-number">1</span> El sistema tidyverse: dplyr, tidyr, etc</a>
+  <ul>
+  <li><a href="#los-4-principios-del-tidyverse" id="toc-los-4-principios-del-tidyverse" class="nav-link" data-scroll-target="#los-4-principios-del-tidyverse"><span class="header-section-number">1.1</span> Los 4 principios del tidyverse</a></li>
+  <li><a href="#uso-de-dplyr" id="toc-uso-de-dplyr" class="nav-link" data-scroll-target="#uso-de-dplyr"><span class="header-section-number">1.2</span> Uso de dplyr</a>
+  <ul class="collapse">
+  <li><a href="#ordenación-de-los-datos" id="toc-ordenación-de-los-datos" class="nav-link" data-scroll-target="#ordenación-de-los-datos"><span class="header-section-number">1.2.1</span> Ordenación de los datos</a></li>
+  <li><a href="#selección-de-variables-select" id="toc-selección-de-variables-select" class="nav-link" data-scroll-target="#selección-de-variables-select"><span class="header-section-number">1.2.2</span> Selección de variables: select()</a></li>
+  <li><a href="#filtrado-de-observaciones-individuos-filter" id="toc-filtrado-de-observaciones-individuos-filter" class="nav-link" data-scroll-target="#filtrado-de-observaciones-individuos-filter"><span class="header-section-number">1.2.3</span> Filtrado de observaciones-individuos: filter()</a></li>
+  <li><a href="#añadir-nuevas-columnas-o-variables-calculadas-mutate" id="toc-añadir-nuevas-columnas-o-variables-calculadas-mutate" class="nav-link" data-scroll-target="#añadir-nuevas-columnas-o-variables-calculadas-mutate"><span class="header-section-number">1.2.4</span> Añadir nuevas columnas o variables calculadas: mutate()</a></li>
+  <li><a href="#obtener-resúmenes-estadísticos-summarise" id="toc-obtener-resúmenes-estadísticos-summarise" class="nav-link" data-scroll-target="#obtener-resúmenes-estadísticos-summarise"><span class="header-section-number">1.2.5</span> Obtener resúmenes estadísticos: summarise()</a></li>
+  <li><a href="#agrupar-filas-u-observaciones-individuos-group_by.-uso-con-summarise" id="toc-agrupar-filas-u-observaciones-individuos-group_by.-uso-con-summarise" class="nav-link" data-scroll-target="#agrupar-filas-u-observaciones-individuos-group_by.-uso-con-summarise"><span class="header-section-number">1.2.6</span> Agrupar filas u observaciones-individuos: group_by(). Uso con summarise()</a></li>
+  <li><a href="#uso-de-case_when-para-generalizar-el-ifelse-en-el-sistema-tidyverse" id="toc-uso-de-case_when-para-generalizar-el-ifelse-en-el-sistema-tidyverse" class="nav-link" data-scroll-target="#uso-de-case_when-para-generalizar-el-ifelse-en-el-sistema-tidyverse"><span class="header-section-number">1.2.7</span> Uso de “case_when” para generalizar el “ifelse” en el sistema tidyverse</a></li>
+  </ul></li>
+  <li><a href="#recursos-adicionales" id="toc-recursos-adicionales" class="nav-link" data-scroll-target="#recursos-adicionales"><span class="header-section-number">1.3</span> Recursos adicionales</a></li>
+  </ul></li>
+  </ul>
+<div class="quarto-alternate-formats"><h2>Otros formatos</h2><ul><li><a href="practica03a.pdf"><i class="bi bi-file-pdf"></i>PDF</a></li></ul></div></nav>
+</div>
+<main class="content" id="quarto-document-content">
+
+<header id="title-block-header" class="quarto-title-block default">
+<div class="quarto-title">
+<div class="quarto-title-block"><div><h1 class="title">Práctica 3: Parte 1 (Tidyverse: Principios y uso de dplyr)</h1><button type="button" class="btn code-tools-button" id="quarto-code-tools-source"><i class="bi"></i> Código</button></div></div>
+</div>
+
+
+
+<div class="quarto-title-meta">
+
+    
+  
+    
+  </div>
+  
+
+
+</header>
+
+
+<section id="el-sistema-tidyverse-dplyr-tidyr-etc" class="level1" data-number="1">
+<h1 data-number="1"><span class="header-section-number">1</span> El sistema tidyverse: dplyr, tidyr, etc</h1>
+<p>En primer lugar, se importarán los datos almacenados en un fichero “RData” (formato binario de R), que contiene datos de la población de las provincias de España obtenidas en el Censo de 2001.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb1"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="fu">load</span>(<span class="st">"datosPobEspCenso2001.RData"</span>,<span class="at">verbose =</span> <span class="cn">TRUE</span>)</span></code><button title="Copiar al portapapeles" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>Loading objects:
+  datos</code></pre>
+</div>
+</div>
+<p>El fichero “datosPobEspCenso2001.RData” contiene el objeto R del tipo tibble (una mejora del objeto data.frame) con los datos.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb3"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a><span class="fu">str</span>(datos)</span></code><button title="Copiar al portapapeles" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>Classes 'tbl_df', 'tbl' and 'data.frame':   52 obs. of  5 variables:
+ $ Provincia: chr  "01-Álava" "02-Albacete" "03-Alicante/Alacant" "04-Almería" ...
+ $ CCAA     : chr  "País Vasco" "Castilla-La Mancha" "Comunidad Valenciana" "Andalucía" ...
+ $ TOTAL    : num  286387 364835 1461925 536731 1062998 ...
+ $ Varon    : num  142036 181461 722162 272023 508995 ...
+ $ Mujer    : num  144351 183374 739763 264708 554003 ...</code></pre>
+</div>
+</div>
+<p>Antes de seguir, se cargará el sistema “tidyverse”, que a su vez carga una serie de paquetes asociados a este sistema. En este manual nos centraremos principalmente en: “dplyr” y “ggplot2”.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb5"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(tidyverse)</span>
+<span id="cb5-2"><a href="#cb5-2" aria-hidden="true" tabindex="-1"></a><span class="co">#library(tidyverse,warn.conflicts = FALSE)</span></span></code><button title="Copiar al portapapeles" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<div class="cell" data-layout-align="center">
+<div class="cell-output-display">
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure">
+<p><img src="imagenes/tidyversesistema.png" class="img-fluid quarto-figure quarto-figure-center figure-img" style="width:80.0%"></p>
+</figure>
+</div>
+</div>
+</div>
+<p>En R, al escribir el nombre del objeto que contiene los datos, nos mostrará sus valores. Aunque al ser, un objeto de tipo “tibble”, mostrará solamente una representación corta de ellos.</p>
+<p>Veamos en este caso el <strong>contenido del objeto “datos”</strong> con información sobre la población de las provincias de España en el Censo de 2001. <em>Nota</em>: en este documento, los datos se mostrarán con ayuda en la cabecera yaml de: <code>df-print: paged</code> en html y <code>df-print: kable</code> en pdf.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb6"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a>datos</span></code><button title="Copiar al portapapeles" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<div data-pagedtable="false">
+  <script data-pagedtable-source="" type="application/json">
+{"columns":[{"label":["Provincia"],"name":[1],"type":["chr"],"align":["left"]},{"label":["CCAA"],"name":[2],"type":["chr"],"align":["left"]},{"label":["TOTAL"],"name":[3],"type":["dbl"],"align":["right"]},{"label":["Varon"],"name":[4],"type":["dbl"],"align":["right"]},{"label":["Mujer"],"name":[5],"type":["dbl"],"align":["right"]}],"data":[{"1":"01-Álava","2":"País Vasco","3":"286387","4":"142036","5":"144351"},{"1":"02-Albacete","2":"Castilla-La Mancha","3":"364835","4":"181461","5":"183374"},{"1":"03-Alicante/Alacant","2":"Comunidad Valenciana","3":"1461925","4":"722162","5":"739763"},{"1":"04-Almería","2":"Andalucía","3":"536731","4":"272023","5":"264708"},{"1":"33-Asturias","2":"Asturias (Principado de)","3":"1062998","4":"508995","5":"554003"},{"1":"05-Ávila","2":"Castilla y León","3":"163442","4":"81850","5":"81592"},{"1":"06-Badajoz","2":"Extremadura","3":"654882","4":"323541","5":"331341"},{"1":"07-Balears (Illes)","2":"Balears (Illes)","3":"841669","4":"417314","5":"424355"},{"1":"08-Barcelona","2":"Cataluña","3":"4805927","4":"2341592","5":"2464335"},{"1":"09-Burgos","2":"Castilla y León","3":"348934","4":"174576","5":"174358"},{"1":"10-Cáceres","2":"Extremadura","3":"403621","4":"200820","5":"202801"},{"1":"11-Cádiz","2":"Andalucía","3":"1116491","4":"552463","5":"564028"},{"1":"39-Cantabria","2":"Cantabria","3":"535131","4":"260586","5":"274545"},{"1":"12-Castellón/Castelló","2":"Comunidad Valenciana","3":"484566","4":"240673","5":"243893"},{"1":"51-Ceuta","2":"Ceuta","3":"71505","4":"35949","5":"35556"},{"1":"13-Ciudad Real","2":"Castilla-La Mancha","3":"478957","4":"235189","5":"243768"},{"1":"14-Córdoba","2":"Andalucía","3":"761657","4":"372464","5":"389193"},{"1":"15-Coruña (A)","2":"Galicia","3":"1096027","4":"525388","5":"570639"},{"1":"16-Cuenca","2":"Castilla-La Mancha","3":"200346","4":"99959","5":"100387"},{"1":"17-Girona","2":"Cataluña","3":"565304","4":"280830","5":"284474"},{"1":"18-Granada","2":"Andalucía","3":"821660","4":"401638","5":"420022"},{"1":"19-Guadalajara","2":"Castilla-La Mancha","3":"174999","4":"88535","5":"86464"},{"1":"20-Guipúzcoa","2":"País Vasco","3":"673563","4":"330288","5":"343275"},{"1":"21-Huelva","2":"Andalucía","3":"462579","4":"229013","5":"233566"},{"1":"22-Huesca","2":"Aragón","3":"206502","4":"104089","5":"102413"},{"1":"23-Jaén","2":"Andalucía","3":"643820","4":"317343","5":"326477"},{"1":"24-León","2":"Castilla y León","3":"488751","4":"238139","5":"250612"},{"1":"25-Lleida","2":"Cataluña","3":"362206","4":"180425","5":"181781"},{"1":"27-Lugo","2":"Galicia","3":"357648","4":"173339","5":"184309"},{"1":"28-Madrid","2":"Madrid (Comunidad de)","3":"5423384","4":"2609746","5":"2813638"},{"1":"29-Málaga","2":"Andalucía","3":"1287017","4":"630902","5":"656115"},{"1":"52-Melilla","2":"Melilla","3":"66411","4":"33134","5":"33277"},{"1":"30-Murcia","2":"Murcia (Región de)","3":"1197646","4":"597265","5":"600381"},{"1":"31-Navarra","2":"Navarra (Comunidad Foral de)","3":"555829","4":"276629","5":"279200"},{"1":"32-Ourense","2":"Galicia","3":"338446","4":"161968","5":"176478"},{"1":"34-Palencia","2":"Castilla y León","3":"174143","4":"85955","5":"88188"},{"1":"35-Palmas (Las)","2":"Canarias","3":"887676","4":"444761","5":"442915"},{"1":"36-Pontevedra","2":"Galicia","3":"903759","4":"433683","5":"470076"},{"1":"26-Rioja (La)","2":"Rioja (La)","3":"276702","4":"137827","5":"138875"},{"1":"37-Salamanca","2":"Castilla y León","3":"345609","4":"167948","5":"177661"},{"1":"38-Santa Cruz de Tenerife","2":"Canarias","3":"806801","4":"398205","5":"408596"},{"1":"40-Segovia","2":"Castilla y León","3":"147694","4":"73973","5":"73721"},{"1":"41-Sevilla","2":"Andalucía","3":"1727603","4":"846220","5":"881383"},{"1":"42-Soria","2":"Castilla y León","3":"90717","4":"45443","5":"45274"},{"1":"43-Tarragona","2":"Cataluña","3":"609673","4":"303684","5":"305989"},{"1":"44-Teruel","2":"Aragón","3":"135858","4":"68724","5":"67134"},{"1":"45-Toledo","2":"Castilla-La Mancha","3":"541379","4":"270406","5":"270973"},{"1":"46-Valencia/València","2":"Comunidad Valenciana","3":"2216285","4":"1084149","5":"1132136"},{"1":"47-Valladolid","2":"Castilla y León","3":"498094","4":"243999","5":"254095"},{"1":"48-Vizcaya","2":"País Vasco","3":"1122637","4":"545557","5":"577080"},{"1":"49-Zamora","2":"Castilla y León","3":"199090","4":"97991","5":"101099"},{"1":"50-Zaragoza","2":"Aragón","3":"861855","4":"422033","5":"439822"}],"options":{"columns":{"min":{},"max":[10]},"rows":{"min":[10],"max":[10]},"pages":{}}}
+  </script>
+</div>
+</div>
+</div>
+<section id="los-4-principios-del-tidyverse" class="level2" data-number="1.1">
+<h2 data-number="1.1" class="anchored" data-anchor-id="los-4-principios-del-tidyverse"><span class="header-section-number">1.1</span> Los 4 principios del tidyverse</h2>
+<p>Los 4 principios del sistema tidyverse son los siguientes:</p>
+<ul>
+<li><p><strong>Principio 1</strong>: se usarán datos convenientemente organizados.</p>
+<ul>
+<li>Cada fila o línea de los datos es una observación.</li>
+<li>Cada columna es una variable.</li>
+</ul>
+<p><img src="imagenes/tidyverse04.png" class="img-fluid" style="width:90.0%"></p>
+<p>En el de la izquierda se muestran 2 datos de un alumno en una sola fila (calificación en “Mate” y calificación en “Ingles”).</p>
+<p>En el de la derecha se organiza de modo que hay dos filas, una para cada observación-calificación.</p></li>
+<li><p><strong>Principio 2</strong>: en cada paso se usa una función o herramienta.</p>
+<p>Si se quisiera obtener: “<strong>la media actual de cada estudiante en la asignatura Matemáticas</strong>”, los pasos que se necesitan realizar sobre los datos son:</p>
+<ol type="1">
+<li><em>Filtrado</em>. Nos quedamos con únicamente las calificaciones de la asignatura Matemáticas.</li>
+<li><em>Agrupación</em>. Agrupamos para cada apellidos-nombre (alumno) diferente.</li>
+<li><em>Cálculo</em>. Para cada alumno calculamos la media de sus notas de Matemáticas.</li>
+<li><em>Mostrar resultados</em>. Se mostrarían para cada alumno sus respectivas medias.</li>
+</ol></li>
+<li><p><strong>Principio 3</strong>: uso del operador tubería <strong>“<code>%&gt;%</code>”</strong> (incluido en “tidyverse”) o <strong>“<code>|&gt;</code>”</strong> (definido en R a partir de la versión 4.1) para <em>combinar</em> las herramientas o funciones a utilizar. Facilitará la lectura y la modificación del código.</p></li>
+<li><p><strong>Principio 4</strong>: cada paso es una consulta o un comando.</p></li>
+</ul>
+<p>Con el sistema tidyverse, la respuesta a la cuestión planteada se obtendría del siguiente modo:</p>
+<div class="sourceCode" id="cb7"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a>datos <span class="sc">%&gt;%</span></span>
+<span id="cb7-2"><a href="#cb7-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">filter</span>(materia <span class="sc">==</span> <span class="st">"mate"</span>) <span class="sc">%&gt;%</span>            <span class="co"># filtrado</span></span>
+<span id="cb7-3"><a href="#cb7-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">group_by</span>(apellido,primer) <span class="sc">%&gt;%</span>            <span class="co"># agrupación</span></span>
+<span id="cb7-4"><a href="#cb7-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">summarise</span>(<span class="at">media =</span> <span class="fu">mean</span>(puntos))          <span class="co"># cálculo   </span></span></code><button title="Copiar al portapapeles" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<p>Equivalente (nuevas versiones de R):</p>
+<div class="sourceCode" id="cb8"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a>datos <span class="sc">|&gt;</span> </span>
+<span id="cb8-2"><a href="#cb8-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">filter</span>(materia <span class="sc">==</span> <span class="st">"mate"</span>) <span class="sc">|&gt;</span> </span>
+<span id="cb8-3"><a href="#cb8-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">group_by</span>(apellido,primer) <span class="sc">|&gt;</span> </span>
+<span id="cb8-4"><a href="#cb8-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">summarise</span>(<span class="at">media =</span> <span class="fu">mean</span>(puntos))</span></code><button title="Copiar al portapapeles" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<p><strong>Nota:</strong> la información en “datos” no verifica los principios del sistema tidyverse (en una fila no hay un solo valor por provincia), pero como veremos con ejemplos a continuación, aunque no se cumpla lo recomendado, también es posible aplicar las herramientas del paquete tidyverse a datos que no cumplen sus principios.</p>
+</section>
+<section id="uso-de-dplyr" class="level2" data-number="1.2">
+<h2 data-number="1.2" class="anchored" data-anchor-id="uso-de-dplyr"><span class="header-section-number">1.2</span> Uso de dplyr</h2>
+<p>La librería o paquete “dplyr” contiene una serie de herramientas que facilitarán la manipulación básica de los datos, además de usar el operador “tubería”: <code>%&gt;%</code> (del paquete “magrittr”) o <code>|&gt;</code> (incluido en nuevas versiones de R) que permiten <strong>encadenar</strong> varias herramientas de forma consecutiva, que como se verá más adelante, <strong>simplificará</strong> su lectura. Además, de <strong>acelerar</strong> la obtención de los resultados respecto al uso con el sistema base de R, sobre todo cuando los datasets son muy grandes. La mayoría de estas herramientas tiene sus equivalentes en el sistema base de R o en otros paquetes R, pero se están convirtiendo en un estándar.</p>
+<div style="page-break-after: always;"></div>
+<p>Las principales herramientas que contiene dplyr son las siguientes:</p>
+<ul>
+<li><code>select()</code>: para seleccionar determinadas columnas o variables.</li>
+<li><code>filter()</code>: para seleccionar determinadas filas o individuos-observaciones que verifican determinadas condiciones.</li>
+<li><code>arrange()</code>: para ordenar los datos por determinadas columnas.</li>
+<li><code>mutate()</code>: para construir nuevas columnas o variables.</li>
+<li><code>summarise()</code>: para obtener columnas de resumen estadístico.</li>
+<li><code>group_by()</code>: para agrupar las filas o individuos-observaciones por los valores de una o varias columnas o variables.</li>
+</ul>
+<p>Existen otras herramientas básicas como: <code>slice()</code> (selecciona filas por posición), <code>rename()</code>, <code>pull()</code> (convierte columna a un vector), <code>sample_n()</code> y <code>sample_frac()</code> (seleccionar filas de forma aleatoria), <code>glimpse()</code> (para presentar en consola), …</p>
+<p>También existen herramientas que permiten realizar operaciones más avanzadas que ayudan a relacionar varios “data.frame”: <code>inner_join(x, y)</code>, <code>left_join(x, y)</code>, <code>right_join(x, y)</code>, <code>semi_join(x, y)</code>, <code>anti_join(x, y)</code>, …, y crear un solo “data.frame”.</p>
+<p>Aprenderemos el uso básico de “dplyr” con ayuda de ejemplos.</p>
+<p>R muestra de forma no muy amigable los datos (como se ha visto anteriormente), por ello se va a usar la función <code>kable()</code> del paquete “knitr” para mejorar su presentación.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb9"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb9-1"><a href="#cb9-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(knitr)</span></code><button title="Copiar al portapapeles" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stderr">
+<pre><code>Warning: package 'knitr' was built under R version 4.3.3</code></pre>
+</div>
+<div class="sourceCode cell-code" id="cb11"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb11-1"><a href="#cb11-1" aria-hidden="true" tabindex="-1"></a><span class="fu">kable</span>(<span class="fu">head</span>(datos))</span></code><button title="Copiar al portapapeles" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<table class="caption-top table table-sm table-striped small">
+<colgroup>
+<col style="width: 29%">
+<col style="width: 37%">
+<col style="width: 11%">
+<col style="width: 10%">
+<col style="width: 10%">
+</colgroup>
+<thead>
+<tr class="header">
+<th style="text-align: left;">Provincia</th>
+<th style="text-align: left;">CCAA</th>
+<th style="text-align: right;">TOTAL</th>
+<th style="text-align: right;">Varon</th>
+<th style="text-align: right;">Mujer</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td style="text-align: left;">01-Álava</td>
+<td style="text-align: left;">País Vasco</td>
+<td style="text-align: right;">286387</td>
+<td style="text-align: right;">142036</td>
+<td style="text-align: right;">144351</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">02-Albacete</td>
+<td style="text-align: left;">Castilla-La Mancha</td>
+<td style="text-align: right;">364835</td>
+<td style="text-align: right;">181461</td>
+<td style="text-align: right;">183374</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">03-Alicante/Alacant</td>
+<td style="text-align: left;">Comunidad Valenciana</td>
+<td style="text-align: right;">1461925</td>
+<td style="text-align: right;">722162</td>
+<td style="text-align: right;">739763</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">04-Almería</td>
+<td style="text-align: left;">Andalucía</td>
+<td style="text-align: right;">536731</td>
+<td style="text-align: right;">272023</td>
+<td style="text-align: right;">264708</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">33-Asturias</td>
+<td style="text-align: left;">Asturias (Principado de)</td>
+<td style="text-align: right;">1062998</td>
+<td style="text-align: right;">508995</td>
+<td style="text-align: right;">554003</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">05-Ávila</td>
+<td style="text-align: left;">Castilla y León</td>
+<td style="text-align: right;">163442</td>
+<td style="text-align: right;">81850</td>
+<td style="text-align: right;">81592</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+<p><strong>Nota</strong>: con la función <code>head(datos)</code> se mostrarían únicamente las primeras 6 filas de los datos. Pero también se podrían mostrar en número diferente, por ejemplo, para mostrar las 10 primeras filas, se escribiría: <code>head(datos,10)</code>.</p>
+<section id="ordenación-de-los-datos" class="level3" data-number="1.2.1">
+<h3 data-number="1.2.1" class="anchored" data-anchor-id="ordenación-de-los-datos"><span class="header-section-number">1.2.1</span> Ordenación de los datos</h3>
+<!-- La información en "datos" no aparece ordenada de ninguna forma particular.  -->
+<p>La función <code>arrange()</code> del paquete “dplyr” nos va a permitir ordenar los datos por una o más columnas. Veamos varios ejemplos.</p>
+<p>En el siguiente ejemplo, <strong>ordenamos los datos en orden ascendente del valor en la columna o variable “TOTAL”</strong> (población total de la provincia) y mostramos únicamente las 10 primeras filas:</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb12"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb12-1"><a href="#cb12-1" aria-hidden="true" tabindex="-1"></a><span class="fu">head</span>(<span class="fu">arrange</span>(datos, TOTAL),<span class="dv">10</span>)</span></code><button title="Copiar al portapapeles" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<div data-pagedtable="false">
+  <script data-pagedtable-source="" type="application/json">
+{"columns":[{"label":["Provincia"],"name":[1],"type":["chr"],"align":["left"]},{"label":["CCAA"],"name":[2],"type":["chr"],"align":["left"]},{"label":["TOTAL"],"name":[3],"type":["dbl"],"align":["right"]},{"label":["Varon"],"name":[4],"type":["dbl"],"align":["right"]},{"label":["Mujer"],"name":[5],"type":["dbl"],"align":["right"]}],"data":[{"1":"52-Melilla","2":"Melilla","3":"66411","4":"33134","5":"33277"},{"1":"51-Ceuta","2":"Ceuta","3":"71505","4":"35949","5":"35556"},{"1":"42-Soria","2":"Castilla y León","3":"90717","4":"45443","5":"45274"},{"1":"44-Teruel","2":"Aragón","3":"135858","4":"68724","5":"67134"},{"1":"40-Segovia","2":"Castilla y León","3":"147694","4":"73973","5":"73721"},{"1":"05-Ávila","2":"Castilla y León","3":"163442","4":"81850","5":"81592"},{"1":"34-Palencia","2":"Castilla y León","3":"174143","4":"85955","5":"88188"},{"1":"19-Guadalajara","2":"Castilla-La Mancha","3":"174999","4":"88535","5":"86464"},{"1":"49-Zamora","2":"Castilla y León","3":"199090","4":"97991","5":"101099"},{"1":"16-Cuenca","2":"Castilla-La Mancha","3":"200346","4":"99959","5":"100387"}],"options":{"columns":{"min":{},"max":[10]},"rows":{"min":[10],"max":[10]},"pages":{}}}
+  </script>
+</div>
+</div>
+</div>
+<p>Puede verse que la menos poblada es Melilla con 66.411 habitantes, seguida de Ceuta, Soria, Teruel y Segovia.</p>
+<p>Ese mismo objetivo se puede conseguir con ayuda del operador tubería (o pipe) <code>%&gt;%</code> para encadenar las mismas operaciones de forma consecutiva, como se puede ver en el siguiente código:</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb13"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb13-1"><a href="#cb13-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Se podría escribir así: datos %&gt;% arrange(TOTAL) %&gt;% head(10)</span></span>
+<span id="cb13-2"><a href="#cb13-2" aria-hidden="true" tabindex="-1"></a>datos <span class="sc">%&gt;%</span> </span>
+<span id="cb13-3"><a href="#cb13-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">arrange</span>(TOTAL) <span class="sc">%&gt;%</span> </span>
+<span id="cb13-4"><a href="#cb13-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">head</span>(<span class="dv">10</span>)</span></code><button title="Copiar al portapapeles" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<div data-pagedtable="false">
+  <script data-pagedtable-source="" type="application/json">
+{"columns":[{"label":["Provincia"],"name":[1],"type":["chr"],"align":["left"]},{"label":["CCAA"],"name":[2],"type":["chr"],"align":["left"]},{"label":["TOTAL"],"name":[3],"type":["dbl"],"align":["right"]},{"label":["Varon"],"name":[4],"type":["dbl"],"align":["right"]},{"label":["Mujer"],"name":[5],"type":["dbl"],"align":["right"]}],"data":[{"1":"52-Melilla","2":"Melilla","3":"66411","4":"33134","5":"33277"},{"1":"51-Ceuta","2":"Ceuta","3":"71505","4":"35949","5":"35556"},{"1":"42-Soria","2":"Castilla y León","3":"90717","4":"45443","5":"45274"},{"1":"44-Teruel","2":"Aragón","3":"135858","4":"68724","5":"67134"},{"1":"40-Segovia","2":"Castilla y León","3":"147694","4":"73973","5":"73721"},{"1":"05-Ávila","2":"Castilla y León","3":"163442","4":"81850","5":"81592"},{"1":"34-Palencia","2":"Castilla y León","3":"174143","4":"85955","5":"88188"},{"1":"19-Guadalajara","2":"Castilla-La Mancha","3":"174999","4":"88535","5":"86464"},{"1":"49-Zamora","2":"Castilla y León","3":"199090","4":"97991","5":"101099"},{"1":"16-Cuenca","2":"Castilla-La Mancha","3":"200346","4":"99959","5":"100387"}],"options":{"columns":{"min":{},"max":[10]},"rows":{"min":[10],"max":[10]},"pages":{}}}
+  </script>
+</div>
+</div>
+</div>
+<p>Se puede leer del siguiente modo: <strong>“a datos se aplica una ordenación según la columna TOTAL y a continuación al resultado se aplica que se muestren únicamente las 10 primeras filas”</strong>.</p>
+<div class="callout callout-style-default callout-note callout-titled">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+Nota
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p>En RStudio, para insertar “<code>%&gt;%</code>” en el editor o en la consola, se puede utilizar la <strong>combinación de teclas: Ctrl+May+M (en Mac: Cmd+May+M)</strong>.</p>
+</div>
+</div>
+<div class="callout callout-style-default callout-note callout-titled">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+Nota
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p><strong>Lo que hace realmente el operador tubería es colocar el elemento resultante de lo que está a su izquierda como primer argumento de la función que tiene a su derecha.</strong></p>
+<p><code>x %&gt;% f(y)        es lo mismo que    f(x,y)</code></p>
+<p><code>x |&gt;  f(y)        es lo mismo que    f(x,y)</code></p>
+<p><code>y %&gt;% f(x, ., z)  es lo mismo que    f(x,y,z)</code></p>
+<p><strong>Importante</strong>. El operador “<code>%&gt;%</code>” se puede utilizar también con cualquier función del sistema base de R u otra librería.</p>
+</div>
+</div>
+<p>El ejemplo, anterior sería equivalente al siguiente, en el que se tiene que ir dando nombres diferentes de objetos (más difícil de leer):</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb14"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb14-1"><a href="#cb14-1" aria-hidden="true" tabindex="-1"></a>elemento01 <span class="ot">=</span> <span class="fu">arrange</span>(datos,TOTAL)</span>
+<span id="cb14-2"><a href="#cb14-2" aria-hidden="true" tabindex="-1"></a>elemento02 <span class="ot">=</span> <span class="fu">head</span>(elemento01,<span class="dv">10</span>)</span>
+<span id="cb14-3"><a href="#cb14-3" aria-hidden="true" tabindex="-1"></a>elemento02</span></code><button title="Copiar al portapapeles" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<div data-pagedtable="false">
+  <script data-pagedtable-source="" type="application/json">
+{"columns":[{"label":["Provincia"],"name":[1],"type":["chr"],"align":["left"]},{"label":["CCAA"],"name":[2],"type":["chr"],"align":["left"]},{"label":["TOTAL"],"name":[3],"type":["dbl"],"align":["right"]},{"label":["Varon"],"name":[4],"type":["dbl"],"align":["right"]},{"label":["Mujer"],"name":[5],"type":["dbl"],"align":["right"]}],"data":[{"1":"52-Melilla","2":"Melilla","3":"66411","4":"33134","5":"33277"},{"1":"51-Ceuta","2":"Ceuta","3":"71505","4":"35949","5":"35556"},{"1":"42-Soria","2":"Castilla y León","3":"90717","4":"45443","5":"45274"},{"1":"44-Teruel","2":"Aragón","3":"135858","4":"68724","5":"67134"},{"1":"40-Segovia","2":"Castilla y León","3":"147694","4":"73973","5":"73721"},{"1":"05-Ávila","2":"Castilla y León","3":"163442","4":"81850","5":"81592"},{"1":"34-Palencia","2":"Castilla y León","3":"174143","4":"85955","5":"88188"},{"1":"19-Guadalajara","2":"Castilla-La Mancha","3":"174999","4":"88535","5":"86464"},{"1":"49-Zamora","2":"Castilla y León","3":"199090","4":"97991","5":"101099"},{"1":"16-Cuenca","2":"Castilla-La Mancha","3":"200346","4":"99959","5":"100387"}],"options":{"columns":{"min":{},"max":[10]},"rows":{"min":[10],"max":[10]},"pages":{}}}
+  </script>
+</div>
+</div>
+</div>
+<p><strong>Ejemplo</strong>. Se quieren presentar los datos ordenados por <strong>CCAA</strong> (comunidad autónoma) y en caso de empate ordene de forma <strong>descendente</strong> según <strong>TOTAL</strong> (se usa: <code>desc()</code>).</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb15"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb15-1"><a href="#cb15-1" aria-hidden="true" tabindex="-1"></a>datos <span class="sc">%&gt;%</span> </span>
+<span id="cb15-2"><a href="#cb15-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">arrange</span>(CCAA,<span class="fu">desc</span>(TOTAL)) <span class="sc">%&gt;%</span> </span>
+<span id="cb15-3"><a href="#cb15-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">head</span>(<span class="dv">15</span>) <span class="sc">%&gt;%</span> </span>
+<span id="cb15-4"><a href="#cb15-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">kable</span>(<span class="at">booktabs =</span> <span class="cn">TRUE</span>)</span></code><button title="Copiar al portapapeles" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<table class="caption-top table table-sm table-striped small">
+<colgroup>
+<col style="width: 35%">
+<col style="width: 34%">
+<col style="width: 10%">
+<col style="width: 9%">
+<col style="width: 9%">
+</colgroup>
+<thead>
+<tr class="header">
+<th style="text-align: left;">Provincia</th>
+<th style="text-align: left;">CCAA</th>
+<th style="text-align: right;">TOTAL</th>
+<th style="text-align: right;">Varon</th>
+<th style="text-align: right;">Mujer</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td style="text-align: left;">41-Sevilla</td>
+<td style="text-align: left;">Andalucía</td>
+<td style="text-align: right;">1727603</td>
+<td style="text-align: right;">846220</td>
+<td style="text-align: right;">881383</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">29-Málaga</td>
+<td style="text-align: left;">Andalucía</td>
+<td style="text-align: right;">1287017</td>
+<td style="text-align: right;">630902</td>
+<td style="text-align: right;">656115</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">11-Cádiz</td>
+<td style="text-align: left;">Andalucía</td>
+<td style="text-align: right;">1116491</td>
+<td style="text-align: right;">552463</td>
+<td style="text-align: right;">564028</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">18-Granada</td>
+<td style="text-align: left;">Andalucía</td>
+<td style="text-align: right;">821660</td>
+<td style="text-align: right;">401638</td>
+<td style="text-align: right;">420022</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">14-Córdoba</td>
+<td style="text-align: left;">Andalucía</td>
+<td style="text-align: right;">761657</td>
+<td style="text-align: right;">372464</td>
+<td style="text-align: right;">389193</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">23-Jaén</td>
+<td style="text-align: left;">Andalucía</td>
+<td style="text-align: right;">643820</td>
+<td style="text-align: right;">317343</td>
+<td style="text-align: right;">326477</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">04-Almería</td>
+<td style="text-align: left;">Andalucía</td>
+<td style="text-align: right;">536731</td>
+<td style="text-align: right;">272023</td>
+<td style="text-align: right;">264708</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">21-Huelva</td>
+<td style="text-align: left;">Andalucía</td>
+<td style="text-align: right;">462579</td>
+<td style="text-align: right;">229013</td>
+<td style="text-align: right;">233566</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">50-Zaragoza</td>
+<td style="text-align: left;">Aragón</td>
+<td style="text-align: right;">861855</td>
+<td style="text-align: right;">422033</td>
+<td style="text-align: right;">439822</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">22-Huesca</td>
+<td style="text-align: left;">Aragón</td>
+<td style="text-align: right;">206502</td>
+<td style="text-align: right;">104089</td>
+<td style="text-align: right;">102413</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">44-Teruel</td>
+<td style="text-align: left;">Aragón</td>
+<td style="text-align: right;">135858</td>
+<td style="text-align: right;">68724</td>
+<td style="text-align: right;">67134</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">33-Asturias</td>
+<td style="text-align: left;">Asturias (Principado de)</td>
+<td style="text-align: right;">1062998</td>
+<td style="text-align: right;">508995</td>
+<td style="text-align: right;">554003</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">07-Balears (Illes)</td>
+<td style="text-align: left;">Balears (Illes)</td>
+<td style="text-align: right;">841669</td>
+<td style="text-align: right;">417314</td>
+<td style="text-align: right;">424355</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">35-Palmas (Las)</td>
+<td style="text-align: left;">Canarias</td>
+<td style="text-align: right;">887676</td>
+<td style="text-align: right;">444761</td>
+<td style="text-align: right;">442915</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">38-Santa Cruz de Tenerife</td>
+<td style="text-align: left;">Canarias</td>
+<td style="text-align: right;">806801</td>
+<td style="text-align: right;">398205</td>
+<td style="text-align: right;">408596</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+<p>La función <code>arrange()</code> puede ordenar por más de 2 columnas, y el uso de la función <code>desc()</code> sobre “TOTAL” (podría usarse en las columnas que se necesite) ha establecido que la ordenación sea de forma descendente según la columna indicada.</p>
+</section>
+<section id="selección-de-variables-select" class="level3" data-number="1.2.2">
+<h3 data-number="1.2.2" class="anchored" data-anchor-id="selección-de-variables-select"><span class="header-section-number">1.2.2</span> Selección de variables: select()</h3>
+<p>Ahora se usará <code>select()</code> para reducir el dataset al quedarse con determinadas columnas.</p>
+<p><strong>Ejemplo</strong>. Se quiere trabajar únicamente con los datos: nombres de provincia y población total. Para ello, se guarda el resultado obtenido con <code>select()</code> en un objeto R que se ha llamado <code>datos_s01</code>.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb16"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb16-1"><a href="#cb16-1" aria-hidden="true" tabindex="-1"></a>datos_s01 <span class="ot">=</span> datos <span class="sc">%&gt;%</span> </span>
+<span id="cb16-2"><a href="#cb16-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">select</span>(Provincia,TOTAL) </span>
+<span id="cb16-3"><a href="#cb16-3" aria-hidden="true" tabindex="-1"></a><span class="co"># se pueden usar posiciones de columna: select(1,3)</span></span>
+<span id="cb16-4"><a href="#cb16-4" aria-hidden="true" tabindex="-1"></a><span class="co"># también expresiones como: select(1,3:4)</span></span>
+<span id="cb16-5"><a href="#cb16-5" aria-hidden="true" tabindex="-1"></a><span class="fu">head</span>(datos_s01)</span></code><button title="Copiar al portapapeles" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<div data-pagedtable="false">
+  <script data-pagedtable-source="" type="application/json">
+{"columns":[{"label":["Provincia"],"name":[1],"type":["chr"],"align":["left"]},{"label":["TOTAL"],"name":[2],"type":["dbl"],"align":["right"]}],"data":[{"1":"01-Álava","2":"286387"},{"1":"02-Albacete","2":"364835"},{"1":"03-Alicante/Alacant","2":"1461925"},{"1":"04-Almería","2":"536731"},{"1":"33-Asturias","2":"1062998"},{"1":"05-Ávila","2":"163442"}],"options":{"columns":{"min":{},"max":[10]},"rows":{"min":[10],"max":[10]},"pages":{}}}
+  </script>
+</div>
+</div>
+</div>
+<p><strong>Nota:</strong> Con <code>select</code> también se podrían reordenar la colocación de las columnas, apareciendo en el nuevo objeto con las columnas colocadas en el orden en el que se han enumerado en la llamada a la función.</p>
+<p><strong>Ejemplo</strong>. Se quieren obtener las columnas CCAA, Provincia y Población de Mujeres, ordenadas por Población de Mujeres de forma descendente (de mayor a menor).</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb17"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb17-1"><a href="#cb17-1" aria-hidden="true" tabindex="-1"></a>datos <span class="sc">%&gt;%</span> </span>
+<span id="cb17-2"><a href="#cb17-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">select</span>(CCAA,Provincia,Mujer) <span class="sc">%&gt;%</span> </span>
+<span id="cb17-3"><a href="#cb17-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">arrange</span>(<span class="fu">desc</span>(Mujer)) <span class="sc">%&gt;%</span> </span>
+<span id="cb17-4"><a href="#cb17-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">head</span>()</span></code><button title="Copiar al portapapeles" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<div data-pagedtable="false">
+  <script data-pagedtable-source="" type="application/json">
+{"columns":[{"label":["CCAA"],"name":[1],"type":["chr"],"align":["left"]},{"label":["Provincia"],"name":[2],"type":["chr"],"align":["left"]},{"label":["Mujer"],"name":[3],"type":["dbl"],"align":["right"]}],"data":[{"1":"Madrid (Comunidad de)","2":"28-Madrid","3":"2813638"},{"1":"Cataluña","2":"08-Barcelona","3":"2464335"},{"1":"Comunidad Valenciana","2":"46-Valencia/València","3":"1132136"},{"1":"Andalucía","2":"41-Sevilla","3":"881383"},{"1":"Comunidad Valenciana","2":"03-Alicante/Alacant","3":"739763"},{"1":"Andalucía","2":"29-Málaga","3":"656115"}],"options":{"columns":{"min":{},"max":[10]},"rows":{"min":[10],"max":[10]},"pages":{}}}
+  </script>
+</div>
+</div>
+</div>
+</section>
+<section id="filtrado-de-observaciones-individuos-filter" class="level3" data-number="1.2.3">
+<h3 data-number="1.2.3" class="anchored" data-anchor-id="filtrado-de-observaciones-individuos-filter"><span class="header-section-number">1.2.3</span> Filtrado de observaciones-individuos: filter()</h3>
+<p>Una operación muy habitual es reducir el conjunto de datos, al quedarse con aquellas filas u observaciones-individuos que cumplen determinadas condiciones lógicas, o dicho de otro modo, poseen ciertas características que nos interesan.</p>
+<p><strong>Ejemplo</strong>. Se quiere obtener un conjunto de datos que contengan únicamente la información de las provincias de Andalucía que tengan una población total superior a 800.000 habitantes.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb18"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb18-1"><a href="#cb18-1" aria-hidden="true" tabindex="-1"></a>datos_f01 <span class="ot">=</span> datos <span class="sc">%&gt;%</span> </span>
+<span id="cb18-2"><a href="#cb18-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">filter</span>(CCAA <span class="sc">==</span> <span class="st">"Andalucía"</span>, TOTAL<span class="sc">&gt;</span><span class="dv">800000</span>)  </span>
+<span id="cb18-3"><a href="#cb18-3" aria-hidden="true" tabindex="-1"></a>           <span class="co"># '==' para la igualdad en expresiones lógicas</span></span>
+<span id="cb18-4"><a href="#cb18-4" aria-hidden="true" tabindex="-1"></a>datos_f01</span></code><button title="Copiar al portapapeles" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<div data-pagedtable="false">
+  <script data-pagedtable-source="" type="application/json">
+{"columns":[{"label":["Provincia"],"name":[1],"type":["chr"],"align":["left"]},{"label":["CCAA"],"name":[2],"type":["chr"],"align":["left"]},{"label":["TOTAL"],"name":[3],"type":["dbl"],"align":["right"]},{"label":["Varon"],"name":[4],"type":["dbl"],"align":["right"]},{"label":["Mujer"],"name":[5],"type":["dbl"],"align":["right"]}],"data":[{"1":"11-Cádiz","2":"Andalucía","3":"1116491","4":"552463","5":"564028"},{"1":"18-Granada","2":"Andalucía","3":"821660","4":"401638","5":"420022"},{"1":"29-Málaga","2":"Andalucía","3":"1287017","4":"630902","5":"656115"},{"1":"41-Sevilla","2":"Andalucía","3":"1727603","4":"846220","5":"881383"}],"options":{"columns":{"min":{},"max":[10]},"rows":{"min":[10],"max":[10]},"pages":{}}}
+  </script>
+</div>
+</div>
+<div class="sourceCode cell-code" id="cb19"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb19-1"><a href="#cb19-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Equivalente a:</span></span>
+<span id="cb19-2"><a href="#cb19-2" aria-hidden="true" tabindex="-1"></a><span class="co"># datos_f02 = datos %&gt;% </span></span>
+<span id="cb19-3"><a href="#cb19-3" aria-hidden="true" tabindex="-1"></a><span class="co">#  filter(CCAA == "Andalucía" &amp; TOTAL&gt;800000)  </span></span></code><button title="Copiar al portapapeles" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<div class="callout callout-style-default callout-note callout-titled">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+Nota
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p>Como puede verse en el ejemplo anterior se puede añadir más de una condición en la función <code>filter()</code> separándolas por comas. La expresión lógica podría ser tan compleja como se necesite, recordando que se pueden usar paréntesis para facilitar su correcta construcción. Los operadores lógicos más usados son: <code>==</code> (igual), <code>&lt;</code> (menor), <code>&gt;</code> (mayor), <code>&lt;=</code> (menor o igual), <code>&gt;=</code> (mayor o igual), <code>!=</code> (distinto), <code>&amp;</code> (y lógico), <code>|</code> (o lógico).</p>
+</div>
+</div>
+<div class="callout callout-style-default callout-note callout-titled">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+Nota
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p>En <code>filter()</code> se usa muy a menudo la función <code>is.na()</code> para seleccionar las filas que tienen el valor <code>NA</code> en una columna, o también <code>!is.na()</code> para seleccionar las filas que no tienen el valor <code>NA</code> en una columna.</p>
+</div>
+</div>
+<p>En nuestros datos, no aparecen valores NA, pero se podría haber utilizado una llamada del siguiente tipo:</p>
+<div class="sourceCode" id="cb20"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb20-1"><a href="#cb20-1" aria-hidden="true" tabindex="-1"></a>datos <span class="sc">%&gt;%</span> </span>
+<span id="cb20-2"><a href="#cb20-2" aria-hidden="true" tabindex="-1"></a>   <span class="fu">filter</span>(<span class="sc">!</span><span class="fu">is.na</span>(TOTAL))</span></code><button title="Copiar al portapapeles" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<p><strong>Ejemplo</strong>. Se quiere trabajar únicamente con aquellas provincias que tienen más hombres que mujeres, mostrando las variables: Provincia, población de hombres y población de mujeres y ordenando por número de hombres de forma descendente.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb21"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb21-1"><a href="#cb21-1" aria-hidden="true" tabindex="-1"></a>datos <span class="sc">%&gt;%</span> </span>
+<span id="cb21-2"><a href="#cb21-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">filter</span>(Varon <span class="sc">&gt;=</span> Mujer) <span class="sc">%&gt;%</span> </span>
+<span id="cb21-3"><a href="#cb21-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">select</span>(Provincia,Varon,Mujer) <span class="sc">%&gt;%</span> </span>
+<span id="cb21-4"><a href="#cb21-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">arrange</span>(<span class="fu">desc</span>(Varon)) <span class="sc">%&gt;%</span> </span>
+<span id="cb21-5"><a href="#cb21-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">kable</span>(<span class="at">booktabs=</span><span class="cn">TRUE</span>)</span></code><button title="Copiar al portapapeles" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<table class="caption-top table table-sm table-striped small">
+<thead>
+<tr class="header">
+<th style="text-align: left;">Provincia</th>
+<th style="text-align: right;">Varon</th>
+<th style="text-align: right;">Mujer</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td style="text-align: left;">35-Palmas (Las)</td>
+<td style="text-align: right;">444761</td>
+<td style="text-align: right;">442915</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">04-Almería</td>
+<td style="text-align: right;">272023</td>
+<td style="text-align: right;">264708</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">09-Burgos</td>
+<td style="text-align: right;">174576</td>
+<td style="text-align: right;">174358</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">22-Huesca</td>
+<td style="text-align: right;">104089</td>
+<td style="text-align: right;">102413</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">19-Guadalajara</td>
+<td style="text-align: right;">88535</td>
+<td style="text-align: right;">86464</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">05-Ávila</td>
+<td style="text-align: right;">81850</td>
+<td style="text-align: right;">81592</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">40-Segovia</td>
+<td style="text-align: right;">73973</td>
+<td style="text-align: right;">73721</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">44-Teruel</td>
+<td style="text-align: right;">68724</td>
+<td style="text-align: right;">67134</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">42-Soria</td>
+<td style="text-align: right;">45443</td>
+<td style="text-align: right;">45274</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">51-Ceuta</td>
+<td style="text-align: right;">35949</td>
+<td style="text-align: right;">35556</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+<p><strong>Nota</strong>. Cualquiera de las herramientas del paquete “dplyr” se podrían emplear varias veces y en distintas posiciones, siempre que sea sintácticamente correcta la expresión.</p>
+</section>
+<section id="añadir-nuevas-columnas-o-variables-calculadas-mutate" class="level3" data-number="1.2.4">
+<h3 data-number="1.2.4" class="anchored" data-anchor-id="añadir-nuevas-columnas-o-variables-calculadas-mutate"><span class="header-section-number">1.2.4</span> Añadir nuevas columnas o variables calculadas: mutate()</h3>
+<p>La función <code>mutate()</code> permite añadir nuevas columnas a nuestros datos al efectuar algún tipo de operación más o menos compleja, generalmente a partir de los datos de las otras columnas.</p>
+<p><strong>Ejemplo</strong>. Se quieren añadir dos columnas:</p>
+<ul>
+<li>una que contenga la diferencia entre el número de hombres y mujeres,</li>
+<li>y otra que contenga el porcentaje de mujeres respecto al total de la población de la provincia.</li>
+</ul>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb22"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb22-1"><a href="#cb22-1" aria-hidden="true" tabindex="-1"></a>datos_m01 <span class="ot">=</span> datos <span class="sc">%&gt;%</span> </span>
+<span id="cb22-2"><a href="#cb22-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">Diferencia =</span> Varon <span class="sc">-</span> Mujer,</span>
+<span id="cb22-3"><a href="#cb22-3" aria-hidden="true" tabindex="-1"></a>         <span class="at">PorcMuj =</span> <span class="fu">round</span>( <span class="dv">100</span> <span class="sc">*</span> (Mujer<span class="sc">/</span>TOTAL),<span class="dv">2</span>)</span>
+<span id="cb22-4"><a href="#cb22-4" aria-hidden="true" tabindex="-1"></a>         )</span>
+<span id="cb22-5"><a href="#cb22-5" aria-hidden="true" tabindex="-1"></a>datos_m01 <span class="sc">%&gt;%</span> </span>
+<span id="cb22-6"><a href="#cb22-6" aria-hidden="true" tabindex="-1"></a>  <span class="fu">head</span>(<span class="dv">10</span>) <span class="sc">%&gt;%</span> </span>
+<span id="cb22-7"><a href="#cb22-7" aria-hidden="true" tabindex="-1"></a>  <span class="fu">kable</span>(<span class="at">booktabs=</span><span class="cn">TRUE</span>)</span></code><button title="Copiar al portapapeles" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<table class="caption-top table table-sm table-striped small">
+<colgroup>
+<col style="width: 22%">
+<col style="width: 28%">
+<col style="width: 9%">
+<col style="width: 9%">
+<col style="width: 9%">
+<col style="width: 12%">
+<col style="width: 9%">
+</colgroup>
+<thead>
+<tr class="header">
+<th style="text-align: left;">Provincia</th>
+<th style="text-align: left;">CCAA</th>
+<th style="text-align: right;">TOTAL</th>
+<th style="text-align: right;">Varon</th>
+<th style="text-align: right;">Mujer</th>
+<th style="text-align: right;">Diferencia</th>
+<th style="text-align: right;">PorcMuj</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td style="text-align: left;">01-Álava</td>
+<td style="text-align: left;">País Vasco</td>
+<td style="text-align: right;">286387</td>
+<td style="text-align: right;">142036</td>
+<td style="text-align: right;">144351</td>
+<td style="text-align: right;">-2315</td>
+<td style="text-align: right;">50.40</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">02-Albacete</td>
+<td style="text-align: left;">Castilla-La Mancha</td>
+<td style="text-align: right;">364835</td>
+<td style="text-align: right;">181461</td>
+<td style="text-align: right;">183374</td>
+<td style="text-align: right;">-1913</td>
+<td style="text-align: right;">50.26</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">03-Alicante/Alacant</td>
+<td style="text-align: left;">Comunidad Valenciana</td>
+<td style="text-align: right;">1461925</td>
+<td style="text-align: right;">722162</td>
+<td style="text-align: right;">739763</td>
+<td style="text-align: right;">-17601</td>
+<td style="text-align: right;">50.60</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">04-Almería</td>
+<td style="text-align: left;">Andalucía</td>
+<td style="text-align: right;">536731</td>
+<td style="text-align: right;">272023</td>
+<td style="text-align: right;">264708</td>
+<td style="text-align: right;">7315</td>
+<td style="text-align: right;">49.32</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">33-Asturias</td>
+<td style="text-align: left;">Asturias (Principado de)</td>
+<td style="text-align: right;">1062998</td>
+<td style="text-align: right;">508995</td>
+<td style="text-align: right;">554003</td>
+<td style="text-align: right;">-45008</td>
+<td style="text-align: right;">52.12</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">05-Ávila</td>
+<td style="text-align: left;">Castilla y León</td>
+<td style="text-align: right;">163442</td>
+<td style="text-align: right;">81850</td>
+<td style="text-align: right;">81592</td>
+<td style="text-align: right;">258</td>
+<td style="text-align: right;">49.92</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">06-Badajoz</td>
+<td style="text-align: left;">Extremadura</td>
+<td style="text-align: right;">654882</td>
+<td style="text-align: right;">323541</td>
+<td style="text-align: right;">331341</td>
+<td style="text-align: right;">-7800</td>
+<td style="text-align: right;">50.60</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">07-Balears (Illes)</td>
+<td style="text-align: left;">Balears (Illes)</td>
+<td style="text-align: right;">841669</td>
+<td style="text-align: right;">417314</td>
+<td style="text-align: right;">424355</td>
+<td style="text-align: right;">-7041</td>
+<td style="text-align: right;">50.42</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">08-Barcelona</td>
+<td style="text-align: left;">Cataluña</td>
+<td style="text-align: right;">4805927</td>
+<td style="text-align: right;">2341592</td>
+<td style="text-align: right;">2464335</td>
+<td style="text-align: right;">-122743</td>
+<td style="text-align: right;">51.28</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">09-Burgos</td>
+<td style="text-align: left;">Castilla y León</td>
+<td style="text-align: right;">348934</td>
+<td style="text-align: right;">174576</td>
+<td style="text-align: right;">174358</td>
+<td style="text-align: right;">218</td>
+<td style="text-align: right;">49.97</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+<p>Como puede observarse, se han mantenido las columnas existentes y se han añadido las nuevas al conjunto de datos. <strong>Nota</strong>: la función <code>transmute()</code> del paquete dplyr añade columnas pero sin mantener las columnas existentes.</p>
+<p><strong>Ejemplo</strong>. Ahora construimos los datos con una nueva columna. Trabajamos únicamente con aquellas provincias que tienen mayor número de hombres que de mujeres, y presentamos la nueva variable diferencia (hombres menos mujeres), ordenando por la diferencia (mayor a menor) pero sin mostrar el total.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb23"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb23-1"><a href="#cb23-1" aria-hidden="true" tabindex="-1"></a>datos <span class="sc">%&gt;%</span> </span>
+<span id="cb23-2"><a href="#cb23-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">filter</span>(Mujer <span class="sc">&lt;=</span> Varon) <span class="sc">%&gt;%</span> </span>
+<span id="cb23-3"><a href="#cb23-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">Diferencia =</span> Varon <span class="sc">-</span> Mujer) <span class="sc">%&gt;%</span> </span>
+<span id="cb23-4"><a href="#cb23-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">arrange</span>(<span class="fu">desc</span>(Diferencia)) <span class="sc">%&gt;%</span> </span>
+<span id="cb23-5"><a href="#cb23-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">select</span>(<span class="sc">-</span>TOTAL) <span class="sc">%&gt;%</span> </span>
+<span id="cb23-6"><a href="#cb23-6" aria-hidden="true" tabindex="-1"></a>  <span class="fu">kable</span>(<span class="at">booktabs=</span><span class="cn">TRUE</span>)</span></code><button title="Copiar al portapapeles" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<table class="caption-top table table-sm table-striped small">
+<thead>
+<tr class="header">
+<th style="text-align: left;">Provincia</th>
+<th style="text-align: left;">CCAA</th>
+<th style="text-align: right;">Varon</th>
+<th style="text-align: right;">Mujer</th>
+<th style="text-align: right;">Diferencia</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td style="text-align: left;">04-Almería</td>
+<td style="text-align: left;">Andalucía</td>
+<td style="text-align: right;">272023</td>
+<td style="text-align: right;">264708</td>
+<td style="text-align: right;">7315</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">19-Guadalajara</td>
+<td style="text-align: left;">Castilla-La Mancha</td>
+<td style="text-align: right;">88535</td>
+<td style="text-align: right;">86464</td>
+<td style="text-align: right;">2071</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">35-Palmas (Las)</td>
+<td style="text-align: left;">Canarias</td>
+<td style="text-align: right;">444761</td>
+<td style="text-align: right;">442915</td>
+<td style="text-align: right;">1846</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">22-Huesca</td>
+<td style="text-align: left;">Aragón</td>
+<td style="text-align: right;">104089</td>
+<td style="text-align: right;">102413</td>
+<td style="text-align: right;">1676</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">44-Teruel</td>
+<td style="text-align: left;">Aragón</td>
+<td style="text-align: right;">68724</td>
+<td style="text-align: right;">67134</td>
+<td style="text-align: right;">1590</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">51-Ceuta</td>
+<td style="text-align: left;">Ceuta</td>
+<td style="text-align: right;">35949</td>
+<td style="text-align: right;">35556</td>
+<td style="text-align: right;">393</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">05-Ávila</td>
+<td style="text-align: left;">Castilla y León</td>
+<td style="text-align: right;">81850</td>
+<td style="text-align: right;">81592</td>
+<td style="text-align: right;">258</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">40-Segovia</td>
+<td style="text-align: left;">Castilla y León</td>
+<td style="text-align: right;">73973</td>
+<td style="text-align: right;">73721</td>
+<td style="text-align: right;">252</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">09-Burgos</td>
+<td style="text-align: left;">Castilla y León</td>
+<td style="text-align: right;">174576</td>
+<td style="text-align: right;">174358</td>
+<td style="text-align: right;">218</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">42-Soria</td>
+<td style="text-align: left;">Castilla y León</td>
+<td style="text-align: right;">45443</td>
+<td style="text-align: right;">45274</td>
+<td style="text-align: right;">169</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+<p><strong>Nota</strong>. El uso del “<code>-</code>” delante de la variable “TOTAL” significa que se muestren todas las columnas menos la columna “TOTAL”.</p>
+</section>
+<section id="obtener-resúmenes-estadísticos-summarise" class="level3" data-number="1.2.5">
+<h3 data-number="1.2.5" class="anchored" data-anchor-id="obtener-resúmenes-estadísticos-summarise"><span class="header-section-number">1.2.5</span> Obtener resúmenes estadísticos: summarise()</h3>
+<p>Con la función <code>summarise()</code> se obtienen objetos que contienen en sus columnas cualquier tipo de cálculo o de resumen estadístico obtenido sobre alguna columna teniendo en cuenta todas sus filas.</p>
+<p><strong>Ejemplo</strong>. En el siguiente ejemplo obtenemos de los datos de población de las provincias españolas en el censo del 2001, la suma total de hombres, la suma total de mujeres, la población total (obtenida de 2 formas), la media de población de los hombres por provincia y la cuasidesviación típica de la población de hombres.</p>
+<div style="page-break-after: always;"></div>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb24"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb24-1"><a href="#cb24-1" aria-hidden="true" tabindex="-1"></a>datos_su01 <span class="ot">=</span> datos <span class="sc">%&gt;%</span> </span>
+<span id="cb24-2"><a href="#cb24-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">summarise</span>(<span class="at">TotHombres =</span> <span class="fu">sum</span>(Varon),</span>
+<span id="cb24-3"><a href="#cb24-3" aria-hidden="true" tabindex="-1"></a>            <span class="at">TotMujeres =</span> <span class="fu">sum</span>(Mujer),</span>
+<span id="cb24-4"><a href="#cb24-4" aria-hidden="true" tabindex="-1"></a>            <span class="at">TotalHM =</span> <span class="fu">sum</span>(Varon<span class="sc">+</span>Mujer),</span>
+<span id="cb24-5"><a href="#cb24-5" aria-hidden="true" tabindex="-1"></a>            <span class="at">TotalHM2 =</span> TotHombres <span class="sc">+</span> TotMujeres,</span>
+<span id="cb24-6"><a href="#cb24-6" aria-hidden="true" tabindex="-1"></a>            <span class="at">MediaHombres =</span> <span class="fu">mean</span>(Varon),</span>
+<span id="cb24-7"><a href="#cb24-7" aria-hidden="true" tabindex="-1"></a>            <span class="at">SdHombres =</span> <span class="fu">sd</span>(Varon))</span>
+<span id="cb24-8"><a href="#cb24-8" aria-hidden="true" tabindex="-1"></a>datos_su01</span></code><button title="Copiar al portapapeles" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<div data-pagedtable="false">
+  <script data-pagedtable-source="" type="application/json">
+{"columns":[{"label":["TotHombres"],"name":[1],"type":["dbl"],"align":["right"]},{"label":["TotMujeres"],"name":[2],"type":["dbl"],"align":["right"]},{"label":["TotalHM"],"name":[3],"type":["dbl"],"align":["right"]},{"label":["TotalHM2"],"name":[4],"type":["dbl"],"align":["right"]},{"label":["MediaHombres"],"name":[5],"type":["dbl"],"align":["right"]},{"label":["SdHombres"],"name":[6],"type":["dbl"],"align":["right"]}],"data":[{"1":"20012882","2":"20834489","3":"40847371","4":"40847371","5":"384863.1","6":"474446.3"}],"options":{"columns":{"min":{},"max":[10]},"rows":{"min":[10],"max":[10]},"pages":{}}}
+  </script>
+</div>
+</div>
+</div>
+<p>Es un objeto con una sola fila, en la que por ejemplo, <code>TotHombres</code> se ha obtenido sumando todos los elementos de la columna “Varon”, es decir, se ha calculado el total de hombres en España en el censo del 2001.</p>
+<p>Se puede observar, que hay más mujeres que hombres, a pesar de que al nacer existe una proporción mayor de niños que de niñas.</p>
+<div class="callout callout-style-default callout-note callout-titled">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+Nota
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p>“dplyr” dispone de funciones muy útiles para emplear con <code>summarise()</code>: <code>n()</code> (para contar filas), <code>n_distinct(COLUMNA)</code> (para contar filas de valores distintos), etc.</p>
+</div>
+</div>
+</section>
+<section id="agrupar-filas-u-observaciones-individuos-group_by.-uso-con-summarise" class="level3" data-number="1.2.6">
+<h3 data-number="1.2.6" class="anchored" data-anchor-id="agrupar-filas-u-observaciones-individuos-group_by.-uso-con-summarise"><span class="header-section-number">1.2.6</span> Agrupar filas u observaciones-individuos: group_by(). Uso con summarise()</h3>
+<p>La función <code>group_by()</code> nos ayudará a obtener cálculos o resúmenes estadísticos pero para cada uno de los grupos de filas o individuos que se hayan establecido.</p>
+<div style="page-break-after: always;"></div>
+<p><strong>Ejemplo</strong>. Se quiere obtener la población total para cada CCAA.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb25"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb25-1"><a href="#cb25-1" aria-hidden="true" tabindex="-1"></a>datos_g01 <span class="ot">=</span> datos <span class="sc">%&gt;%</span> </span>
+<span id="cb25-2"><a href="#cb25-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">group_by</span>(CCAA) <span class="sc">%&gt;%</span> </span>
+<span id="cb25-3"><a href="#cb25-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">summarise</span>(<span class="at">TotalCCAA =</span> <span class="fu">sum</span>(TOTAL),</span>
+<span id="cb25-4"><a href="#cb25-4" aria-hidden="true" tabindex="-1"></a>            <span class="at">TotHombresCCAA =</span> <span class="fu">sum</span>(Varon),</span>
+<span id="cb25-5"><a href="#cb25-5" aria-hidden="true" tabindex="-1"></a>            <span class="at">TotMujeresCCAA =</span> <span class="fu">sum</span>(Mujer,<span class="at">na.rm =</span> <span class="cn">TRUE</span>))</span>
+<span id="cb25-6"><a href="#cb25-6" aria-hidden="true" tabindex="-1"></a>datos_g01 <span class="sc">%&gt;%</span> </span>
+<span id="cb25-7"><a href="#cb25-7" aria-hidden="true" tabindex="-1"></a>  <span class="fu">kable</span>(<span class="at">booktabs=</span><span class="cn">TRUE</span>)</span></code><button title="Copiar al portapapeles" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<table class="caption-top table table-sm table-striped small">
+<colgroup>
+<col style="width: 42%">
+<col style="width: 14%">
+<col style="width: 21%">
+<col style="width: 21%">
+</colgroup>
+<thead>
+<tr class="header">
+<th style="text-align: left;">CCAA</th>
+<th style="text-align: right;">TotalCCAA</th>
+<th style="text-align: right;">TotHombresCCAA</th>
+<th style="text-align: right;">TotMujeresCCAA</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td style="text-align: left;">Andalucía</td>
+<td style="text-align: right;">7357558</td>
+<td style="text-align: right;">3622066</td>
+<td style="text-align: right;">3735492</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Aragón</td>
+<td style="text-align: right;">1204215</td>
+<td style="text-align: right;">594846</td>
+<td style="text-align: right;">609369</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">Asturias (Principado de)</td>
+<td style="text-align: right;">1062998</td>
+<td style="text-align: right;">508995</td>
+<td style="text-align: right;">554003</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Balears (Illes)</td>
+<td style="text-align: right;">841669</td>
+<td style="text-align: right;">417314</td>
+<td style="text-align: right;">424355</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">Canarias</td>
+<td style="text-align: right;">1694477</td>
+<td style="text-align: right;">842966</td>
+<td style="text-align: right;">851511</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Cantabria</td>
+<td style="text-align: right;">535131</td>
+<td style="text-align: right;">260586</td>
+<td style="text-align: right;">274545</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">Castilla y León</td>
+<td style="text-align: right;">2456474</td>
+<td style="text-align: right;">1209874</td>
+<td style="text-align: right;">1246600</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Castilla-La Mancha</td>
+<td style="text-align: right;">1760516</td>
+<td style="text-align: right;">875550</td>
+<td style="text-align: right;">884966</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">Cataluña</td>
+<td style="text-align: right;">6343110</td>
+<td style="text-align: right;">3106531</td>
+<td style="text-align: right;">3236579</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Ceuta</td>
+<td style="text-align: right;">71505</td>
+<td style="text-align: right;">35949</td>
+<td style="text-align: right;">35556</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">Comunidad Valenciana</td>
+<td style="text-align: right;">4162776</td>
+<td style="text-align: right;">2046984</td>
+<td style="text-align: right;">2115792</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Extremadura</td>
+<td style="text-align: right;">1058503</td>
+<td style="text-align: right;">524361</td>
+<td style="text-align: right;">534142</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">Galicia</td>
+<td style="text-align: right;">2695880</td>
+<td style="text-align: right;">1294378</td>
+<td style="text-align: right;">1401502</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Madrid (Comunidad de)</td>
+<td style="text-align: right;">5423384</td>
+<td style="text-align: right;">2609746</td>
+<td style="text-align: right;">2813638</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">Melilla</td>
+<td style="text-align: right;">66411</td>
+<td style="text-align: right;">33134</td>
+<td style="text-align: right;">33277</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Murcia (Región de)</td>
+<td style="text-align: right;">1197646</td>
+<td style="text-align: right;">597265</td>
+<td style="text-align: right;">600381</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">Navarra (Comunidad Foral de)</td>
+<td style="text-align: right;">555829</td>
+<td style="text-align: right;">276629</td>
+<td style="text-align: right;">279200</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">País Vasco</td>
+<td style="text-align: right;">2082587</td>
+<td style="text-align: right;">1017881</td>
+<td style="text-align: right;">1064706</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">Rioja (La)</td>
+<td style="text-align: right;">276702</td>
+<td style="text-align: right;">137827</td>
+<td style="text-align: right;">138875</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+<p>La función <code>group_by</code> ha preparado los datos para que aparezcan las provincias de cada CCAA agrupadas, de forma que al llamar a la función <code>summarise()</code> no devuelve una única fila como en los ejemplos del apartado anterior, sino que obtiene una fila de resultados para cada grupo formado, en este caso para cada CCAA. Por ejemplo, el valor de “TotalCCAA” para Andalucía se ha obtenido al sumar las poblaciones (TOTAL) de las 8 provincias de Andalucía.</p>
+<div class="callout callout-style-default callout-note callout-titled">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+Nota
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p>Esto mismo se podría haber hecho con ayuda del sistema base de R, con la función <code>aggregate()</code> (devuelve un data.frame) o <code>tapply()</code> (devuelve un vector), como se muestra a continuación:</p>
+<div class="sourceCode" id="cb26"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb26-1"><a href="#cb26-1" aria-hidden="true" tabindex="-1"></a><span class="fu">aggregate</span>(TOTAL <span class="sc">~</span> CCAA, datos, sum)</span></code><button title="Copiar al portapapeles" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode" id="cb27"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb27-1"><a href="#cb27-1" aria-hidden="true" tabindex="-1"></a><span class="fu">with</span>(datos, <span class="fu">tapply</span>(TOTAL,CCAA,sum,<span class="at">na.rm=</span><span class="cn">TRUE</span>))</span></code><button title="Copiar al portapapeles" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+</div>
+<p><strong>Ejemplo</strong>. Se quiere obtener el total de la población por CCAA, pero nos interesa presentar únicamente las que tienen más de 5 millones de habitantes y ordenadas de mayor a menor por población total.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb28"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb28-1"><a href="#cb28-1" aria-hidden="true" tabindex="-1"></a>datos_ag02 <span class="ot">=</span> datos <span class="sc">%&gt;%</span> </span>
+<span id="cb28-2"><a href="#cb28-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">group_by</span>(CCAA) <span class="sc">%&gt;%</span> </span>
+<span id="cb28-3"><a href="#cb28-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">summarise</span>(<span class="at">TOTALCCAA =</span> <span class="fu">sum</span>(TOTAL),</span>
+<span id="cb28-4"><a href="#cb28-4" aria-hidden="true" tabindex="-1"></a>            <span class="at">TOTALVaron =</span> <span class="fu">sum</span>(Varon),</span>
+<span id="cb28-5"><a href="#cb28-5" aria-hidden="true" tabindex="-1"></a>            <span class="at">TOTALMujer =</span> <span class="fu">sum</span>(Mujer)) <span class="sc">%&gt;%</span> </span>
+<span id="cb28-6"><a href="#cb28-6" aria-hidden="true" tabindex="-1"></a>  <span class="fu">filter</span>(TOTALCCAA <span class="sc">&gt;=</span> <span class="dv">5000000</span>) <span class="sc">%&gt;%</span> </span>
+<span id="cb28-7"><a href="#cb28-7" aria-hidden="true" tabindex="-1"></a>  <span class="fu">arrange</span>(<span class="fu">desc</span>(TOTALCCAA))</span>
+<span id="cb28-8"><a href="#cb28-8" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb28-9"><a href="#cb28-9" aria-hidden="true" tabindex="-1"></a>datos_ag02 <span class="sc">%&gt;%</span></span>
+<span id="cb28-10"><a href="#cb28-10" aria-hidden="true" tabindex="-1"></a>  <span class="fu">kable</span>()</span></code><button title="Copiar al portapapeles" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<table class="caption-top table table-sm table-striped small">
+<thead>
+<tr class="header">
+<th style="text-align: left;">CCAA</th>
+<th style="text-align: right;">TOTALCCAA</th>
+<th style="text-align: right;">TOTALVaron</th>
+<th style="text-align: right;">TOTALMujer</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td style="text-align: left;">Andalucía</td>
+<td style="text-align: right;">7357558</td>
+<td style="text-align: right;">3622066</td>
+<td style="text-align: right;">3735492</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Cataluña</td>
+<td style="text-align: right;">6343110</td>
+<td style="text-align: right;">3106531</td>
+<td style="text-align: right;">3236579</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">Madrid (Comunidad de)</td>
+<td style="text-align: right;">5423384</td>
+<td style="text-align: right;">2609746</td>
+<td style="text-align: right;">2813638</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+<div class="callout callout-style-default callout-note callout-titled">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+Nota
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p>Se pueden utilizar: <code>count()</code> o <code>tally()</code> también para contar el número de observaciones por grupo.</p>
+</div>
+</div>
+<div class="callout callout-style-default callout-note callout-titled">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+Nota
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p><code>slice(), slice_head(), slice_tail(), slice_min(), slice_max()</code>, <code>slice_sample()</code>: Permiten seleccionar filas por sus posiciones (valores enteros). Salvo la primera función, <code>slice()</code>, todas tienen como argumentos <code>n</code> (número filas) o <code>prop</code> (fracción de filas). Se pueden usar de forma conjunta con datos agrupados: <code>group_by()</code>. Sustituyen a funciones como: <code>top_n()</code> o <code>top_frac()</code>.</p>
+</div>
+</div>
+<p>Las siguientes instrucciones son correctas:</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb29"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb29-1"><a href="#cb29-1" aria-hidden="true" tabindex="-1"></a>datos <span class="sc">%&gt;%</span> </span>
+<span id="cb29-2"><a href="#cb29-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">slice</span>(<span class="dv">1</span><span class="sc">:</span><span class="dv">10</span>)</span>
+<span id="cb29-3"><a href="#cb29-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb29-4"><a href="#cb29-4" aria-hidden="true" tabindex="-1"></a>datos <span class="sc">%&gt;%</span> </span>
+<span id="cb29-5"><a href="#cb29-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">group_by</span>(CCAA) <span class="sc">%&gt;%</span> </span>
+<span id="cb29-6"><a href="#cb29-6" aria-hidden="true" tabindex="-1"></a>  <span class="fu">slice_head</span>(<span class="at">prop =</span> <span class="fl">0.5</span>)</span>
+<span id="cb29-7"><a href="#cb29-7" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb29-8"><a href="#cb29-8" aria-hidden="true" tabindex="-1"></a>datos <span class="sc">%&gt;%</span> </span>
+<span id="cb29-9"><a href="#cb29-9" aria-hidden="true" tabindex="-1"></a>  <span class="fu">group_by</span>(CCAA) <span class="sc">%&gt;%</span> </span>
+<span id="cb29-10"><a href="#cb29-10" aria-hidden="true" tabindex="-1"></a>  <span class="fu">slice_tail</span>(<span class="at">prop =</span> <span class="fl">0.5</span>)</span>
+<span id="cb29-11"><a href="#cb29-11" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb29-12"><a href="#cb29-12" aria-hidden="true" tabindex="-1"></a>datos <span class="sc">%&gt;%</span> </span>
+<span id="cb29-13"><a href="#cb29-13" aria-hidden="true" tabindex="-1"></a>  <span class="fu">group_by</span>(CCAA) <span class="sc">%&gt;%</span> </span>
+<span id="cb29-14"><a href="#cb29-14" aria-hidden="true" tabindex="-1"></a>  <span class="fu">slice_min</span>(<span class="at">prop =</span> <span class="fl">0.5</span>,<span class="at">order_by =</span> TOTAL)</span>
+<span id="cb29-15"><a href="#cb29-15" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb29-16"><a href="#cb29-16" aria-hidden="true" tabindex="-1"></a>datos <span class="sc">%&gt;%</span> </span>
+<span id="cb29-17"><a href="#cb29-17" aria-hidden="true" tabindex="-1"></a>  <span class="fu">group_by</span>(CCAA) <span class="sc">%&gt;%</span> </span>
+<span id="cb29-18"><a href="#cb29-18" aria-hidden="true" tabindex="-1"></a>  <span class="fu">slice_max</span>(<span class="at">prop =</span> <span class="fl">0.5</span>,<span class="at">order_by =</span> TOTAL)</span>
+<span id="cb29-19"><a href="#cb29-19" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb29-20"><a href="#cb29-20" aria-hidden="true" tabindex="-1"></a><span class="fu">set.seed</span>(<span class="dv">12345</span>)</span>
+<span id="cb29-21"><a href="#cb29-21" aria-hidden="true" tabindex="-1"></a>datos <span class="sc">%&gt;%</span> </span>
+<span id="cb29-22"><a href="#cb29-22" aria-hidden="true" tabindex="-1"></a>  <span class="fu">slice_sample</span>(<span class="at">prop =</span> <span class="fl">0.3</span>,<span class="at">replace =</span> <span class="cn">FALSE</span>)</span>
+<span id="cb29-23"><a href="#cb29-23" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb29-24"><a href="#cb29-24" aria-hidden="true" tabindex="-1"></a>datos <span class="sc">%&gt;%</span> </span>
+<span id="cb29-25"><a href="#cb29-25" aria-hidden="true" tabindex="-1"></a>  <span class="fu">group_by</span>(CCAA) <span class="sc">%&gt;%</span> </span>
+<span id="cb29-26"><a href="#cb29-26" aria-hidden="true" tabindex="-1"></a>  <span class="fu">slice_sample</span>(<span class="at">n =</span> <span class="dv">5</span>, <span class="at">replace =</span> <span class="cn">FALSE</span>)</span>
+<span id="cb29-27"><a href="#cb29-27" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb29-28"><a href="#cb29-28" aria-hidden="true" tabindex="-1"></a>datos <span class="sc">%&gt;%</span> </span>
+<span id="cb29-29"><a href="#cb29-29" aria-hidden="true" tabindex="-1"></a>  <span class="fu">group_by</span>(CCAA) <span class="sc">%&gt;%</span> </span>
+<span id="cb29-30"><a href="#cb29-30" aria-hidden="true" tabindex="-1"></a>  <span class="fu">slice_sample</span>(<span class="at">n =</span> <span class="dv">5</span>, <span class="at">replace =</span> <span class="cn">TRUE</span>)</span></code><button title="Copiar al portapapeles" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<p><strong>Nota:</strong> Se pueden usar también: <code>first()</code>, <code>last()</code> y <code>nth()</code>, para extraer el primer, último o n-ésimo valor de un grupo (o vector).</p>
+<div style="page-break-after: always;"></div>
+<p><strong>Ejemplo</strong>. Para contar el número de provincias por cada CCAA</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb30"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb30-1"><a href="#cb30-1" aria-hidden="true" tabindex="-1"></a>datos <span class="sc">%&gt;%</span> </span>
+<span id="cb30-2"><a href="#cb30-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">group_by</span>(CCAA) <span class="sc">%&gt;%</span> </span>
+<span id="cb30-3"><a href="#cb30-3" aria-hidden="true" tabindex="-1"></a>  dplyr<span class="sc">::</span><span class="fu">summarise</span>(<span class="at">NumProvincias =</span> <span class="fu">n</span>()) <span class="co"># Equivale a: </span></span></code><button title="Copiar al portapapeles" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<div data-pagedtable="false">
+  <script data-pagedtable-source="" type="application/json">
+{"columns":[{"label":["CCAA"],"name":[1],"type":["chr"],"align":["left"]},{"label":["NumProvincias"],"name":[2],"type":["int"],"align":["right"]}],"data":[{"1":"Andalucía","2":"8"},{"1":"Aragón","2":"3"},{"1":"Asturias (Principado de)","2":"1"},{"1":"Balears (Illes)","2":"1"},{"1":"Canarias","2":"2"},{"1":"Cantabria","2":"1"},{"1":"Castilla y León","2":"9"},{"1":"Castilla-La Mancha","2":"5"},{"1":"Cataluña","2":"4"},{"1":"Ceuta","2":"1"},{"1":"Comunidad Valenciana","2":"3"},{"1":"Extremadura","2":"2"},{"1":"Galicia","2":"4"},{"1":"Madrid (Comunidad de)","2":"1"},{"1":"Melilla","2":"1"},{"1":"Murcia (Región de)","2":"1"},{"1":"Navarra (Comunidad Foral de)","2":"1"},{"1":"País Vasco","2":"3"},{"1":"Rioja (La)","2":"1"}],"options":{"columns":{"min":{},"max":[10]},"rows":{"min":[10],"max":[10]},"pages":{}}}
+  </script>
+</div>
+</div>
+<div class="sourceCode cell-code" id="cb31"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb31-1"><a href="#cb31-1" aria-hidden="true" tabindex="-1"></a><span class="co"># datos %&gt;% </span></span>
+<span id="cb31-2"><a href="#cb31-2" aria-hidden="true" tabindex="-1"></a><span class="co">#   group_by(CCAA) %&gt;% </span></span>
+<span id="cb31-3"><a href="#cb31-3" aria-hidden="true" tabindex="-1"></a><span class="co">#   count()  # o tally()</span></span></code><button title="Copiar al portapapeles" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<!-- **Nota**. Cuando se agrupan filas, puede ser interesante emplear **"funciones ventanas"**, que para n entradas devuelven n valores de salida. Ejemplos de estas funciones están: de ordenación: `min_rank()`, de desplazamiento: `lead()` y `lag()`, y de agregación acumulativa: `cummean()`.  -->
+<div style="page-break-after: always;"></div>
+<!-- - melting data (pag. 73): Data Manipulation with R (2edt) -->
+</section>
+<section id="uso-de-case_when-para-generalizar-el-ifelse-en-el-sistema-tidyverse" class="level3" data-number="1.2.7">
+<h3 data-number="1.2.7" class="anchored" data-anchor-id="uso-de-case_when-para-generalizar-el-ifelse-en-el-sistema-tidyverse"><span class="header-section-number">1.2.7</span> Uso de “case_when” para generalizar el “ifelse” en el sistema tidyverse</h3>
+<p>Para explicar la miniherramienta o función <strong><code>case_when()</code></strong>, se utilizan los siguientes datos que contienen personas que pertenecen o no a dos grupos: “Grupo1” y “Grupo2”.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb32"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb32-1"><a href="#cb32-1" aria-hidden="true" tabindex="-1"></a>df <span class="ot">=</span> <span class="fu">data.frame</span>(</span>
+<span id="cb32-2"><a href="#cb32-2" aria-hidden="true" tabindex="-1"></a>  <span class="at">Nombre =</span> <span class="fu">c</span>(<span class="st">"Juan"</span>,<span class="st">"Ana"</span>,<span class="st">"Marta"</span>),</span>
+<span id="cb32-3"><a href="#cb32-3" aria-hidden="true" tabindex="-1"></a>  <span class="at">Grupo1 =</span> <span class="fu">c</span>(F,T,T),</span>
+<span id="cb32-4"><a href="#cb32-4" aria-hidden="true" tabindex="-1"></a>  <span class="at">Grupo2 =</span> <span class="fu">c</span>(F,F,T)</span>
+<span id="cb32-5"><a href="#cb32-5" aria-hidden="true" tabindex="-1"></a>)</span>
+<span id="cb32-6"><a href="#cb32-6" aria-hidden="true" tabindex="-1"></a>df</span></code><button title="Copiar al portapapeles" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<div data-pagedtable="false">
+  <script data-pagedtable-source="" type="application/json">
+{"columns":[{"label":["Nombre"],"name":[1],"type":["chr"],"align":["left"]},{"label":["Grupo1"],"name":[2],"type":["lgl"],"align":["right"]},{"label":["Grupo2"],"name":[3],"type":["lgl"],"align":["right"]}],"data":[{"1":"Juan","2":"FALSE","3":"FALSE"},{"1":"Ana","2":"TRUE","3":"FALSE"},{"1":"Marta","2":"TRUE","3":"TRUE"}],"options":{"columns":{"min":{},"max":[10]},"rows":{"min":[10],"max":[10]},"pages":{}}}
+  </script>
+</div>
+</div>
+</div>
+<p>Se utiliza la función <strong><code>case_when()</code></strong> para construir una nueva columna (<strong><code>mutate()</code></strong>) que asigne valores nuevos en función de los valores de las columnas: “Grupo1” y “Grupo2”. Como puede verse, aparecen una serie de expresiones lógicas a la izquierda del símbolo <strong>“<code>~</code>”</strong>, que si es cierta se asigna el valor que está a su derecha.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb33"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb33-1"><a href="#cb33-1" aria-hidden="true" tabindex="-1"></a>df <span class="ot">&lt;-</span> df <span class="sc">%&gt;%</span> </span>
+<span id="cb33-2"><a href="#cb33-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">Grupo =</span> <span class="fu">case_when</span>(</span>
+<span id="cb33-3"><a href="#cb33-3" aria-hidden="true" tabindex="-1"></a>    Grupo1 <span class="sc">&amp;</span> Grupo2 <span class="sc">~</span> <span class="st">"A"</span>,     <span class="co"># Ambos grupos: Grupo  A</span></span>
+<span id="cb33-4"><a href="#cb33-4" aria-hidden="true" tabindex="-1"></a>    <span class="fu">xor</span>(Grupo1, Grupo2) <span class="sc">~</span> <span class="st">"B"</span>, <span class="co"># A un grupo solamente: Grupo B</span></span>
+<span id="cb33-5"><a href="#cb33-5" aria-hidden="true" tabindex="-1"></a>    <span class="sc">!</span>Grupo1 <span class="sc">&amp;</span> <span class="sc">!</span>Grupo2 <span class="sc">~</span> <span class="st">"C"</span>,   <span class="co"># Ningún grupo: Grupo C</span></span>
+<span id="cb33-6"><a href="#cb33-6" aria-hidden="true" tabindex="-1"></a>     <span class="cn">TRUE</span> <span class="sc">~</span> <span class="st">"D"</span>                <span class="co"># En otro caso: Grupo D (no habría otro caso)</span></span>
+<span id="cb33-7"><a href="#cb33-7" aria-hidden="true" tabindex="-1"></a>))</span>
+<span id="cb33-8"><a href="#cb33-8" aria-hidden="true" tabindex="-1"></a>df</span></code><button title="Copiar al portapapeles" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<div data-pagedtable="false">
+  <script data-pagedtable-source="" type="application/json">
+{"columns":[{"label":["Nombre"],"name":[1],"type":["chr"],"align":["left"]},{"label":["Grupo1"],"name":[2],"type":["lgl"],"align":["right"]},{"label":["Grupo2"],"name":[3],"type":["lgl"],"align":["right"]},{"label":["Grupo"],"name":[4],"type":["chr"],"align":["left"]}],"data":[{"1":"Juan","2":"FALSE","3":"FALSE","4":"C"},{"1":"Ana","2":"TRUE","3":"FALSE","4":"B"},{"1":"Marta","2":"TRUE","3":"TRUE","4":"A"}],"options":{"columns":{"min":{},"max":[10]},"rows":{"min":[10],"max":[10]},"pages":{}}}
+  </script>
+</div>
+</div>
+</div>
+<p><strong>Nota:</strong> En demografía, cuando se quiere agrupar la variable edad en distintas categorías se puede utilizar <code>case_when()</code>.</p>
+<div style="page-break-after: always;"></div>
+</section>
+</section>
+<section id="recursos-adicionales" class="level2" data-number="1.3">
+<h2 data-number="1.3" class="anchored" data-anchor-id="recursos-adicionales"><span class="header-section-number">1.3</span> Recursos adicionales</h2>
+<p>A continuación se recogen algunos enlaces con material relacionado con “dplyr” para poder profundizar:</p>
+<ul>
+<li><p>dplyr en CRAN: <a href="https://cran.r-project.org/web/packages/dplyr/index.html" class="uri">https://cran.r-project.org/web/packages/dplyr/index.html</a></p></li>
+<li><p>Documentación de dplyr: <a href="https://dplyr.tidyverse.org" class="uri">https://dplyr.tidyverse.org</a></p></li>
+<li><p>Transparencias sobre el uso de dplyr (inglés): <a href="http://patilv.com/dplyr-nycflights/" class="uri">http://patilv.com/dplyr-nycflights/</a></p></li>
+<li><p><a href="https://www.youtube.com/watch?v=jWjqLW-u3hc&amp;feature=youtu.be">Youtube: uso de dplyr unos 38 minutos</a></p></li>
+</ul>
+<!-- -->
+
+</section>
+</section>
+
+</main>
+<!-- /main column -->
+<script id="quarto-html-after-body" type="application/javascript">
+window.document.addEventListener("DOMContentLoaded", function (event) {
+  const toggleBodyColorMode = (bsSheetEl) => {
+    const mode = bsSheetEl.getAttribute("data-mode");
+    const bodyEl = window.document.querySelector("body");
+    if (mode === "dark") {
+      bodyEl.classList.add("quarto-dark");
+      bodyEl.classList.remove("quarto-light");
+    } else {
+      bodyEl.classList.add("quarto-light");
+      bodyEl.classList.remove("quarto-dark");
+    }
+  }
+  const toggleBodyColorPrimary = () => {
+    const bsSheetEl = window.document.querySelector("link#quarto-bootstrap");
+    if (bsSheetEl) {
+      toggleBodyColorMode(bsSheetEl);
+    }
+  }
+  toggleBodyColorPrimary();  
+  const icon = "";
+  const anchorJS = new window.AnchorJS();
+  anchorJS.options = {
+    placement: 'right',
+    icon: icon
+  };
+  anchorJS.add('.anchored');
+  const isCodeAnnotation = (el) => {
+    for (const clz of el.classList) {
+      if (clz.startsWith('code-annotation-')) {                     
+        return true;
+      }
+    }
+    return false;
+  }
+  const onCopySuccess = function(e) {
+    // button target
+    const button = e.trigger;
+    // don't keep focus
+    button.blur();
+    // flash "checked"
+    button.classList.add('code-copy-button-checked');
+    var currentTitle = button.getAttribute("title");
+    button.setAttribute("title", "Copiado");
+    let tooltip;
+    if (window.bootstrap) {
+      button.setAttribute("data-bs-toggle", "tooltip");
+      button.setAttribute("data-bs-placement", "left");
+      button.setAttribute("data-bs-title", "Copiado");
+      tooltip = new bootstrap.Tooltip(button, 
+        { trigger: "manual", 
+          customClass: "code-copy-button-tooltip",
+          offset: [0, -8]});
+      tooltip.show();    
+    }
+    setTimeout(function() {
+      if (tooltip) {
+        tooltip.hide();
+        button.removeAttribute("data-bs-title");
+        button.removeAttribute("data-bs-toggle");
+        button.removeAttribute("data-bs-placement");
+      }
+      button.setAttribute("title", currentTitle);
+      button.classList.remove('code-copy-button-checked');
+    }, 1000);
+    // clear code selection
+    e.clearSelection();
+  }
+  const getTextToCopy = function(trigger) {
+      const codeEl = trigger.previousElementSibling.cloneNode(true);
+      for (const childEl of codeEl.children) {
+        if (isCodeAnnotation(childEl)) {
+          childEl.remove();
+        }
+      }
+      return codeEl.innerText;
+  }
+  const clipboard = new window.ClipboardJS('.code-copy-button:not([data-in-quarto-modal])', {
+    text: getTextToCopy
+  });
+  clipboard.on('success', onCopySuccess);
+  if (window.document.getElementById('quarto-embedded-source-code-modal')) {
+    // For code content inside modals, clipBoardJS needs to be initialized with a container option
+    // TODO: Check when it could be a function (https://github.com/zenorocha/clipboard.js/issues/860)
+    const clipboardModal = new window.ClipboardJS('.code-copy-button[data-in-quarto-modal]', {
+      text: getTextToCopy,
+      container: window.document.getElementById('quarto-embedded-source-code-modal')
+    });
+    clipboardModal.on('success', onCopySuccess);
+  }
+  const viewSource = window.document.getElementById('quarto-view-source') ||
+                     window.document.getElementById('quarto-code-tools-source');
+  if (viewSource) {
+    const sourceUrl = viewSource.getAttribute("data-quarto-source-url");
+    viewSource.addEventListener("click", function(e) {
+      if (sourceUrl) {
+        // rstudio viewer pane
+        if (/\bcapabilities=\b/.test(window.location)) {
+          window.open(sourceUrl);
+        } else {
+          window.location.href = sourceUrl;
+        }
+      } else {
+        const modal = new bootstrap.Modal(document.getElementById('quarto-embedded-source-code-modal'));
+        modal.show();
+      }
+      return false;
+    });
+  }
+  function toggleCodeHandler(show) {
+    return function(e) {
+      const detailsSrc = window.document.querySelectorAll(".cell > details > .sourceCode");
+      for (let i=0; i<detailsSrc.length; i++) {
+        const details = detailsSrc[i].parentElement;
+        if (show) {
+          details.open = true;
+        } else {
+          details.removeAttribute("open");
+        }
+      }
+      const cellCodeDivs = window.document.querySelectorAll(".cell > .sourceCode");
+      const fromCls = show ? "hidden" : "unhidden";
+      const toCls = show ? "unhidden" : "hidden";
+      for (let i=0; i<cellCodeDivs.length; i++) {
+        const codeDiv = cellCodeDivs[i];
+        if (codeDiv.classList.contains(fromCls)) {
+          codeDiv.classList.remove(fromCls);
+          codeDiv.classList.add(toCls);
+        } 
+      }
+      return false;
+    }
+  }
+  const hideAllCode = window.document.getElementById("quarto-hide-all-code");
+  if (hideAllCode) {
+    hideAllCode.addEventListener("click", toggleCodeHandler(false));
+  }
+  const showAllCode = window.document.getElementById("quarto-show-all-code");
+  if (showAllCode) {
+    showAllCode.addEventListener("click", toggleCodeHandler(true));
+  }
+    var localhostRegex = new RegExp(/^(?:http|https):\/\/localhost\:?[0-9]*\//);
+    var mailtoRegex = new RegExp(/^mailto:/);
+      var filterRegex = new RegExp('/' + window.location.host + '/');
+    var isInternal = (href) => {
+        return filterRegex.test(href) || localhostRegex.test(href) || mailtoRegex.test(href);
+    }
+    // Inspect non-navigation links and adorn them if external
+ 	var links = window.document.querySelectorAll('a[href]:not(.nav-link):not(.navbar-brand):not(.toc-action):not(.sidebar-link):not(.sidebar-item-toggle):not(.pagination-link):not(.no-external):not([aria-hidden]):not(.dropdown-item):not(.quarto-navigation-tool):not(.about-link)');
+    for (var i=0; i<links.length; i++) {
+      const link = links[i];
+      if (!isInternal(link.href)) {
+        // undo the damage that might have been done by quarto-nav.js in the case of
+        // links that we want to consider external
+        if (link.dataset.originalHref !== undefined) {
+          link.href = link.dataset.originalHref;
+        }
+      }
+    }
+  function tippyHover(el, contentFn, onTriggerFn, onUntriggerFn) {
+    const config = {
+      allowHTML: true,
+      maxWidth: 500,
+      delay: 100,
+      arrow: false,
+      appendTo: function(el) {
+          return el.parentElement;
+      },
+      interactive: true,
+      interactiveBorder: 10,
+      theme: 'quarto',
+      placement: 'bottom-start',
+    };
+    if (contentFn) {
+      config.content = contentFn;
+    }
+    if (onTriggerFn) {
+      config.onTrigger = onTriggerFn;
+    }
+    if (onUntriggerFn) {
+      config.onUntrigger = onUntriggerFn;
+    }
+    window.tippy(el, config); 
+  }
+  const noterefs = window.document.querySelectorAll('a[role="doc-noteref"]');
+  for (var i=0; i<noterefs.length; i++) {
+    const ref = noterefs[i];
+    tippyHover(ref, function() {
+      // use id or data attribute instead here
+      let href = ref.getAttribute('data-footnote-href') || ref.getAttribute('href');
+      try { href = new URL(href).hash; } catch {}
+      const id = href.replace(/^#\/?/, "");
+      const note = window.document.getElementById(id);
+      if (note) {
+        return note.innerHTML;
+      } else {
+        return "";
+      }
+    });
+  }
+  const xrefs = window.document.querySelectorAll('a.quarto-xref');
+  const processXRef = (id, note) => {
+    // Strip column container classes
+    const stripColumnClz = (el) => {
+      el.classList.remove("page-full", "page-columns");
+      if (el.children) {
+        for (const child of el.children) {
+          stripColumnClz(child);
+        }
+      }
+    }
+    stripColumnClz(note)
+    if (id === null || id.startsWith('sec-')) {
+      // Special case sections, only their first couple elements
+      const container = document.createElement("div");
+      if (note.children && note.children.length > 2) {
+        container.appendChild(note.children[0].cloneNode(true));
+        for (let i = 1; i < note.children.length; i++) {
+          const child = note.children[i];
+          if (child.tagName === "P" && child.innerText === "") {
+            continue;
+          } else {
+            container.appendChild(child.cloneNode(true));
+            break;
+          }
+        }
+        if (window.Quarto?.typesetMath) {
+          window.Quarto.typesetMath(container);
+        }
+        return container.innerHTML
+      } else {
+        if (window.Quarto?.typesetMath) {
+          window.Quarto.typesetMath(note);
+        }
+        return note.innerHTML;
+      }
+    } else {
+      // Remove any anchor links if they are present
+      const anchorLink = note.querySelector('a.anchorjs-link');
+      if (anchorLink) {
+        anchorLink.remove();
+      }
+      if (window.Quarto?.typesetMath) {
+        window.Quarto.typesetMath(note);
+      }
+      // TODO in 1.5, we should make sure this works without a callout special case
+      if (note.classList.contains("callout")) {
+        return note.outerHTML;
+      } else {
+        return note.innerHTML;
+      }
+    }
+  }
+  for (var i=0; i<xrefs.length; i++) {
+    const xref = xrefs[i];
+    tippyHover(xref, undefined, function(instance) {
+      instance.disable();
+      let url = xref.getAttribute('href');
+      let hash = undefined; 
+      if (url.startsWith('#')) {
+        hash = url;
+      } else {
+        try { hash = new URL(url).hash; } catch {}
+      }
+      if (hash) {
+        const id = hash.replace(/^#\/?/, "");
+        const note = window.document.getElementById(id);
+        if (note !== null) {
+          try {
+            const html = processXRef(id, note.cloneNode(true));
+            instance.setContent(html);
+          } finally {
+            instance.enable();
+            instance.show();
+          }
+        } else {
+          // See if we can fetch this
+          fetch(url.split('#')[0])
+          .then(res => res.text())
+          .then(html => {
+            const parser = new DOMParser();
+            const htmlDoc = parser.parseFromString(html, "text/html");
+            const note = htmlDoc.getElementById(id);
+            if (note !== null) {
+              const html = processXRef(id, note);
+              instance.setContent(html);
+            } 
+          }).finally(() => {
+            instance.enable();
+            instance.show();
+          });
+        }
+      } else {
+        // See if we can fetch a full url (with no hash to target)
+        // This is a special case and we should probably do some content thinning / targeting
+        fetch(url)
+        .then(res => res.text())
+        .then(html => {
+          const parser = new DOMParser();
+          const htmlDoc = parser.parseFromString(html, "text/html");
+          const note = htmlDoc.querySelector('main.content');
+          if (note !== null) {
+            // This should only happen for chapter cross references
+            // (since there is no id in the URL)
+            // remove the first header
+            if (note.children.length > 0 && note.children[0].tagName === "HEADER") {
+              note.children[0].remove();
+            }
+            const html = processXRef(null, note);
+            instance.setContent(html);
+          } 
+        }).finally(() => {
+          instance.enable();
+          instance.show();
+        });
+      }
+    }, function(instance) {
+    });
+  }
+      let selectedAnnoteEl;
+      const selectorForAnnotation = ( cell, annotation) => {
+        let cellAttr = 'data-code-cell="' + cell + '"';
+        let lineAttr = 'data-code-annotation="' +  annotation + '"';
+        const selector = 'span[' + cellAttr + '][' + lineAttr + ']';
+        return selector;
+      }
+      const selectCodeLines = (annoteEl) => {
+        const doc = window.document;
+        const targetCell = annoteEl.getAttribute("data-target-cell");
+        const targetAnnotation = annoteEl.getAttribute("data-target-annotation");
+        const annoteSpan = window.document.querySelector(selectorForAnnotation(targetCell, targetAnnotation));
+        const lines = annoteSpan.getAttribute("data-code-lines").split(",");
+        const lineIds = lines.map((line) => {
+          return targetCell + "-" + line;
+        })
+        let top = null;
+        let height = null;
+        let parent = null;
+        if (lineIds.length > 0) {
+            //compute the position of the single el (top and bottom and make a div)
+            const el = window.document.getElementById(lineIds[0]);
+            top = el.offsetTop;
+            height = el.offsetHeight;
+            parent = el.parentElement.parentElement;
+          if (lineIds.length > 1) {
+            const lastEl = window.document.getElementById(lineIds[lineIds.length - 1]);
+            const bottom = lastEl.offsetTop + lastEl.offsetHeight;
+            height = bottom - top;
+          }
+          if (top !== null && height !== null && parent !== null) {
+            // cook up a div (if necessary) and position it 
+            let div = window.document.getElementById("code-annotation-line-highlight");
+            if (div === null) {
+              div = window.document.createElement("div");
+              div.setAttribute("id", "code-annotation-line-highlight");
+              div.style.position = 'absolute';
+              parent.appendChild(div);
+            }
+            div.style.top = top - 2 + "px";
+            div.style.height = height + 4 + "px";
+            div.style.left = 0;
+            let gutterDiv = window.document.getElementById("code-annotation-line-highlight-gutter");
+            if (gutterDiv === null) {
+              gutterDiv = window.document.createElement("div");
+              gutterDiv.setAttribute("id", "code-annotation-line-highlight-gutter");
+              gutterDiv.style.position = 'absolute';
+              const codeCell = window.document.getElementById(targetCell);
+              const gutter = codeCell.querySelector('.code-annotation-gutter');
+              gutter.appendChild(gutterDiv);
+            }
+            gutterDiv.style.top = top - 2 + "px";
+            gutterDiv.style.height = height + 4 + "px";
+          }
+          selectedAnnoteEl = annoteEl;
+        }
+      };
+      const unselectCodeLines = () => {
+        const elementsIds = ["code-annotation-line-highlight", "code-annotation-line-highlight-gutter"];
+        elementsIds.forEach((elId) => {
+          const div = window.document.getElementById(elId);
+          if (div) {
+            div.remove();
+          }
+        });
+        selectedAnnoteEl = undefined;
+      };
+        // Handle positioning of the toggle
+    window.addEventListener(
+      "resize",
+      throttle(() => {
+        elRect = undefined;
+        if (selectedAnnoteEl) {
+          selectCodeLines(selectedAnnoteEl);
+        }
+      }, 10)
+    );
+    function throttle(fn, ms) {
+    let throttle = false;
+    let timer;
+      return (...args) => {
+        if(!throttle) { // first call gets through
+            fn.apply(this, args);
+            throttle = true;
+        } else { // all the others get throttled
+            if(timer) clearTimeout(timer); // cancel #2
+            timer = setTimeout(() => {
+              fn.apply(this, args);
+              timer = throttle = false;
+            }, ms);
+        }
+      };
+    }
+      // Attach click handler to the DT
+      const annoteDls = window.document.querySelectorAll('dt[data-target-cell]');
+      for (const annoteDlNode of annoteDls) {
+        annoteDlNode.addEventListener('click', (event) => {
+          const clickedEl = event.target;
+          if (clickedEl !== selectedAnnoteEl) {
+            unselectCodeLines();
+            const activeEl = window.document.querySelector('dt[data-target-cell].code-annotation-active');
+            if (activeEl) {
+              activeEl.classList.remove('code-annotation-active');
+            }
+            selectCodeLines(clickedEl);
+            clickedEl.classList.add('code-annotation-active');
+          } else {
+            // Unselect the line
+            unselectCodeLines();
+            clickedEl.classList.remove('code-annotation-active');
+          }
+        });
+      }
+  const findCites = (el) => {
+    const parentEl = el.parentElement;
+    if (parentEl) {
+      const cites = parentEl.dataset.cites;
+      if (cites) {
+        return {
+          el,
+          cites: cites.split(' ')
+        };
+      } else {
+        return findCites(el.parentElement)
+      }
+    } else {
+      return undefined;
+    }
+  };
+  var bibliorefs = window.document.querySelectorAll('a[role="doc-biblioref"]');
+  for (var i=0; i<bibliorefs.length; i++) {
+    const ref = bibliorefs[i];
+    const citeInfo = findCites(ref);
+    if (citeInfo) {
+      tippyHover(citeInfo.el, function() {
+        var popup = window.document.createElement('div');
+        citeInfo.cites.forEach(function(cite) {
+          var citeDiv = window.document.createElement('div');
+          citeDiv.classList.add('hanging-indent');
+          citeDiv.classList.add('csl-entry');
+          var biblioDiv = window.document.getElementById('ref-' + cite);
+          if (biblioDiv) {
+            citeDiv.innerHTML = biblioDiv.innerHTML;
+          }
+          popup.appendChild(citeDiv);
+        });
+        return popup.innerHTML;
+      });
+    }
+  }
+});
+</script><div class="modal fade" id="quarto-embedded-source-code-modal" tabindex="-1" aria-labelledby="quarto-embedded-source-code-modal-label" aria-hidden="true"><div class="modal-dialog modal-dialog-scrollable"><div class="modal-content"><div class="modal-header"><h5 class="modal-title" id="quarto-embedded-source-code-modal-label">Ejecutar el código</h5><button class="btn-close" data-bs-dismiss="modal"></button></div><div class="modal-body"><div class="">
+<div class="sourceCode" id="cb34" data-shortcodes="false"><pre class="sourceCode markdown code-with-copy"><code class="sourceCode markdown"><span id="cb34-1"><a href="#cb34-1" aria-hidden="true" tabindex="-1"></a><span class="co">---</span></span>
+<span id="cb34-2"><a href="#cb34-2" aria-hidden="true" tabindex="-1"></a><span class="an">title:</span><span class="co"> "Práctica 3: Parte 1 (Tidyverse: Principios y uso de dplyr)"</span></span>
+<span id="cb34-3"><a href="#cb34-3" aria-hidden="true" tabindex="-1"></a><span class="an">lang:</span><span class="co"> es</span></span>
+<span id="cb34-4"><a href="#cb34-4" aria-hidden="true" tabindex="-1"></a><span class="an">toc:</span><span class="co"> true</span></span>
+<span id="cb34-5"><a href="#cb34-5" aria-hidden="true" tabindex="-1"></a><span class="an">toc-depth:</span><span class="co"> 4</span></span>
+<span id="cb34-6"><a href="#cb34-6" aria-hidden="true" tabindex="-1"></a><span class="an">number-sections:</span><span class="co"> true</span></span>
+<span id="cb34-7"><a href="#cb34-7" aria-hidden="true" tabindex="-1"></a><span class="an">format:</span></span>
+<span id="cb34-8"><a href="#cb34-8" aria-hidden="true" tabindex="-1"></a><span class="co">  html:</span></span>
+<span id="cb34-9"><a href="#cb34-9" aria-hidden="true" tabindex="-1"></a><span class="co">    df-print: paged</span></span>
+<span id="cb34-10"><a href="#cb34-10" aria-hidden="true" tabindex="-1"></a><span class="co">    code-tools: true</span></span>
+<span id="cb34-11"><a href="#cb34-11" aria-hidden="true" tabindex="-1"></a><span class="co">    #code-fold: true</span></span>
+<span id="cb34-12"><a href="#cb34-12" aria-hidden="true" tabindex="-1"></a><span class="co">  pdf: </span></span>
+<span id="cb34-13"><a href="#cb34-13" aria-hidden="true" tabindex="-1"></a><span class="co">    df-print: kable</span></span>
+<span id="cb34-14"><a href="#cb34-14" aria-hidden="true" tabindex="-1"></a><span class="co">    include-in-header: </span></span>
+<span id="cb34-15"><a href="#cb34-15" aria-hidden="true" tabindex="-1"></a><span class="co">       text: |</span></span>
+<span id="cb34-16"><a href="#cb34-16" aria-hidden="true" tabindex="-1"></a><span class="co">         \usepackage{fvextra}</span></span>
+<span id="cb34-17"><a href="#cb34-17" aria-hidden="true" tabindex="-1"></a><span class="co">         \DefineVerbatimEnvironment{Highlighting}{Verbatim}{breaklines,commandchars=\\\{\}}         </span></span>
+<span id="cb34-18"><a href="#cb34-18" aria-hidden="true" tabindex="-1"></a><span class="co">    include-before-body:</span></span>
+<span id="cb34-19"><a href="#cb34-19" aria-hidden="true" tabindex="-1"></a><span class="co">      text: |</span></span>
+<span id="cb34-20"><a href="#cb34-20" aria-hidden="true" tabindex="-1"></a><span class="co">        \RecustomVerbatimEnvironment{verbatim}{Verbatim}{</span></span>
+<span id="cb34-21"><a href="#cb34-21" aria-hidden="true" tabindex="-1"></a><span class="co">          showspaces = false,</span></span>
+<span id="cb34-22"><a href="#cb34-22" aria-hidden="true" tabindex="-1"></a><span class="co">          showtabs = false,</span></span>
+<span id="cb34-23"><a href="#cb34-23" aria-hidden="true" tabindex="-1"></a><span class="co">          breaksymbolleft={},</span></span>
+<span id="cb34-24"><a href="#cb34-24" aria-hidden="true" tabindex="-1"></a><span class="co">          breaklines</span></span>
+<span id="cb34-25"><a href="#cb34-25" aria-hidden="true" tabindex="-1"></a><span class="co">          % Note: setting commandchars=\\\{\} here will cause an error </span></span>
+<span id="cb34-26"><a href="#cb34-26" aria-hidden="true" tabindex="-1"></a><span class="co">        }                   </span></span>
+<span id="cb34-27"><a href="#cb34-27" aria-hidden="true" tabindex="-1"></a><span class="co">    </span></span>
+<span id="cb34-28"><a href="#cb34-28" aria-hidden="true" tabindex="-1"></a><span class="an">execute:</span><span class="co"> </span></span>
+<span id="cb34-29"><a href="#cb34-29" aria-hidden="true" tabindex="-1"></a><span class="co">  echo: true</span></span>
+<span id="cb34-30"><a href="#cb34-30" aria-hidden="true" tabindex="-1"></a><span class="co">  warnings: false</span></span>
+<span id="cb34-31"><a href="#cb34-31" aria-hidden="true" tabindex="-1"></a><span class="co">---</span></span>
+<span id="cb34-32"><a href="#cb34-32" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb34-33"><a href="#cb34-33" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb34-34"><a href="#cb34-34" aria-hidden="true" tabindex="-1"></a>\newcommand{\bcenter}{\begin{center}} </span>
+<span id="cb34-35"><a href="#cb34-35" aria-hidden="true" tabindex="-1"></a>\newcommand{\ecenter}{\end{center}}</span>
+<span id="cb34-36"><a href="#cb34-36" aria-hidden="true" tabindex="-1"></a>\renewcommand{\footnotesize}{}</span>
+<span id="cb34-37"><a href="#cb34-37" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb34-38"><a href="#cb34-38" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb34-39"><a href="#cb34-39" aria-hidden="true" tabindex="-1"></a>\bigskip</span>
+<span id="cb34-40"><a href="#cb34-40" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb34-41"><a href="#cb34-41" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb34-42"><a href="#cb34-42" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb34-43"><a href="#cb34-43" aria-hidden="true" tabindex="-1"></a><span class="fu"># El sistema tidyverse: dplyr, tidyr, etc</span></span>
+<span id="cb34-44"><a href="#cb34-44" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb34-45"><a href="#cb34-45" aria-hidden="true" tabindex="-1"></a>En primer lugar, se importarán los datos almacenados en un fichero "RData" (formato binario de R), que contiene datos de la población de las provincias de España obtenidas en el Censo de 2001.</span>
+<span id="cb34-46"><a href="#cb34-46" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb34-49"><a href="#cb34-49" aria-hidden="true" tabindex="-1"></a><span class="in">```{r}</span></span>
+<span id="cb34-50"><a href="#cb34-50" aria-hidden="true" tabindex="-1"></a><span class="fu">load</span>(<span class="st">"datosPobEspCenso2001.RData"</span>,<span class="at">verbose =</span> <span class="cn">TRUE</span>)</span>
+<span id="cb34-51"><a href="#cb34-51" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
+<span id="cb34-52"><a href="#cb34-52" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb34-53"><a href="#cb34-53" aria-hidden="true" tabindex="-1"></a>El fichero "datosPobEspCenso2001.RData" contiene el objeto R del tipo tibble (una mejora del objeto data.frame) con los datos.</span>
+<span id="cb34-54"><a href="#cb34-54" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb34-57"><a href="#cb34-57" aria-hidden="true" tabindex="-1"></a><span class="in">```{r}</span></span>
+<span id="cb34-58"><a href="#cb34-58" aria-hidden="true" tabindex="-1"></a><span class="fu">str</span>(datos)</span>
+<span id="cb34-59"><a href="#cb34-59" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
+<span id="cb34-60"><a href="#cb34-60" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb34-61"><a href="#cb34-61" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb34-62"><a href="#cb34-62" aria-hidden="true" tabindex="-1"></a>Antes de seguir, se cargará el sistema "tidyverse", que a su vez carga una serie de paquetes asociados a este sistema. En este manual nos centraremos principalmente en: "dplyr" y "ggplot2".</span>
+<span id="cb34-63"><a href="#cb34-63" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb34-64"><a href="#cb34-64" aria-hidden="true" tabindex="-1"></a><span class="in">```{r message=FALSE,warning=FALSE}</span></span>
+<span id="cb34-65"><a href="#cb34-65" aria-hidden="true" tabindex="-1"></a><span class="in">library(tidyverse)</span></span>
+<span id="cb34-66"><a href="#cb34-66" aria-hidden="true" tabindex="-1"></a><span class="in">#library(tidyverse,warn.conflicts = FALSE)</span></span>
+<span id="cb34-67"><a href="#cb34-67" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
+<span id="cb34-68"><a href="#cb34-68" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb34-69"><a href="#cb34-69" aria-hidden="true" tabindex="-1"></a><span class="in">```{r echo=FALSE,out.width="80%",fig.align='center'}</span></span>
+<span id="cb34-70"><a href="#cb34-70" aria-hidden="true" tabindex="-1"></a><span class="in">knitr::include_graphics("imagenes/tidyversesistema.png")</span></span>
+<span id="cb34-71"><a href="#cb34-71" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
+<span id="cb34-72"><a href="#cb34-72" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb34-73"><a href="#cb34-73" aria-hidden="true" tabindex="-1"></a>En R, al escribir el nombre del objeto que contiene los datos, nos mostrará sus valores. Aunque al ser, un objeto de tipo "tibble", mostrará solamente una representación corta de ellos.</span>
+<span id="cb34-74"><a href="#cb34-74" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb34-75"><a href="#cb34-75" aria-hidden="true" tabindex="-1"></a>Veamos en este caso el **contenido del objeto "datos"** con información sobre la población de las provincias de España en el Censo de 2001. *Nota*: en este documento, los datos se mostrarán con ayuda en la cabecera yaml de: <span class="in">`df-print: paged`</span> en html y <span class="in">`df-print: kable`</span> en pdf.</span>
+<span id="cb34-76"><a href="#cb34-76" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb34-79"><a href="#cb34-79" aria-hidden="true" tabindex="-1"></a><span class="in">```{r}</span></span>
+<span id="cb34-80"><a href="#cb34-80" aria-hidden="true" tabindex="-1"></a>datos</span>
+<span id="cb34-81"><a href="#cb34-81" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
+<span id="cb34-82"><a href="#cb34-82" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb34-83"><a href="#cb34-83" aria-hidden="true" tabindex="-1"></a><span class="fu">## Los 4 principios del tidyverse</span></span>
+<span id="cb34-84"><a href="#cb34-84" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb34-85"><a href="#cb34-85" aria-hidden="true" tabindex="-1"></a>Los 4 principios del sistema tidyverse son los siguientes:</span>
+<span id="cb34-86"><a href="#cb34-86" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb34-87"><a href="#cb34-87" aria-hidden="true" tabindex="-1"></a><span class="ss">- </span>**Principio 1**: se usarán datos convenientemente organizados.</span>
+<span id="cb34-88"><a href="#cb34-88" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb34-89"><a href="#cb34-89" aria-hidden="true" tabindex="-1"></a><span class="ss">    * </span>Cada fila o línea de los datos es una observación.</span>
+<span id="cb34-90"><a href="#cb34-90" aria-hidden="true" tabindex="-1"></a><span class="ss">    * </span>Cada columna es una variable.</span>
+<span id="cb34-91"><a href="#cb34-91" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb34-92"><a href="#cb34-92" aria-hidden="true" tabindex="-1"></a>    <span class="al">![](imagenes/tidyverse04.png)</span>{width="90%"}</span>
+<span id="cb34-93"><a href="#cb34-93" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb34-94"><a href="#cb34-94" aria-hidden="true" tabindex="-1"></a><span class="in">    En el de la izquierda se muestran 2 datos de un alumno en una sola fila (calificación en "Mate" y calificación en "Ingles").</span></span>
+<span id="cb34-95"><a href="#cb34-95" aria-hidden="true" tabindex="-1"></a>  </span>
+<span id="cb34-96"><a href="#cb34-96" aria-hidden="true" tabindex="-1"></a><span class="in">    En el de la derecha se organiza de modo que hay dos filas, una para cada observación-calificación.</span></span>
+<span id="cb34-97"><a href="#cb34-97" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb34-98"><a href="#cb34-98" aria-hidden="true" tabindex="-1"></a><span class="ss">- </span>**Principio 2**: en cada paso se usa una función o herramienta.</span>
+<span id="cb34-99"><a href="#cb34-99" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb34-100"><a href="#cb34-100" aria-hidden="true" tabindex="-1"></a>    Si se quisiera obtener: "**la media actual de cada estudiante en la asignatura Matemáticas**", los pasos que se necesitan realizar sobre los datos son:</span>
+<span id="cb34-101"><a href="#cb34-101" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb34-102"><a href="#cb34-102" aria-hidden="true" tabindex="-1"></a><span class="ss">    1. </span>*Filtrado*. Nos quedamos con únicamente las calificaciones de la asignatura Matemáticas.</span>
+<span id="cb34-103"><a href="#cb34-103" aria-hidden="true" tabindex="-1"></a><span class="ss">    2. </span>*Agrupación*. Agrupamos para cada apellidos-nombre (alumno) diferente.</span>
+<span id="cb34-104"><a href="#cb34-104" aria-hidden="true" tabindex="-1"></a><span class="ss">    3. </span>*Cálculo*. Para cada alumno calculamos la media de sus notas de Matemáticas.</span>
+<span id="cb34-105"><a href="#cb34-105" aria-hidden="true" tabindex="-1"></a><span class="ss">    4. </span>*Mostrar resultados*. Se mostrarían para cada alumno sus respectivas medias.</span>
+<span id="cb34-106"><a href="#cb34-106" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb34-107"><a href="#cb34-107" aria-hidden="true" tabindex="-1"></a><span class="ss">- </span>**Principio 3**: uso del operador tubería **"`%&gt;%`"** (incluido en "tidyverse") o **"`|&gt;`"** (definido en R a partir de la versión 4.1) para *combinar* las herramientas o funciones a utilizar. Facilitará la lectura y la modificación del código.</span>
+<span id="cb34-108"><a href="#cb34-108" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb34-109"><a href="#cb34-109" aria-hidden="true" tabindex="-1"></a><span class="ss">- </span>**Principio 4**: cada paso es una consulta o un comando.</span>
+<span id="cb34-110"><a href="#cb34-110" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb34-111"><a href="#cb34-111" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb34-112"><a href="#cb34-112" aria-hidden="true" tabindex="-1"></a>Con el sistema tidyverse, la respuesta a la cuestión planteada se obtendría del siguiente modo:</span>
+<span id="cb34-113"><a href="#cb34-113" aria-hidden="true" tabindex="-1"></a><span class="in">```r</span></span>
+<span id="cb34-114"><a href="#cb34-114" aria-hidden="true" tabindex="-1"></a>datos <span class="sc">%&gt;%</span></span>
+<span id="cb34-115"><a href="#cb34-115" aria-hidden="true" tabindex="-1"></a>  <span class="fu">filter</span>(materia <span class="sc">==</span> <span class="st">"mate"</span>) <span class="sc">%&gt;%</span>            <span class="co"># filtrado</span></span>
+<span id="cb34-116"><a href="#cb34-116" aria-hidden="true" tabindex="-1"></a>  <span class="fu">group_by</span>(apellido,primer) <span class="sc">%&gt;%</span>            <span class="co"># agrupación</span></span>
+<span id="cb34-117"><a href="#cb34-117" aria-hidden="true" tabindex="-1"></a>  <span class="fu">summarise</span>(<span class="at">media =</span> <span class="fu">mean</span>(puntos))          <span class="co"># cálculo   </span></span>
+<span id="cb34-118"><a href="#cb34-118" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
+<span id="cb34-119"><a href="#cb34-119" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb34-120"><a href="#cb34-120" aria-hidden="true" tabindex="-1"></a>Equivalente (nuevas versiones de R):</span>
+<span id="cb34-121"><a href="#cb34-121" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb34-122"><a href="#cb34-122" aria-hidden="true" tabindex="-1"></a><span class="in">```r</span></span>
+<span id="cb34-123"><a href="#cb34-123" aria-hidden="true" tabindex="-1"></a>datos <span class="sc">|&gt;</span> </span>
+<span id="cb34-124"><a href="#cb34-124" aria-hidden="true" tabindex="-1"></a>  <span class="fu">filter</span>(materia <span class="sc">==</span> <span class="st">"mate"</span>) <span class="sc">|&gt;</span> </span>
+<span id="cb34-125"><a href="#cb34-125" aria-hidden="true" tabindex="-1"></a>  <span class="fu">group_by</span>(apellido,primer) <span class="sc">|&gt;</span> </span>
+<span id="cb34-126"><a href="#cb34-126" aria-hidden="true" tabindex="-1"></a>  <span class="fu">summarise</span>(<span class="at">media =</span> <span class="fu">mean</span>(puntos))</span>
+<span id="cb34-127"><a href="#cb34-127" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
+<span id="cb34-128"><a href="#cb34-128" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb34-129"><a href="#cb34-129" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb34-130"><a href="#cb34-130" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb34-131"><a href="#cb34-131" aria-hidden="true" tabindex="-1"></a>**Nota:** la información en "datos" no verifica los principios del sistema tidyverse (en una fila no hay un solo valor por provincia), pero como veremos con ejemplos a continuación, aunque no se cumpla lo recomendado, también es posible aplicar las herramientas del paquete tidyverse a datos que no cumplen sus principios.</span>
+<span id="cb34-132"><a href="#cb34-132" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb34-133"><a href="#cb34-133" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb34-134"><a href="#cb34-134" aria-hidden="true" tabindex="-1"></a><span class="fu">## Uso de dplyr</span></span>
+<span id="cb34-135"><a href="#cb34-135" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb34-136"><a href="#cb34-136" aria-hidden="true" tabindex="-1"></a>La librería o paquete "dplyr" contiene una serie de herramientas que facilitarán la manipulación básica de los datos, además de usar el operador "tubería": <span class="in">`%&gt;%`</span> (del paquete "magrittr") o <span class="in">`|&gt;`</span> (incluido en nuevas versiones de R) que permiten **encadenar** varias herramientas de forma consecutiva, que como se verá más adelante, **simplificará** su lectura. Además, de **acelerar** la obtención de los resultados respecto al uso con el sistema base de R, sobre todo cuando los datasets son muy grandes. La mayoría de estas herramientas tiene sus equivalentes en el sistema base de R o en otros paquetes R, pero se están convirtiendo en un estándar.</span>
+<span id="cb34-137"><a href="#cb34-137" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb34-138"><a href="#cb34-138" aria-hidden="true" tabindex="-1"></a>{{&lt; pagebreak &gt;}}</span>
+<span id="cb34-139"><a href="#cb34-139" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb34-140"><a href="#cb34-140" aria-hidden="true" tabindex="-1"></a>Las principales herramientas que contiene dplyr son las siguientes:</span>
+<span id="cb34-141"><a href="#cb34-141" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb34-142"><a href="#cb34-142" aria-hidden="true" tabindex="-1"></a><span class="ss">- </span><span class="in">`select()`</span>: para seleccionar determinadas columnas o variables.</span>
+<span id="cb34-143"><a href="#cb34-143" aria-hidden="true" tabindex="-1"></a><span class="ss">- </span><span class="in">`filter()`</span>: para seleccionar determinadas filas o individuos-observaciones que verifican determinadas condiciones.</span>
+<span id="cb34-144"><a href="#cb34-144" aria-hidden="true" tabindex="-1"></a><span class="ss">- </span><span class="in">`arrange()`</span>: para ordenar los datos por determinadas columnas.</span>
+<span id="cb34-145"><a href="#cb34-145" aria-hidden="true" tabindex="-1"></a><span class="ss">- </span><span class="in">`mutate()`</span>: para construir nuevas columnas o variables.</span>
+<span id="cb34-146"><a href="#cb34-146" aria-hidden="true" tabindex="-1"></a><span class="ss">- </span><span class="in">`summarise()`</span>: para obtener columnas de resumen estadístico.</span>
+<span id="cb34-147"><a href="#cb34-147" aria-hidden="true" tabindex="-1"></a><span class="ss">- </span><span class="in">`group_by()`</span>: para agrupar las filas o individuos-observaciones por los valores de una o varias columnas o variables.</span>
+<span id="cb34-148"><a href="#cb34-148" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb34-149"><a href="#cb34-149" aria-hidden="true" tabindex="-1"></a>Existen otras herramientas básicas como: <span class="in">`slice()`</span> (selecciona filas por posición), <span class="in">`rename()`</span>, <span class="in">`pull()`</span> (convierte columna a un vector), <span class="in">`sample_n()`</span> y <span class="in">`sample_frac()`</span> (seleccionar filas de forma aleatoria), <span class="in">`glimpse()`</span> (para presentar en consola), ...</span>
+<span id="cb34-150"><a href="#cb34-150" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb34-151"><a href="#cb34-151" aria-hidden="true" tabindex="-1"></a>También existen herramientas que permiten realizar operaciones más avanzadas que ayudan a relacionar varios "data.frame": <span class="in">`inner_join(x, y)`</span>, <span class="in">`left_join(x, y)`</span>, <span class="in">`right_join(x, y)`</span>, <span class="in">`semi_join(x, y)`</span>, <span class="in">`anti_join(x, y)`</span>, ..., y crear un solo "data.frame".</span>
+<span id="cb34-152"><a href="#cb34-152" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb34-153"><a href="#cb34-153" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb34-154"><a href="#cb34-154" aria-hidden="true" tabindex="-1"></a>Aprenderemos el uso básico de "dplyr" con ayuda de ejemplos.</span>
+<span id="cb34-155"><a href="#cb34-155" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb34-156"><a href="#cb34-156" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb34-157"><a href="#cb34-157" aria-hidden="true" tabindex="-1"></a>R muestra de forma no muy amigable los datos (como se ha visto anteriormente), por ello se va a usar la función <span class="in">`kable()`</span> del paquete "knitr" para mejorar su presentación.</span>
+<span id="cb34-158"><a href="#cb34-158" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb34-161"><a href="#cb34-161" aria-hidden="true" tabindex="-1"></a><span class="in">```{r}</span></span>
+<span id="cb34-162"><a href="#cb34-162" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(knitr)</span>
+<span id="cb34-163"><a href="#cb34-163" aria-hidden="true" tabindex="-1"></a><span class="fu">kable</span>(<span class="fu">head</span>(datos))</span>
+<span id="cb34-164"><a href="#cb34-164" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
+<span id="cb34-165"><a href="#cb34-165" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb34-166"><a href="#cb34-166" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb34-167"><a href="#cb34-167" aria-hidden="true" tabindex="-1"></a>**Nota**: con la función <span class="in">`head(datos)`</span> se mostrarían únicamente las primeras 6 filas de los datos. Pero también se podrían mostrar en número diferente, por ejemplo, para mostrar las 10 primeras filas, se escribiría: <span class="in">`head(datos,10)`</span>.</span>
+<span id="cb34-168"><a href="#cb34-168" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb34-169"><a href="#cb34-169" aria-hidden="true" tabindex="-1"></a><span class="fu">### Ordenación de los datos</span></span>
+<span id="cb34-170"><a href="#cb34-170" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb34-171"><a href="#cb34-171" aria-hidden="true" tabindex="-1"></a><span class="co">&lt;!-- La información en "datos" no aparece ordenada de ninguna forma particular.  --&gt;</span></span>
+<span id="cb34-172"><a href="#cb34-172" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb34-173"><a href="#cb34-173" aria-hidden="true" tabindex="-1"></a>La función <span class="in">`arrange()`</span> del paquete "dplyr" nos va a permitir ordenar los datos por una o más columnas. Veamos varios ejemplos.</span>
+<span id="cb34-174"><a href="#cb34-174" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb34-175"><a href="#cb34-175" aria-hidden="true" tabindex="-1"></a>En el siguiente ejemplo, **ordenamos los datos en orden ascendente del valor en la columna o variable "TOTAL"** (población total de la provincia) y mostramos únicamente las 10 primeras filas:</span>
+<span id="cb34-178"><a href="#cb34-178" aria-hidden="true" tabindex="-1"></a><span class="in">```{r}</span></span>
+<span id="cb34-179"><a href="#cb34-179" aria-hidden="true" tabindex="-1"></a><span class="fu">head</span>(<span class="fu">arrange</span>(datos, TOTAL),<span class="dv">10</span>)</span>
+<span id="cb34-180"><a href="#cb34-180" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
+<span id="cb34-181"><a href="#cb34-181" aria-hidden="true" tabindex="-1"></a>Puede verse que la menos poblada es Melilla con 66.411 habitantes, seguida de Ceuta, Soria, Teruel y Segovia.</span>
+<span id="cb34-182"><a href="#cb34-182" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb34-183"><a href="#cb34-183" aria-hidden="true" tabindex="-1"></a>Ese mismo objetivo se puede conseguir con ayuda del operador tubería (o pipe) <span class="in">`%&gt;%`</span> para encadenar las mismas operaciones de forma consecutiva, como se puede ver en el siguiente código:</span>
+<span id="cb34-184"><a href="#cb34-184" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb34-187"><a href="#cb34-187" aria-hidden="true" tabindex="-1"></a><span class="in">```{r}</span></span>
+<span id="cb34-188"><a href="#cb34-188" aria-hidden="true" tabindex="-1"></a><span class="co"># Se podría escribir así: datos %&gt;% arrange(TOTAL) %&gt;% head(10)</span></span>
+<span id="cb34-189"><a href="#cb34-189" aria-hidden="true" tabindex="-1"></a>datos <span class="sc">%&gt;%</span> </span>
+<span id="cb34-190"><a href="#cb34-190" aria-hidden="true" tabindex="-1"></a>  <span class="fu">arrange</span>(TOTAL) <span class="sc">%&gt;%</span> </span>
+<span id="cb34-191"><a href="#cb34-191" aria-hidden="true" tabindex="-1"></a>  <span class="fu">head</span>(<span class="dv">10</span>)</span>
+<span id="cb34-192"><a href="#cb34-192" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
+<span id="cb34-193"><a href="#cb34-193" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb34-194"><a href="#cb34-194" aria-hidden="true" tabindex="-1"></a>Se puede leer del siguiente modo: **"a datos se aplica una ordenación según la columna TOTAL y a continuación al resultado se aplica que se muestren únicamente las 10 primeras filas"**.</span>
+<span id="cb34-195"><a href="#cb34-195" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb34-196"><a href="#cb34-196" aria-hidden="true" tabindex="-1"></a>::: {.callout-note}</span>
+<span id="cb34-197"><a href="#cb34-197" aria-hidden="true" tabindex="-1"></a>En RStudio, para insertar "<span class="in">`%&gt;%`</span>" en el editor o en la consola, se puede utilizar la **combinación de teclas: Ctrl+May+M (en Mac: Cmd+May+M)**. </span>
+<span id="cb34-198"><a href="#cb34-198" aria-hidden="true" tabindex="-1"></a>:::</span>
+<span id="cb34-199"><a href="#cb34-199" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb34-200"><a href="#cb34-200" aria-hidden="true" tabindex="-1"></a>::: {.callout-note}</span>
+<span id="cb34-201"><a href="#cb34-201" aria-hidden="true" tabindex="-1"></a>**Lo que hace realmente el operador tubería es colocar el elemento resultante de lo que está a su izquierda como primer argumento de la función que tiene a su derecha.** </span>
+<span id="cb34-202"><a href="#cb34-202" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb34-203"><a href="#cb34-203" aria-hidden="true" tabindex="-1"></a>\bcenter</span>
+<span id="cb34-204"><a href="#cb34-204" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb34-205"><a href="#cb34-205" aria-hidden="true" tabindex="-1"></a><span class="in">`x %&gt;% f(y)        es lo mismo que    f(x,y)`</span></span>
+<span id="cb34-206"><a href="#cb34-206" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb34-207"><a href="#cb34-207" aria-hidden="true" tabindex="-1"></a><span class="in">`x |&gt;  f(y)        es lo mismo que    f(x,y)`</span></span>
+<span id="cb34-208"><a href="#cb34-208" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb34-209"><a href="#cb34-209" aria-hidden="true" tabindex="-1"></a>\ecenter</span>
+<span id="cb34-210"><a href="#cb34-210" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb34-211"><a href="#cb34-211" aria-hidden="true" tabindex="-1"></a>\bcenter</span>
+<span id="cb34-212"><a href="#cb34-212" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb34-213"><a href="#cb34-213" aria-hidden="true" tabindex="-1"></a><span class="in">`y %&gt;% f(x, ., z)  es lo mismo que    f(x,y,z)`</span> </span>
+<span id="cb34-214"><a href="#cb34-214" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb34-215"><a href="#cb34-215" aria-hidden="true" tabindex="-1"></a>\ecenter</span>
+<span id="cb34-216"><a href="#cb34-216" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb34-217"><a href="#cb34-217" aria-hidden="true" tabindex="-1"></a>**Importante**. El operador "<span class="in">`%&gt;%`</span>" se puede utilizar también con cualquier función del sistema base de R u otra librería.</span>
+<span id="cb34-218"><a href="#cb34-218" aria-hidden="true" tabindex="-1"></a>:::</span>
+<span id="cb34-219"><a href="#cb34-219" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb34-220"><a href="#cb34-220" aria-hidden="true" tabindex="-1"></a>El ejemplo, anterior sería equivalente al siguiente, en el que se tiene que ir dando nombres diferentes de objetos (más difícil de leer):</span>
+<span id="cb34-221"><a href="#cb34-221" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb34-224"><a href="#cb34-224" aria-hidden="true" tabindex="-1"></a><span class="in">```{r}</span></span>
+<span id="cb34-225"><a href="#cb34-225" aria-hidden="true" tabindex="-1"></a>elemento01 <span class="ot">=</span> <span class="fu">arrange</span>(datos,TOTAL)</span>
+<span id="cb34-226"><a href="#cb34-226" aria-hidden="true" tabindex="-1"></a>elemento02 <span class="ot">=</span> <span class="fu">head</span>(elemento01,<span class="dv">10</span>)</span>
+<span id="cb34-227"><a href="#cb34-227" aria-hidden="true" tabindex="-1"></a>elemento02</span>
+<span id="cb34-228"><a href="#cb34-228" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
+<span id="cb34-229"><a href="#cb34-229" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb34-230"><a href="#cb34-230" aria-hidden="true" tabindex="-1"></a>**Ejemplo**. Se quieren presentar los datos ordenados por **CCAA** (comunidad autónoma) y en caso de empate ordene de forma **descendente** según **TOTAL** (se usa: <span class="in">`desc()`</span>).</span>
+<span id="cb34-231"><a href="#cb34-231" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb34-234"><a href="#cb34-234" aria-hidden="true" tabindex="-1"></a><span class="in">```{r}</span></span>
+<span id="cb34-235"><a href="#cb34-235" aria-hidden="true" tabindex="-1"></a>datos <span class="sc">%&gt;%</span> </span>
+<span id="cb34-236"><a href="#cb34-236" aria-hidden="true" tabindex="-1"></a>  <span class="fu">arrange</span>(CCAA,<span class="fu">desc</span>(TOTAL)) <span class="sc">%&gt;%</span> </span>
+<span id="cb34-237"><a href="#cb34-237" aria-hidden="true" tabindex="-1"></a>  <span class="fu">head</span>(<span class="dv">15</span>) <span class="sc">%&gt;%</span> </span>
+<span id="cb34-238"><a href="#cb34-238" aria-hidden="true" tabindex="-1"></a>  <span class="fu">kable</span>(<span class="at">booktabs =</span> <span class="cn">TRUE</span>)</span>
+<span id="cb34-239"><a href="#cb34-239" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
+<span id="cb34-240"><a href="#cb34-240" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb34-241"><a href="#cb34-241" aria-hidden="true" tabindex="-1"></a>La función <span class="in">`arrange()`</span> puede ordenar por más de 2 columnas, y el uso de la función <span class="in">`desc()`</span> sobre "TOTAL" (podría usarse en las columnas que se necesite) ha establecido que la ordenación sea de forma descendente según la columna indicada.</span>
+<span id="cb34-242"><a href="#cb34-242" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb34-243"><a href="#cb34-243" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb34-244"><a href="#cb34-244" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb34-245"><a href="#cb34-245" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb34-246"><a href="#cb34-246" aria-hidden="true" tabindex="-1"></a><span class="fu">### Selección de variables: select()</span></span>
+<span id="cb34-247"><a href="#cb34-247" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb34-248"><a href="#cb34-248" aria-hidden="true" tabindex="-1"></a>Ahora se usará <span class="in">`select()`</span> para reducir el dataset al quedarse con determinadas columnas. </span>
+<span id="cb34-249"><a href="#cb34-249" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb34-250"><a href="#cb34-250" aria-hidden="true" tabindex="-1"></a>**Ejemplo**. Se quiere trabajar únicamente con los datos: nombres de provincia y población total. Para ello, se guarda el resultado obtenido con <span class="in">`select()`</span> en un objeto R que se ha llamado <span class="in">`datos_s01`</span>.</span>
+<span id="cb34-251"><a href="#cb34-251" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb34-254"><a href="#cb34-254" aria-hidden="true" tabindex="-1"></a><span class="in">```{r}</span></span>
+<span id="cb34-255"><a href="#cb34-255" aria-hidden="true" tabindex="-1"></a>datos_s01 <span class="ot">=</span> datos <span class="sc">%&gt;%</span> </span>
+<span id="cb34-256"><a href="#cb34-256" aria-hidden="true" tabindex="-1"></a>  <span class="fu">select</span>(Provincia,TOTAL) </span>
+<span id="cb34-257"><a href="#cb34-257" aria-hidden="true" tabindex="-1"></a><span class="co"># se pueden usar posiciones de columna: select(1,3)</span></span>
+<span id="cb34-258"><a href="#cb34-258" aria-hidden="true" tabindex="-1"></a><span class="co"># también expresiones como: select(1,3:4)</span></span>
+<span id="cb34-259"><a href="#cb34-259" aria-hidden="true" tabindex="-1"></a><span class="fu">head</span>(datos_s01)</span>
+<span id="cb34-260"><a href="#cb34-260" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
+<span id="cb34-261"><a href="#cb34-261" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb34-262"><a href="#cb34-262" aria-hidden="true" tabindex="-1"></a>**Nota:** Con <span class="in">`select`</span> también se podrían reordenar la colocación de las columnas, apareciendo en el nuevo objeto con las columnas colocadas en el orden en el que se han enumerado en la llamada a la función.</span>
+<span id="cb34-263"><a href="#cb34-263" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb34-264"><a href="#cb34-264" aria-hidden="true" tabindex="-1"></a>**Ejemplo**. Se quieren obtener las columnas CCAA, Provincia y Población de Mujeres, ordenadas por Población de Mujeres de forma descendente (de mayor a menor).</span>
+<span id="cb34-265"><a href="#cb34-265" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb34-268"><a href="#cb34-268" aria-hidden="true" tabindex="-1"></a><span class="in">```{r}</span></span>
+<span id="cb34-269"><a href="#cb34-269" aria-hidden="true" tabindex="-1"></a>datos <span class="sc">%&gt;%</span> </span>
+<span id="cb34-270"><a href="#cb34-270" aria-hidden="true" tabindex="-1"></a>  <span class="fu">select</span>(CCAA,Provincia,Mujer) <span class="sc">%&gt;%</span> </span>
+<span id="cb34-271"><a href="#cb34-271" aria-hidden="true" tabindex="-1"></a>  <span class="fu">arrange</span>(<span class="fu">desc</span>(Mujer)) <span class="sc">%&gt;%</span> </span>
+<span id="cb34-272"><a href="#cb34-272" aria-hidden="true" tabindex="-1"></a>  <span class="fu">head</span>()</span>
+<span id="cb34-273"><a href="#cb34-273" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
+<span id="cb34-274"><a href="#cb34-274" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb34-275"><a href="#cb34-275" aria-hidden="true" tabindex="-1"></a><span class="fu">### Filtrado de observaciones-individuos: filter()</span></span>
+<span id="cb34-276"><a href="#cb34-276" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb34-277"><a href="#cb34-277" aria-hidden="true" tabindex="-1"></a>Una operación muy habitual es reducir el conjunto de datos, al quedarse con aquellas filas u observaciones-individuos que cumplen determinadas condiciones lógicas, o dicho de otro modo, poseen ciertas características que nos interesan.</span>
+<span id="cb34-278"><a href="#cb34-278" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb34-279"><a href="#cb34-279" aria-hidden="true" tabindex="-1"></a>**Ejemplo**. Se quiere obtener un conjunto de datos que contengan únicamente la información de las provincias de Andalucía que tengan una población total superior a 800.000 habitantes.</span>
+<span id="cb34-280"><a href="#cb34-280" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb34-283"><a href="#cb34-283" aria-hidden="true" tabindex="-1"></a><span class="in">```{r}</span></span>
+<span id="cb34-284"><a href="#cb34-284" aria-hidden="true" tabindex="-1"></a>datos_f01 <span class="ot">=</span> datos <span class="sc">%&gt;%</span> </span>
+<span id="cb34-285"><a href="#cb34-285" aria-hidden="true" tabindex="-1"></a>  <span class="fu">filter</span>(CCAA <span class="sc">==</span> <span class="st">"Andalucía"</span>, TOTAL<span class="sc">&gt;</span><span class="dv">800000</span>)  </span>
+<span id="cb34-286"><a href="#cb34-286" aria-hidden="true" tabindex="-1"></a>           <span class="co"># '==' para la igualdad en expresiones lógicas</span></span>
+<span id="cb34-287"><a href="#cb34-287" aria-hidden="true" tabindex="-1"></a>datos_f01</span>
+<span id="cb34-288"><a href="#cb34-288" aria-hidden="true" tabindex="-1"></a><span class="co"># Equivalente a:</span></span>
+<span id="cb34-289"><a href="#cb34-289" aria-hidden="true" tabindex="-1"></a><span class="co"># datos_f02 = datos %&gt;% </span></span>
+<span id="cb34-290"><a href="#cb34-290" aria-hidden="true" tabindex="-1"></a><span class="co">#  filter(CCAA == "Andalucía" &amp; TOTAL&gt;800000)  </span></span>
+<span id="cb34-291"><a href="#cb34-291" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
+<span id="cb34-292"><a href="#cb34-292" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb34-293"><a href="#cb34-293" aria-hidden="true" tabindex="-1"></a>::: {.callout-note}</span>
+<span id="cb34-294"><a href="#cb34-294" aria-hidden="true" tabindex="-1"></a>Como puede verse en el ejemplo anterior se puede añadir más de una condición en la función <span class="in">`filter()`</span> separándolas por comas. La expresión lógica podría ser tan compleja como se necesite, recordando que se pueden usar paréntesis para facilitar su correcta construcción. Los operadores lógicos más usados son: <span class="in">`==`</span> (igual), <span class="in">`&lt;`</span> (menor), <span class="in">`&gt;`</span> (mayor), <span class="in">`&lt;=`</span> (menor o igual), <span class="in">`&gt;=`</span> (mayor o igual), <span class="in">`!=`</span> (distinto), <span class="in">`&amp;`</span> (y lógico), <span class="in">`|`</span> (o lógico).</span>
+<span id="cb34-295"><a href="#cb34-295" aria-hidden="true" tabindex="-1"></a>:::</span>
+<span id="cb34-296"><a href="#cb34-296" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb34-297"><a href="#cb34-297" aria-hidden="true" tabindex="-1"></a>::: {.callout-note}</span>
+<span id="cb34-298"><a href="#cb34-298" aria-hidden="true" tabindex="-1"></a>En <span class="in">`filter()`</span> se usa muy a menudo  la función <span class="in">`is.na()`</span> para seleccionar las filas que tienen el valor <span class="in">`NA`</span> en una columna, o también <span class="in">`!is.na()`</span> para seleccionar las filas que no tienen el valor <span class="in">`NA`</span> en una columna.</span>
+<span id="cb34-299"><a href="#cb34-299" aria-hidden="true" tabindex="-1"></a>:::</span>
+<span id="cb34-300"><a href="#cb34-300" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb34-301"><a href="#cb34-301" aria-hidden="true" tabindex="-1"></a>En nuestros datos, no aparecen valores NA, pero se podría haber utilizado una llamada del siguiente tipo:</span>
+<span id="cb34-302"><a href="#cb34-302" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb34-303"><a href="#cb34-303" aria-hidden="true" tabindex="-1"></a><span class="in">```r</span></span>
+<span id="cb34-304"><a href="#cb34-304" aria-hidden="true" tabindex="-1"></a>datos <span class="sc">%&gt;%</span> </span>
+<span id="cb34-305"><a href="#cb34-305" aria-hidden="true" tabindex="-1"></a>   <span class="fu">filter</span>(<span class="sc">!</span><span class="fu">is.na</span>(TOTAL))</span>
+<span id="cb34-306"><a href="#cb34-306" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
+<span id="cb34-307"><a href="#cb34-307" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb34-308"><a href="#cb34-308" aria-hidden="true" tabindex="-1"></a>**Ejemplo**. Se quiere trabajar únicamente con aquellas provincias que tienen más hombres que mujeres, mostrando las variables: Provincia, población de hombres y población de mujeres y ordenando por número de hombres de forma descendente.</span>
+<span id="cb34-309"><a href="#cb34-309" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb34-312"><a href="#cb34-312" aria-hidden="true" tabindex="-1"></a><span class="in">```{r}</span></span>
+<span id="cb34-313"><a href="#cb34-313" aria-hidden="true" tabindex="-1"></a>datos <span class="sc">%&gt;%</span> </span>
+<span id="cb34-314"><a href="#cb34-314" aria-hidden="true" tabindex="-1"></a>  <span class="fu">filter</span>(Varon <span class="sc">&gt;=</span> Mujer) <span class="sc">%&gt;%</span> </span>
+<span id="cb34-315"><a href="#cb34-315" aria-hidden="true" tabindex="-1"></a>  <span class="fu">select</span>(Provincia,Varon,Mujer) <span class="sc">%&gt;%</span> </span>
+<span id="cb34-316"><a href="#cb34-316" aria-hidden="true" tabindex="-1"></a>  <span class="fu">arrange</span>(<span class="fu">desc</span>(Varon)) <span class="sc">%&gt;%</span> </span>
+<span id="cb34-317"><a href="#cb34-317" aria-hidden="true" tabindex="-1"></a>  <span class="fu">kable</span>(<span class="at">booktabs=</span><span class="cn">TRUE</span>)</span>
+<span id="cb34-318"><a href="#cb34-318" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
+<span id="cb34-319"><a href="#cb34-319" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb34-320"><a href="#cb34-320" aria-hidden="true" tabindex="-1"></a>**Nota**. Cualquiera de las herramientas del paquete "dplyr" se podrían emplear varias veces y en distintas posiciones, siempre que sea sintácticamente correcta la expresión.</span>
+<span id="cb34-321"><a href="#cb34-321" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb34-322"><a href="#cb34-322" aria-hidden="true" tabindex="-1"></a><span class="fu">### Añadir nuevas columnas o variables calculadas: mutate()</span></span>
+<span id="cb34-323"><a href="#cb34-323" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb34-324"><a href="#cb34-324" aria-hidden="true" tabindex="-1"></a>La función <span class="in">`mutate()`</span> permite añadir nuevas columnas a nuestros datos al efectuar algún tipo de operación más o menos compleja, generalmente a partir de los datos de las otras columnas.</span>
+<span id="cb34-325"><a href="#cb34-325" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb34-326"><a href="#cb34-326" aria-hidden="true" tabindex="-1"></a>**Ejemplo**. Se quieren añadir dos columnas: </span>
+<span id="cb34-327"><a href="#cb34-327" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb34-328"><a href="#cb34-328" aria-hidden="true" tabindex="-1"></a><span class="ss">- </span>una que contenga la diferencia entre el número de hombres y mujeres, </span>
+<span id="cb34-329"><a href="#cb34-329" aria-hidden="true" tabindex="-1"></a><span class="ss">- </span>y otra que contenga el porcentaje de mujeres respecto al total de la población de la provincia.</span>
+<span id="cb34-330"><a href="#cb34-330" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb34-331"><a href="#cb34-331" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb34-332"><a href="#cb34-332" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb34-335"><a href="#cb34-335" aria-hidden="true" tabindex="-1"></a><span class="in">```{r}</span></span>
+<span id="cb34-336"><a href="#cb34-336" aria-hidden="true" tabindex="-1"></a>datos_m01 <span class="ot">=</span> datos <span class="sc">%&gt;%</span> </span>
+<span id="cb34-337"><a href="#cb34-337" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">Diferencia =</span> Varon <span class="sc">-</span> Mujer,</span>
+<span id="cb34-338"><a href="#cb34-338" aria-hidden="true" tabindex="-1"></a>         <span class="at">PorcMuj =</span> <span class="fu">round</span>( <span class="dv">100</span> <span class="sc">*</span> (Mujer<span class="sc">/</span>TOTAL),<span class="dv">2</span>)</span>
+<span id="cb34-339"><a href="#cb34-339" aria-hidden="true" tabindex="-1"></a>         )</span>
+<span id="cb34-340"><a href="#cb34-340" aria-hidden="true" tabindex="-1"></a>datos_m01 <span class="sc">%&gt;%</span> </span>
+<span id="cb34-341"><a href="#cb34-341" aria-hidden="true" tabindex="-1"></a>  <span class="fu">head</span>(<span class="dv">10</span>) <span class="sc">%&gt;%</span> </span>
+<span id="cb34-342"><a href="#cb34-342" aria-hidden="true" tabindex="-1"></a>  <span class="fu">kable</span>(<span class="at">booktabs=</span><span class="cn">TRUE</span>)</span>
+<span id="cb34-343"><a href="#cb34-343" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
+<span id="cb34-344"><a href="#cb34-344" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb34-345"><a href="#cb34-345" aria-hidden="true" tabindex="-1"></a>Como puede observarse, se han mantenido las columnas existentes y se han añadido las nuevas al conjunto de datos. **Nota**: la función <span class="in">`transmute()`</span> del paquete dplyr añade columnas pero sin mantener las columnas existentes.</span>
+<span id="cb34-346"><a href="#cb34-346" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb34-347"><a href="#cb34-347" aria-hidden="true" tabindex="-1"></a>**Ejemplo**. Ahora construimos los datos con una nueva columna. Trabajamos únicamente con aquellas provincias que tienen mayor número de hombres que de mujeres, y presentamos la nueva variable diferencia (hombres menos mujeres), ordenando por la diferencia (mayor a menor) pero sin mostrar el total.</span>
+<span id="cb34-348"><a href="#cb34-348" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb34-351"><a href="#cb34-351" aria-hidden="true" tabindex="-1"></a><span class="in">```{r}</span></span>
+<span id="cb34-352"><a href="#cb34-352" aria-hidden="true" tabindex="-1"></a>datos <span class="sc">%&gt;%</span> </span>
+<span id="cb34-353"><a href="#cb34-353" aria-hidden="true" tabindex="-1"></a>  <span class="fu">filter</span>(Mujer <span class="sc">&lt;=</span> Varon) <span class="sc">%&gt;%</span> </span>
+<span id="cb34-354"><a href="#cb34-354" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">Diferencia =</span> Varon <span class="sc">-</span> Mujer) <span class="sc">%&gt;%</span> </span>
+<span id="cb34-355"><a href="#cb34-355" aria-hidden="true" tabindex="-1"></a>  <span class="fu">arrange</span>(<span class="fu">desc</span>(Diferencia)) <span class="sc">%&gt;%</span> </span>
+<span id="cb34-356"><a href="#cb34-356" aria-hidden="true" tabindex="-1"></a>  <span class="fu">select</span>(<span class="sc">-</span>TOTAL) <span class="sc">%&gt;%</span> </span>
+<span id="cb34-357"><a href="#cb34-357" aria-hidden="true" tabindex="-1"></a>  <span class="fu">kable</span>(<span class="at">booktabs=</span><span class="cn">TRUE</span>)</span>
+<span id="cb34-358"><a href="#cb34-358" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
+<span id="cb34-359"><a href="#cb34-359" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb34-360"><a href="#cb34-360" aria-hidden="true" tabindex="-1"></a>**Nota**. El uso del "<span class="in">`-`</span>" delante de la variable "TOTAL" significa que se muestren todas las columnas menos la columna "TOTAL".</span>
+<span id="cb34-361"><a href="#cb34-361" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb34-362"><a href="#cb34-362" aria-hidden="true" tabindex="-1"></a><span class="fu">### Obtener resúmenes estadísticos: summarise()</span></span>
+<span id="cb34-363"><a href="#cb34-363" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb34-364"><a href="#cb34-364" aria-hidden="true" tabindex="-1"></a>Con la función <span class="in">`summarise()`</span> se obtienen objetos que contienen en sus columnas cualquier tipo de cálculo o de resumen estadístico obtenido sobre alguna columna teniendo en cuenta todas sus filas.</span>
+<span id="cb34-365"><a href="#cb34-365" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb34-366"><a href="#cb34-366" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb34-367"><a href="#cb34-367" aria-hidden="true" tabindex="-1"></a>**Ejemplo**. En el siguiente ejemplo obtenemos de los datos de población de las provincias españolas en el censo del 2001, la suma total de hombres, la suma total de mujeres, la población total (obtenida de 2 formas), la media de población de los hombres por provincia y la cuasidesviación típica de la población de hombres.</span>
+<span id="cb34-368"><a href="#cb34-368" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb34-369"><a href="#cb34-369" aria-hidden="true" tabindex="-1"></a>{{&lt; pagebreak &gt;}}</span>
+<span id="cb34-370"><a href="#cb34-370" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb34-373"><a href="#cb34-373" aria-hidden="true" tabindex="-1"></a><span class="in">```{r}</span></span>
+<span id="cb34-374"><a href="#cb34-374" aria-hidden="true" tabindex="-1"></a>datos_su01 <span class="ot">=</span> datos <span class="sc">%&gt;%</span> </span>
+<span id="cb34-375"><a href="#cb34-375" aria-hidden="true" tabindex="-1"></a>  <span class="fu">summarise</span>(<span class="at">TotHombres =</span> <span class="fu">sum</span>(Varon),</span>
+<span id="cb34-376"><a href="#cb34-376" aria-hidden="true" tabindex="-1"></a>            <span class="at">TotMujeres =</span> <span class="fu">sum</span>(Mujer),</span>
+<span id="cb34-377"><a href="#cb34-377" aria-hidden="true" tabindex="-1"></a>            <span class="at">TotalHM =</span> <span class="fu">sum</span>(Varon<span class="sc">+</span>Mujer),</span>
+<span id="cb34-378"><a href="#cb34-378" aria-hidden="true" tabindex="-1"></a>            <span class="at">TotalHM2 =</span> TotHombres <span class="sc">+</span> TotMujeres,</span>
+<span id="cb34-379"><a href="#cb34-379" aria-hidden="true" tabindex="-1"></a>            <span class="at">MediaHombres =</span> <span class="fu">mean</span>(Varon),</span>
+<span id="cb34-380"><a href="#cb34-380" aria-hidden="true" tabindex="-1"></a>            <span class="at">SdHombres =</span> <span class="fu">sd</span>(Varon))</span>
+<span id="cb34-381"><a href="#cb34-381" aria-hidden="true" tabindex="-1"></a>datos_su01</span>
+<span id="cb34-382"><a href="#cb34-382" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
+<span id="cb34-383"><a href="#cb34-383" aria-hidden="true" tabindex="-1"></a>Es un objeto con una sola fila, en la que por ejemplo, <span class="in">`TotHombres`</span> se ha obtenido sumando todos los elementos de la columna "Varon", es decir, se ha calculado el total de hombres en España en el censo del 2001. </span>
+<span id="cb34-384"><a href="#cb34-384" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb34-385"><a href="#cb34-385" aria-hidden="true" tabindex="-1"></a>Se puede observar, que hay más mujeres que hombres, a pesar de que al nacer existe una proporción mayor de niños que de niñas.</span>
+<span id="cb34-386"><a href="#cb34-386" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb34-387"><a href="#cb34-387" aria-hidden="true" tabindex="-1"></a>::: {.callout-note}</span>
+<span id="cb34-388"><a href="#cb34-388" aria-hidden="true" tabindex="-1"></a>"dplyr" dispone de funciones muy útiles para emplear con <span class="in">`summarise()`</span>: <span class="in">`n()`</span> (para contar filas), <span class="in">`n_distinct(COLUMNA)`</span> (para contar filas de valores distintos), etc.</span>
+<span id="cb34-389"><a href="#cb34-389" aria-hidden="true" tabindex="-1"></a>:::</span>
+<span id="cb34-390"><a href="#cb34-390" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb34-391"><a href="#cb34-391" aria-hidden="true" tabindex="-1"></a><span class="fu">### Agrupar filas u observaciones-individuos: group_by(). Uso con summarise()</span></span>
+<span id="cb34-392"><a href="#cb34-392" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb34-393"><a href="#cb34-393" aria-hidden="true" tabindex="-1"></a>La función <span class="in">`group_by()`</span> nos ayudará a obtener cálculos o resúmenes estadísticos pero para cada uno de los grupos de filas o individuos que se hayan establecido.</span>
+<span id="cb34-394"><a href="#cb34-394" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb34-395"><a href="#cb34-395" aria-hidden="true" tabindex="-1"></a>{{&lt; pagebreak &gt;}}</span>
+<span id="cb34-396"><a href="#cb34-396" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb34-397"><a href="#cb34-397" aria-hidden="true" tabindex="-1"></a>**Ejemplo**. Se quiere obtener la población total para cada CCAA. </span>
+<span id="cb34-398"><a href="#cb34-398" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb34-401"><a href="#cb34-401" aria-hidden="true" tabindex="-1"></a><span class="in">```{r}</span></span>
+<span id="cb34-402"><a href="#cb34-402" aria-hidden="true" tabindex="-1"></a>datos_g01 <span class="ot">=</span> datos <span class="sc">%&gt;%</span> </span>
+<span id="cb34-403"><a href="#cb34-403" aria-hidden="true" tabindex="-1"></a>  <span class="fu">group_by</span>(CCAA) <span class="sc">%&gt;%</span> </span>
+<span id="cb34-404"><a href="#cb34-404" aria-hidden="true" tabindex="-1"></a>  <span class="fu">summarise</span>(<span class="at">TotalCCAA =</span> <span class="fu">sum</span>(TOTAL),</span>
+<span id="cb34-405"><a href="#cb34-405" aria-hidden="true" tabindex="-1"></a>            <span class="at">TotHombresCCAA =</span> <span class="fu">sum</span>(Varon),</span>
+<span id="cb34-406"><a href="#cb34-406" aria-hidden="true" tabindex="-1"></a>            <span class="at">TotMujeresCCAA =</span> <span class="fu">sum</span>(Mujer,<span class="at">na.rm =</span> <span class="cn">TRUE</span>))</span>
+<span id="cb34-407"><a href="#cb34-407" aria-hidden="true" tabindex="-1"></a>datos_g01 <span class="sc">%&gt;%</span> </span>
+<span id="cb34-408"><a href="#cb34-408" aria-hidden="true" tabindex="-1"></a>  <span class="fu">kable</span>(<span class="at">booktabs=</span><span class="cn">TRUE</span>)</span>
+<span id="cb34-409"><a href="#cb34-409" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
+<span id="cb34-410"><a href="#cb34-410" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb34-411"><a href="#cb34-411" aria-hidden="true" tabindex="-1"></a>La función <span class="in">`group_by`</span> ha preparado los datos para que aparezcan las provincias de cada CCAA agrupadas, de forma que al llamar a la función <span class="in">`summarise()`</span> no devuelve una única fila como en los ejemplos del apartado anterior, sino que obtiene una fila de resultados para cada grupo formado, en este caso para cada CCAA. Por ejemplo, el valor de "TotalCCAA" para Andalucía se ha obtenido al sumar las poblaciones (TOTAL) de las 8 provincias de Andalucía.</span>
+<span id="cb34-412"><a href="#cb34-412" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb34-413"><a href="#cb34-413" aria-hidden="true" tabindex="-1"></a>::: {.callout-note}</span>
+<span id="cb34-414"><a href="#cb34-414" aria-hidden="true" tabindex="-1"></a>Esto mismo se podría haber hecho con ayuda del sistema base de R, con la función <span class="in">`aggregate()`</span> (devuelve un data.frame) o <span class="in">`tapply()`</span> (devuelve un vector), como se muestra a continuación:</span>
+<span id="cb34-415"><a href="#cb34-415" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb34-416"><a href="#cb34-416" aria-hidden="true" tabindex="-1"></a><span class="in">```r</span></span>
+<span id="cb34-417"><a href="#cb34-417" aria-hidden="true" tabindex="-1"></a><span class="fu">aggregate</span>(TOTAL <span class="sc">~</span> CCAA, datos, sum)</span>
+<span id="cb34-418"><a href="#cb34-418" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
+<span id="cb34-419"><a href="#cb34-419" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb34-420"><a href="#cb34-420" aria-hidden="true" tabindex="-1"></a><span class="in">```r</span></span>
+<span id="cb34-421"><a href="#cb34-421" aria-hidden="true" tabindex="-1"></a><span class="fu">with</span>(datos, <span class="fu">tapply</span>(TOTAL,CCAA,sum,<span class="at">na.rm=</span><span class="cn">TRUE</span>))</span>
+<span id="cb34-422"><a href="#cb34-422" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
+<span id="cb34-423"><a href="#cb34-423" aria-hidden="true" tabindex="-1"></a>:::</span>
+<span id="cb34-424"><a href="#cb34-424" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb34-425"><a href="#cb34-425" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb34-426"><a href="#cb34-426" aria-hidden="true" tabindex="-1"></a>**Ejemplo**. Se quiere obtener el total de la población por CCAA, pero nos interesa presentar únicamente las que tienen más de 5 millones de habitantes y ordenadas de mayor a menor por población total.</span>
+<span id="cb34-427"><a href="#cb34-427" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb34-430"><a href="#cb34-430" aria-hidden="true" tabindex="-1"></a><span class="in">```{r}</span></span>
+<span id="cb34-431"><a href="#cb34-431" aria-hidden="true" tabindex="-1"></a>datos_ag02 <span class="ot">=</span> datos <span class="sc">%&gt;%</span> </span>
+<span id="cb34-432"><a href="#cb34-432" aria-hidden="true" tabindex="-1"></a>  <span class="fu">group_by</span>(CCAA) <span class="sc">%&gt;%</span> </span>
+<span id="cb34-433"><a href="#cb34-433" aria-hidden="true" tabindex="-1"></a>  <span class="fu">summarise</span>(<span class="at">TOTALCCAA =</span> <span class="fu">sum</span>(TOTAL),</span>
+<span id="cb34-434"><a href="#cb34-434" aria-hidden="true" tabindex="-1"></a>            <span class="at">TOTALVaron =</span> <span class="fu">sum</span>(Varon),</span>
+<span id="cb34-435"><a href="#cb34-435" aria-hidden="true" tabindex="-1"></a>            <span class="at">TOTALMujer =</span> <span class="fu">sum</span>(Mujer)) <span class="sc">%&gt;%</span> </span>
+<span id="cb34-436"><a href="#cb34-436" aria-hidden="true" tabindex="-1"></a>  <span class="fu">filter</span>(TOTALCCAA <span class="sc">&gt;=</span> <span class="dv">5000000</span>) <span class="sc">%&gt;%</span> </span>
+<span id="cb34-437"><a href="#cb34-437" aria-hidden="true" tabindex="-1"></a>  <span class="fu">arrange</span>(<span class="fu">desc</span>(TOTALCCAA))</span>
+<span id="cb34-438"><a href="#cb34-438" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb34-439"><a href="#cb34-439" aria-hidden="true" tabindex="-1"></a>datos_ag02 <span class="sc">%&gt;%</span></span>
+<span id="cb34-440"><a href="#cb34-440" aria-hidden="true" tabindex="-1"></a>  <span class="fu">kable</span>()</span>
+<span id="cb34-441"><a href="#cb34-441" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
+<span id="cb34-442"><a href="#cb34-442" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb34-443"><a href="#cb34-443" aria-hidden="true" tabindex="-1"></a>:::{.callout-note}</span>
+<span id="cb34-444"><a href="#cb34-444" aria-hidden="true" tabindex="-1"></a>Se pueden utilizar: <span class="in">`count()`</span> o <span class="in">`tally()`</span> también para contar el número de observaciones por grupo. </span>
+<span id="cb34-445"><a href="#cb34-445" aria-hidden="true" tabindex="-1"></a>:::</span>
+<span id="cb34-446"><a href="#cb34-446" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb34-447"><a href="#cb34-447" aria-hidden="true" tabindex="-1"></a>:::{.callout-note}</span>
+<span id="cb34-448"><a href="#cb34-448" aria-hidden="true" tabindex="-1"></a><span class="in">`slice(), slice_head(), slice_tail(), slice_min(), slice_max()`</span>, <span class="in">`slice_sample()`</span>: </span>
+<span id="cb34-449"><a href="#cb34-449" aria-hidden="true" tabindex="-1"></a>Permiten seleccionar filas por sus posiciones (valores enteros). Salvo la primera función, <span class="in">`slice()`</span>, todas tienen como argumentos <span class="in">`n`</span> (número filas) o <span class="in">`prop`</span> (fracción de filas). Se pueden usar de forma conjunta con datos agrupados: <span class="in">`group_by()`</span>. Sustituyen a funciones como: <span class="in">`top_n()`</span> o <span class="in">`top_frac()`</span>. </span>
+<span id="cb34-450"><a href="#cb34-450" aria-hidden="true" tabindex="-1"></a>:::</span>
+<span id="cb34-451"><a href="#cb34-451" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb34-452"><a href="#cb34-452" aria-hidden="true" tabindex="-1"></a>Las siguientes instrucciones son correctas:</span>
+<span id="cb34-453"><a href="#cb34-453" aria-hidden="true" tabindex="-1"></a><span class="in">```{r eval=FALSE}</span></span>
+<span id="cb34-454"><a href="#cb34-454" aria-hidden="true" tabindex="-1"></a><span class="in">datos %&gt;% </span></span>
+<span id="cb34-455"><a href="#cb34-455" aria-hidden="true" tabindex="-1"></a><span class="in">  slice(1:10)</span></span>
+<span id="cb34-456"><a href="#cb34-456" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb34-457"><a href="#cb34-457" aria-hidden="true" tabindex="-1"></a><span class="in">datos %&gt;% </span></span>
+<span id="cb34-458"><a href="#cb34-458" aria-hidden="true" tabindex="-1"></a><span class="in">  group_by(CCAA) %&gt;% </span></span>
+<span id="cb34-459"><a href="#cb34-459" aria-hidden="true" tabindex="-1"></a><span class="in">  slice_head(prop = 0.5)</span></span>
+<span id="cb34-460"><a href="#cb34-460" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb34-461"><a href="#cb34-461" aria-hidden="true" tabindex="-1"></a><span class="in">datos %&gt;% </span></span>
+<span id="cb34-462"><a href="#cb34-462" aria-hidden="true" tabindex="-1"></a><span class="in">  group_by(CCAA) %&gt;% </span></span>
+<span id="cb34-463"><a href="#cb34-463" aria-hidden="true" tabindex="-1"></a><span class="in">  slice_tail(prop = 0.5)</span></span>
+<span id="cb34-464"><a href="#cb34-464" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb34-465"><a href="#cb34-465" aria-hidden="true" tabindex="-1"></a><span class="in">datos %&gt;% </span></span>
+<span id="cb34-466"><a href="#cb34-466" aria-hidden="true" tabindex="-1"></a><span class="in">  group_by(CCAA) %&gt;% </span></span>
+<span id="cb34-467"><a href="#cb34-467" aria-hidden="true" tabindex="-1"></a><span class="in">  slice_min(prop = 0.5,order_by = TOTAL)</span></span>
+<span id="cb34-468"><a href="#cb34-468" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb34-469"><a href="#cb34-469" aria-hidden="true" tabindex="-1"></a><span class="in">datos %&gt;% </span></span>
+<span id="cb34-470"><a href="#cb34-470" aria-hidden="true" tabindex="-1"></a><span class="in">  group_by(CCAA) %&gt;% </span></span>
+<span id="cb34-471"><a href="#cb34-471" aria-hidden="true" tabindex="-1"></a><span class="in">  slice_max(prop = 0.5,order_by = TOTAL)</span></span>
+<span id="cb34-472"><a href="#cb34-472" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb34-473"><a href="#cb34-473" aria-hidden="true" tabindex="-1"></a><span class="in">set.seed(12345)</span></span>
+<span id="cb34-474"><a href="#cb34-474" aria-hidden="true" tabindex="-1"></a><span class="in">datos %&gt;% </span></span>
+<span id="cb34-475"><a href="#cb34-475" aria-hidden="true" tabindex="-1"></a><span class="in">  slice_sample(prop = 0.3,replace = FALSE)</span></span>
+<span id="cb34-476"><a href="#cb34-476" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb34-477"><a href="#cb34-477" aria-hidden="true" tabindex="-1"></a><span class="in">datos %&gt;% </span></span>
+<span id="cb34-478"><a href="#cb34-478" aria-hidden="true" tabindex="-1"></a><span class="in">  group_by(CCAA) %&gt;% </span></span>
+<span id="cb34-479"><a href="#cb34-479" aria-hidden="true" tabindex="-1"></a><span class="in">  slice_sample(n = 5, replace = FALSE)</span></span>
+<span id="cb34-480"><a href="#cb34-480" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb34-481"><a href="#cb34-481" aria-hidden="true" tabindex="-1"></a><span class="in">datos %&gt;% </span></span>
+<span id="cb34-482"><a href="#cb34-482" aria-hidden="true" tabindex="-1"></a><span class="in">  group_by(CCAA) %&gt;% </span></span>
+<span id="cb34-483"><a href="#cb34-483" aria-hidden="true" tabindex="-1"></a><span class="in">  slice_sample(n = 5, replace = TRUE)</span></span>
+<span id="cb34-484"><a href="#cb34-484" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
+<span id="cb34-485"><a href="#cb34-485" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb34-486"><a href="#cb34-486" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb34-487"><a href="#cb34-487" aria-hidden="true" tabindex="-1"></a>**Nota:** Se pueden usar también: <span class="in">`first()`</span>, <span class="in">`last()`</span> y <span class="in">`nth()`</span>, para extraer el primer, último o n-ésimo valor de un grupo (o vector).</span>
+<span id="cb34-488"><a href="#cb34-488" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb34-489"><a href="#cb34-489" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb34-490"><a href="#cb34-490" aria-hidden="true" tabindex="-1"></a>{{&lt; pagebreak &gt;}}</span>
+<span id="cb34-491"><a href="#cb34-491" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb34-492"><a href="#cb34-492" aria-hidden="true" tabindex="-1"></a>**Ejemplo**. Para contar el número de provincias por cada CCAA</span>
+<span id="cb34-493"><a href="#cb34-493" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb34-496"><a href="#cb34-496" aria-hidden="true" tabindex="-1"></a><span class="in">```{r}</span></span>
+<span id="cb34-497"><a href="#cb34-497" aria-hidden="true" tabindex="-1"></a>datos <span class="sc">%&gt;%</span> </span>
+<span id="cb34-498"><a href="#cb34-498" aria-hidden="true" tabindex="-1"></a>  <span class="fu">group_by</span>(CCAA) <span class="sc">%&gt;%</span> </span>
+<span id="cb34-499"><a href="#cb34-499" aria-hidden="true" tabindex="-1"></a>  dplyr<span class="sc">::</span><span class="fu">summarise</span>(<span class="at">NumProvincias =</span> <span class="fu">n</span>()) <span class="co"># Equivale a: </span></span>
+<span id="cb34-500"><a href="#cb34-500" aria-hidden="true" tabindex="-1"></a><span class="co"># datos %&gt;% </span></span>
+<span id="cb34-501"><a href="#cb34-501" aria-hidden="true" tabindex="-1"></a><span class="co">#   group_by(CCAA) %&gt;% </span></span>
+<span id="cb34-502"><a href="#cb34-502" aria-hidden="true" tabindex="-1"></a><span class="co">#   count()  # o tally()</span></span>
+<span id="cb34-503"><a href="#cb34-503" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
+<span id="cb34-504"><a href="#cb34-504" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb34-505"><a href="#cb34-505" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb34-506"><a href="#cb34-506" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb34-507"><a href="#cb34-507" aria-hidden="true" tabindex="-1"></a><span class="co">&lt;!-- **Nota**. Cuando se agrupan filas, puede ser interesante emplear **"funciones ventanas"**, que para n entradas devuelven n valores de salida. Ejemplos de estas funciones están: de ordenación: `min_rank()`, de desplazamiento: `lead()` y `lag()`, y de agregación acumulativa: `cummean()`.  --&gt;</span></span>
+<span id="cb34-508"><a href="#cb34-508" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb34-509"><a href="#cb34-509" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb34-510"><a href="#cb34-510" aria-hidden="true" tabindex="-1"></a>{{&lt; pagebreak &gt;}}</span>
+<span id="cb34-511"><a href="#cb34-511" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb34-512"><a href="#cb34-512" aria-hidden="true" tabindex="-1"></a><span class="co">&lt;!-- - melting data (pag. 73): Data Manipulation with R (2edt) --&gt;</span></span>
+<span id="cb34-513"><a href="#cb34-513" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb34-514"><a href="#cb34-514" aria-hidden="true" tabindex="-1"></a><span class="fu">### Uso de "case_when" para generalizar el "ifelse" en el sistema tidyverse</span></span>
+<span id="cb34-515"><a href="#cb34-515" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb34-516"><a href="#cb34-516" aria-hidden="true" tabindex="-1"></a>Para explicar la miniherramienta o función **`case_when()`**, se utilizan los siguientes datos que contienen personas que pertenecen o no a dos grupos: "Grupo1" y "Grupo2".</span>
+<span id="cb34-519"><a href="#cb34-519" aria-hidden="true" tabindex="-1"></a><span class="in">```{r}</span></span>
+<span id="cb34-520"><a href="#cb34-520" aria-hidden="true" tabindex="-1"></a>df <span class="ot">=</span> <span class="fu">data.frame</span>(</span>
+<span id="cb34-521"><a href="#cb34-521" aria-hidden="true" tabindex="-1"></a>  <span class="at">Nombre =</span> <span class="fu">c</span>(<span class="st">"Juan"</span>,<span class="st">"Ana"</span>,<span class="st">"Marta"</span>),</span>
+<span id="cb34-522"><a href="#cb34-522" aria-hidden="true" tabindex="-1"></a>  <span class="at">Grupo1 =</span> <span class="fu">c</span>(F,T,T),</span>
+<span id="cb34-523"><a href="#cb34-523" aria-hidden="true" tabindex="-1"></a>  <span class="at">Grupo2 =</span> <span class="fu">c</span>(F,F,T)</span>
+<span id="cb34-524"><a href="#cb34-524" aria-hidden="true" tabindex="-1"></a>)</span>
+<span id="cb34-525"><a href="#cb34-525" aria-hidden="true" tabindex="-1"></a>df</span>
+<span id="cb34-526"><a href="#cb34-526" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
+<span id="cb34-527"><a href="#cb34-527" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb34-528"><a href="#cb34-528" aria-hidden="true" tabindex="-1"></a>Se utiliza la función **`case_when()`** para construir una nueva columna (**`mutate()`**) que asigne valores nuevos en función de los valores de las columnas: "Grupo1" y "Grupo2". Como puede verse, aparecen una serie de expresiones lógicas a la izquierda del símbolo **"`~`"**, que si es cierta se asigna el valor que está a su derecha.</span>
+<span id="cb34-531"><a href="#cb34-531" aria-hidden="true" tabindex="-1"></a><span class="in">```{r}</span></span>
+<span id="cb34-532"><a href="#cb34-532" aria-hidden="true" tabindex="-1"></a>df <span class="ot">&lt;-</span> df <span class="sc">%&gt;%</span> </span>
+<span id="cb34-533"><a href="#cb34-533" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">Grupo =</span> <span class="fu">case_when</span>(</span>
+<span id="cb34-534"><a href="#cb34-534" aria-hidden="true" tabindex="-1"></a>    Grupo1 <span class="sc">&amp;</span> Grupo2 <span class="sc">~</span> <span class="st">"A"</span>,     <span class="co"># Ambos grupos: Grupo  A</span></span>
+<span id="cb34-535"><a href="#cb34-535" aria-hidden="true" tabindex="-1"></a>    <span class="fu">xor</span>(Grupo1, Grupo2) <span class="sc">~</span> <span class="st">"B"</span>, <span class="co"># A un grupo solamente: Grupo B</span></span>
+<span id="cb34-536"><a href="#cb34-536" aria-hidden="true" tabindex="-1"></a>    <span class="sc">!</span>Grupo1 <span class="sc">&amp;</span> <span class="sc">!</span>Grupo2 <span class="sc">~</span> <span class="st">"C"</span>,   <span class="co"># Ningún grupo: Grupo C</span></span>
+<span id="cb34-537"><a href="#cb34-537" aria-hidden="true" tabindex="-1"></a>     <span class="cn">TRUE</span> <span class="sc">~</span> <span class="st">"D"</span>                <span class="co"># En otro caso: Grupo D (no habría otro caso)</span></span>
+<span id="cb34-538"><a href="#cb34-538" aria-hidden="true" tabindex="-1"></a>))</span>
+<span id="cb34-539"><a href="#cb34-539" aria-hidden="true" tabindex="-1"></a>df</span>
+<span id="cb34-540"><a href="#cb34-540" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
+<span id="cb34-541"><a href="#cb34-541" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb34-542"><a href="#cb34-542" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb34-543"><a href="#cb34-543" aria-hidden="true" tabindex="-1"></a>**Nota:** En demografía, cuando se quiere agrupar la variable edad en distintas categorías se puede utilizar <span class="in">`case_when()`</span>.</span>
+<span id="cb34-544"><a href="#cb34-544" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb34-545"><a href="#cb34-545" aria-hidden="true" tabindex="-1"></a>{{&lt; pagebreak &gt;}}</span>
+<span id="cb34-546"><a href="#cb34-546" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb34-547"><a href="#cb34-547" aria-hidden="true" tabindex="-1"></a><span class="fu">## Recursos adicionales</span></span>
+<span id="cb34-548"><a href="#cb34-548" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb34-549"><a href="#cb34-549" aria-hidden="true" tabindex="-1"></a>A continuación se recogen algunos enlaces con material relacionado con "dplyr" para poder profundizar:</span>
+<span id="cb34-550"><a href="#cb34-550" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb34-551"><a href="#cb34-551" aria-hidden="true" tabindex="-1"></a><span class="ss">- </span>dplyr en CRAN: <span class="ot">&lt;https://cran.r-project.org/web/packages/dplyr/index.html&gt;</span></span>
+<span id="cb34-552"><a href="#cb34-552" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb34-553"><a href="#cb34-553" aria-hidden="true" tabindex="-1"></a><span class="ss">- </span>Documentación de dplyr: <span class="ot">&lt;https://dplyr.tidyverse.org&gt;</span></span>
+<span id="cb34-554"><a href="#cb34-554" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb34-555"><a href="#cb34-555" aria-hidden="true" tabindex="-1"></a><span class="ss">- </span>Transparencias sobre el uso de dplyr (inglés): <span class="ot">&lt;http://patilv.com/dplyr-nycflights/&gt;</span></span>
+<span id="cb34-556"><a href="#cb34-556" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb34-557"><a href="#cb34-557" aria-hidden="true" tabindex="-1"></a><span class="ss">- </span><span class="co">[</span><span class="ot">Youtube: uso de dplyr unos 38 minutos</span><span class="co">](https://www.youtube.com/watch?v=jWjqLW-u3hc&amp;feature=youtu.be)</span></span>
+<span id="cb34-558"><a href="#cb34-558" aria-hidden="true" tabindex="-1"></a></span>
+</code><button title="Copiar al portapapeles" class="code-copy-button" data-in-quarto-modal=""><i class="bi"></i></button></pre></div>
+</div></div></div></div></div>
+</div> <!-- /content -->
+
+
+
+
+</body></html>

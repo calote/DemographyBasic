@@ -1,0 +1,519 @@
+---
+title: "Práctica 3: Parte 1 (Tidyverse: Principios y uso de dplyr)"
+lang: es
+toc: true
+toc-depth: 4
+number-sections: true
+format:
+  html:
+    df-print: paged
+    code-tools: true
+    #code-fold: true
+  pdf: 
+    df-print: kable
+    include-in-header: 
+       text: |
+         \usepackage{fvextra}
+         \DefineVerbatimEnvironment{Highlighting}{Verbatim}{breaklines,commandchars=\\\{\}}         
+    include-before-body:
+      text: |
+        \RecustomVerbatimEnvironment{verbatim}{Verbatim}{
+          showspaces = false,
+          showtabs = false,
+          breaksymbolleft={},
+          breaklines
+          % Note: setting commandchars=\\\{\} here will cause an error 
+        }                   
+    
+execute: 
+  echo: true
+  warnings: false
+---
+
+
+\newcommand{\bcenter}{\begin{center}} 
+\newcommand{\ecenter}{\end{center}}
+\renewcommand{\footnotesize}{}
+
+
+\bigskip
+
+
+
+# El sistema tidyverse: dplyr, tidyr, etc
+
+En primer lugar, se importarán los datos almacenados en un fichero "RData" (formato binario de R), que contiene datos de la población de las provincias de España obtenidas en el Censo de 2001.
+
+```{r}
+load("datosPobEspCenso2001.RData",verbose = TRUE)
+```
+
+El fichero "datosPobEspCenso2001.RData" contiene el objeto R del tipo tibble (una mejora del objeto data.frame) con los datos.
+
+```{r}
+str(datos)
+```
+
+
+Antes de seguir, se cargará el sistema "tidyverse", que a su vez carga una serie de paquetes asociados a este sistema. En este manual nos centraremos principalmente en: "dplyr" y "ggplot2".
+
+```{r message=FALSE,warning=FALSE}
+library(tidyverse)
+#library(tidyverse,warn.conflicts = FALSE)
+```
+
+```{r echo=FALSE,out.width="80%",fig.align='center'}
+knitr::include_graphics("imagenes/tidyversesistema.png")
+```
+
+En R, al escribir el nombre del objeto que contiene los datos, nos mostrará sus valores. Aunque al ser, un objeto de tipo "tibble", mostrará solamente una representación corta de ellos.
+
+Veamos en este caso el **contenido del objeto "datos"** con información sobre la población de las provincias de España en el Censo de 2001. *Nota*: en este documento, los datos se mostrarán con ayuda en la cabecera yaml de: `df-print: paged` en html y `df-print: kable` en pdf.
+
+```{r}
+datos
+```
+
+## Los 4 principios del tidyverse
+
+Los 4 principios del sistema tidyverse son los siguientes:
+
+- **Principio 1**: se usarán datos convenientemente organizados.
+
+    * Cada fila o línea de los datos es una observación.
+    * Cada columna es una variable.
+
+    ![](imagenes/tidyverse04.png){width="90%"}
+
+    En el de la izquierda se muestran 2 datos de un alumno en una sola fila (calificación en "Mate" y calificación en "Ingles").
+  
+    En el de la derecha se organiza de modo que hay dos filas, una para cada observación-calificación.
+
+- **Principio 2**: en cada paso se usa una función o herramienta.
+
+    Si se quisiera obtener: "**la media actual de cada estudiante en la asignatura Matemáticas**", los pasos que se necesitan realizar sobre los datos son:
+
+    1. *Filtrado*. Nos quedamos con únicamente las calificaciones de la asignatura Matemáticas.
+    2. *Agrupación*. Agrupamos para cada apellidos-nombre (alumno) diferente.
+    3. *Cálculo*. Para cada alumno calculamos la media de sus notas de Matemáticas.
+    4. *Mostrar resultados*. Se mostrarían para cada alumno sus respectivas medias.
+
+- **Principio 3**: uso del operador tubería **"`%>%`"** (incluido en "tidyverse") o **"`|>`"** (definido en R a partir de la versión 4.1) para *combinar* las herramientas o funciones a utilizar. Facilitará la lectura y la modificación del código.
+
+- **Principio 4**: cada paso es una consulta o un comando.
+
+
+Con el sistema tidyverse, la respuesta a la cuestión planteada se obtendría del siguiente modo:
+```r
+datos %>%
+  filter(materia == "mate") %>%            # filtrado
+  group_by(apellido,primer) %>%            # agrupación
+  summarise(media = mean(puntos))          # cálculo   
+```
+
+Equivalente (nuevas versiones de R):
+
+```r
+datos |> 
+  filter(materia == "mate") |> 
+  group_by(apellido,primer) |> 
+  summarise(media = mean(puntos))
+```
+
+
+
+**Nota:** la información en "datos" no verifica los principios del sistema tidyverse (en una fila no hay un solo valor por provincia), pero como veremos con ejemplos a continuación, aunque no se cumpla lo recomendado, también es posible aplicar las herramientas del paquete tidyverse a datos que no cumplen sus principios.
+
+
+## Uso de dplyr
+
+La librería o paquete "dplyr" contiene una serie de herramientas que facilitarán la manipulación básica de los datos, además de usar el operador "tubería": `%>%` (del paquete "magrittr") o `|>` (incluido en nuevas versiones de R) que permiten **encadenar** varias herramientas de forma consecutiva, que como se verá más adelante, **simplificará** su lectura. Además, de **acelerar** la obtención de los resultados respecto al uso con el sistema base de R, sobre todo cuando los datasets son muy grandes. La mayoría de estas herramientas tiene sus equivalentes en el sistema base de R o en otros paquetes R, pero se están convirtiendo en un estándar.
+
+{{< pagebreak >}}
+
+Las principales herramientas que contiene dplyr son las siguientes:
+
+- `select()`: para seleccionar determinadas columnas o variables.
+- `filter()`: para seleccionar determinadas filas o individuos-observaciones que verifican determinadas condiciones.
+- `arrange()`: para ordenar los datos por determinadas columnas.
+- `mutate()`: para construir nuevas columnas o variables.
+- `summarise()`: para obtener columnas de resumen estadístico.
+- `group_by()`: para agrupar las filas o individuos-observaciones por los valores de una o varias columnas o variables.
+
+Existen otras herramientas básicas como: `slice()` (selecciona filas por posición), `rename()`, `pull()` (convierte columna a un vector), `sample_n()` y `sample_frac()` (seleccionar filas de forma aleatoria), `glimpse()` (para presentar en consola), ...
+
+También existen herramientas que permiten realizar operaciones más avanzadas que ayudan a relacionar varios "data.frame": `inner_join(x, y)`, `left_join(x, y)`, `right_join(x, y)`, `semi_join(x, y)`, `anti_join(x, y)`, ..., y crear un solo "data.frame".
+
+
+Aprenderemos el uso básico de "dplyr" con ayuda de ejemplos.
+
+
+R muestra de forma no muy amigable los datos (como se ha visto anteriormente), por ello se va a usar la función `kable()` del paquete "knitr" para mejorar su presentación.
+
+```{r}
+library(knitr)
+kable(head(datos))
+```
+
+
+**Nota**: con la función `head(datos)` se mostrarían únicamente las primeras 6 filas de los datos. Pero también se podrían mostrar en número diferente, por ejemplo, para mostrar las 10 primeras filas, se escribiría: `head(datos,10)`.
+
+### Ordenación de los datos
+
+<!-- La información en "datos" no aparece ordenada de ninguna forma particular.  -->
+
+La función `arrange()` del paquete "dplyr" nos va a permitir ordenar los datos por una o más columnas. Veamos varios ejemplos.
+
+En el siguiente ejemplo, **ordenamos los datos en orden ascendente del valor en la columna o variable "TOTAL"** (población total de la provincia) y mostramos únicamente las 10 primeras filas:
+```{r}
+head(arrange(datos, TOTAL),10)
+```
+Puede verse que la menos poblada es Melilla con 66.411 habitantes, seguida de Ceuta, Soria, Teruel y Segovia.
+
+Ese mismo objetivo se puede conseguir con ayuda del operador tubería (o pipe) `%>%` para encadenar las mismas operaciones de forma consecutiva, como se puede ver en el siguiente código:
+
+```{r}
+# Se podría escribir así: datos %>% arrange(TOTAL) %>% head(10)
+datos %>% 
+  arrange(TOTAL) %>% 
+  head(10)
+```
+
+Se puede leer del siguiente modo: **"a datos se aplica una ordenación según la columna TOTAL y a continuación al resultado se aplica que se muestren únicamente las 10 primeras filas"**.
+
+::: {.callout-note}
+En RStudio, para insertar "`%>%`" en el editor o en la consola, se puede utilizar la **combinación de teclas: Ctrl+May+M (en Mac: Cmd+May+M)**. 
+:::
+
+::: {.callout-note}
+**Lo que hace realmente el operador tubería es colocar el elemento resultante de lo que está a su izquierda como primer argumento de la función que tiene a su derecha.** 
+
+\bcenter
+
+`x %>% f(y)        es lo mismo que    f(x,y)`
+
+`x |>  f(y)        es lo mismo que    f(x,y)`
+
+\ecenter
+
+\bcenter
+
+`y %>% f(x, ., z)  es lo mismo que    f(x,y,z)` 
+
+\ecenter
+
+**Importante**. El operador "`%>%`" se puede utilizar también con cualquier función del sistema base de R u otra librería.
+:::
+
+El ejemplo, anterior sería equivalente al siguiente, en el que se tiene que ir dando nombres diferentes de objetos (más difícil de leer):
+
+```{r}
+elemento01 = arrange(datos,TOTAL)
+elemento02 = head(elemento01,10)
+elemento02
+```
+
+**Ejemplo**. Se quieren presentar los datos ordenados por **CCAA** (comunidad autónoma) y en caso de empate ordene de forma **descendente** según **TOTAL** (se usa: `desc()`).
+
+```{r}
+datos %>% 
+  arrange(CCAA,desc(TOTAL)) %>% 
+  head(15) %>% 
+  kable(booktabs = TRUE)
+```
+
+La función `arrange()` puede ordenar por más de 2 columnas, y el uso de la función `desc()` sobre "TOTAL" (podría usarse en las columnas que se necesite) ha establecido que la ordenación sea de forma descendente según la columna indicada.
+
+
+
+
+### Selección de variables: select()
+
+Ahora se usará `select()` para reducir el dataset al quedarse con determinadas columnas. 
+
+**Ejemplo**. Se quiere trabajar únicamente con los datos: nombres de provincia y población total. Para ello, se guarda el resultado obtenido con `select()` en un objeto R que se ha llamado `datos_s01`.
+
+```{r}
+datos_s01 = datos %>% 
+  select(Provincia,TOTAL) 
+# se pueden usar posiciones de columna: select(1,3)
+# también expresiones como: select(1,3:4)
+head(datos_s01)
+```
+
+**Nota:** Con `select` también se podrían reordenar la colocación de las columnas, apareciendo en el nuevo objeto con las columnas colocadas en el orden en el que se han enumerado en la llamada a la función.
+
+**Ejemplo**. Se quieren obtener las columnas CCAA, Provincia y Población de Mujeres, ordenadas por Población de Mujeres de forma descendente (de mayor a menor).
+
+```{r}
+datos %>% 
+  select(CCAA,Provincia,Mujer) %>% 
+  arrange(desc(Mujer)) %>% 
+  head()
+```
+
+### Filtrado de observaciones-individuos: filter()
+
+Una operación muy habitual es reducir el conjunto de datos, al quedarse con aquellas filas u observaciones-individuos que cumplen determinadas condiciones lógicas, o dicho de otro modo, poseen ciertas características que nos interesan.
+
+**Ejemplo**. Se quiere obtener un conjunto de datos que contengan únicamente la información de las provincias de Andalucía que tengan una población total superior a 800.000 habitantes.
+
+```{r}
+datos_f01 = datos %>% 
+  filter(CCAA == "Andalucía", TOTAL>800000)  
+           # '==' para la igualdad en expresiones lógicas
+datos_f01
+# Equivalente a:
+# datos_f02 = datos %>% 
+#  filter(CCAA == "Andalucía" & TOTAL>800000)  
+```
+
+::: {.callout-note}
+Como puede verse en el ejemplo anterior se puede añadir más de una condición en la función `filter()` separándolas por comas. La expresión lógica podría ser tan compleja como se necesite, recordando que se pueden usar paréntesis para facilitar su correcta construcción. Los operadores lógicos más usados son: `==` (igual), `<` (menor), `>` (mayor), `<=` (menor o igual), `>=` (mayor o igual), `!=` (distinto), `&` (y lógico), `|` (o lógico).
+:::
+
+::: {.callout-note}
+En `filter()` se usa muy a menudo  la función `is.na()` para seleccionar las filas que tienen el valor `NA` en una columna, o también `!is.na()` para seleccionar las filas que no tienen el valor `NA` en una columna.
+:::
+
+En nuestros datos, no aparecen valores NA, pero se podría haber utilizado una llamada del siguiente tipo:
+
+```r
+datos %>% 
+   filter(!is.na(TOTAL))
+```
+
+**Ejemplo**. Se quiere trabajar únicamente con aquellas provincias que tienen más hombres que mujeres, mostrando las variables: Provincia, población de hombres y población de mujeres y ordenando por número de hombres de forma descendente.
+
+```{r}
+datos %>% 
+  filter(Varon >= Mujer) %>% 
+  select(Provincia,Varon,Mujer) %>% 
+  arrange(desc(Varon)) %>% 
+  kable(booktabs=TRUE)
+```
+
+**Nota**. Cualquiera de las herramientas del paquete "dplyr" se podrían emplear varias veces y en distintas posiciones, siempre que sea sintácticamente correcta la expresión.
+
+### Añadir nuevas columnas o variables calculadas: mutate()
+
+La función `mutate()` permite añadir nuevas columnas a nuestros datos al efectuar algún tipo de operación más o menos compleja, generalmente a partir de los datos de las otras columnas.
+
+**Ejemplo**. Se quieren añadir dos columnas: 
+
+- una que contenga la diferencia entre el número de hombres y mujeres, 
+- y otra que contenga el porcentaje de mujeres respecto al total de la población de la provincia.
+
+
+
+```{r}
+datos_m01 = datos %>% 
+  mutate(Diferencia = Varon - Mujer,
+         PorcMuj = round( 100 * (Mujer/TOTAL),2)
+         )
+datos_m01 %>% 
+  head(10) %>% 
+  kable(booktabs=TRUE)
+```
+
+Como puede observarse, se han mantenido las columnas existentes y se han añadido las nuevas al conjunto de datos. **Nota**: la función `transmute()` del paquete dplyr añade columnas pero sin mantener las columnas existentes.
+
+**Ejemplo**. Ahora construimos los datos con una nueva columna. Trabajamos únicamente con aquellas provincias que tienen mayor número de hombres que de mujeres, y presentamos la nueva variable diferencia (hombres menos mujeres), ordenando por la diferencia (mayor a menor) pero sin mostrar el total.
+
+```{r}
+datos %>% 
+  filter(Mujer <= Varon) %>% 
+  mutate(Diferencia = Varon - Mujer) %>% 
+  arrange(desc(Diferencia)) %>% 
+  select(-TOTAL) %>% 
+  kable(booktabs=TRUE)
+```
+
+**Nota**. El uso del "`-`" delante de la variable "TOTAL" significa que se muestren todas las columnas menos la columna "TOTAL".
+
+### Obtener resúmenes estadísticos: summarise()
+
+Con la función `summarise()` se obtienen objetos que contienen en sus columnas cualquier tipo de cálculo o de resumen estadístico obtenido sobre alguna columna teniendo en cuenta todas sus filas.
+
+
+**Ejemplo**. En el siguiente ejemplo obtenemos de los datos de población de las provincias españolas en el censo del 2001, la suma total de hombres, la suma total de mujeres, la población total (obtenida de 2 formas), la media de población de los hombres por provincia y la cuasidesviación típica de la población de hombres.
+
+{{< pagebreak >}}
+
+```{r}
+datos_su01 = datos %>% 
+  summarise(TotHombres = sum(Varon),
+            TotMujeres = sum(Mujer),
+            TotalHM = sum(Varon+Mujer),
+            TotalHM2 = TotHombres + TotMujeres,
+            MediaHombres = mean(Varon),
+            SdHombres = sd(Varon))
+datos_su01
+```
+Es un objeto con una sola fila, en la que por ejemplo, `TotHombres` se ha obtenido sumando todos los elementos de la columna "Varon", es decir, se ha calculado el total de hombres en España en el censo del 2001. 
+
+Se puede observar, que hay más mujeres que hombres, a pesar de que al nacer existe una proporción mayor de niños que de niñas.
+
+::: {.callout-note}
+"dplyr" dispone de funciones muy útiles para emplear con `summarise()`: `n()` (para contar filas), `n_distinct(COLUMNA)` (para contar filas de valores distintos), etc.
+:::
+
+### Agrupar filas u observaciones-individuos: group_by(). Uso con summarise()
+
+La función `group_by()` nos ayudará a obtener cálculos o resúmenes estadísticos pero para cada uno de los grupos de filas o individuos que se hayan establecido.
+
+{{< pagebreak >}}
+
+**Ejemplo**. Se quiere obtener la población total para cada CCAA. 
+
+```{r}
+datos_g01 = datos %>% 
+  group_by(CCAA) %>% 
+  summarise(TotalCCAA = sum(TOTAL),
+            TotHombresCCAA = sum(Varon),
+            TotMujeresCCAA = sum(Mujer,na.rm = TRUE))
+datos_g01 %>% 
+  kable(booktabs=TRUE)
+```
+
+La función `group_by` ha preparado los datos para que aparezcan las provincias de cada CCAA agrupadas, de forma que al llamar a la función `summarise()` no devuelve una única fila como en los ejemplos del apartado anterior, sino que obtiene una fila de resultados para cada grupo formado, en este caso para cada CCAA. Por ejemplo, el valor de "TotalCCAA" para Andalucía se ha obtenido al sumar las poblaciones (TOTAL) de las 8 provincias de Andalucía.
+
+::: {.callout-note}
+Esto mismo se podría haber hecho con ayuda del sistema base de R, con la función `aggregate()` (devuelve un data.frame) o `tapply()` (devuelve un vector), como se muestra a continuación:
+
+```r
+aggregate(TOTAL ~ CCAA, datos, sum)
+```
+
+```r
+with(datos, tapply(TOTAL,CCAA,sum,na.rm=TRUE))
+```
+:::
+
+
+**Ejemplo**. Se quiere obtener el total de la población por CCAA, pero nos interesa presentar únicamente las que tienen más de 5 millones de habitantes y ordenadas de mayor a menor por población total.
+
+```{r}
+datos_ag02 = datos %>% 
+  group_by(CCAA) %>% 
+  summarise(TOTALCCAA = sum(TOTAL),
+            TOTALVaron = sum(Varon),
+            TOTALMujer = sum(Mujer)) %>% 
+  filter(TOTALCCAA >= 5000000) %>% 
+  arrange(desc(TOTALCCAA))
+
+datos_ag02 %>%
+  kable()
+```
+
+:::{.callout-note}
+Se pueden utilizar: `count()` o `tally()` también para contar el número de observaciones por grupo. 
+:::
+
+:::{.callout-note}
+`slice(), slice_head(), slice_tail(), slice_min(), slice_max()`, `slice_sample()`: 
+Permiten seleccionar filas por sus posiciones (valores enteros). Salvo la primera función, `slice()`, todas tienen como argumentos `n` (número filas) o `prop` (fracción de filas). Se pueden usar de forma conjunta con datos agrupados: `group_by()`. Sustituyen a funciones como: `top_n()` o `top_frac()`. 
+:::
+
+Las siguientes instrucciones son correctas:
+```{r eval=FALSE}
+datos %>% 
+  slice(1:10)
+
+datos %>% 
+  group_by(CCAA) %>% 
+  slice_head(prop = 0.5)
+
+datos %>% 
+  group_by(CCAA) %>% 
+  slice_tail(prop = 0.5)
+
+datos %>% 
+  group_by(CCAA) %>% 
+  slice_min(prop = 0.5,order_by = TOTAL)
+
+datos %>% 
+  group_by(CCAA) %>% 
+  slice_max(prop = 0.5,order_by = TOTAL)
+
+set.seed(12345)
+datos %>% 
+  slice_sample(prop = 0.3,replace = FALSE)
+
+datos %>% 
+  group_by(CCAA) %>% 
+  slice_sample(n = 5, replace = FALSE)
+
+datos %>% 
+  group_by(CCAA) %>% 
+  slice_sample(n = 5, replace = TRUE)
+```
+
+
+**Nota:** Se pueden usar también: `first()`, `last()` y `nth()`, para extraer el primer, último o n-ésimo valor de un grupo (o vector).
+
+
+{{< pagebreak >}}
+
+**Ejemplo**. Para contar el número de provincias por cada CCAA
+
+```{r}
+datos %>% 
+  group_by(CCAA) %>% 
+  dplyr::summarise(NumProvincias = n()) # Equivale a: 
+# datos %>% 
+#   group_by(CCAA) %>% 
+#   count()  # o tally()
+```
+
+
+
+<!-- **Nota**. Cuando se agrupan filas, puede ser interesante emplear **"funciones ventanas"**, que para n entradas devuelven n valores de salida. Ejemplos de estas funciones están: de ordenación: `min_rank()`, de desplazamiento: `lead()` y `lag()`, y de agregación acumulativa: `cummean()`.  -->
+
+
+{{< pagebreak >}}
+
+<!-- - melting data (pag. 73): Data Manipulation with R (2edt) -->
+
+### Uso de "case_when" para generalizar el "ifelse" en el sistema tidyverse
+
+Para explicar la miniherramienta o función **`case_when()`**, se utilizan los siguientes datos que contienen personas que pertenecen o no a dos grupos: "Grupo1" y "Grupo2".
+```{r}
+df = data.frame(
+  Nombre = c("Juan","Ana","Marta"),
+  Grupo1 = c(F,T,T),
+  Grupo2 = c(F,F,T)
+)
+df
+```
+
+Se utiliza la función **`case_when()`** para construir una nueva columna (**`mutate()`**) que asigne valores nuevos en función de los valores de las columnas: "Grupo1" y "Grupo2". Como puede verse, aparecen una serie de expresiones lógicas a la izquierda del símbolo **"`~`"**, que si es cierta se asigna el valor que está a su derecha.
+```{r}
+df <- df %>% 
+  mutate(Grupo = case_when(
+    Grupo1 & Grupo2 ~ "A",     # Ambos grupos: Grupo  A
+    xor(Grupo1, Grupo2) ~ "B", # A un grupo solamente: Grupo B
+    !Grupo1 & !Grupo2 ~ "C",   # Ningún grupo: Grupo C
+     TRUE ~ "D"                # En otro caso: Grupo D (no habría otro caso)
+))
+df
+```
+
+
+**Nota:** En demografía, cuando se quiere agrupar la variable edad en distintas categorías se puede utilizar `case_when()`.
+
+{{< pagebreak >}}
+
+## Recursos adicionales
+
+A continuación se recogen algunos enlaces con material relacionado con "dplyr" para poder profundizar:
+
+- dplyr en CRAN: <https://cran.r-project.org/web/packages/dplyr/index.html>
+
+- Documentación de dplyr: <https://dplyr.tidyverse.org>
+
+- Transparencias sobre el uso de dplyr (inglés): <http://patilv.com/dplyr-nycflights/>
+
+- [Youtube: uso de dplyr unos 38 minutos](https://www.youtube.com/watch?v=jWjqLW-u3hc&feature=youtu.be)
+
+

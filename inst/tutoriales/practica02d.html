@@ -1,0 +1,4030 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="es" xml:lang="es"><head>
+
+<meta charset="utf-8">
+<meta name="generator" content="quarto-1.6.32">
+
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+
+
+<title>Práctica 2: Parte 4 (Presentar tablas mejorado)</title>
+<style>
+code{white-space: pre-wrap;}
+span.smallcaps{font-variant: small-caps;}
+div.columns{display: flex; gap: min(4vw, 1.5em);}
+div.column{flex: auto; overflow-x: auto;}
+div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+ul.task-list{list-style: none;}
+ul.task-list li input[type="checkbox"] {
+  width: 0.8em;
+  margin: 0 0.8em 0.2em -1em; /* quarto-specific, see https://github.com/quarto-dev/quarto-cli/issues/4556 */ 
+  vertical-align: middle;
+}
+/* CSS for syntax highlighting */
+pre > code.sourceCode { white-space: pre; position: relative; }
+pre > code.sourceCode > span { line-height: 1.25; }
+pre > code.sourceCode > span:empty { height: 1.2em; }
+.sourceCode { overflow: visible; }
+code.sourceCode > span { color: inherit; text-decoration: inherit; }
+div.sourceCode { margin: 1em 0; }
+pre.sourceCode { margin: 0; }
+@media screen {
+div.sourceCode { overflow: auto; }
+}
+@media print {
+pre > code.sourceCode { white-space: pre-wrap; }
+pre > code.sourceCode > span { display: inline-block; text-indent: -5em; padding-left: 5em; }
+}
+pre.numberSource code
+  { counter-reset: source-line 0; }
+pre.numberSource code > span
+  { position: relative; left: -4em; counter-increment: source-line; }
+pre.numberSource code > span > a:first-child::before
+  { content: counter(source-line);
+    position: relative; left: -1em; text-align: right; vertical-align: baseline;
+    border: none; display: inline-block;
+    -webkit-touch-callout: none; -webkit-user-select: none;
+    -khtml-user-select: none; -moz-user-select: none;
+    -ms-user-select: none; user-select: none;
+    padding: 0 4px; width: 4em;
+  }
+pre.numberSource { margin-left: 3em;  padding-left: 4px; }
+div.sourceCode
+  {   }
+@media screen {
+pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
+}
+</style>
+
+
+<script src="practica02d_files/libs/clipboard/clipboard.min.js"></script>
+<script src="practica02d_files/libs/quarto-html/quarto.js"></script>
+<script src="practica02d_files/libs/quarto-html/popper.min.js"></script>
+<script src="practica02d_files/libs/quarto-html/tippy.umd.min.js"></script>
+<script src="practica02d_files/libs/quarto-html/anchor.min.js"></script>
+<link href="practica02d_files/libs/quarto-html/tippy.css" rel="stylesheet">
+<link href="practica02d_files/libs/quarto-html/quarto-syntax-highlighting-2486e1f0a3ee9ee1fc393803a1361cdb.css" rel="stylesheet" id="quarto-text-highlighting-styles">
+<script src="practica02d_files/libs/bootstrap/bootstrap.min.js"></script>
+<link href="practica02d_files/libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
+<link href="practica02d_files/libs/bootstrap/bootstrap-677b520d69fcc55ab41b4b425631e74d.min.css" rel="stylesheet" append-hash="true" id="quarto-bootstrap" data-mode="light">
+<script src="practica02d_files/libs/kePrint-0.0.1/kePrint.js"></script>
+<link href="practica02d_files/libs/lightable-0.0.1/lightable.css" rel="stylesheet">
+<link href="practica02d_files/libs/pagedtable-1.1/css/pagedtable.css" rel="stylesheet">
+<script src="practica02d_files/libs/pagedtable-1.1/js/pagedtable.js"></script>
+
+
+</head>
+
+<body>
+
+<div id="quarto-content" class="page-columns page-rows-contents page-layout-article">
+<div id="quarto-margin-sidebar" class="sidebar margin-sidebar">
+  <nav id="TOC" role="doc-toc" class="toc-active">
+    <h2 id="toc-title">Tabla de contenidos</h2>
+   
+  <ul>
+  <li><a href="#tablas-con-la-función-func_salida_tablas-definida-en-funciones_tablas.r" id="toc-tablas-con-la-función-func_salida_tablas-definida-en-funciones_tablas.r" class="nav-link active" data-scroll-target="#tablas-con-la-función-func_salida_tablas-definida-en-funciones_tablas.r"><span class="header-section-number">1</span> Tablas con la función <code>func_salida_tablas()</code> definida en “funciones_tablas.R”</a>
+  <ul>
+  <li><a href="#ejemplo-básico" id="toc-ejemplo-básico" class="nav-link" data-scroll-target="#ejemplo-básico"><span class="header-section-number">1.1</span> Ejemplo: básico</a></li>
+  <li><a href="#ejemplo-básico-presenta-las-6-primeras-filas" id="toc-ejemplo-básico-presenta-las-6-primeras-filas" class="nav-link" data-scroll-target="#ejemplo-básico-presenta-las-6-primeras-filas"><span class="header-section-number">1.2</span> Ejemplo: básico (presenta las 6 primeras filas)</a></li>
+  <li><a href="#ejemplo-básico-con-leyenda-scaption" id="toc-ejemplo-básico-con-leyenda-scaption" class="nav-link" data-scroll-target="#ejemplo-básico-con-leyenda-scaption"><span class="header-section-number">1.3</span> Ejemplo: básico con leyenda (scaption)</a></li>
+  <li><a href="#ejemplo-básico-1" id="toc-ejemplo-básico-1" class="nav-link" data-scroll-target="#ejemplo-básico-1"><span class="header-section-number">1.4</span> Ejemplo: básico</a></li>
+  <li><a href="#ejemplo-se-modifican-las-anchuras-de-algunas-columnas" id="toc-ejemplo-se-modifican-las-anchuras-de-algunas-columnas" class="nav-link" data-scroll-target="#ejemplo-se-modifican-las-anchuras-de-algunas-columnas"><span class="header-section-number">1.5</span> Ejemplo: se modifican las anchuras de algunas columnas</a></li>
+  <li><a href="#ejemplo-tabla-apaisada-pdf.-importar-ficheros-xlsx" id="toc-ejemplo-tabla-apaisada-pdf.-importar-ficheros-xlsx" class="nav-link" data-scroll-target="#ejemplo-tabla-apaisada-pdf.-importar-ficheros-xlsx"><span class="header-section-number">1.6</span> Ejemplo: tabla apaisada (pdf). Importar ficheros xlsx</a></li>
+  <li><a href="#ejemplo-tabla-apaisada-varias-páginas-pdf-reduciendo-el-número-de-columnas-que-se-muestran" id="toc-ejemplo-tabla-apaisada-varias-páginas-pdf-reduciendo-el-número-de-columnas-que-se-muestran" class="nav-link" data-scroll-target="#ejemplo-tabla-apaisada-varias-páginas-pdf-reduciendo-el-número-de-columnas-que-se-muestran"><span class="header-section-number">1.7</span> Ejemplo: tabla apaisada varias páginas (pdf): reduciendo el número de columnas que se muestran</a></li>
+  </ul></li>
+  </ul>
+<div class="quarto-alternate-formats"><h2>Otros formatos</h2><ul><li><a href="practica02d.pdf"><i class="bi bi-file-pdf"></i>PDF</a></li></ul></div></nav>
+</div>
+<main class="content" id="quarto-document-content">
+
+<header id="title-block-header" class="quarto-title-block default">
+<div class="quarto-title">
+<div class="quarto-title-block"><div><h1 class="title">Práctica 2: Parte 4 (Presentar tablas mejorado)</h1><button type="button" class="btn code-tools-button" id="quarto-code-tools-source"><i class="bi"></i> Código</button></div></div>
+</div>
+
+
+
+<div class="quarto-title-meta">
+
+    
+  
+    
+  </div>
+  
+
+
+</header>
+
+
+<p><strong>Ver la cabecera yaml de este documento, contiene muchas opciones avanzadas</strong>.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb1"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="fu">suppressWarnings</span>(<span class="fu">suppressMessages</span>(<span class="fu">library</span>(DemographyBasic)))</span></code><button title="Copiar al portapapeles" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<p>En la cabecera yaml de este documento Quarto se han añadido las opciones</p>
+<ul>
+<li><p><code>df-print: paged</code> (“html”). Las tablas de información en la salida html aparecerán paginadas de un modo especial para que no se tenga que realizar “scroll” en la página web.</p></li>
+<li><p><code>df-print: kable</code> (“pdf”). Como se ha visto usa: “<code>knitr::kable()</code>” para salidas pdf.</p></li>
+</ul>
+<section id="tablas-con-la-función-func_salida_tablas-definida-en-funciones_tablas.r" class="level1" data-number="1">
+<h1 data-number="1"><span class="header-section-number">1</span> Tablas con la función <code>func_salida_tablas()</code> definida en “funciones_tablas.R”</h1>
+<p>Importamos el fichero csv: “datosPractica01.csv” con <code>read.table()</code>:</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb2"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a>datos.csv <span class="ot">=</span> <span class="fu">read.table</span>(<span class="at">file =</span> <span class="st">"datosPractica01.csv"</span>, <span class="at">header =</span> <span class="cn">TRUE</span>, <span class="at">sep =</span> <span class="st">","</span>)</span></code><button title="Copiar al portapapeles" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<p>En el paquete “DemographyBasic” se encuentra definida la función:</p>
+<div class="sourceCode" id="cb3"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a>DemBas_presentadf <span class="ot">=</span> <span class="cf">function</span>(datos1,<span class="at">scaption =</span> <span class="cn">NULL</span>,</span>
+<span id="cb3-3"><a href="#cb3-3" aria-hidden="true" tabindex="-1"></a>                              <span class="at">apaisadalatex=</span><span class="cn">FALSE</span>,</span>
+<span id="cb3-4"><a href="#cb3-4" aria-hidden="true" tabindex="-1"></a>                              <span class="at">variaspaginas=</span><span class="cn">TRUE</span>,</span>
+<span id="cb3-5"><a href="#cb3-5" aria-hidden="true" tabindex="-1"></a>                              <span class="at">fuentesize=</span><span class="cn">NULL</span>,  <span class="co"># 8, 2, 12, ...</span></span>
+<span id="cb3-6"><a href="#cb3-6" aria-hidden="true" tabindex="-1"></a>                              <span class="at">CompletaAncho =</span> <span class="cn">FALSE</span>)   </span></code><button title="Copiar al portapapeles" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<p><strong>Nota importante</strong>: usa el paquete “kableExtra”.</p>
+<p><strong>Referencias</strong> para obtener más información:</p>
+<ul>
+<li><p><a href="http://destio.us.es/calvo/ficheros/ComoCrearTablasRMarkdown_PedroLuque_2019Sep_librodigital.pdf" target="_blank">Libro: Cómo crear Tablas de información en R Markdown</a></p></li>
+<li><p><a href="http://destio.us.es/calvo//ficheros/chuleta_kableExtra_ComoCrearTablasRMarkdown_PedroLuque_2019Sep_librodigital.pdf" target="_blank">Chuleta sobre kableExtra</a></p></li>
+<li><p><a href="http://destio.us.es/calvo/Qtutoriales/SobrePlantillaTFE/CuestionesPracticasSobrePlantillaTFE.html#cómo-incluir-una-tabla-o-cuadro-con-información" target="_blank">Cómo incluir una tabla o cuadro con información</a></p></li>
+</ul>
+<section id="ejemplo-básico" class="level2" data-number="1.1">
+<h2 data-number="1.1" class="anchored" data-anchor-id="ejemplo-básico"><span class="header-section-number">1.1</span> Ejemplo: básico</h2>
+<p>Al cargar el fichero de funciones: “funciones_tablas.R” se carga el paquete R “kableExtra” y las salidas son diferentes a las que se obtienen sin cargar este paquete. En la salida pdf, se ve en este ejemplo que no usa el modo multipágina.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb4"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a>datos.csv</span></code><button title="Copiar al portapapeles" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<div data-pagedtable="false">
+  <script data-pagedtable-source="" type="application/json">
+{"columns":[{"label":["X"],"name":[1],"type":["int"],"align":["right"]},{"label":["Provincia"],"name":[2],"type":["chr"],"align":["left"]},{"label":["CCAA"],"name":[3],"type":["chr"],"align":["left"]},{"label":["TOTAL"],"name":[4],"type":["int"],"align":["right"]},{"label":["Varon"],"name":[5],"type":["int"],"align":["right"]},{"label":["Mujer"],"name":[6],"type":["int"],"align":["right"]}],"data":[{"1":"1","2":"01-Álava","3":"País Vasco","4":"286387","5":"142036","6":"144351"},{"1":"2","2":"02-Albacete","3":"Castilla-La Mancha","4":"364835","5":"181461","6":"183374"},{"1":"3","2":"03-Alicante/Alacant","3":"Comunidad Valenciana","4":"1461925","5":"722162","6":"739763"},{"1":"4","2":"04-Almería","3":"Andalucía","4":"536731","5":"272023","6":"264708"},{"1":"5","2":"33-Asturias","3":"Asturias (Principado de)","4":"1062998","5":"508995","6":"554003"},{"1":"6","2":"05-Ávila","3":"Castilla y León","4":"163442","5":"81850","6":"81592"},{"1":"7","2":"06-Badajoz","3":"Extremadura","4":"654882","5":"323541","6":"331341"},{"1":"8","2":"07-Balears (Illes)","3":"Balears (Illes)","4":"841669","5":"417314","6":"424355"},{"1":"9","2":"08-Barcelona","3":"Cataluña","4":"4805927","5":"2341592","6":"2464335"},{"1":"10","2":"09-Burgos","3":"Castilla y León","4":"348934","5":"174576","6":"174358"},{"1":"11","2":"10-Cáceres","3":"Extremadura","4":"403621","5":"200820","6":"202801"},{"1":"12","2":"11-Cádiz","3":"Andalucía","4":"1116491","5":"552463","6":"564028"},{"1":"13","2":"39-Cantabria","3":"Cantabria","4":"535131","5":"260586","6":"274545"},{"1":"14","2":"12-Castellón/Castelló","3":"Comunidad Valenciana","4":"484566","5":"240673","6":"243893"},{"1":"15","2":"51-Ceuta","3":"Ceuta","4":"71505","5":"35949","6":"35556"},{"1":"16","2":"13-Ciudad Real","3":"Castilla-La Mancha","4":"478957","5":"235189","6":"243768"},{"1":"17","2":"14-Córdoba","3":"Andalucía","4":"761657","5":"372464","6":"389193"},{"1":"18","2":"15-Coruña (A)","3":"Galicia","4":"1096027","5":"525388","6":"570639"},{"1":"19","2":"16-Cuenca","3":"Castilla-La Mancha","4":"200346","5":"99959","6":"100387"},{"1":"20","2":"17-Girona","3":"Cataluña","4":"565304","5":"280830","6":"284474"},{"1":"21","2":"18-Granada","3":"Andalucía","4":"821660","5":"401638","6":"420022"},{"1":"22","2":"19-Guadalajara","3":"Castilla-La Mancha","4":"174999","5":"88535","6":"86464"},{"1":"23","2":"20-Guipúzcoa","3":"País Vasco","4":"673563","5":"330288","6":"343275"},{"1":"24","2":"21-Huelva","3":"Andalucía","4":"462579","5":"229013","6":"233566"},{"1":"25","2":"22-Huesca","3":"Aragón","4":"206502","5":"104089","6":"102413"},{"1":"26","2":"23-Jaén","3":"Andalucía","4":"643820","5":"317343","6":"326477"},{"1":"27","2":"24-León","3":"Castilla y León","4":"488751","5":"238139","6":"250612"},{"1":"28","2":"25-Lleida","3":"Cataluña","4":"362206","5":"180425","6":"181781"},{"1":"29","2":"27-Lugo","3":"Galicia","4":"357648","5":"173339","6":"184309"},{"1":"30","2":"28-Madrid","3":"Madrid (Comunidad de)","4":"5423384","5":"2609746","6":"2813638"},{"1":"31","2":"29-Málaga","3":"Andalucía","4":"1287017","5":"630902","6":"656115"},{"1":"32","2":"52-Melilla","3":"Melilla","4":"66411","5":"33134","6":"33277"},{"1":"33","2":"30-Murcia","3":"Murcia (Región de)","4":"1197646","5":"597265","6":"600381"},{"1":"34","2":"31-Navarra","3":"Navarra (Comunidad Foral de)","4":"555829","5":"276629","6":"279200"},{"1":"35","2":"32-Ourense","3":"Galicia","4":"338446","5":"161968","6":"176478"},{"1":"36","2":"34-Palencia","3":"Castilla y León","4":"174143","5":"85955","6":"88188"},{"1":"37","2":"35-Palmas (Las)","3":"Canarias","4":"887676","5":"444761","6":"442915"},{"1":"38","2":"36-Pontevedra","3":"Galicia","4":"903759","5":"433683","6":"470076"},{"1":"39","2":"26-Rioja (La)","3":"Rioja (La)","4":"276702","5":"137827","6":"138875"},{"1":"40","2":"37-Salamanca","3":"Castilla y León","4":"345609","5":"167948","6":"177661"},{"1":"41","2":"38-Santa Cruz de Tenerife","3":"Canarias","4":"806801","5":"398205","6":"408596"},{"1":"42","2":"40-Segovia","3":"Castilla y León","4":"147694","5":"73973","6":"73721"},{"1":"43","2":"41-Sevilla","3":"Andalucía","4":"1727603","5":"846220","6":"881383"},{"1":"44","2":"42-Soria","3":"Castilla y León","4":"90717","5":"45443","6":"45274"},{"1":"45","2":"43-Tarragona","3":"Cataluña","4":"609673","5":"303684","6":"305989"},{"1":"46","2":"44-Teruel","3":"Aragón","4":"135858","5":"68724","6":"67134"},{"1":"47","2":"45-Toledo","3":"Castilla-La Mancha","4":"541379","5":"270406","6":"270973"},{"1":"48","2":"46-Valencia/València","3":"Comunidad Valenciana","4":"2216285","5":"1084149","6":"1132136"},{"1":"49","2":"47-Valladolid","3":"Castilla y León","4":"498094","5":"243999","6":"254095"},{"1":"50","2":"48-Vizcaya","3":"País Vasco","4":"1122637","5":"545557","6":"577080"},{"1":"51","2":"49-Zamora","3":"Castilla y León","4":"199090","5":"97991","6":"101099"},{"1":"52","2":"50-Zaragoza","3":"Aragón","4":"861855","5":"422033","6":"439822"}],"options":{"columns":{"min":{},"max":[10]},"rows":{"min":[10],"max":[10]},"pages":{}}}
+  </script>
+</div>
+</div>
+</div>
+<p>Sin embargo, la siguiente no tiene el problema mencionado anteriormente.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb5"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a><span class="fu">DemBas_presentadf</span>(datos.csv)</span></code><button title="Copiar al portapapeles" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<div class="table-responsive">
+<table class="table table-striped table-hover table-condensed caption-top table-sm small" data-quarto-postprocess="true">
+<thead>
+<tr class="header">
+<th style="text-align: right;" data-quarto-table-cell-role="th">X</th>
+<th style="text-align: left;" data-quarto-table-cell-role="th">Provincia</th>
+<th style="text-align: left;" data-quarto-table-cell-role="th">CCAA</th>
+<th style="text-align: right;" data-quarto-table-cell-role="th">TOTAL</th>
+<th style="text-align: right;" data-quarto-table-cell-role="th">Varon</th>
+<th style="text-align: right;" data-quarto-table-cell-role="th">Mujer</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td style="text-align: right;">1</td>
+<td style="text-align: left;">01-Álava</td>
+<td style="text-align: left;">País Vasco</td>
+<td style="text-align: right;">286387</td>
+<td style="text-align: right;">142036</td>
+<td style="text-align: right;">144351</td>
+</tr>
+<tr class="even">
+<td style="text-align: right;">2</td>
+<td style="text-align: left;">02-Albacete</td>
+<td style="text-align: left;">Castilla-La Mancha</td>
+<td style="text-align: right;">364835</td>
+<td style="text-align: right;">181461</td>
+<td style="text-align: right;">183374</td>
+</tr>
+<tr class="odd">
+<td style="text-align: right;">3</td>
+<td style="text-align: left;">03-Alicante/Alacant</td>
+<td style="text-align: left;">Comunidad Valenciana</td>
+<td style="text-align: right;">1461925</td>
+<td style="text-align: right;">722162</td>
+<td style="text-align: right;">739763</td>
+</tr>
+<tr class="even">
+<td style="text-align: right;">4</td>
+<td style="text-align: left;">04-Almería</td>
+<td style="text-align: left;">Andalucía</td>
+<td style="text-align: right;">536731</td>
+<td style="text-align: right;">272023</td>
+<td style="text-align: right;">264708</td>
+</tr>
+<tr class="odd">
+<td style="text-align: right;">5</td>
+<td style="text-align: left;">33-Asturias</td>
+<td style="text-align: left;">Asturias (Principado de)</td>
+<td style="text-align: right;">1062998</td>
+<td style="text-align: right;">508995</td>
+<td style="text-align: right;">554003</td>
+</tr>
+<tr class="even">
+<td style="text-align: right;">6</td>
+<td style="text-align: left;">05-Ávila</td>
+<td style="text-align: left;">Castilla y León</td>
+<td style="text-align: right;">163442</td>
+<td style="text-align: right;">81850</td>
+<td style="text-align: right;">81592</td>
+</tr>
+<tr class="odd">
+<td style="text-align: right;">7</td>
+<td style="text-align: left;">06-Badajoz</td>
+<td style="text-align: left;">Extremadura</td>
+<td style="text-align: right;">654882</td>
+<td style="text-align: right;">323541</td>
+<td style="text-align: right;">331341</td>
+</tr>
+<tr class="even">
+<td style="text-align: right;">8</td>
+<td style="text-align: left;">07-Balears (Illes)</td>
+<td style="text-align: left;">Balears (Illes)</td>
+<td style="text-align: right;">841669</td>
+<td style="text-align: right;">417314</td>
+<td style="text-align: right;">424355</td>
+</tr>
+<tr class="odd">
+<td style="text-align: right;">9</td>
+<td style="text-align: left;">08-Barcelona</td>
+<td style="text-align: left;">Cataluña</td>
+<td style="text-align: right;">4805927</td>
+<td style="text-align: right;">2341592</td>
+<td style="text-align: right;">2464335</td>
+</tr>
+<tr class="even">
+<td style="text-align: right;">10</td>
+<td style="text-align: left;">09-Burgos</td>
+<td style="text-align: left;">Castilla y León</td>
+<td style="text-align: right;">348934</td>
+<td style="text-align: right;">174576</td>
+<td style="text-align: right;">174358</td>
+</tr>
+<tr class="odd">
+<td style="text-align: right;">11</td>
+<td style="text-align: left;">10-Cáceres</td>
+<td style="text-align: left;">Extremadura</td>
+<td style="text-align: right;">403621</td>
+<td style="text-align: right;">200820</td>
+<td style="text-align: right;">202801</td>
+</tr>
+<tr class="even">
+<td style="text-align: right;">12</td>
+<td style="text-align: left;">11-Cádiz</td>
+<td style="text-align: left;">Andalucía</td>
+<td style="text-align: right;">1116491</td>
+<td style="text-align: right;">552463</td>
+<td style="text-align: right;">564028</td>
+</tr>
+<tr class="odd">
+<td style="text-align: right;">13</td>
+<td style="text-align: left;">39-Cantabria</td>
+<td style="text-align: left;">Cantabria</td>
+<td style="text-align: right;">535131</td>
+<td style="text-align: right;">260586</td>
+<td style="text-align: right;">274545</td>
+</tr>
+<tr class="even">
+<td style="text-align: right;">14</td>
+<td style="text-align: left;">12-Castellón/Castelló</td>
+<td style="text-align: left;">Comunidad Valenciana</td>
+<td style="text-align: right;">484566</td>
+<td style="text-align: right;">240673</td>
+<td style="text-align: right;">243893</td>
+</tr>
+<tr class="odd">
+<td style="text-align: right;">15</td>
+<td style="text-align: left;">51-Ceuta</td>
+<td style="text-align: left;">Ceuta</td>
+<td style="text-align: right;">71505</td>
+<td style="text-align: right;">35949</td>
+<td style="text-align: right;">35556</td>
+</tr>
+<tr class="even">
+<td style="text-align: right;">16</td>
+<td style="text-align: left;">13-Ciudad Real</td>
+<td style="text-align: left;">Castilla-La Mancha</td>
+<td style="text-align: right;">478957</td>
+<td style="text-align: right;">235189</td>
+<td style="text-align: right;">243768</td>
+</tr>
+<tr class="odd">
+<td style="text-align: right;">17</td>
+<td style="text-align: left;">14-Córdoba</td>
+<td style="text-align: left;">Andalucía</td>
+<td style="text-align: right;">761657</td>
+<td style="text-align: right;">372464</td>
+<td style="text-align: right;">389193</td>
+</tr>
+<tr class="even">
+<td style="text-align: right;">18</td>
+<td style="text-align: left;">15-Coruña (A)</td>
+<td style="text-align: left;">Galicia</td>
+<td style="text-align: right;">1096027</td>
+<td style="text-align: right;">525388</td>
+<td style="text-align: right;">570639</td>
+</tr>
+<tr class="odd">
+<td style="text-align: right;">19</td>
+<td style="text-align: left;">16-Cuenca</td>
+<td style="text-align: left;">Castilla-La Mancha</td>
+<td style="text-align: right;">200346</td>
+<td style="text-align: right;">99959</td>
+<td style="text-align: right;">100387</td>
+</tr>
+<tr class="even">
+<td style="text-align: right;">20</td>
+<td style="text-align: left;">17-Girona</td>
+<td style="text-align: left;">Cataluña</td>
+<td style="text-align: right;">565304</td>
+<td style="text-align: right;">280830</td>
+<td style="text-align: right;">284474</td>
+</tr>
+<tr class="odd">
+<td style="text-align: right;">21</td>
+<td style="text-align: left;">18-Granada</td>
+<td style="text-align: left;">Andalucía</td>
+<td style="text-align: right;">821660</td>
+<td style="text-align: right;">401638</td>
+<td style="text-align: right;">420022</td>
+</tr>
+<tr class="even">
+<td style="text-align: right;">22</td>
+<td style="text-align: left;">19-Guadalajara</td>
+<td style="text-align: left;">Castilla-La Mancha</td>
+<td style="text-align: right;">174999</td>
+<td style="text-align: right;">88535</td>
+<td style="text-align: right;">86464</td>
+</tr>
+<tr class="odd">
+<td style="text-align: right;">23</td>
+<td style="text-align: left;">20-Guipúzcoa</td>
+<td style="text-align: left;">País Vasco</td>
+<td style="text-align: right;">673563</td>
+<td style="text-align: right;">330288</td>
+<td style="text-align: right;">343275</td>
+</tr>
+<tr class="even">
+<td style="text-align: right;">24</td>
+<td style="text-align: left;">21-Huelva</td>
+<td style="text-align: left;">Andalucía</td>
+<td style="text-align: right;">462579</td>
+<td style="text-align: right;">229013</td>
+<td style="text-align: right;">233566</td>
+</tr>
+<tr class="odd">
+<td style="text-align: right;">25</td>
+<td style="text-align: left;">22-Huesca</td>
+<td style="text-align: left;">Aragón</td>
+<td style="text-align: right;">206502</td>
+<td style="text-align: right;">104089</td>
+<td style="text-align: right;">102413</td>
+</tr>
+<tr class="even">
+<td style="text-align: right;">26</td>
+<td style="text-align: left;">23-Jaén</td>
+<td style="text-align: left;">Andalucía</td>
+<td style="text-align: right;">643820</td>
+<td style="text-align: right;">317343</td>
+<td style="text-align: right;">326477</td>
+</tr>
+<tr class="odd">
+<td style="text-align: right;">27</td>
+<td style="text-align: left;">24-León</td>
+<td style="text-align: left;">Castilla y León</td>
+<td style="text-align: right;">488751</td>
+<td style="text-align: right;">238139</td>
+<td style="text-align: right;">250612</td>
+</tr>
+<tr class="even">
+<td style="text-align: right;">28</td>
+<td style="text-align: left;">25-Lleida</td>
+<td style="text-align: left;">Cataluña</td>
+<td style="text-align: right;">362206</td>
+<td style="text-align: right;">180425</td>
+<td style="text-align: right;">181781</td>
+</tr>
+<tr class="odd">
+<td style="text-align: right;">29</td>
+<td style="text-align: left;">27-Lugo</td>
+<td style="text-align: left;">Galicia</td>
+<td style="text-align: right;">357648</td>
+<td style="text-align: right;">173339</td>
+<td style="text-align: right;">184309</td>
+</tr>
+<tr class="even">
+<td style="text-align: right;">30</td>
+<td style="text-align: left;">28-Madrid</td>
+<td style="text-align: left;">Madrid (Comunidad de)</td>
+<td style="text-align: right;">5423384</td>
+<td style="text-align: right;">2609746</td>
+<td style="text-align: right;">2813638</td>
+</tr>
+<tr class="odd">
+<td style="text-align: right;">31</td>
+<td style="text-align: left;">29-Málaga</td>
+<td style="text-align: left;">Andalucía</td>
+<td style="text-align: right;">1287017</td>
+<td style="text-align: right;">630902</td>
+<td style="text-align: right;">656115</td>
+</tr>
+<tr class="even">
+<td style="text-align: right;">32</td>
+<td style="text-align: left;">52-Melilla</td>
+<td style="text-align: left;">Melilla</td>
+<td style="text-align: right;">66411</td>
+<td style="text-align: right;">33134</td>
+<td style="text-align: right;">33277</td>
+</tr>
+<tr class="odd">
+<td style="text-align: right;">33</td>
+<td style="text-align: left;">30-Murcia</td>
+<td style="text-align: left;">Murcia (Región de)</td>
+<td style="text-align: right;">1197646</td>
+<td style="text-align: right;">597265</td>
+<td style="text-align: right;">600381</td>
+</tr>
+<tr class="even">
+<td style="text-align: right;">34</td>
+<td style="text-align: left;">31-Navarra</td>
+<td style="text-align: left;">Navarra (Comunidad Foral de)</td>
+<td style="text-align: right;">555829</td>
+<td style="text-align: right;">276629</td>
+<td style="text-align: right;">279200</td>
+</tr>
+<tr class="odd">
+<td style="text-align: right;">35</td>
+<td style="text-align: left;">32-Ourense</td>
+<td style="text-align: left;">Galicia</td>
+<td style="text-align: right;">338446</td>
+<td style="text-align: right;">161968</td>
+<td style="text-align: right;">176478</td>
+</tr>
+<tr class="even">
+<td style="text-align: right;">36</td>
+<td style="text-align: left;">34-Palencia</td>
+<td style="text-align: left;">Castilla y León</td>
+<td style="text-align: right;">174143</td>
+<td style="text-align: right;">85955</td>
+<td style="text-align: right;">88188</td>
+</tr>
+<tr class="odd">
+<td style="text-align: right;">37</td>
+<td style="text-align: left;">35-Palmas (Las)</td>
+<td style="text-align: left;">Canarias</td>
+<td style="text-align: right;">887676</td>
+<td style="text-align: right;">444761</td>
+<td style="text-align: right;">442915</td>
+</tr>
+<tr class="even">
+<td style="text-align: right;">38</td>
+<td style="text-align: left;">36-Pontevedra</td>
+<td style="text-align: left;">Galicia</td>
+<td style="text-align: right;">903759</td>
+<td style="text-align: right;">433683</td>
+<td style="text-align: right;">470076</td>
+</tr>
+<tr class="odd">
+<td style="text-align: right;">39</td>
+<td style="text-align: left;">26-Rioja (La)</td>
+<td style="text-align: left;">Rioja (La)</td>
+<td style="text-align: right;">276702</td>
+<td style="text-align: right;">137827</td>
+<td style="text-align: right;">138875</td>
+</tr>
+<tr class="even">
+<td style="text-align: right;">40</td>
+<td style="text-align: left;">37-Salamanca</td>
+<td style="text-align: left;">Castilla y León</td>
+<td style="text-align: right;">345609</td>
+<td style="text-align: right;">167948</td>
+<td style="text-align: right;">177661</td>
+</tr>
+<tr class="odd">
+<td style="text-align: right;">41</td>
+<td style="text-align: left;">38-Santa Cruz de Tenerife</td>
+<td style="text-align: left;">Canarias</td>
+<td style="text-align: right;">806801</td>
+<td style="text-align: right;">398205</td>
+<td style="text-align: right;">408596</td>
+</tr>
+<tr class="even">
+<td style="text-align: right;">42</td>
+<td style="text-align: left;">40-Segovia</td>
+<td style="text-align: left;">Castilla y León</td>
+<td style="text-align: right;">147694</td>
+<td style="text-align: right;">73973</td>
+<td style="text-align: right;">73721</td>
+</tr>
+<tr class="odd">
+<td style="text-align: right;">43</td>
+<td style="text-align: left;">41-Sevilla</td>
+<td style="text-align: left;">Andalucía</td>
+<td style="text-align: right;">1727603</td>
+<td style="text-align: right;">846220</td>
+<td style="text-align: right;">881383</td>
+</tr>
+<tr class="even">
+<td style="text-align: right;">44</td>
+<td style="text-align: left;">42-Soria</td>
+<td style="text-align: left;">Castilla y León</td>
+<td style="text-align: right;">90717</td>
+<td style="text-align: right;">45443</td>
+<td style="text-align: right;">45274</td>
+</tr>
+<tr class="odd">
+<td style="text-align: right;">45</td>
+<td style="text-align: left;">43-Tarragona</td>
+<td style="text-align: left;">Cataluña</td>
+<td style="text-align: right;">609673</td>
+<td style="text-align: right;">303684</td>
+<td style="text-align: right;">305989</td>
+</tr>
+<tr class="even">
+<td style="text-align: right;">46</td>
+<td style="text-align: left;">44-Teruel</td>
+<td style="text-align: left;">Aragón</td>
+<td style="text-align: right;">135858</td>
+<td style="text-align: right;">68724</td>
+<td style="text-align: right;">67134</td>
+</tr>
+<tr class="odd">
+<td style="text-align: right;">47</td>
+<td style="text-align: left;">45-Toledo</td>
+<td style="text-align: left;">Castilla-La Mancha</td>
+<td style="text-align: right;">541379</td>
+<td style="text-align: right;">270406</td>
+<td style="text-align: right;">270973</td>
+</tr>
+<tr class="even">
+<td style="text-align: right;">48</td>
+<td style="text-align: left;">46-Valencia/València</td>
+<td style="text-align: left;">Comunidad Valenciana</td>
+<td style="text-align: right;">2216285</td>
+<td style="text-align: right;">1084149</td>
+<td style="text-align: right;">1132136</td>
+</tr>
+<tr class="odd">
+<td style="text-align: right;">49</td>
+<td style="text-align: left;">47-Valladolid</td>
+<td style="text-align: left;">Castilla y León</td>
+<td style="text-align: right;">498094</td>
+<td style="text-align: right;">243999</td>
+<td style="text-align: right;">254095</td>
+</tr>
+<tr class="even">
+<td style="text-align: right;">50</td>
+<td style="text-align: left;">48-Vizcaya</td>
+<td style="text-align: left;">País Vasco</td>
+<td style="text-align: right;">1122637</td>
+<td style="text-align: right;">545557</td>
+<td style="text-align: right;">577080</td>
+</tr>
+<tr class="odd">
+<td style="text-align: right;">51</td>
+<td style="text-align: left;">49-Zamora</td>
+<td style="text-align: left;">Castilla y León</td>
+<td style="text-align: right;">199090</td>
+<td style="text-align: right;">97991</td>
+<td style="text-align: right;">101099</td>
+</tr>
+<tr class="even">
+<td style="text-align: right;">52</td>
+<td style="text-align: left;">50-Zaragoza</td>
+<td style="text-align: left;">Aragón</td>
+<td style="text-align: right;">861855</td>
+<td style="text-align: right;">422033</td>
+<td style="text-align: right;">439822</td>
+</tr>
+</tbody>
+</table>
+</div>
+
+
+</div>
+</div>
+</section>
+<section id="ejemplo-básico-presenta-las-6-primeras-filas" class="level2" data-number="1.2">
+<h2 data-number="1.2" class="anchored" data-anchor-id="ejemplo-básico-presenta-las-6-primeras-filas"><span class="header-section-number">1.2</span> Ejemplo: básico (presenta las 6 primeras filas)</h2>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb6"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a><span class="fu">DemBas_presentadf</span>(<span class="fu">head</span>(datos.csv))</span></code><button title="Copiar al portapapeles" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<div class="table-responsive">
+<table class="table table-striped table-hover table-condensed caption-top table-sm small" data-quarto-postprocess="true">
+<thead>
+<tr class="header">
+<th style="text-align: right;" data-quarto-table-cell-role="th">X</th>
+<th style="text-align: left;" data-quarto-table-cell-role="th">Provincia</th>
+<th style="text-align: left;" data-quarto-table-cell-role="th">CCAA</th>
+<th style="text-align: right;" data-quarto-table-cell-role="th">TOTAL</th>
+<th style="text-align: right;" data-quarto-table-cell-role="th">Varon</th>
+<th style="text-align: right;" data-quarto-table-cell-role="th">Mujer</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td style="text-align: right;">1</td>
+<td style="text-align: left;">01-Álava</td>
+<td style="text-align: left;">País Vasco</td>
+<td style="text-align: right;">286387</td>
+<td style="text-align: right;">142036</td>
+<td style="text-align: right;">144351</td>
+</tr>
+<tr class="even">
+<td style="text-align: right;">2</td>
+<td style="text-align: left;">02-Albacete</td>
+<td style="text-align: left;">Castilla-La Mancha</td>
+<td style="text-align: right;">364835</td>
+<td style="text-align: right;">181461</td>
+<td style="text-align: right;">183374</td>
+</tr>
+<tr class="odd">
+<td style="text-align: right;">3</td>
+<td style="text-align: left;">03-Alicante/Alacant</td>
+<td style="text-align: left;">Comunidad Valenciana</td>
+<td style="text-align: right;">1461925</td>
+<td style="text-align: right;">722162</td>
+<td style="text-align: right;">739763</td>
+</tr>
+<tr class="even">
+<td style="text-align: right;">4</td>
+<td style="text-align: left;">04-Almería</td>
+<td style="text-align: left;">Andalucía</td>
+<td style="text-align: right;">536731</td>
+<td style="text-align: right;">272023</td>
+<td style="text-align: right;">264708</td>
+</tr>
+<tr class="odd">
+<td style="text-align: right;">5</td>
+<td style="text-align: left;">33-Asturias</td>
+<td style="text-align: left;">Asturias (Principado de)</td>
+<td style="text-align: right;">1062998</td>
+<td style="text-align: right;">508995</td>
+<td style="text-align: right;">554003</td>
+</tr>
+<tr class="even">
+<td style="text-align: right;">6</td>
+<td style="text-align: left;">05-Ávila</td>
+<td style="text-align: left;">Castilla y León</td>
+<td style="text-align: right;">163442</td>
+<td style="text-align: right;">81850</td>
+<td style="text-align: right;">81592</td>
+</tr>
+</tbody>
+</table>
+</div>
+
+
+</div>
+</div>
+</section>
+<section id="ejemplo-básico-con-leyenda-scaption" class="level2" data-number="1.3">
+<h2 data-number="1.3" class="anchored" data-anchor-id="ejemplo-básico-con-leyenda-scaption"><span class="header-section-number">1.3</span> Ejemplo: básico con leyenda (scaption)</h2>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb7"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a><span class="fu">DemBas_presentadf</span>(datos.csv, <span class="at">scaption =</span> <span class="st">"Datos de España"</span>)</span></code><button title="Copiar al portapapeles" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<div class="table-responsive">
+<table class="table table-striped table-hover table-condensed caption-top table-sm small" data-quarto-postprocess="true">
+<caption>Datos de España</caption>
+<thead>
+<tr class="header">
+<th style="text-align: right;" data-quarto-table-cell-role="th">X</th>
+<th style="text-align: left;" data-quarto-table-cell-role="th">Provincia</th>
+<th style="text-align: left;" data-quarto-table-cell-role="th">CCAA</th>
+<th style="text-align: right;" data-quarto-table-cell-role="th">TOTAL</th>
+<th style="text-align: right;" data-quarto-table-cell-role="th">Varon</th>
+<th style="text-align: right;" data-quarto-table-cell-role="th">Mujer</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td style="text-align: right;">1</td>
+<td style="text-align: left;">01-Álava</td>
+<td style="text-align: left;">País Vasco</td>
+<td style="text-align: right;">286387</td>
+<td style="text-align: right;">142036</td>
+<td style="text-align: right;">144351</td>
+</tr>
+<tr class="even">
+<td style="text-align: right;">2</td>
+<td style="text-align: left;">02-Albacete</td>
+<td style="text-align: left;">Castilla-La Mancha</td>
+<td style="text-align: right;">364835</td>
+<td style="text-align: right;">181461</td>
+<td style="text-align: right;">183374</td>
+</tr>
+<tr class="odd">
+<td style="text-align: right;">3</td>
+<td style="text-align: left;">03-Alicante/Alacant</td>
+<td style="text-align: left;">Comunidad Valenciana</td>
+<td style="text-align: right;">1461925</td>
+<td style="text-align: right;">722162</td>
+<td style="text-align: right;">739763</td>
+</tr>
+<tr class="even">
+<td style="text-align: right;">4</td>
+<td style="text-align: left;">04-Almería</td>
+<td style="text-align: left;">Andalucía</td>
+<td style="text-align: right;">536731</td>
+<td style="text-align: right;">272023</td>
+<td style="text-align: right;">264708</td>
+</tr>
+<tr class="odd">
+<td style="text-align: right;">5</td>
+<td style="text-align: left;">33-Asturias</td>
+<td style="text-align: left;">Asturias (Principado de)</td>
+<td style="text-align: right;">1062998</td>
+<td style="text-align: right;">508995</td>
+<td style="text-align: right;">554003</td>
+</tr>
+<tr class="even">
+<td style="text-align: right;">6</td>
+<td style="text-align: left;">05-Ávila</td>
+<td style="text-align: left;">Castilla y León</td>
+<td style="text-align: right;">163442</td>
+<td style="text-align: right;">81850</td>
+<td style="text-align: right;">81592</td>
+</tr>
+<tr class="odd">
+<td style="text-align: right;">7</td>
+<td style="text-align: left;">06-Badajoz</td>
+<td style="text-align: left;">Extremadura</td>
+<td style="text-align: right;">654882</td>
+<td style="text-align: right;">323541</td>
+<td style="text-align: right;">331341</td>
+</tr>
+<tr class="even">
+<td style="text-align: right;">8</td>
+<td style="text-align: left;">07-Balears (Illes)</td>
+<td style="text-align: left;">Balears (Illes)</td>
+<td style="text-align: right;">841669</td>
+<td style="text-align: right;">417314</td>
+<td style="text-align: right;">424355</td>
+</tr>
+<tr class="odd">
+<td style="text-align: right;">9</td>
+<td style="text-align: left;">08-Barcelona</td>
+<td style="text-align: left;">Cataluña</td>
+<td style="text-align: right;">4805927</td>
+<td style="text-align: right;">2341592</td>
+<td style="text-align: right;">2464335</td>
+</tr>
+<tr class="even">
+<td style="text-align: right;">10</td>
+<td style="text-align: left;">09-Burgos</td>
+<td style="text-align: left;">Castilla y León</td>
+<td style="text-align: right;">348934</td>
+<td style="text-align: right;">174576</td>
+<td style="text-align: right;">174358</td>
+</tr>
+<tr class="odd">
+<td style="text-align: right;">11</td>
+<td style="text-align: left;">10-Cáceres</td>
+<td style="text-align: left;">Extremadura</td>
+<td style="text-align: right;">403621</td>
+<td style="text-align: right;">200820</td>
+<td style="text-align: right;">202801</td>
+</tr>
+<tr class="even">
+<td style="text-align: right;">12</td>
+<td style="text-align: left;">11-Cádiz</td>
+<td style="text-align: left;">Andalucía</td>
+<td style="text-align: right;">1116491</td>
+<td style="text-align: right;">552463</td>
+<td style="text-align: right;">564028</td>
+</tr>
+<tr class="odd">
+<td style="text-align: right;">13</td>
+<td style="text-align: left;">39-Cantabria</td>
+<td style="text-align: left;">Cantabria</td>
+<td style="text-align: right;">535131</td>
+<td style="text-align: right;">260586</td>
+<td style="text-align: right;">274545</td>
+</tr>
+<tr class="even">
+<td style="text-align: right;">14</td>
+<td style="text-align: left;">12-Castellón/Castelló</td>
+<td style="text-align: left;">Comunidad Valenciana</td>
+<td style="text-align: right;">484566</td>
+<td style="text-align: right;">240673</td>
+<td style="text-align: right;">243893</td>
+</tr>
+<tr class="odd">
+<td style="text-align: right;">15</td>
+<td style="text-align: left;">51-Ceuta</td>
+<td style="text-align: left;">Ceuta</td>
+<td style="text-align: right;">71505</td>
+<td style="text-align: right;">35949</td>
+<td style="text-align: right;">35556</td>
+</tr>
+<tr class="even">
+<td style="text-align: right;">16</td>
+<td style="text-align: left;">13-Ciudad Real</td>
+<td style="text-align: left;">Castilla-La Mancha</td>
+<td style="text-align: right;">478957</td>
+<td style="text-align: right;">235189</td>
+<td style="text-align: right;">243768</td>
+</tr>
+<tr class="odd">
+<td style="text-align: right;">17</td>
+<td style="text-align: left;">14-Córdoba</td>
+<td style="text-align: left;">Andalucía</td>
+<td style="text-align: right;">761657</td>
+<td style="text-align: right;">372464</td>
+<td style="text-align: right;">389193</td>
+</tr>
+<tr class="even">
+<td style="text-align: right;">18</td>
+<td style="text-align: left;">15-Coruña (A)</td>
+<td style="text-align: left;">Galicia</td>
+<td style="text-align: right;">1096027</td>
+<td style="text-align: right;">525388</td>
+<td style="text-align: right;">570639</td>
+</tr>
+<tr class="odd">
+<td style="text-align: right;">19</td>
+<td style="text-align: left;">16-Cuenca</td>
+<td style="text-align: left;">Castilla-La Mancha</td>
+<td style="text-align: right;">200346</td>
+<td style="text-align: right;">99959</td>
+<td style="text-align: right;">100387</td>
+</tr>
+<tr class="even">
+<td style="text-align: right;">20</td>
+<td style="text-align: left;">17-Girona</td>
+<td style="text-align: left;">Cataluña</td>
+<td style="text-align: right;">565304</td>
+<td style="text-align: right;">280830</td>
+<td style="text-align: right;">284474</td>
+</tr>
+<tr class="odd">
+<td style="text-align: right;">21</td>
+<td style="text-align: left;">18-Granada</td>
+<td style="text-align: left;">Andalucía</td>
+<td style="text-align: right;">821660</td>
+<td style="text-align: right;">401638</td>
+<td style="text-align: right;">420022</td>
+</tr>
+<tr class="even">
+<td style="text-align: right;">22</td>
+<td style="text-align: left;">19-Guadalajara</td>
+<td style="text-align: left;">Castilla-La Mancha</td>
+<td style="text-align: right;">174999</td>
+<td style="text-align: right;">88535</td>
+<td style="text-align: right;">86464</td>
+</tr>
+<tr class="odd">
+<td style="text-align: right;">23</td>
+<td style="text-align: left;">20-Guipúzcoa</td>
+<td style="text-align: left;">País Vasco</td>
+<td style="text-align: right;">673563</td>
+<td style="text-align: right;">330288</td>
+<td style="text-align: right;">343275</td>
+</tr>
+<tr class="even">
+<td style="text-align: right;">24</td>
+<td style="text-align: left;">21-Huelva</td>
+<td style="text-align: left;">Andalucía</td>
+<td style="text-align: right;">462579</td>
+<td style="text-align: right;">229013</td>
+<td style="text-align: right;">233566</td>
+</tr>
+<tr class="odd">
+<td style="text-align: right;">25</td>
+<td style="text-align: left;">22-Huesca</td>
+<td style="text-align: left;">Aragón</td>
+<td style="text-align: right;">206502</td>
+<td style="text-align: right;">104089</td>
+<td style="text-align: right;">102413</td>
+</tr>
+<tr class="even">
+<td style="text-align: right;">26</td>
+<td style="text-align: left;">23-Jaén</td>
+<td style="text-align: left;">Andalucía</td>
+<td style="text-align: right;">643820</td>
+<td style="text-align: right;">317343</td>
+<td style="text-align: right;">326477</td>
+</tr>
+<tr class="odd">
+<td style="text-align: right;">27</td>
+<td style="text-align: left;">24-León</td>
+<td style="text-align: left;">Castilla y León</td>
+<td style="text-align: right;">488751</td>
+<td style="text-align: right;">238139</td>
+<td style="text-align: right;">250612</td>
+</tr>
+<tr class="even">
+<td style="text-align: right;">28</td>
+<td style="text-align: left;">25-Lleida</td>
+<td style="text-align: left;">Cataluña</td>
+<td style="text-align: right;">362206</td>
+<td style="text-align: right;">180425</td>
+<td style="text-align: right;">181781</td>
+</tr>
+<tr class="odd">
+<td style="text-align: right;">29</td>
+<td style="text-align: left;">27-Lugo</td>
+<td style="text-align: left;">Galicia</td>
+<td style="text-align: right;">357648</td>
+<td style="text-align: right;">173339</td>
+<td style="text-align: right;">184309</td>
+</tr>
+<tr class="even">
+<td style="text-align: right;">30</td>
+<td style="text-align: left;">28-Madrid</td>
+<td style="text-align: left;">Madrid (Comunidad de)</td>
+<td style="text-align: right;">5423384</td>
+<td style="text-align: right;">2609746</td>
+<td style="text-align: right;">2813638</td>
+</tr>
+<tr class="odd">
+<td style="text-align: right;">31</td>
+<td style="text-align: left;">29-Málaga</td>
+<td style="text-align: left;">Andalucía</td>
+<td style="text-align: right;">1287017</td>
+<td style="text-align: right;">630902</td>
+<td style="text-align: right;">656115</td>
+</tr>
+<tr class="even">
+<td style="text-align: right;">32</td>
+<td style="text-align: left;">52-Melilla</td>
+<td style="text-align: left;">Melilla</td>
+<td style="text-align: right;">66411</td>
+<td style="text-align: right;">33134</td>
+<td style="text-align: right;">33277</td>
+</tr>
+<tr class="odd">
+<td style="text-align: right;">33</td>
+<td style="text-align: left;">30-Murcia</td>
+<td style="text-align: left;">Murcia (Región de)</td>
+<td style="text-align: right;">1197646</td>
+<td style="text-align: right;">597265</td>
+<td style="text-align: right;">600381</td>
+</tr>
+<tr class="even">
+<td style="text-align: right;">34</td>
+<td style="text-align: left;">31-Navarra</td>
+<td style="text-align: left;">Navarra (Comunidad Foral de)</td>
+<td style="text-align: right;">555829</td>
+<td style="text-align: right;">276629</td>
+<td style="text-align: right;">279200</td>
+</tr>
+<tr class="odd">
+<td style="text-align: right;">35</td>
+<td style="text-align: left;">32-Ourense</td>
+<td style="text-align: left;">Galicia</td>
+<td style="text-align: right;">338446</td>
+<td style="text-align: right;">161968</td>
+<td style="text-align: right;">176478</td>
+</tr>
+<tr class="even">
+<td style="text-align: right;">36</td>
+<td style="text-align: left;">34-Palencia</td>
+<td style="text-align: left;">Castilla y León</td>
+<td style="text-align: right;">174143</td>
+<td style="text-align: right;">85955</td>
+<td style="text-align: right;">88188</td>
+</tr>
+<tr class="odd">
+<td style="text-align: right;">37</td>
+<td style="text-align: left;">35-Palmas (Las)</td>
+<td style="text-align: left;">Canarias</td>
+<td style="text-align: right;">887676</td>
+<td style="text-align: right;">444761</td>
+<td style="text-align: right;">442915</td>
+</tr>
+<tr class="even">
+<td style="text-align: right;">38</td>
+<td style="text-align: left;">36-Pontevedra</td>
+<td style="text-align: left;">Galicia</td>
+<td style="text-align: right;">903759</td>
+<td style="text-align: right;">433683</td>
+<td style="text-align: right;">470076</td>
+</tr>
+<tr class="odd">
+<td style="text-align: right;">39</td>
+<td style="text-align: left;">26-Rioja (La)</td>
+<td style="text-align: left;">Rioja (La)</td>
+<td style="text-align: right;">276702</td>
+<td style="text-align: right;">137827</td>
+<td style="text-align: right;">138875</td>
+</tr>
+<tr class="even">
+<td style="text-align: right;">40</td>
+<td style="text-align: left;">37-Salamanca</td>
+<td style="text-align: left;">Castilla y León</td>
+<td style="text-align: right;">345609</td>
+<td style="text-align: right;">167948</td>
+<td style="text-align: right;">177661</td>
+</tr>
+<tr class="odd">
+<td style="text-align: right;">41</td>
+<td style="text-align: left;">38-Santa Cruz de Tenerife</td>
+<td style="text-align: left;">Canarias</td>
+<td style="text-align: right;">806801</td>
+<td style="text-align: right;">398205</td>
+<td style="text-align: right;">408596</td>
+</tr>
+<tr class="even">
+<td style="text-align: right;">42</td>
+<td style="text-align: left;">40-Segovia</td>
+<td style="text-align: left;">Castilla y León</td>
+<td style="text-align: right;">147694</td>
+<td style="text-align: right;">73973</td>
+<td style="text-align: right;">73721</td>
+</tr>
+<tr class="odd">
+<td style="text-align: right;">43</td>
+<td style="text-align: left;">41-Sevilla</td>
+<td style="text-align: left;">Andalucía</td>
+<td style="text-align: right;">1727603</td>
+<td style="text-align: right;">846220</td>
+<td style="text-align: right;">881383</td>
+</tr>
+<tr class="even">
+<td style="text-align: right;">44</td>
+<td style="text-align: left;">42-Soria</td>
+<td style="text-align: left;">Castilla y León</td>
+<td style="text-align: right;">90717</td>
+<td style="text-align: right;">45443</td>
+<td style="text-align: right;">45274</td>
+</tr>
+<tr class="odd">
+<td style="text-align: right;">45</td>
+<td style="text-align: left;">43-Tarragona</td>
+<td style="text-align: left;">Cataluña</td>
+<td style="text-align: right;">609673</td>
+<td style="text-align: right;">303684</td>
+<td style="text-align: right;">305989</td>
+</tr>
+<tr class="even">
+<td style="text-align: right;">46</td>
+<td style="text-align: left;">44-Teruel</td>
+<td style="text-align: left;">Aragón</td>
+<td style="text-align: right;">135858</td>
+<td style="text-align: right;">68724</td>
+<td style="text-align: right;">67134</td>
+</tr>
+<tr class="odd">
+<td style="text-align: right;">47</td>
+<td style="text-align: left;">45-Toledo</td>
+<td style="text-align: left;">Castilla-La Mancha</td>
+<td style="text-align: right;">541379</td>
+<td style="text-align: right;">270406</td>
+<td style="text-align: right;">270973</td>
+</tr>
+<tr class="even">
+<td style="text-align: right;">48</td>
+<td style="text-align: left;">46-Valencia/València</td>
+<td style="text-align: left;">Comunidad Valenciana</td>
+<td style="text-align: right;">2216285</td>
+<td style="text-align: right;">1084149</td>
+<td style="text-align: right;">1132136</td>
+</tr>
+<tr class="odd">
+<td style="text-align: right;">49</td>
+<td style="text-align: left;">47-Valladolid</td>
+<td style="text-align: left;">Castilla y León</td>
+<td style="text-align: right;">498094</td>
+<td style="text-align: right;">243999</td>
+<td style="text-align: right;">254095</td>
+</tr>
+<tr class="even">
+<td style="text-align: right;">50</td>
+<td style="text-align: left;">48-Vizcaya</td>
+<td style="text-align: left;">País Vasco</td>
+<td style="text-align: right;">1122637</td>
+<td style="text-align: right;">545557</td>
+<td style="text-align: right;">577080</td>
+</tr>
+<tr class="odd">
+<td style="text-align: right;">51</td>
+<td style="text-align: left;">49-Zamora</td>
+<td style="text-align: left;">Castilla y León</td>
+<td style="text-align: right;">199090</td>
+<td style="text-align: right;">97991</td>
+<td style="text-align: right;">101099</td>
+</tr>
+<tr class="even">
+<td style="text-align: right;">52</td>
+<td style="text-align: left;">50-Zaragoza</td>
+<td style="text-align: left;">Aragón</td>
+<td style="text-align: right;">861855</td>
+<td style="text-align: right;">422033</td>
+<td style="text-align: right;">439822</td>
+</tr>
+</tbody>
+</table>
+</div>
+
+
+</div>
+</div>
+<p>Se podrían utilizar sobre data.frame mayores creados, por ejemplo con <code>rbind()</code>:</p>
+<div class="sourceCode" id="cb8"><pre class="sourceCode markdown code-with-copy"><code class="sourceCode markdown"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a><span class="in">```{r}</span></span>
+<span id="cb8-2"><a href="#cb8-2" aria-hidden="true" tabindex="-1"></a><span class="in">DemBas_presentadf(rbind(datos.csv,datos.csv), </span></span>
+<span id="cb8-3"><a href="#cb8-3" aria-hidden="true" tabindex="-1"></a><span class="in">                   scaption = "Tabla con kableExtra",</span></span>
+<span id="cb8-4"><a href="#cb8-4" aria-hidden="true" tabindex="-1"></a><span class="in">                   variaspaginas = T)</span></span>
+<span id="cb8-5"><a href="#cb8-5" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span></code><button title="Copiar al portapapeles" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</section>
+<section id="ejemplo-básico-1" class="level2" data-number="1.4">
+<h2 data-number="1.4" class="anchored" data-anchor-id="ejemplo-básico-1"><span class="header-section-number">1.4</span> Ejemplo: básico</h2>
+<p>Importamos el fichero csv: “datosPractica01.csv”</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb9"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb9-1"><a href="#cb9-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(readr)</span>
+<span id="cb9-2"><a href="#cb9-2" aria-hidden="true" tabindex="-1"></a>datosPractica01 <span class="ot">&lt;-</span> <span class="fu">read_csv</span>(<span class="st">"datosPractica01.csv"</span>,</span>
+<span id="cb9-3"><a href="#cb9-3" aria-hidden="true" tabindex="-1"></a>                            <span class="at">col_types =</span> <span class="fu">cols</span>(<span class="at">...1 =</span> <span class="fu">col_skip</span>()))</span>
+<span id="cb9-4"><a href="#cb9-4" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; New names:</span></span>
+<span id="cb9-5"><a href="#cb9-5" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; • `` -&gt; `...1`</span></span></code><button title="Copiar al portapapeles" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb10"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb10-1"><a href="#cb10-1" aria-hidden="true" tabindex="-1"></a><span class="fu">DemBas_presentadf</span>(<span class="fu">head</span>(datosPractica01,<span class="dv">20</span>), <span class="at">scaption =</span> <span class="st">"Tabla nueva"</span>)</span></code><button title="Copiar al portapapeles" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<div class="table-responsive">
+<table class="table table-striped table-hover table-condensed caption-top table-sm small" data-quarto-postprocess="true">
+<caption>Tabla nueva</caption>
+<thead>
+<tr class="header">
+<th style="text-align: left;" data-quarto-table-cell-role="th">Provincia</th>
+<th style="text-align: left;" data-quarto-table-cell-role="th">CCAA</th>
+<th style="text-align: right;" data-quarto-table-cell-role="th">TOTAL</th>
+<th style="text-align: right;" data-quarto-table-cell-role="th">Varon</th>
+<th style="text-align: right;" data-quarto-table-cell-role="th">Mujer</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td style="text-align: left;">01-Álava</td>
+<td style="text-align: left;">País Vasco</td>
+<td style="text-align: right;">286387</td>
+<td style="text-align: right;">142036</td>
+<td style="text-align: right;">144351</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">02-Albacete</td>
+<td style="text-align: left;">Castilla-La Mancha</td>
+<td style="text-align: right;">364835</td>
+<td style="text-align: right;">181461</td>
+<td style="text-align: right;">183374</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">03-Alicante/Alacant</td>
+<td style="text-align: left;">Comunidad Valenciana</td>
+<td style="text-align: right;">1461925</td>
+<td style="text-align: right;">722162</td>
+<td style="text-align: right;">739763</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">04-Almería</td>
+<td style="text-align: left;">Andalucía</td>
+<td style="text-align: right;">536731</td>
+<td style="text-align: right;">272023</td>
+<td style="text-align: right;">264708</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">33-Asturias</td>
+<td style="text-align: left;">Asturias (Principado de)</td>
+<td style="text-align: right;">1062998</td>
+<td style="text-align: right;">508995</td>
+<td style="text-align: right;">554003</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">05-Ávila</td>
+<td style="text-align: left;">Castilla y León</td>
+<td style="text-align: right;">163442</td>
+<td style="text-align: right;">81850</td>
+<td style="text-align: right;">81592</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">06-Badajoz</td>
+<td style="text-align: left;">Extremadura</td>
+<td style="text-align: right;">654882</td>
+<td style="text-align: right;">323541</td>
+<td style="text-align: right;">331341</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">07-Balears (Illes)</td>
+<td style="text-align: left;">Balears (Illes)</td>
+<td style="text-align: right;">841669</td>
+<td style="text-align: right;">417314</td>
+<td style="text-align: right;">424355</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">08-Barcelona</td>
+<td style="text-align: left;">Cataluña</td>
+<td style="text-align: right;">4805927</td>
+<td style="text-align: right;">2341592</td>
+<td style="text-align: right;">2464335</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">09-Burgos</td>
+<td style="text-align: left;">Castilla y León</td>
+<td style="text-align: right;">348934</td>
+<td style="text-align: right;">174576</td>
+<td style="text-align: right;">174358</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">10-Cáceres</td>
+<td style="text-align: left;">Extremadura</td>
+<td style="text-align: right;">403621</td>
+<td style="text-align: right;">200820</td>
+<td style="text-align: right;">202801</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">11-Cádiz</td>
+<td style="text-align: left;">Andalucía</td>
+<td style="text-align: right;">1116491</td>
+<td style="text-align: right;">552463</td>
+<td style="text-align: right;">564028</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">39-Cantabria</td>
+<td style="text-align: left;">Cantabria</td>
+<td style="text-align: right;">535131</td>
+<td style="text-align: right;">260586</td>
+<td style="text-align: right;">274545</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">12-Castellón/Castelló</td>
+<td style="text-align: left;">Comunidad Valenciana</td>
+<td style="text-align: right;">484566</td>
+<td style="text-align: right;">240673</td>
+<td style="text-align: right;">243893</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">51-Ceuta</td>
+<td style="text-align: left;">Ceuta</td>
+<td style="text-align: right;">71505</td>
+<td style="text-align: right;">35949</td>
+<td style="text-align: right;">35556</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">13-Ciudad Real</td>
+<td style="text-align: left;">Castilla-La Mancha</td>
+<td style="text-align: right;">478957</td>
+<td style="text-align: right;">235189</td>
+<td style="text-align: right;">243768</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">14-Córdoba</td>
+<td style="text-align: left;">Andalucía</td>
+<td style="text-align: right;">761657</td>
+<td style="text-align: right;">372464</td>
+<td style="text-align: right;">389193</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">15-Coruña (A)</td>
+<td style="text-align: left;">Galicia</td>
+<td style="text-align: right;">1096027</td>
+<td style="text-align: right;">525388</td>
+<td style="text-align: right;">570639</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">16-Cuenca</td>
+<td style="text-align: left;">Castilla-La Mancha</td>
+<td style="text-align: right;">200346</td>
+<td style="text-align: right;">99959</td>
+<td style="text-align: right;">100387</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">17-Girona</td>
+<td style="text-align: left;">Cataluña</td>
+<td style="text-align: right;">565304</td>
+<td style="text-align: right;">280830</td>
+<td style="text-align: right;">284474</td>
+</tr>
+</tbody>
+</table>
+</div>
+
+
+</div>
+</div>
+</section>
+<section id="ejemplo-se-modifican-las-anchuras-de-algunas-columnas" class="level2" data-number="1.5">
+<h2 data-number="1.5" class="anchored" data-anchor-id="ejemplo-se-modifican-las-anchuras-de-algunas-columnas"><span class="header-section-number">1.5</span> Ejemplo: se modifican las anchuras de algunas columnas</h2>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb11"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb11-1"><a href="#cb11-1" aria-hidden="true" tabindex="-1"></a><span class="fu">DemBas_presentadf</span>(<span class="fu">head</span>(datosPractica01,<span class="dv">20</span>), </span>
+<span id="cb11-2"><a href="#cb11-2" aria-hidden="true" tabindex="-1"></a>                   <span class="at">scaption =</span> <span class="st">"Nueva Tabla 2"</span>) <span class="sc">|&gt;</span> </span>
+<span id="cb11-3"><a href="#cb11-3" aria-hidden="true" tabindex="-1"></a>      <span class="fu">column_spec</span>(<span class="fu">c</span>(<span class="dv">1</span>), <span class="at">width =</span> <span class="st">"2cm"</span>) <span class="sc">|&gt;</span> </span>
+<span id="cb11-4"><a href="#cb11-4" aria-hidden="true" tabindex="-1"></a>      <span class="fu">column_spec</span>(<span class="fu">c</span>(<span class="dv">2</span>), <span class="at">width =</span> <span class="st">"3cm"</span>)</span></code><button title="Copiar al portapapeles" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<div class="table-responsive">
+<table class="table table-striped table-hover table-condensed caption-top table-sm small" data-quarto-postprocess="true">
+<caption>Nueva Tabla 2</caption>
+<thead>
+<tr class="header">
+<th style="text-align: left;" data-quarto-table-cell-role="th">Provincia</th>
+<th style="text-align: left;" data-quarto-table-cell-role="th">CCAA</th>
+<th style="text-align: right;" data-quarto-table-cell-role="th">TOTAL</th>
+<th style="text-align: right;" data-quarto-table-cell-role="th">Varon</th>
+<th style="text-align: right;" data-quarto-table-cell-role="th">Mujer</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td style="text-align: left; width: 2cm;">01-Álava</td>
+<td style="text-align: left; width: 3cm;">País Vasco</td>
+<td style="text-align: right;">286387</td>
+<td style="text-align: right;">142036</td>
+<td style="text-align: right;">144351</td>
+</tr>
+<tr class="even">
+<td style="text-align: left; width: 2cm;">02-Albacete</td>
+<td style="text-align: left; width: 3cm;">Castilla-La Mancha</td>
+<td style="text-align: right;">364835</td>
+<td style="text-align: right;">181461</td>
+<td style="text-align: right;">183374</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left; width: 2cm;">03-Alicante/Alacant</td>
+<td style="text-align: left; width: 3cm;">Comunidad Valenciana</td>
+<td style="text-align: right;">1461925</td>
+<td style="text-align: right;">722162</td>
+<td style="text-align: right;">739763</td>
+</tr>
+<tr class="even">
+<td style="text-align: left; width: 2cm;">04-Almería</td>
+<td style="text-align: left; width: 3cm;">Andalucía</td>
+<td style="text-align: right;">536731</td>
+<td style="text-align: right;">272023</td>
+<td style="text-align: right;">264708</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left; width: 2cm;">33-Asturias</td>
+<td style="text-align: left; width: 3cm;">Asturias (Principado de)</td>
+<td style="text-align: right;">1062998</td>
+<td style="text-align: right;">508995</td>
+<td style="text-align: right;">554003</td>
+</tr>
+<tr class="even">
+<td style="text-align: left; width: 2cm;">05-Ávila</td>
+<td style="text-align: left; width: 3cm;">Castilla y León</td>
+<td style="text-align: right;">163442</td>
+<td style="text-align: right;">81850</td>
+<td style="text-align: right;">81592</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left; width: 2cm;">06-Badajoz</td>
+<td style="text-align: left; width: 3cm;">Extremadura</td>
+<td style="text-align: right;">654882</td>
+<td style="text-align: right;">323541</td>
+<td style="text-align: right;">331341</td>
+</tr>
+<tr class="even">
+<td style="text-align: left; width: 2cm;">07-Balears (Illes)</td>
+<td style="text-align: left; width: 3cm;">Balears (Illes)</td>
+<td style="text-align: right;">841669</td>
+<td style="text-align: right;">417314</td>
+<td style="text-align: right;">424355</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left; width: 2cm;">08-Barcelona</td>
+<td style="text-align: left; width: 3cm;">Cataluña</td>
+<td style="text-align: right;">4805927</td>
+<td style="text-align: right;">2341592</td>
+<td style="text-align: right;">2464335</td>
+</tr>
+<tr class="even">
+<td style="text-align: left; width: 2cm;">09-Burgos</td>
+<td style="text-align: left; width: 3cm;">Castilla y León</td>
+<td style="text-align: right;">348934</td>
+<td style="text-align: right;">174576</td>
+<td style="text-align: right;">174358</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left; width: 2cm;">10-Cáceres</td>
+<td style="text-align: left; width: 3cm;">Extremadura</td>
+<td style="text-align: right;">403621</td>
+<td style="text-align: right;">200820</td>
+<td style="text-align: right;">202801</td>
+</tr>
+<tr class="even">
+<td style="text-align: left; width: 2cm;">11-Cádiz</td>
+<td style="text-align: left; width: 3cm;">Andalucía</td>
+<td style="text-align: right;">1116491</td>
+<td style="text-align: right;">552463</td>
+<td style="text-align: right;">564028</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left; width: 2cm;">39-Cantabria</td>
+<td style="text-align: left; width: 3cm;">Cantabria</td>
+<td style="text-align: right;">535131</td>
+<td style="text-align: right;">260586</td>
+<td style="text-align: right;">274545</td>
+</tr>
+<tr class="even">
+<td style="text-align: left; width: 2cm;">12-Castellón/Castelló</td>
+<td style="text-align: left; width: 3cm;">Comunidad Valenciana</td>
+<td style="text-align: right;">484566</td>
+<td style="text-align: right;">240673</td>
+<td style="text-align: right;">243893</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left; width: 2cm;">51-Ceuta</td>
+<td style="text-align: left; width: 3cm;">Ceuta</td>
+<td style="text-align: right;">71505</td>
+<td style="text-align: right;">35949</td>
+<td style="text-align: right;">35556</td>
+</tr>
+<tr class="even">
+<td style="text-align: left; width: 2cm;">13-Ciudad Real</td>
+<td style="text-align: left; width: 3cm;">Castilla-La Mancha</td>
+<td style="text-align: right;">478957</td>
+<td style="text-align: right;">235189</td>
+<td style="text-align: right;">243768</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left; width: 2cm;">14-Córdoba</td>
+<td style="text-align: left; width: 3cm;">Andalucía</td>
+<td style="text-align: right;">761657</td>
+<td style="text-align: right;">372464</td>
+<td style="text-align: right;">389193</td>
+</tr>
+<tr class="even">
+<td style="text-align: left; width: 2cm;">15-Coruña (A)</td>
+<td style="text-align: left; width: 3cm;">Galicia</td>
+<td style="text-align: right;">1096027</td>
+<td style="text-align: right;">525388</td>
+<td style="text-align: right;">570639</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left; width: 2cm;">16-Cuenca</td>
+<td style="text-align: left; width: 3cm;">Castilla-La Mancha</td>
+<td style="text-align: right;">200346</td>
+<td style="text-align: right;">99959</td>
+<td style="text-align: right;">100387</td>
+</tr>
+<tr class="even">
+<td style="text-align: left; width: 2cm;">17-Girona</td>
+<td style="text-align: left; width: 3cm;">Cataluña</td>
+<td style="text-align: right;">565304</td>
+<td style="text-align: right;">280830</td>
+<td style="text-align: right;">284474</td>
+</tr>
+</tbody>
+</table>
+</div>
+
+
+</div>
+</div>
+<div style="page-break-after: always;"></div>
+</section>
+<section id="ejemplo-tabla-apaisada-pdf.-importar-ficheros-xlsx" class="level2" data-number="1.6">
+<h2 data-number="1.6" class="anchored" data-anchor-id="ejemplo-tabla-apaisada-pdf.-importar-ficheros-xlsx"><span class="header-section-number">1.6</span> Ejemplo: tabla apaisada (pdf). Importar ficheros xlsx</h2>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb12"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb12-1"><a href="#cb12-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(readxl)</span>
+<span id="cb12-2"><a href="#cb12-2" aria-hidden="true" tabindex="-1"></a>datos1 <span class="ot">=</span> <span class="fu">read_xlsx</span>(<span class="st">"2852.xlsx"</span>,<span class="at">sheet=</span><span class="dv">1</span>,<span class="at">range=</span><span class="st">"A8:U61"</span>)</span>
+<span id="cb12-3"><a href="#cb12-3" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; New names:</span></span>
+<span id="cb12-4"><a href="#cb12-4" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; • `` -&gt; `...1`</span></span>
+<span id="cb12-5"><a href="#cb12-5" aria-hidden="true" tabindex="-1"></a><span class="fu">names</span>(datos1)[<span class="dv">1</span>] <span class="ot">=</span> <span class="st">"Provincias"</span></span></code><button title="Copiar al portapapeles" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<p>Cuando se intenta presentar en un fichero pdf una tabla que necesita un ancho que supera los 21cm de un papel en formato a4 (los ficheros html no presentan limitación de ancho porque no está pensado inicialmente para imprimirse en papel), se puede utilizar la función definida <code>func_salida_tablas()</code>, indicando los argumentos <code>apaisadalatex = TRUE,variaspaginas=FALSE</code>:</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb13"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb13-1"><a href="#cb13-1" aria-hidden="true" tabindex="-1"></a><span class="fu">DemBas_presentadf</span>(datos1,</span>
+<span id="cb13-2"><a href="#cb13-2" aria-hidden="true" tabindex="-1"></a>                   <span class="at">scaption =</span> <span class="st">"Tabla apaisada en una página"</span>,</span>
+<span id="cb13-3"><a href="#cb13-3" aria-hidden="true" tabindex="-1"></a>                   <span class="at">apaisadalatex =</span> <span class="cn">TRUE</span>,</span>
+<span id="cb13-4"><a href="#cb13-4" aria-hidden="true" tabindex="-1"></a>                   <span class="at">variaspaginas=</span><span class="cn">FALSE</span>)</span></code><button title="Copiar al portapapeles" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<div class="table-responsive">
+<table class="table table-striped table-hover table-condensed caption-top table-sm small" data-quarto-postprocess="true">
+<caption>Tabla apaisada en una página</caption>
+<thead>
+<tr class="header">
+<th style="text-align: left;" data-quarto-table-cell-role="th">Provincias</th>
+<th style="text-align: right;" data-quarto-table-cell-role="th">2017</th>
+<th style="text-align: right;" data-quarto-table-cell-role="th">2016</th>
+<th style="text-align: right;" data-quarto-table-cell-role="th">2015</th>
+<th style="text-align: right;" data-quarto-table-cell-role="th">2014</th>
+<th style="text-align: right;" data-quarto-table-cell-role="th">2013</th>
+<th style="text-align: right;" data-quarto-table-cell-role="th">2012</th>
+<th style="text-align: right;" data-quarto-table-cell-role="th">2011</th>
+<th style="text-align: right;" data-quarto-table-cell-role="th">2010</th>
+<th style="text-align: right;" data-quarto-table-cell-role="th">2009</th>
+<th style="text-align: right;" data-quarto-table-cell-role="th">2008</th>
+<th style="text-align: right;" data-quarto-table-cell-role="th">2007</th>
+<th style="text-align: right;" data-quarto-table-cell-role="th">2006</th>
+<th style="text-align: right;" data-quarto-table-cell-role="th">2005</th>
+<th style="text-align: right;" data-quarto-table-cell-role="th">2004</th>
+<th style="text-align: right;" data-quarto-table-cell-role="th">2003</th>
+<th style="text-align: right;" data-quarto-table-cell-role="th">2002</th>
+<th style="text-align: right;" data-quarto-table-cell-role="th">2001</th>
+<th style="text-align: right;" data-quarto-table-cell-role="th">2000</th>
+<th style="text-align: right;" data-quarto-table-cell-role="th">1999</th>
+<th style="text-align: right;" data-quarto-table-cell-role="th">1998</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td style="text-align: left;">Total Nacional</td>
+<td style="text-align: right;">46572132</td>
+<td style="text-align: right;">46557008</td>
+<td style="text-align: right;">46624382</td>
+<td style="text-align: right;">46771341</td>
+<td style="text-align: right;">47129783</td>
+<td style="text-align: right;">47265321</td>
+<td style="text-align: right;">47190493</td>
+<td style="text-align: right;">47021031</td>
+<td style="text-align: right;">46745807</td>
+<td style="text-align: right;">46157822</td>
+<td style="text-align: right;">45200737</td>
+<td style="text-align: right;">44708964</td>
+<td style="text-align: right;">44108530</td>
+<td style="text-align: right;">43197684</td>
+<td style="text-align: right;">42717064</td>
+<td style="text-align: right;">41837894</td>
+<td style="text-align: right;">41116842</td>
+<td style="text-align: right;">40499791</td>
+<td style="text-align: right;">40202160</td>
+<td style="text-align: right;">39852651</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">02 Albacete</td>
+<td style="text-align: right;">390032</td>
+<td style="text-align: right;">392118</td>
+<td style="text-align: right;">394580</td>
+<td style="text-align: right;">396987</td>
+<td style="text-align: right;">400007</td>
+<td style="text-align: right;">402837</td>
+<td style="text-align: right;">402318</td>
+<td style="text-align: right;">401682</td>
+<td style="text-align: right;">400891</td>
+<td style="text-align: right;">397493</td>
+<td style="text-align: right;">392110</td>
+<td style="text-align: right;">387658</td>
+<td style="text-align: right;">384640</td>
+<td style="text-align: right;">379448</td>
+<td style="text-align: right;">376556</td>
+<td style="text-align: right;">371787</td>
+<td style="text-align: right;">367283</td>
+<td style="text-align: right;">363263</td>
+<td style="text-align: right;">361021</td>
+<td style="text-align: right;">358597</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">03 Alicante/Alacant</td>
+<td style="text-align: right;">1825332</td>
+<td style="text-align: right;">1836459</td>
+<td style="text-align: right;">1855047</td>
+<td style="text-align: right;">1868438</td>
+<td style="text-align: right;">1945642</td>
+<td style="text-align: right;">1943910</td>
+<td style="text-align: right;">1934127</td>
+<td style="text-align: right;">1926285</td>
+<td style="text-align: right;">1917012</td>
+<td style="text-align: right;">1891477</td>
+<td style="text-align: right;">1825264</td>
+<td style="text-align: right;">1783555</td>
+<td style="text-align: right;">1732389</td>
+<td style="text-align: right;">1657040</td>
+<td style="text-align: right;">1632349</td>
+<td style="text-align: right;">1557968</td>
+<td style="text-align: right;">1490265</td>
+<td style="text-align: right;">1445144</td>
+<td style="text-align: right;">1410946</td>
+<td style="text-align: right;">1388933</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">04 Almería</td>
+<td style="text-align: right;">706672</td>
+<td style="text-align: right;">704297</td>
+<td style="text-align: right;">701211</td>
+<td style="text-align: right;">701688</td>
+<td style="text-align: right;">699329</td>
+<td style="text-align: right;">704219</td>
+<td style="text-align: right;">702819</td>
+<td style="text-align: right;">695560</td>
+<td style="text-align: right;">684426</td>
+<td style="text-align: right;">667635</td>
+<td style="text-align: right;">646633</td>
+<td style="text-align: right;">635850</td>
+<td style="text-align: right;">612315</td>
+<td style="text-align: right;">580077</td>
+<td style="text-align: right;">565310</td>
+<td style="text-align: right;">546498</td>
+<td style="text-align: right;">533168</td>
+<td style="text-align: right;">518229</td>
+<td style="text-align: right;">512843</td>
+<td style="text-align: right;">505448</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">01 Araba/Álava</td>
+<td style="text-align: right;">326574</td>
+<td style="text-align: right;">324126</td>
+<td style="text-align: right;">323648</td>
+<td style="text-align: right;">321932</td>
+<td style="text-align: right;">321417</td>
+<td style="text-align: right;">322557</td>
+<td style="text-align: right;">319227</td>
+<td style="text-align: right;">317352</td>
+<td style="text-align: right;">313819</td>
+<td style="text-align: right;">309635</td>
+<td style="text-align: right;">305459</td>
+<td style="text-align: right;">301926</td>
+<td style="text-align: right;">299957</td>
+<td style="text-align: right;">295905</td>
+<td style="text-align: right;">294360</td>
+<td style="text-align: right;">291860</td>
+<td style="text-align: right;">288793</td>
+<td style="text-align: right;">286497</td>
+<td style="text-align: right;">285748</td>
+<td style="text-align: right;">284595</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">33 Asturias</td>
+<td style="text-align: right;">1034960</td>
+<td style="text-align: right;">1042608</td>
+<td style="text-align: right;">1051229</td>
+<td style="text-align: right;">1061756</td>
+<td style="text-align: right;">1068165</td>
+<td style="text-align: right;">1077360</td>
+<td style="text-align: right;">1081487</td>
+<td style="text-align: right;">1084341</td>
+<td style="text-align: right;">1085289</td>
+<td style="text-align: right;">1080138</td>
+<td style="text-align: right;">1074862</td>
+<td style="text-align: right;">1076896</td>
+<td style="text-align: right;">1076635</td>
+<td style="text-align: right;">1073761</td>
+<td style="text-align: right;">1075381</td>
+<td style="text-align: right;">1073971</td>
+<td style="text-align: right;">1075329</td>
+<td style="text-align: right;">1076567</td>
+<td style="text-align: right;">1084314</td>
+<td style="text-align: right;">1081834</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">05 Ávila</td>
+<td style="text-align: right;">160700</td>
+<td style="text-align: right;">162514</td>
+<td style="text-align: right;">164925</td>
+<td style="text-align: right;">167015</td>
+<td style="text-align: right;">168825</td>
+<td style="text-align: right;">171265</td>
+<td style="text-align: right;">172704</td>
+<td style="text-align: right;">171896</td>
+<td style="text-align: right;">171680</td>
+<td style="text-align: right;">171815</td>
+<td style="text-align: right;">168638</td>
+<td style="text-align: right;">167818</td>
+<td style="text-align: right;">167032</td>
+<td style="text-align: right;">166108</td>
+<td style="text-align: right;">165480</td>
+<td style="text-align: right;">165138</td>
+<td style="text-align: right;">163885</td>
+<td style="text-align: right;">164991</td>
+<td style="text-align: right;">166259</td>
+<td style="text-align: right;">167132</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">06 Badajoz</td>
+<td style="text-align: right;">679884</td>
+<td style="text-align: right;">684113</td>
+<td style="text-align: right;">686730</td>
+<td style="text-align: right;">690929</td>
+<td style="text-align: right;">693729</td>
+<td style="text-align: right;">694533</td>
+<td style="text-align: right;">693921</td>
+<td style="text-align: right;">692137</td>
+<td style="text-align: right;">688777</td>
+<td style="text-align: right;">685246</td>
+<td style="text-align: right;">678459</td>
+<td style="text-align: right;">673474</td>
+<td style="text-align: right;">671299</td>
+<td style="text-align: right;">663896</td>
+<td style="text-align: right;">663142</td>
+<td style="text-align: right;">662808</td>
+<td style="text-align: right;">664251</td>
+<td style="text-align: right;">661874</td>
+<td style="text-align: right;">664625</td>
+<td style="text-align: right;">663803</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">07 Balears, Illes</td>
+<td style="text-align: right;">1115999</td>
+<td style="text-align: right;">1107220</td>
+<td style="text-align: right;">1104479</td>
+<td style="text-align: right;">1103442</td>
+<td style="text-align: right;">1111674</td>
+<td style="text-align: right;">1119439</td>
+<td style="text-align: right;">1113114</td>
+<td style="text-align: right;">1106049</td>
+<td style="text-align: right;">1095426</td>
+<td style="text-align: right;">1072844</td>
+<td style="text-align: right;">1030650</td>
+<td style="text-align: right;">1001062</td>
+<td style="text-align: right;">983131</td>
+<td style="text-align: right;">955045</td>
+<td style="text-align: right;">947361</td>
+<td style="text-align: right;">916968</td>
+<td style="text-align: right;">878627</td>
+<td style="text-align: right;">845630</td>
+<td style="text-align: right;">821820</td>
+<td style="text-align: right;">796483</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">08 Barcelona</td>
+<td style="text-align: right;">5576037</td>
+<td style="text-align: right;">5542680</td>
+<td style="text-align: right;">5523922</td>
+<td style="text-align: right;">5523784</td>
+<td style="text-align: right;">5540925</td>
+<td style="text-align: right;">5552050</td>
+<td style="text-align: right;">5529099</td>
+<td style="text-align: right;">5511147</td>
+<td style="text-align: right;">5487935</td>
+<td style="text-align: right;">5416447</td>
+<td style="text-align: right;">5332513</td>
+<td style="text-align: right;">5309404</td>
+<td style="text-align: right;">5226354</td>
+<td style="text-align: right;">5117885</td>
+<td style="text-align: right;">5052666</td>
+<td style="text-align: right;">4906117</td>
+<td style="text-align: right;">4804606</td>
+<td style="text-align: right;">4736277</td>
+<td style="text-align: right;">4706325</td>
+<td style="text-align: right;">4666271</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">48 Bizkaia</td>
+<td style="text-align: right;">1148302</td>
+<td style="text-align: right;">1147576</td>
+<td style="text-align: right;">1148775</td>
+<td style="text-align: right;">1151905</td>
+<td style="text-align: right;">1156447</td>
+<td style="text-align: right;">1158439</td>
+<td style="text-align: right;">1155772</td>
+<td style="text-align: right;">1153724</td>
+<td style="text-align: right;">1152658</td>
+<td style="text-align: right;">1146421</td>
+<td style="text-align: right;">1141457</td>
+<td style="text-align: right;">1139863</td>
+<td style="text-align: right;">1136181</td>
+<td style="text-align: right;">1132861</td>
+<td style="text-align: right;">1133428</td>
+<td style="text-align: right;">1133444</td>
+<td style="text-align: right;">1132616</td>
+<td style="text-align: right;">1132729</td>
+<td style="text-align: right;">1137418</td>
+<td style="text-align: right;">1137594</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">09 Burgos</td>
+<td style="text-align: right;">358171</td>
+<td style="text-align: right;">360995</td>
+<td style="text-align: right;">364002</td>
+<td style="text-align: right;">366900</td>
+<td style="text-align: right;">371248</td>
+<td style="text-align: right;">374970</td>
+<td style="text-align: right;">375657</td>
+<td style="text-align: right;">374826</td>
+<td style="text-align: right;">375563</td>
+<td style="text-align: right;">373672</td>
+<td style="text-align: right;">365972</td>
+<td style="text-align: right;">363874</td>
+<td style="text-align: right;">361021</td>
+<td style="text-align: right;">356437</td>
+<td style="text-align: right;">355205</td>
+<td style="text-align: right;">352723</td>
+<td style="text-align: right;">349810</td>
+<td style="text-align: right;">347240</td>
+<td style="text-align: right;">347218</td>
+<td style="text-align: right;">346355</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">10 Cáceres</td>
+<td style="text-align: right;">400036</td>
+<td style="text-align: right;">403665</td>
+<td style="text-align: right;">406267</td>
+<td style="text-align: right;">408703</td>
+<td style="text-align: right;">410275</td>
+<td style="text-align: right;">413597</td>
+<td style="text-align: right;">415446</td>
+<td style="text-align: right;">415083</td>
+<td style="text-align: right;">413633</td>
+<td style="text-align: right;">412498</td>
+<td style="text-align: right;">411531</td>
+<td style="text-align: right;">412899</td>
+<td style="text-align: right;">412580</td>
+<td style="text-align: right;">411390</td>
+<td style="text-align: right;">410762</td>
+<td style="text-align: right;">410242</td>
+<td style="text-align: right;">409130</td>
+<td style="text-align: right;">407546</td>
+<td style="text-align: right;">408949</td>
+<td style="text-align: right;">405616</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">11 Cádiz</td>
+<td style="text-align: right;">1239435</td>
+<td style="text-align: right;">1239889</td>
+<td style="text-align: right;">1240284</td>
+<td style="text-align: right;">1240175</td>
+<td style="text-align: right;">1238492</td>
+<td style="text-align: right;">1245164</td>
+<td style="text-align: right;">1243519</td>
+<td style="text-align: right;">1236739</td>
+<td style="text-align: right;">1230594</td>
+<td style="text-align: right;">1220467</td>
+<td style="text-align: right;">1207343</td>
+<td style="text-align: right;">1194062</td>
+<td style="text-align: right;">1180817</td>
+<td style="text-align: right;">1164374</td>
+<td style="text-align: right;">1155724</td>
+<td style="text-align: right;">1140793</td>
+<td style="text-align: right;">1131346</td>
+<td style="text-align: right;">1125105</td>
+<td style="text-align: right;">1119802</td>
+<td style="text-align: right;">1107484</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">39 Cantabria</td>
+<td style="text-align: right;">580295</td>
+<td style="text-align: right;">582206</td>
+<td style="text-align: right;">585179</td>
+<td style="text-align: right;">588656</td>
+<td style="text-align: right;">591888</td>
+<td style="text-align: right;">593861</td>
+<td style="text-align: right;">593121</td>
+<td style="text-align: right;">592250</td>
+<td style="text-align: right;">589235</td>
+<td style="text-align: right;">582138</td>
+<td style="text-align: right;">572824</td>
+<td style="text-align: right;">568091</td>
+<td style="text-align: right;">562309</td>
+<td style="text-align: right;">554784</td>
+<td style="text-align: right;">549690</td>
+<td style="text-align: right;">542275</td>
+<td style="text-align: right;">537606</td>
+<td style="text-align: right;">531159</td>
+<td style="text-align: right;">528478</td>
+<td style="text-align: right;">527137</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">12 Castellón/Castelló</td>
+<td style="text-align: right;">575470</td>
+<td style="text-align: right;">579245</td>
+<td style="text-align: right;">582327</td>
+<td style="text-align: right;">587508</td>
+<td style="text-align: right;">601699</td>
+<td style="text-align: right;">604564</td>
+<td style="text-align: right;">604344</td>
+<td style="text-align: right;">604274</td>
+<td style="text-align: right;">602301</td>
+<td style="text-align: right;">594915</td>
+<td style="text-align: right;">573282</td>
+<td style="text-align: right;">559761</td>
+<td style="text-align: right;">543432</td>
+<td style="text-align: right;">527345</td>
+<td style="text-align: right;">518239</td>
+<td style="text-align: right;">501237</td>
+<td style="text-align: right;">485173</td>
+<td style="text-align: right;">474385</td>
+<td style="text-align: right;">467895</td>
+<td style="text-align: right;">461712</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">13 Ciudad Real</td>
+<td style="text-align: right;">502578</td>
+<td style="text-align: right;">506888</td>
+<td style="text-align: right;">513713</td>
+<td style="text-align: right;">519613</td>
+<td style="text-align: right;">524962</td>
+<td style="text-align: right;">530250</td>
+<td style="text-align: right;">530175</td>
+<td style="text-align: right;">529453</td>
+<td style="text-align: right;">527273</td>
+<td style="text-align: right;">522343</td>
+<td style="text-align: right;">510122</td>
+<td style="text-align: right;">506864</td>
+<td style="text-align: right;">500060</td>
+<td style="text-align: right;">492914</td>
+<td style="text-align: right;">487670</td>
+<td style="text-align: right;">484338</td>
+<td style="text-align: right;">478581</td>
+<td style="text-align: right;">476633</td>
+<td style="text-align: right;">479087</td>
+<td style="text-align: right;">479474</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">14 Córdoba</td>
+<td style="text-align: right;">788219</td>
+<td style="text-align: right;">791610</td>
+<td style="text-align: right;">795611</td>
+<td style="text-align: right;">799402</td>
+<td style="text-align: right;">802422</td>
+<td style="text-align: right;">804498</td>
+<td style="text-align: right;">805857</td>
+<td style="text-align: right;">805108</td>
+<td style="text-align: right;">803998</td>
+<td style="text-align: right;">798822</td>
+<td style="text-align: right;">792182</td>
+<td style="text-align: right;">788287</td>
+<td style="text-align: right;">784376</td>
+<td style="text-align: right;">779870</td>
+<td style="text-align: right;">775944</td>
+<td style="text-align: right;">771131</td>
+<td style="text-align: right;">769625</td>
+<td style="text-align: right;">769237</td>
+<td style="text-align: right;">768676</td>
+<td style="text-align: right;">767175</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">15 Coruña, A</td>
+<td style="text-align: right;">1120294</td>
+<td style="text-align: right;">1122799</td>
+<td style="text-align: right;">1127196</td>
+<td style="text-align: right;">1132735</td>
+<td style="text-align: right;">1138161</td>
+<td style="text-align: right;">1143911</td>
+<td style="text-align: right;">1147124</td>
+<td style="text-align: right;">1146458</td>
+<td style="text-align: right;">1145488</td>
+<td style="text-align: right;">1139121</td>
+<td style="text-align: right;">1132792</td>
+<td style="text-align: right;">1129141</td>
+<td style="text-align: right;">1126707</td>
+<td style="text-align: right;">1121344</td>
+<td style="text-align: right;">1120814</td>
+<td style="text-align: right;">1111886</td>
+<td style="text-align: right;">1108002</td>
+<td style="text-align: right;">1108419</td>
+<td style="text-align: right;">1108980</td>
+<td style="text-align: right;">1106325</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">16 Cuenca</td>
+<td style="text-align: right;">198718</td>
+<td style="text-align: right;">201071</td>
+<td style="text-align: right;">203841</td>
+<td style="text-align: right;">207449</td>
+<td style="text-align: right;">211899</td>
+<td style="text-align: right;">218036</td>
+<td style="text-align: right;">219138</td>
+<td style="text-align: right;">217716</td>
+<td style="text-align: right;">217363</td>
+<td style="text-align: right;">215274</td>
+<td style="text-align: right;">211375</td>
+<td style="text-align: right;">208616</td>
+<td style="text-align: right;">207974</td>
+<td style="text-align: right;">204546</td>
+<td style="text-align: right;">202982</td>
+<td style="text-align: right;">201614</td>
+<td style="text-align: right;">201526</td>
+<td style="text-align: right;">201053</td>
+<td style="text-align: right;">200963</td>
+<td style="text-align: right;">199086</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">20 Gipuzkoa</td>
+<td style="text-align: right;">719282</td>
+<td style="text-align: right;">717832</td>
+<td style="text-align: right;">716834</td>
+<td style="text-align: right;">715148</td>
+<td style="text-align: right;">713818</td>
+<td style="text-align: right;">712097</td>
+<td style="text-align: right;">709607</td>
+<td style="text-align: right;">707263</td>
+<td style="text-align: right;">705698</td>
+<td style="text-align: right;">701056</td>
+<td style="text-align: right;">694944</td>
+<td style="text-align: right;">691895</td>
+<td style="text-align: right;">688708</td>
+<td style="text-align: right;">686513</td>
+<td style="text-align: right;">684416</td>
+<td style="text-align: right;">682977</td>
+<td style="text-align: right;">680069</td>
+<td style="text-align: right;">679370</td>
+<td style="text-align: right;">677275</td>
+<td style="text-align: right;">676439</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">17 Girona</td>
+<td style="text-align: right;">755716</td>
+<td style="text-align: right;">753576</td>
+<td style="text-align: right;">753054</td>
+<td style="text-align: right;">756156</td>
+<td style="text-align: right;">761632</td>
+<td style="text-align: right;">761627</td>
+<td style="text-align: right;">756810</td>
+<td style="text-align: right;">753046</td>
+<td style="text-align: right;">747782</td>
+<td style="text-align: right;">731864</td>
+<td style="text-align: right;">706185</td>
+<td style="text-align: right;">687331</td>
+<td style="text-align: right;">664506</td>
+<td style="text-align: right;">636198</td>
+<td style="text-align: right;">619692</td>
+<td style="text-align: right;">598112</td>
+<td style="text-align: right;">579650</td>
+<td style="text-align: right;">565599</td>
+<td style="text-align: right;">553348</td>
+<td style="text-align: right;">543191</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">18 Granada</td>
+<td style="text-align: right;">912938</td>
+<td style="text-align: right;">915392</td>
+<td style="text-align: right;">917297</td>
+<td style="text-align: right;">919455</td>
+<td style="text-align: right;">919319</td>
+<td style="text-align: right;">922928</td>
+<td style="text-align: right;">924550</td>
+<td style="text-align: right;">918072</td>
+<td style="text-align: right;">907428</td>
+<td style="text-align: right;">901220</td>
+<td style="text-align: right;">884099</td>
+<td style="text-align: right;">876184</td>
+<td style="text-align: right;">860898</td>
+<td style="text-align: right;">841687</td>
+<td style="text-align: right;">828107</td>
+<td style="text-align: right;">818959</td>
+<td style="text-align: right;">812637</td>
+<td style="text-align: right;">809004</td>
+<td style="text-align: right;">813061</td>
+<td style="text-align: right;">801177</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">19 Guadalajara</td>
+<td style="text-align: right;">253310</td>
+<td style="text-align: right;">252882</td>
+<td style="text-align: right;">253686</td>
+<td style="text-align: right;">255426</td>
+<td style="text-align: right;">257723</td>
+<td style="text-align: right;">259537</td>
+<td style="text-align: right;">256461</td>
+<td style="text-align: right;">251563</td>
+<td style="text-align: right;">246151</td>
+<td style="text-align: right;">237787</td>
+<td style="text-align: right;">224076</td>
+<td style="text-align: right;">213505</td>
+<td style="text-align: right;">203737</td>
+<td style="text-align: right;">193913</td>
+<td style="text-align: right;">185474</td>
+<td style="text-align: right;">177761</td>
+<td style="text-align: right;">171532</td>
+<td style="text-align: right;">165347</td>
+<td style="text-align: right;">161669</td>
+<td style="text-align: right;">159331</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">21 Huelva</td>
+<td style="text-align: right;">518930</td>
+<td style="text-align: right;">519596</td>
+<td style="text-align: right;">520017</td>
+<td style="text-align: right;">519229</td>
+<td style="text-align: right;">520668</td>
+<td style="text-align: right;">522862</td>
+<td style="text-align: right;">521968</td>
+<td style="text-align: right;">518081</td>
+<td style="text-align: right;">513403</td>
+<td style="text-align: right;">507915</td>
+<td style="text-align: right;">497671</td>
+<td style="text-align: right;">492174</td>
+<td style="text-align: right;">483792</td>
+<td style="text-align: right;">476707</td>
+<td style="text-align: right;">472446</td>
+<td style="text-align: right;">464934</td>
+<td style="text-align: right;">461730</td>
+<td style="text-align: right;">458998</td>
+<td style="text-align: right;">457507</td>
+<td style="text-align: right;">453958</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">22 Huesca</td>
+<td style="text-align: right;">219702</td>
+<td style="text-align: right;">221079</td>
+<td style="text-align: right;">222909</td>
+<td style="text-align: right;">224909</td>
+<td style="text-align: right;">226329</td>
+<td style="text-align: right;">227609</td>
+<td style="text-align: right;">228361</td>
+<td style="text-align: right;">228566</td>
+<td style="text-align: right;">228409</td>
+<td style="text-align: right;">225271</td>
+<td style="text-align: right;">220107</td>
+<td style="text-align: right;">218023</td>
+<td style="text-align: right;">215864</td>
+<td style="text-align: right;">212901</td>
+<td style="text-align: right;">211286</td>
+<td style="text-align: right;">208963</td>
+<td style="text-align: right;">205955</td>
+<td style="text-align: right;">205430</td>
+<td style="text-align: right;">205429</td>
+<td style="text-align: right;">204956</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">23 Jaén</td>
+<td style="text-align: right;">643484</td>
+<td style="text-align: right;">648250</td>
+<td style="text-align: right;">654170</td>
+<td style="text-align: right;">659033</td>
+<td style="text-align: right;">664916</td>
+<td style="text-align: right;">670242</td>
+<td style="text-align: right;">670600</td>
+<td style="text-align: right;">670761</td>
+<td style="text-align: right;">669782</td>
+<td style="text-align: right;">667438</td>
+<td style="text-align: right;">664742</td>
+<td style="text-align: right;">662751</td>
+<td style="text-align: right;">660284</td>
+<td style="text-align: right;">654458</td>
+<td style="text-align: right;">651565</td>
+<td style="text-align: right;">647387</td>
+<td style="text-align: right;">645781</td>
+<td style="text-align: right;">645711</td>
+<td style="text-align: right;">649662</td>
+<td style="text-align: right;">645792</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">24 León</td>
+<td style="text-align: right;">468316</td>
+<td style="text-align: right;">473604</td>
+<td style="text-align: right;">479395</td>
+<td style="text-align: right;">484694</td>
+<td style="text-align: right;">489752</td>
+<td style="text-align: right;">494451</td>
+<td style="text-align: right;">497799</td>
+<td style="text-align: right;">499284</td>
+<td style="text-align: right;">500169</td>
+<td style="text-align: right;">500200</td>
+<td style="text-align: right;">497387</td>
+<td style="text-align: right;">498223</td>
+<td style="text-align: right;">495902</td>
+<td style="text-align: right;">492720</td>
+<td style="text-align: right;">495998</td>
+<td style="text-align: right;">496655</td>
+<td style="text-align: right;">499517</td>
+<td style="text-align: right;">502155</td>
+<td style="text-align: right;">506511</td>
+<td style="text-align: right;">506365</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">25 Lleida</td>
+<td style="text-align: right;">432384</td>
+<td style="text-align: right;">434041</td>
+<td style="text-align: right;">436029</td>
+<td style="text-align: right;">438001</td>
+<td style="text-align: right;">440915</td>
+<td style="text-align: right;">443032</td>
+<td style="text-align: right;">442308</td>
+<td style="text-align: right;">439768</td>
+<td style="text-align: right;">436402</td>
+<td style="text-align: right;">426872</td>
+<td style="text-align: right;">414015</td>
+<td style="text-align: right;">407496</td>
+<td style="text-align: right;">399439</td>
+<td style="text-align: right;">385092</td>
+<td style="text-align: right;">377639</td>
+<td style="text-align: right;">371055</td>
+<td style="text-align: right;">365023</td>
+<td style="text-align: right;">361590</td>
+<td style="text-align: right;">359361</td>
+<td style="text-align: right;">357903</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">27 Lugo</td>
+<td style="text-align: right;">333634</td>
+<td style="text-align: right;">336527</td>
+<td style="text-align: right;">339386</td>
+<td style="text-align: right;">342748</td>
+<td style="text-align: right;">346005</td>
+<td style="text-align: right;">348902</td>
+<td style="text-align: right;">351530</td>
+<td style="text-align: right;">353504</td>
+<td style="text-align: right;">355195</td>
+<td style="text-align: right;">355549</td>
+<td style="text-align: right;">355176</td>
+<td style="text-align: right;">356595</td>
+<td style="text-align: right;">357625</td>
+<td style="text-align: right;">358452</td>
+<td style="text-align: right;">360512</td>
+<td style="text-align: right;">361782</td>
+<td style="text-align: right;">364125</td>
+<td style="text-align: right;">365619</td>
+<td style="text-align: right;">366934</td>
+<td style="text-align: right;">367751</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">28 Madrid</td>
+<td style="text-align: right;">6507184</td>
+<td style="text-align: right;">6466996</td>
+<td style="text-align: right;">6436996</td>
+<td style="text-align: right;">6454440</td>
+<td style="text-align: right;">6495551</td>
+<td style="text-align: right;">6498560</td>
+<td style="text-align: right;">6489680</td>
+<td style="text-align: right;">6458684</td>
+<td style="text-align: right;">6386932</td>
+<td style="text-align: right;">6271638</td>
+<td style="text-align: right;">6081689</td>
+<td style="text-align: right;">6008183</td>
+<td style="text-align: right;">5964143</td>
+<td style="text-align: right;">5804829</td>
+<td style="text-align: right;">5718942</td>
+<td style="text-align: right;">5527152</td>
+<td style="text-align: right;">5372433</td>
+<td style="text-align: right;">5205408</td>
+<td style="text-align: right;">5145325</td>
+<td style="text-align: right;">5091336</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">29 Málaga</td>
+<td style="text-align: right;">1630615</td>
+<td style="text-align: right;">1629298</td>
+<td style="text-align: right;">1628973</td>
+<td style="text-align: right;">1621968</td>
+<td style="text-align: right;">1652999</td>
+<td style="text-align: right;">1641098</td>
+<td style="text-align: right;">1625827</td>
+<td style="text-align: right;">1609557</td>
+<td style="text-align: right;">1593068</td>
+<td style="text-align: right;">1563261</td>
+<td style="text-align: right;">1517523</td>
+<td style="text-align: right;">1491287</td>
+<td style="text-align: right;">1453409</td>
+<td style="text-align: right;">1397925</td>
+<td style="text-align: right;">1374890</td>
+<td style="text-align: right;">1330010</td>
+<td style="text-align: right;">1302240</td>
+<td style="text-align: right;">1278851</td>
+<td style="text-align: right;">1258084</td>
+<td style="text-align: right;">1240580</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">30 Murcia</td>
+<td style="text-align: right;">1470273</td>
+<td style="text-align: right;">1464847</td>
+<td style="text-align: right;">1467288</td>
+<td style="text-align: right;">1466818</td>
+<td style="text-align: right;">1472049</td>
+<td style="text-align: right;">1474449</td>
+<td style="text-align: right;">1470069</td>
+<td style="text-align: right;">1461979</td>
+<td style="text-align: right;">1446520</td>
+<td style="text-align: right;">1426109</td>
+<td style="text-align: right;">1392117</td>
+<td style="text-align: right;">1370306</td>
+<td style="text-align: right;">1335792</td>
+<td style="text-align: right;">1294694</td>
+<td style="text-align: right;">1269230</td>
+<td style="text-align: right;">1226993</td>
+<td style="text-align: right;">1190378</td>
+<td style="text-align: right;">1149328</td>
+<td style="text-align: right;">1131128</td>
+<td style="text-align: right;">1115068</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">31 Navarra</td>
+<td style="text-align: right;">643234</td>
+<td style="text-align: right;">640647</td>
+<td style="text-align: right;">640476</td>
+<td style="text-align: right;">640790</td>
+<td style="text-align: right;">644477</td>
+<td style="text-align: right;">644566</td>
+<td style="text-align: right;">642051</td>
+<td style="text-align: right;">636924</td>
+<td style="text-align: right;">630578</td>
+<td style="text-align: right;">620377</td>
+<td style="text-align: right;">605876</td>
+<td style="text-align: right;">601874</td>
+<td style="text-align: right;">593472</td>
+<td style="text-align: right;">584734</td>
+<td style="text-align: right;">578210</td>
+<td style="text-align: right;">569628</td>
+<td style="text-align: right;">556263</td>
+<td style="text-align: right;">543757</td>
+<td style="text-align: right;">538009</td>
+<td style="text-align: right;">530819</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">32 Ourense</td>
+<td style="text-align: right;">311680</td>
+<td style="text-align: right;">314853</td>
+<td style="text-align: right;">318391</td>
+<td style="text-align: right;">322293</td>
+<td style="text-align: right;">326724</td>
+<td style="text-align: right;">330257</td>
+<td style="text-align: right;">333257</td>
+<td style="text-align: right;">335219</td>
+<td style="text-align: right;">335642</td>
+<td style="text-align: right;">336099</td>
+<td style="text-align: right;">336926</td>
+<td style="text-align: right;">338671</td>
+<td style="text-align: right;">339555</td>
+<td style="text-align: right;">340258</td>
+<td style="text-align: right;">342213</td>
+<td style="text-align: right;">343768</td>
+<td style="text-align: right;">344623</td>
+<td style="text-align: right;">345241</td>
+<td style="text-align: right;">345620</td>
+<td style="text-align: right;">344170</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">34 Palencia</td>
+<td style="text-align: right;">163390</td>
+<td style="text-align: right;">164644</td>
+<td style="text-align: right;">166035</td>
+<td style="text-align: right;">167609</td>
+<td style="text-align: right;">168955</td>
+<td style="text-align: right;">170713</td>
+<td style="text-align: right;">171668</td>
+<td style="text-align: right;">172510</td>
+<td style="text-align: right;">173306</td>
+<td style="text-align: right;">173454</td>
+<td style="text-align: right;">173281</td>
+<td style="text-align: right;">173153</td>
+<td style="text-align: right;">173471</td>
+<td style="text-align: right;">173990</td>
+<td style="text-align: right;">175047</td>
+<td style="text-align: right;">176125</td>
+<td style="text-align: right;">177345</td>
+<td style="text-align: right;">178316</td>
+<td style="text-align: right;">179465</td>
+<td style="text-align: right;">179623</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">35 Palmas, Las</td>
+<td style="text-align: right;">1100480</td>
+<td style="text-align: right;">1097800</td>
+<td style="text-align: right;">1098406</td>
+<td style="text-align: right;">1100027</td>
+<td style="text-align: right;">1103850</td>
+<td style="text-align: right;">1100813</td>
+<td style="text-align: right;">1096980</td>
+<td style="text-align: right;">1090605</td>
+<td style="text-align: right;">1083502</td>
+<td style="text-align: right;">1070032</td>
+<td style="text-align: right;">1042131</td>
+<td style="text-align: right;">1024186</td>
+<td style="text-align: right;">1011928</td>
+<td style="text-align: right;">987128</td>
+<td style="text-align: right;">979606</td>
+<td style="text-align: right;">951037</td>
+<td style="text-align: right;">924558</td>
+<td style="text-align: right;">897595</td>
+<td style="text-align: right;">872669</td>
+<td style="text-align: right;">849863</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">36 Pontevedra</td>
+<td style="text-align: right;">942731</td>
+<td style="text-align: right;">944346</td>
+<td style="text-align: right;">947374</td>
+<td style="text-align: right;">950919</td>
+<td style="text-align: right;">955050</td>
+<td style="text-align: right;">958428</td>
+<td style="text-align: right;">963511</td>
+<td style="text-align: right;">962472</td>
+<td style="text-align: right;">959764</td>
+<td style="text-align: right;">953400</td>
+<td style="text-align: right;">947639</td>
+<td style="text-align: right;">943117</td>
+<td style="text-align: right;">938311</td>
+<td style="text-align: right;">930931</td>
+<td style="text-align: right;">927555</td>
+<td style="text-align: right;">919934</td>
+<td style="text-align: right;">916176</td>
+<td style="text-align: right;">912621</td>
+<td style="text-align: right;">908803</td>
+<td style="text-align: right;">906298</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">26 Rioja, La</td>
+<td style="text-align: right;">315381</td>
+<td style="text-align: right;">315794</td>
+<td style="text-align: right;">317053</td>
+<td style="text-align: right;">319002</td>
+<td style="text-align: right;">322027</td>
+<td style="text-align: right;">323609</td>
+<td style="text-align: right;">322955</td>
+<td style="text-align: right;">322415</td>
+<td style="text-align: right;">321702</td>
+<td style="text-align: right;">317501</td>
+<td style="text-align: right;">308968</td>
+<td style="text-align: right;">306377</td>
+<td style="text-align: right;">301084</td>
+<td style="text-align: right;">293553</td>
+<td style="text-align: right;">287390</td>
+<td style="text-align: right;">281614</td>
+<td style="text-align: right;">270400</td>
+<td style="text-align: right;">264178</td>
+<td style="text-align: right;">265178</td>
+<td style="text-align: right;">263644</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">37 Salamanca</td>
+<td style="text-align: right;">333603</td>
+<td style="text-align: right;">335985</td>
+<td style="text-align: right;">339395</td>
+<td style="text-align: right;">342459</td>
+<td style="text-align: right;">345548</td>
+<td style="text-align: right;">350564</td>
+<td style="text-align: right;">352986</td>
+<td style="text-align: right;">353619</td>
+<td style="text-align: right;">354608</td>
+<td style="text-align: right;">353404</td>
+<td style="text-align: right;">351326</td>
+<td style="text-align: right;">353110</td>
+<td style="text-align: right;">352414</td>
+<td style="text-align: right;">350984</td>
+<td style="text-align: right;">348271</td>
+<td style="text-align: right;">347120</td>
+<td style="text-align: right;">350209</td>
+<td style="text-align: right;">349733</td>
+<td style="text-align: right;">351128</td>
+<td style="text-align: right;">349550</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">38 Santa Cruz de Tenerife</td>
+<td style="text-align: right;">1007641</td>
+<td style="text-align: right;">1004124</td>
+<td style="text-align: right;">1001900</td>
+<td style="text-align: right;">1004788</td>
+<td style="text-align: right;">1014829</td>
+<td style="text-align: right;">1017531</td>
+<td style="text-align: right;">1029789</td>
+<td style="text-align: right;">1027914</td>
+<td style="text-align: right;">1020490</td>
+<td style="text-align: right;">1005936</td>
+<td style="text-align: right;">983820</td>
+<td style="text-align: right;">971647</td>
+<td style="text-align: right;">956352</td>
+<td style="text-align: right;">928412</td>
+<td style="text-align: right;">915262</td>
+<td style="text-align: right;">892718</td>
+<td style="text-align: right;">856808</td>
+<td style="text-align: right;">818681</td>
+<td style="text-align: right;">800020</td>
+<td style="text-align: right;">780152</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">40 Segovia</td>
+<td style="text-align: right;">154184</td>
+<td style="text-align: right;">155652</td>
+<td style="text-align: right;">157570</td>
+<td style="text-align: right;">159303</td>
+<td style="text-align: right;">161702</td>
+<td style="text-align: right;">163701</td>
+<td style="text-align: right;">164169</td>
+<td style="text-align: right;">164268</td>
+<td style="text-align: right;">164854</td>
+<td style="text-align: right;">163899</td>
+<td style="text-align: right;">159322</td>
+<td style="text-align: right;">156598</td>
+<td style="text-align: right;">155517</td>
+<td style="text-align: right;">152640</td>
+<td style="text-align: right;">150701</td>
+<td style="text-align: right;">149286</td>
+<td style="text-align: right;">147028</td>
+<td style="text-align: right;">146613</td>
+<td style="text-align: right;">146985</td>
+<td style="text-align: right;">146755</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">41 Sevilla</td>
+<td style="text-align: right;">1939527</td>
+<td style="text-align: right;">1939775</td>
+<td style="text-align: right;">1941480</td>
+<td style="text-align: right;">1941355</td>
+<td style="text-align: right;">1942155</td>
+<td style="text-align: right;">1938974</td>
+<td style="text-align: right;">1928962</td>
+<td style="text-align: right;">1917097</td>
+<td style="text-align: right;">1900224</td>
+<td style="text-align: right;">1875462</td>
+<td style="text-align: right;">1849268</td>
+<td style="text-align: right;">1835077</td>
+<td style="text-align: right;">1813908</td>
+<td style="text-align: right;">1792420</td>
+<td style="text-align: right;">1782862</td>
+<td style="text-align: right;">1758720</td>
+<td style="text-align: right;">1747441</td>
+<td style="text-align: right;">1734917</td>
+<td style="text-align: right;">1725482</td>
+<td style="text-align: right;">1714845</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">42 Soria</td>
+<td style="text-align: right;">88903</td>
+<td style="text-align: right;">90040</td>
+<td style="text-align: right;">91006</td>
+<td style="text-align: right;">92221</td>
+<td style="text-align: right;">93291</td>
+<td style="text-align: right;">94522</td>
+<td style="text-align: right;">95223</td>
+<td style="text-align: right;">95258</td>
+<td style="text-align: right;">95101</td>
+<td style="text-align: right;">94646</td>
+<td style="text-align: right;">93593</td>
+<td style="text-align: right;">93503</td>
+<td style="text-align: right;">92773</td>
+<td style="text-align: right;">91652</td>
+<td style="text-align: right;">90954</td>
+<td style="text-align: right;">91487</td>
+<td style="text-align: right;">91314</td>
+<td style="text-align: right;">90911</td>
+<td style="text-align: right;">91252</td>
+<td style="text-align: right;">91593</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">43 Tarragona</td>
+<td style="text-align: right;">791693</td>
+<td style="text-align: right;">792299</td>
+<td style="text-align: right;">795101</td>
+<td style="text-align: right;">800962</td>
+<td style="text-align: right;">810178</td>
+<td style="text-align: right;">814199</td>
+<td style="text-align: right;">811401</td>
+<td style="text-align: right;">808420</td>
+<td style="text-align: right;">803301</td>
+<td style="text-align: right;">788895</td>
+<td style="text-align: right;">757795</td>
+<td style="text-align: right;">730466</td>
+<td style="text-align: right;">704907</td>
+<td style="text-align: right;">674144</td>
+<td style="text-align: right;">654149</td>
+<td style="text-align: right;">631156</td>
+<td style="text-align: right;">612086</td>
+<td style="text-align: right;">598533</td>
+<td style="text-align: right;">588499</td>
+<td style="text-align: right;">580245</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">44 Teruel</td>
+<td style="text-align: right;">135562</td>
+<td style="text-align: right;">136977</td>
+<td style="text-align: right;">138932</td>
+<td style="text-align: right;">140365</td>
+<td style="text-align: right;">142183</td>
+<td style="text-align: right;">143728</td>
+<td style="text-align: right;">144607</td>
+<td style="text-align: right;">145277</td>
+<td style="text-align: right;">146751</td>
+<td style="text-align: right;">146324</td>
+<td style="text-align: right;">144046</td>
+<td style="text-align: right;">142160</td>
+<td style="text-align: right;">141091</td>
+<td style="text-align: right;">139333</td>
+<td style="text-align: right;">138686</td>
+<td style="text-align: right;">137342</td>
+<td style="text-align: right;">136233</td>
+<td style="text-align: right;">136473</td>
+<td style="text-align: right;">136849</td>
+<td style="text-align: right;">136840</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">45 Toledo</td>
+<td style="text-align: right;">686841</td>
+<td style="text-align: right;">688672</td>
+<td style="text-align: right;">693371</td>
+<td style="text-align: right;">699136</td>
+<td style="text-align: right;">706407</td>
+<td style="text-align: right;">711228</td>
+<td style="text-align: right;">707242</td>
+<td style="text-align: right;">697959</td>
+<td style="text-align: right;">689635</td>
+<td style="text-align: right;">670203</td>
+<td style="text-align: right;">639621</td>
+<td style="text-align: right;">615618</td>
+<td style="text-align: right;">598256</td>
+<td style="text-align: right;">578060</td>
+<td style="text-align: right;">563099</td>
+<td style="text-align: right;">546538</td>
+<td style="text-align: right;">536131</td>
+<td style="text-align: right;">527965</td>
+<td style="text-align: right;">523459</td>
+<td style="text-align: right;">519664</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">46 Valencia/València</td>
+<td style="text-align: right;">2540707</td>
+<td style="text-align: right;">2544264</td>
+<td style="text-align: right;">2543315</td>
+<td style="text-align: right;">2548898</td>
+<td style="text-align: right;">2566474</td>
+<td style="text-align: right;">2580792</td>
+<td style="text-align: right;">2578719</td>
+<td style="text-align: right;">2581147</td>
+<td style="text-align: right;">2575362</td>
+<td style="text-align: right;">2543209</td>
+<td style="text-align: right;">2486483</td>
+<td style="text-align: right;">2463592</td>
+<td style="text-align: right;">2416628</td>
+<td style="text-align: right;">2358919</td>
+<td style="text-align: right;">2320297</td>
+<td style="text-align: right;">2267503</td>
+<td style="text-align: right;">2227170</td>
+<td style="text-align: right;">2201200</td>
+<td style="text-align: right;">2187633</td>
+<td style="text-align: right;">2172796</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">47 Valladolid</td>
+<td style="text-align: right;">521130</td>
+<td style="text-align: right;">523679</td>
+<td style="text-align: right;">526288</td>
+<td style="text-align: right;">529157</td>
+<td style="text-align: right;">532284</td>
+<td style="text-align: right;">534280</td>
+<td style="text-align: right;">534874</td>
+<td style="text-align: right;">533640</td>
+<td style="text-align: right;">532575</td>
+<td style="text-align: right;">529019</td>
+<td style="text-align: right;">521661</td>
+<td style="text-align: right;">519249</td>
+<td style="text-align: right;">514674</td>
+<td style="text-align: right;">510863</td>
+<td style="text-align: right;">506302</td>
+<td style="text-align: right;">501157</td>
+<td style="text-align: right;">497961</td>
+<td style="text-align: right;">495690</td>
+<td style="text-align: right;">494594</td>
+<td style="text-align: right;">492029</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">49 Zamora</td>
+<td style="text-align: right;">177404</td>
+<td style="text-align: right;">180406</td>
+<td style="text-align: right;">183436</td>
+<td style="text-align: right;">185432</td>
+<td style="text-align: right;">188270</td>
+<td style="text-align: right;">191612</td>
+<td style="text-align: right;">193383</td>
+<td style="text-align: right;">194214</td>
+<td style="text-align: right;">195665</td>
+<td style="text-align: right;">197221</td>
+<td style="text-align: right;">197237</td>
+<td style="text-align: right;">197492</td>
+<td style="text-align: right;">198045</td>
+<td style="text-align: right;">198524</td>
+<td style="text-align: right;">199688</td>
+<td style="text-align: right;">200678</td>
+<td style="text-align: right;">202356</td>
+<td style="text-align: right;">203469</td>
+<td style="text-align: right;">204650</td>
+<td style="text-align: right;">205201</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">50 Zaragoza</td>
+<td style="text-align: right;">953486</td>
+<td style="text-align: right;">950507</td>
+<td style="text-align: right;">956006</td>
+<td style="text-align: right;">960111</td>
+<td style="text-align: right;">978638</td>
+<td style="text-align: right;">978130</td>
+<td style="text-align: right;">973325</td>
+<td style="text-align: right;">973252</td>
+<td style="text-align: right;">970313</td>
+<td style="text-align: right;">955323</td>
+<td style="text-align: right;">932502</td>
+<td style="text-align: right;">917288</td>
+<td style="text-align: right;">912072</td>
+<td style="text-align: right;">897350</td>
+<td style="text-align: right;">880118</td>
+<td style="text-align: right;">871209</td>
+<td style="text-align: right;">857565</td>
+<td style="text-align: right;">848006</td>
+<td style="text-align: right;">844571</td>
+<td style="text-align: right;">841438</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">51 Ceuta</td>
+<td style="text-align: right;">84959</td>
+<td style="text-align: right;">84519</td>
+<td style="text-align: right;">84263</td>
+<td style="text-align: right;">84963</td>
+<td style="text-align: right;">84180</td>
+<td style="text-align: right;">84018</td>
+<td style="text-align: right;">82376</td>
+<td style="text-align: right;">80579</td>
+<td style="text-align: right;">78674</td>
+<td style="text-align: right;">77389</td>
+<td style="text-align: right;">76603</td>
+<td style="text-align: right;">75861</td>
+<td style="text-align: right;">75276</td>
+<td style="text-align: right;">74654</td>
+<td style="text-align: right;">74931</td>
+<td style="text-align: right;">76152</td>
+<td style="text-align: right;">75694</td>
+<td style="text-align: right;">75241</td>
+<td style="text-align: right;">73704</td>
+<td style="text-align: right;">72117</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">52 Melilla</td>
+<td style="text-align: right;">86120</td>
+<td style="text-align: right;">86026</td>
+<td style="text-align: right;">85584</td>
+<td style="text-align: right;">84509</td>
+<td style="text-align: right;">83679</td>
+<td style="text-align: right;">80802</td>
+<td style="text-align: right;">78476</td>
+<td style="text-align: right;">76034</td>
+<td style="text-align: right;">73460</td>
+<td style="text-align: right;">71448</td>
+<td style="text-align: right;">69440</td>
+<td style="text-align: right;">66871</td>
+<td style="text-align: right;">65488</td>
+<td style="text-align: right;">68016</td>
+<td style="text-align: right;">68463</td>
+<td style="text-align: right;">69184</td>
+<td style="text-align: right;">68789</td>
+<td style="text-align: right;">66263</td>
+<td style="text-align: right;">56929</td>
+<td style="text-align: right;">60108</td>
+</tr>
+</tbody>
+</table>
+</div>
+
+
+</div>
+</div>
+</section>
+<section id="ejemplo-tabla-apaisada-varias-páginas-pdf-reduciendo-el-número-de-columnas-que-se-muestran" class="level2" data-number="1.7">
+<h2 data-number="1.7" class="anchored" data-anchor-id="ejemplo-tabla-apaisada-varias-páginas-pdf-reduciendo-el-número-de-columnas-que-se-muestran"><span class="header-section-number">1.7</span> Ejemplo: tabla apaisada varias páginas (pdf): reduciendo el número de columnas que se muestran</h2>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb14"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb14-1"><a href="#cb14-1" aria-hidden="true" tabindex="-1"></a><span class="fu">DemBas_presentadf</span>(datos1[,<span class="dv">1</span><span class="sc">:</span><span class="dv">9</span>],</span>
+<span id="cb14-2"><a href="#cb14-2" aria-hidden="true" tabindex="-1"></a>                   <span class="at">scaption =</span> <span class="st">"Tabla apaisada en varias páginas"</span>,</span>
+<span id="cb14-3"><a href="#cb14-3" aria-hidden="true" tabindex="-1"></a>                   <span class="at">apaisadalatex =</span> <span class="cn">TRUE</span>,</span>
+<span id="cb14-4"><a href="#cb14-4" aria-hidden="true" tabindex="-1"></a>                   <span class="at">variaspaginas=</span><span class="cn">TRUE</span>,</span>
+<span id="cb14-5"><a href="#cb14-5" aria-hidden="true" tabindex="-1"></a>                   <span class="at">fuentesize =</span> <span class="dv">10</span>)</span></code><button title="Copiar al portapapeles" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<div class="table-responsive">
+<table class="table table-striped table-hover table-condensed caption-top table-sm small" data-quarto-postprocess="true">
+<caption>Tabla apaisada en varias páginas</caption>
+<thead>
+<tr class="header">
+<th style="text-align: left;" data-quarto-table-cell-role="th">Provincias</th>
+<th style="text-align: right;" data-quarto-table-cell-role="th">2017</th>
+<th style="text-align: right;" data-quarto-table-cell-role="th">2016</th>
+<th style="text-align: right;" data-quarto-table-cell-role="th">2015</th>
+<th style="text-align: right;" data-quarto-table-cell-role="th">2014</th>
+<th style="text-align: right;" data-quarto-table-cell-role="th">2013</th>
+<th style="text-align: right;" data-quarto-table-cell-role="th">2012</th>
+<th style="text-align: right;" data-quarto-table-cell-role="th">2011</th>
+<th style="text-align: right;" data-quarto-table-cell-role="th">2010</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td style="text-align: left;">Total Nacional</td>
+<td style="text-align: right;">46572132</td>
+<td style="text-align: right;">46557008</td>
+<td style="text-align: right;">46624382</td>
+<td style="text-align: right;">46771341</td>
+<td style="text-align: right;">47129783</td>
+<td style="text-align: right;">47265321</td>
+<td style="text-align: right;">47190493</td>
+<td style="text-align: right;">47021031</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">02 Albacete</td>
+<td style="text-align: right;">390032</td>
+<td style="text-align: right;">392118</td>
+<td style="text-align: right;">394580</td>
+<td style="text-align: right;">396987</td>
+<td style="text-align: right;">400007</td>
+<td style="text-align: right;">402837</td>
+<td style="text-align: right;">402318</td>
+<td style="text-align: right;">401682</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">03 Alicante/Alacant</td>
+<td style="text-align: right;">1825332</td>
+<td style="text-align: right;">1836459</td>
+<td style="text-align: right;">1855047</td>
+<td style="text-align: right;">1868438</td>
+<td style="text-align: right;">1945642</td>
+<td style="text-align: right;">1943910</td>
+<td style="text-align: right;">1934127</td>
+<td style="text-align: right;">1926285</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">04 Almería</td>
+<td style="text-align: right;">706672</td>
+<td style="text-align: right;">704297</td>
+<td style="text-align: right;">701211</td>
+<td style="text-align: right;">701688</td>
+<td style="text-align: right;">699329</td>
+<td style="text-align: right;">704219</td>
+<td style="text-align: right;">702819</td>
+<td style="text-align: right;">695560</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">01 Araba/Álava</td>
+<td style="text-align: right;">326574</td>
+<td style="text-align: right;">324126</td>
+<td style="text-align: right;">323648</td>
+<td style="text-align: right;">321932</td>
+<td style="text-align: right;">321417</td>
+<td style="text-align: right;">322557</td>
+<td style="text-align: right;">319227</td>
+<td style="text-align: right;">317352</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">33 Asturias</td>
+<td style="text-align: right;">1034960</td>
+<td style="text-align: right;">1042608</td>
+<td style="text-align: right;">1051229</td>
+<td style="text-align: right;">1061756</td>
+<td style="text-align: right;">1068165</td>
+<td style="text-align: right;">1077360</td>
+<td style="text-align: right;">1081487</td>
+<td style="text-align: right;">1084341</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">05 Ávila</td>
+<td style="text-align: right;">160700</td>
+<td style="text-align: right;">162514</td>
+<td style="text-align: right;">164925</td>
+<td style="text-align: right;">167015</td>
+<td style="text-align: right;">168825</td>
+<td style="text-align: right;">171265</td>
+<td style="text-align: right;">172704</td>
+<td style="text-align: right;">171896</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">06 Badajoz</td>
+<td style="text-align: right;">679884</td>
+<td style="text-align: right;">684113</td>
+<td style="text-align: right;">686730</td>
+<td style="text-align: right;">690929</td>
+<td style="text-align: right;">693729</td>
+<td style="text-align: right;">694533</td>
+<td style="text-align: right;">693921</td>
+<td style="text-align: right;">692137</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">07 Balears, Illes</td>
+<td style="text-align: right;">1115999</td>
+<td style="text-align: right;">1107220</td>
+<td style="text-align: right;">1104479</td>
+<td style="text-align: right;">1103442</td>
+<td style="text-align: right;">1111674</td>
+<td style="text-align: right;">1119439</td>
+<td style="text-align: right;">1113114</td>
+<td style="text-align: right;">1106049</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">08 Barcelona</td>
+<td style="text-align: right;">5576037</td>
+<td style="text-align: right;">5542680</td>
+<td style="text-align: right;">5523922</td>
+<td style="text-align: right;">5523784</td>
+<td style="text-align: right;">5540925</td>
+<td style="text-align: right;">5552050</td>
+<td style="text-align: right;">5529099</td>
+<td style="text-align: right;">5511147</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">48 Bizkaia</td>
+<td style="text-align: right;">1148302</td>
+<td style="text-align: right;">1147576</td>
+<td style="text-align: right;">1148775</td>
+<td style="text-align: right;">1151905</td>
+<td style="text-align: right;">1156447</td>
+<td style="text-align: right;">1158439</td>
+<td style="text-align: right;">1155772</td>
+<td style="text-align: right;">1153724</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">09 Burgos</td>
+<td style="text-align: right;">358171</td>
+<td style="text-align: right;">360995</td>
+<td style="text-align: right;">364002</td>
+<td style="text-align: right;">366900</td>
+<td style="text-align: right;">371248</td>
+<td style="text-align: right;">374970</td>
+<td style="text-align: right;">375657</td>
+<td style="text-align: right;">374826</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">10 Cáceres</td>
+<td style="text-align: right;">400036</td>
+<td style="text-align: right;">403665</td>
+<td style="text-align: right;">406267</td>
+<td style="text-align: right;">408703</td>
+<td style="text-align: right;">410275</td>
+<td style="text-align: right;">413597</td>
+<td style="text-align: right;">415446</td>
+<td style="text-align: right;">415083</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">11 Cádiz</td>
+<td style="text-align: right;">1239435</td>
+<td style="text-align: right;">1239889</td>
+<td style="text-align: right;">1240284</td>
+<td style="text-align: right;">1240175</td>
+<td style="text-align: right;">1238492</td>
+<td style="text-align: right;">1245164</td>
+<td style="text-align: right;">1243519</td>
+<td style="text-align: right;">1236739</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">39 Cantabria</td>
+<td style="text-align: right;">580295</td>
+<td style="text-align: right;">582206</td>
+<td style="text-align: right;">585179</td>
+<td style="text-align: right;">588656</td>
+<td style="text-align: right;">591888</td>
+<td style="text-align: right;">593861</td>
+<td style="text-align: right;">593121</td>
+<td style="text-align: right;">592250</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">12 Castellón/Castelló</td>
+<td style="text-align: right;">575470</td>
+<td style="text-align: right;">579245</td>
+<td style="text-align: right;">582327</td>
+<td style="text-align: right;">587508</td>
+<td style="text-align: right;">601699</td>
+<td style="text-align: right;">604564</td>
+<td style="text-align: right;">604344</td>
+<td style="text-align: right;">604274</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">13 Ciudad Real</td>
+<td style="text-align: right;">502578</td>
+<td style="text-align: right;">506888</td>
+<td style="text-align: right;">513713</td>
+<td style="text-align: right;">519613</td>
+<td style="text-align: right;">524962</td>
+<td style="text-align: right;">530250</td>
+<td style="text-align: right;">530175</td>
+<td style="text-align: right;">529453</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">14 Córdoba</td>
+<td style="text-align: right;">788219</td>
+<td style="text-align: right;">791610</td>
+<td style="text-align: right;">795611</td>
+<td style="text-align: right;">799402</td>
+<td style="text-align: right;">802422</td>
+<td style="text-align: right;">804498</td>
+<td style="text-align: right;">805857</td>
+<td style="text-align: right;">805108</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">15 Coruña, A</td>
+<td style="text-align: right;">1120294</td>
+<td style="text-align: right;">1122799</td>
+<td style="text-align: right;">1127196</td>
+<td style="text-align: right;">1132735</td>
+<td style="text-align: right;">1138161</td>
+<td style="text-align: right;">1143911</td>
+<td style="text-align: right;">1147124</td>
+<td style="text-align: right;">1146458</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">16 Cuenca</td>
+<td style="text-align: right;">198718</td>
+<td style="text-align: right;">201071</td>
+<td style="text-align: right;">203841</td>
+<td style="text-align: right;">207449</td>
+<td style="text-align: right;">211899</td>
+<td style="text-align: right;">218036</td>
+<td style="text-align: right;">219138</td>
+<td style="text-align: right;">217716</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">20 Gipuzkoa</td>
+<td style="text-align: right;">719282</td>
+<td style="text-align: right;">717832</td>
+<td style="text-align: right;">716834</td>
+<td style="text-align: right;">715148</td>
+<td style="text-align: right;">713818</td>
+<td style="text-align: right;">712097</td>
+<td style="text-align: right;">709607</td>
+<td style="text-align: right;">707263</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">17 Girona</td>
+<td style="text-align: right;">755716</td>
+<td style="text-align: right;">753576</td>
+<td style="text-align: right;">753054</td>
+<td style="text-align: right;">756156</td>
+<td style="text-align: right;">761632</td>
+<td style="text-align: right;">761627</td>
+<td style="text-align: right;">756810</td>
+<td style="text-align: right;">753046</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">18 Granada</td>
+<td style="text-align: right;">912938</td>
+<td style="text-align: right;">915392</td>
+<td style="text-align: right;">917297</td>
+<td style="text-align: right;">919455</td>
+<td style="text-align: right;">919319</td>
+<td style="text-align: right;">922928</td>
+<td style="text-align: right;">924550</td>
+<td style="text-align: right;">918072</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">19 Guadalajara</td>
+<td style="text-align: right;">253310</td>
+<td style="text-align: right;">252882</td>
+<td style="text-align: right;">253686</td>
+<td style="text-align: right;">255426</td>
+<td style="text-align: right;">257723</td>
+<td style="text-align: right;">259537</td>
+<td style="text-align: right;">256461</td>
+<td style="text-align: right;">251563</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">21 Huelva</td>
+<td style="text-align: right;">518930</td>
+<td style="text-align: right;">519596</td>
+<td style="text-align: right;">520017</td>
+<td style="text-align: right;">519229</td>
+<td style="text-align: right;">520668</td>
+<td style="text-align: right;">522862</td>
+<td style="text-align: right;">521968</td>
+<td style="text-align: right;">518081</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">22 Huesca</td>
+<td style="text-align: right;">219702</td>
+<td style="text-align: right;">221079</td>
+<td style="text-align: right;">222909</td>
+<td style="text-align: right;">224909</td>
+<td style="text-align: right;">226329</td>
+<td style="text-align: right;">227609</td>
+<td style="text-align: right;">228361</td>
+<td style="text-align: right;">228566</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">23 Jaén</td>
+<td style="text-align: right;">643484</td>
+<td style="text-align: right;">648250</td>
+<td style="text-align: right;">654170</td>
+<td style="text-align: right;">659033</td>
+<td style="text-align: right;">664916</td>
+<td style="text-align: right;">670242</td>
+<td style="text-align: right;">670600</td>
+<td style="text-align: right;">670761</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">24 León</td>
+<td style="text-align: right;">468316</td>
+<td style="text-align: right;">473604</td>
+<td style="text-align: right;">479395</td>
+<td style="text-align: right;">484694</td>
+<td style="text-align: right;">489752</td>
+<td style="text-align: right;">494451</td>
+<td style="text-align: right;">497799</td>
+<td style="text-align: right;">499284</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">25 Lleida</td>
+<td style="text-align: right;">432384</td>
+<td style="text-align: right;">434041</td>
+<td style="text-align: right;">436029</td>
+<td style="text-align: right;">438001</td>
+<td style="text-align: right;">440915</td>
+<td style="text-align: right;">443032</td>
+<td style="text-align: right;">442308</td>
+<td style="text-align: right;">439768</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">27 Lugo</td>
+<td style="text-align: right;">333634</td>
+<td style="text-align: right;">336527</td>
+<td style="text-align: right;">339386</td>
+<td style="text-align: right;">342748</td>
+<td style="text-align: right;">346005</td>
+<td style="text-align: right;">348902</td>
+<td style="text-align: right;">351530</td>
+<td style="text-align: right;">353504</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">28 Madrid</td>
+<td style="text-align: right;">6507184</td>
+<td style="text-align: right;">6466996</td>
+<td style="text-align: right;">6436996</td>
+<td style="text-align: right;">6454440</td>
+<td style="text-align: right;">6495551</td>
+<td style="text-align: right;">6498560</td>
+<td style="text-align: right;">6489680</td>
+<td style="text-align: right;">6458684</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">29 Málaga</td>
+<td style="text-align: right;">1630615</td>
+<td style="text-align: right;">1629298</td>
+<td style="text-align: right;">1628973</td>
+<td style="text-align: right;">1621968</td>
+<td style="text-align: right;">1652999</td>
+<td style="text-align: right;">1641098</td>
+<td style="text-align: right;">1625827</td>
+<td style="text-align: right;">1609557</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">30 Murcia</td>
+<td style="text-align: right;">1470273</td>
+<td style="text-align: right;">1464847</td>
+<td style="text-align: right;">1467288</td>
+<td style="text-align: right;">1466818</td>
+<td style="text-align: right;">1472049</td>
+<td style="text-align: right;">1474449</td>
+<td style="text-align: right;">1470069</td>
+<td style="text-align: right;">1461979</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">31 Navarra</td>
+<td style="text-align: right;">643234</td>
+<td style="text-align: right;">640647</td>
+<td style="text-align: right;">640476</td>
+<td style="text-align: right;">640790</td>
+<td style="text-align: right;">644477</td>
+<td style="text-align: right;">644566</td>
+<td style="text-align: right;">642051</td>
+<td style="text-align: right;">636924</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">32 Ourense</td>
+<td style="text-align: right;">311680</td>
+<td style="text-align: right;">314853</td>
+<td style="text-align: right;">318391</td>
+<td style="text-align: right;">322293</td>
+<td style="text-align: right;">326724</td>
+<td style="text-align: right;">330257</td>
+<td style="text-align: right;">333257</td>
+<td style="text-align: right;">335219</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">34 Palencia</td>
+<td style="text-align: right;">163390</td>
+<td style="text-align: right;">164644</td>
+<td style="text-align: right;">166035</td>
+<td style="text-align: right;">167609</td>
+<td style="text-align: right;">168955</td>
+<td style="text-align: right;">170713</td>
+<td style="text-align: right;">171668</td>
+<td style="text-align: right;">172510</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">35 Palmas, Las</td>
+<td style="text-align: right;">1100480</td>
+<td style="text-align: right;">1097800</td>
+<td style="text-align: right;">1098406</td>
+<td style="text-align: right;">1100027</td>
+<td style="text-align: right;">1103850</td>
+<td style="text-align: right;">1100813</td>
+<td style="text-align: right;">1096980</td>
+<td style="text-align: right;">1090605</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">36 Pontevedra</td>
+<td style="text-align: right;">942731</td>
+<td style="text-align: right;">944346</td>
+<td style="text-align: right;">947374</td>
+<td style="text-align: right;">950919</td>
+<td style="text-align: right;">955050</td>
+<td style="text-align: right;">958428</td>
+<td style="text-align: right;">963511</td>
+<td style="text-align: right;">962472</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">26 Rioja, La</td>
+<td style="text-align: right;">315381</td>
+<td style="text-align: right;">315794</td>
+<td style="text-align: right;">317053</td>
+<td style="text-align: right;">319002</td>
+<td style="text-align: right;">322027</td>
+<td style="text-align: right;">323609</td>
+<td style="text-align: right;">322955</td>
+<td style="text-align: right;">322415</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">37 Salamanca</td>
+<td style="text-align: right;">333603</td>
+<td style="text-align: right;">335985</td>
+<td style="text-align: right;">339395</td>
+<td style="text-align: right;">342459</td>
+<td style="text-align: right;">345548</td>
+<td style="text-align: right;">350564</td>
+<td style="text-align: right;">352986</td>
+<td style="text-align: right;">353619</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">38 Santa Cruz de Tenerife</td>
+<td style="text-align: right;">1007641</td>
+<td style="text-align: right;">1004124</td>
+<td style="text-align: right;">1001900</td>
+<td style="text-align: right;">1004788</td>
+<td style="text-align: right;">1014829</td>
+<td style="text-align: right;">1017531</td>
+<td style="text-align: right;">1029789</td>
+<td style="text-align: right;">1027914</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">40 Segovia</td>
+<td style="text-align: right;">154184</td>
+<td style="text-align: right;">155652</td>
+<td style="text-align: right;">157570</td>
+<td style="text-align: right;">159303</td>
+<td style="text-align: right;">161702</td>
+<td style="text-align: right;">163701</td>
+<td style="text-align: right;">164169</td>
+<td style="text-align: right;">164268</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">41 Sevilla</td>
+<td style="text-align: right;">1939527</td>
+<td style="text-align: right;">1939775</td>
+<td style="text-align: right;">1941480</td>
+<td style="text-align: right;">1941355</td>
+<td style="text-align: right;">1942155</td>
+<td style="text-align: right;">1938974</td>
+<td style="text-align: right;">1928962</td>
+<td style="text-align: right;">1917097</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">42 Soria</td>
+<td style="text-align: right;">88903</td>
+<td style="text-align: right;">90040</td>
+<td style="text-align: right;">91006</td>
+<td style="text-align: right;">92221</td>
+<td style="text-align: right;">93291</td>
+<td style="text-align: right;">94522</td>
+<td style="text-align: right;">95223</td>
+<td style="text-align: right;">95258</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">43 Tarragona</td>
+<td style="text-align: right;">791693</td>
+<td style="text-align: right;">792299</td>
+<td style="text-align: right;">795101</td>
+<td style="text-align: right;">800962</td>
+<td style="text-align: right;">810178</td>
+<td style="text-align: right;">814199</td>
+<td style="text-align: right;">811401</td>
+<td style="text-align: right;">808420</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">44 Teruel</td>
+<td style="text-align: right;">135562</td>
+<td style="text-align: right;">136977</td>
+<td style="text-align: right;">138932</td>
+<td style="text-align: right;">140365</td>
+<td style="text-align: right;">142183</td>
+<td style="text-align: right;">143728</td>
+<td style="text-align: right;">144607</td>
+<td style="text-align: right;">145277</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">45 Toledo</td>
+<td style="text-align: right;">686841</td>
+<td style="text-align: right;">688672</td>
+<td style="text-align: right;">693371</td>
+<td style="text-align: right;">699136</td>
+<td style="text-align: right;">706407</td>
+<td style="text-align: right;">711228</td>
+<td style="text-align: right;">707242</td>
+<td style="text-align: right;">697959</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">46 Valencia/València</td>
+<td style="text-align: right;">2540707</td>
+<td style="text-align: right;">2544264</td>
+<td style="text-align: right;">2543315</td>
+<td style="text-align: right;">2548898</td>
+<td style="text-align: right;">2566474</td>
+<td style="text-align: right;">2580792</td>
+<td style="text-align: right;">2578719</td>
+<td style="text-align: right;">2581147</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">47 Valladolid</td>
+<td style="text-align: right;">521130</td>
+<td style="text-align: right;">523679</td>
+<td style="text-align: right;">526288</td>
+<td style="text-align: right;">529157</td>
+<td style="text-align: right;">532284</td>
+<td style="text-align: right;">534280</td>
+<td style="text-align: right;">534874</td>
+<td style="text-align: right;">533640</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">49 Zamora</td>
+<td style="text-align: right;">177404</td>
+<td style="text-align: right;">180406</td>
+<td style="text-align: right;">183436</td>
+<td style="text-align: right;">185432</td>
+<td style="text-align: right;">188270</td>
+<td style="text-align: right;">191612</td>
+<td style="text-align: right;">193383</td>
+<td style="text-align: right;">194214</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">50 Zaragoza</td>
+<td style="text-align: right;">953486</td>
+<td style="text-align: right;">950507</td>
+<td style="text-align: right;">956006</td>
+<td style="text-align: right;">960111</td>
+<td style="text-align: right;">978638</td>
+<td style="text-align: right;">978130</td>
+<td style="text-align: right;">973325</td>
+<td style="text-align: right;">973252</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">51 Ceuta</td>
+<td style="text-align: right;">84959</td>
+<td style="text-align: right;">84519</td>
+<td style="text-align: right;">84263</td>
+<td style="text-align: right;">84963</td>
+<td style="text-align: right;">84180</td>
+<td style="text-align: right;">84018</td>
+<td style="text-align: right;">82376</td>
+<td style="text-align: right;">80579</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">52 Melilla</td>
+<td style="text-align: right;">86120</td>
+<td style="text-align: right;">86026</td>
+<td style="text-align: right;">85584</td>
+<td style="text-align: right;">84509</td>
+<td style="text-align: right;">83679</td>
+<td style="text-align: right;">80802</td>
+<td style="text-align: right;">78476</td>
+<td style="text-align: right;">76034</td>
+</tr>
+</tbody>
+</table>
+</div>
+
+
+</div>
+</div>
+<!-- -->
+
+</section>
+</section>
+
+</main>
+<!-- /main column -->
+<script id="quarto-html-after-body" type="application/javascript">
+window.document.addEventListener("DOMContentLoaded", function (event) {
+  const toggleBodyColorMode = (bsSheetEl) => {
+    const mode = bsSheetEl.getAttribute("data-mode");
+    const bodyEl = window.document.querySelector("body");
+    if (mode === "dark") {
+      bodyEl.classList.add("quarto-dark");
+      bodyEl.classList.remove("quarto-light");
+    } else {
+      bodyEl.classList.add("quarto-light");
+      bodyEl.classList.remove("quarto-dark");
+    }
+  }
+  const toggleBodyColorPrimary = () => {
+    const bsSheetEl = window.document.querySelector("link#quarto-bootstrap");
+    if (bsSheetEl) {
+      toggleBodyColorMode(bsSheetEl);
+    }
+  }
+  toggleBodyColorPrimary();  
+  const icon = "";
+  const anchorJS = new window.AnchorJS();
+  anchorJS.options = {
+    placement: 'right',
+    icon: icon
+  };
+  anchorJS.add('.anchored');
+  const isCodeAnnotation = (el) => {
+    for (const clz of el.classList) {
+      if (clz.startsWith('code-annotation-')) {                     
+        return true;
+      }
+    }
+    return false;
+  }
+  const onCopySuccess = function(e) {
+    // button target
+    const button = e.trigger;
+    // don't keep focus
+    button.blur();
+    // flash "checked"
+    button.classList.add('code-copy-button-checked');
+    var currentTitle = button.getAttribute("title");
+    button.setAttribute("title", "Copiado");
+    let tooltip;
+    if (window.bootstrap) {
+      button.setAttribute("data-bs-toggle", "tooltip");
+      button.setAttribute("data-bs-placement", "left");
+      button.setAttribute("data-bs-title", "Copiado");
+      tooltip = new bootstrap.Tooltip(button, 
+        { trigger: "manual", 
+          customClass: "code-copy-button-tooltip",
+          offset: [0, -8]});
+      tooltip.show();    
+    }
+    setTimeout(function() {
+      if (tooltip) {
+        tooltip.hide();
+        button.removeAttribute("data-bs-title");
+        button.removeAttribute("data-bs-toggle");
+        button.removeAttribute("data-bs-placement");
+      }
+      button.setAttribute("title", currentTitle);
+      button.classList.remove('code-copy-button-checked');
+    }, 1000);
+    // clear code selection
+    e.clearSelection();
+  }
+  const getTextToCopy = function(trigger) {
+      const codeEl = trigger.previousElementSibling.cloneNode(true);
+      for (const childEl of codeEl.children) {
+        if (isCodeAnnotation(childEl)) {
+          childEl.remove();
+        }
+      }
+      return codeEl.innerText;
+  }
+  const clipboard = new window.ClipboardJS('.code-copy-button:not([data-in-quarto-modal])', {
+    text: getTextToCopy
+  });
+  clipboard.on('success', onCopySuccess);
+  if (window.document.getElementById('quarto-embedded-source-code-modal')) {
+    // For code content inside modals, clipBoardJS needs to be initialized with a container option
+    // TODO: Check when it could be a function (https://github.com/zenorocha/clipboard.js/issues/860)
+    const clipboardModal = new window.ClipboardJS('.code-copy-button[data-in-quarto-modal]', {
+      text: getTextToCopy,
+      container: window.document.getElementById('quarto-embedded-source-code-modal')
+    });
+    clipboardModal.on('success', onCopySuccess);
+  }
+  const viewSource = window.document.getElementById('quarto-view-source') ||
+                     window.document.getElementById('quarto-code-tools-source');
+  if (viewSource) {
+    const sourceUrl = viewSource.getAttribute("data-quarto-source-url");
+    viewSource.addEventListener("click", function(e) {
+      if (sourceUrl) {
+        // rstudio viewer pane
+        if (/\bcapabilities=\b/.test(window.location)) {
+          window.open(sourceUrl);
+        } else {
+          window.location.href = sourceUrl;
+        }
+      } else {
+        const modal = new bootstrap.Modal(document.getElementById('quarto-embedded-source-code-modal'));
+        modal.show();
+      }
+      return false;
+    });
+  }
+  function toggleCodeHandler(show) {
+    return function(e) {
+      const detailsSrc = window.document.querySelectorAll(".cell > details > .sourceCode");
+      for (let i=0; i<detailsSrc.length; i++) {
+        const details = detailsSrc[i].parentElement;
+        if (show) {
+          details.open = true;
+        } else {
+          details.removeAttribute("open");
+        }
+      }
+      const cellCodeDivs = window.document.querySelectorAll(".cell > .sourceCode");
+      const fromCls = show ? "hidden" : "unhidden";
+      const toCls = show ? "unhidden" : "hidden";
+      for (let i=0; i<cellCodeDivs.length; i++) {
+        const codeDiv = cellCodeDivs[i];
+        if (codeDiv.classList.contains(fromCls)) {
+          codeDiv.classList.remove(fromCls);
+          codeDiv.classList.add(toCls);
+        } 
+      }
+      return false;
+    }
+  }
+  const hideAllCode = window.document.getElementById("quarto-hide-all-code");
+  if (hideAllCode) {
+    hideAllCode.addEventListener("click", toggleCodeHandler(false));
+  }
+  const showAllCode = window.document.getElementById("quarto-show-all-code");
+  if (showAllCode) {
+    showAllCode.addEventListener("click", toggleCodeHandler(true));
+  }
+    var localhostRegex = new RegExp(/^(?:http|https):\/\/localhost\:?[0-9]*\//);
+    var mailtoRegex = new RegExp(/^mailto:/);
+      var filterRegex = new RegExp('/' + window.location.host + '/');
+    var isInternal = (href) => {
+        return filterRegex.test(href) || localhostRegex.test(href) || mailtoRegex.test(href);
+    }
+    // Inspect non-navigation links and adorn them if external
+ 	var links = window.document.querySelectorAll('a[href]:not(.nav-link):not(.navbar-brand):not(.toc-action):not(.sidebar-link):not(.sidebar-item-toggle):not(.pagination-link):not(.no-external):not([aria-hidden]):not(.dropdown-item):not(.quarto-navigation-tool):not(.about-link)');
+    for (var i=0; i<links.length; i++) {
+      const link = links[i];
+      if (!isInternal(link.href)) {
+        // undo the damage that might have been done by quarto-nav.js in the case of
+        // links that we want to consider external
+        if (link.dataset.originalHref !== undefined) {
+          link.href = link.dataset.originalHref;
+        }
+      }
+    }
+  function tippyHover(el, contentFn, onTriggerFn, onUntriggerFn) {
+    const config = {
+      allowHTML: true,
+      maxWidth: 500,
+      delay: 100,
+      arrow: false,
+      appendTo: function(el) {
+          return el.parentElement;
+      },
+      interactive: true,
+      interactiveBorder: 10,
+      theme: 'quarto',
+      placement: 'bottom-start',
+    };
+    if (contentFn) {
+      config.content = contentFn;
+    }
+    if (onTriggerFn) {
+      config.onTrigger = onTriggerFn;
+    }
+    if (onUntriggerFn) {
+      config.onUntrigger = onUntriggerFn;
+    }
+    window.tippy(el, config); 
+  }
+  const noterefs = window.document.querySelectorAll('a[role="doc-noteref"]');
+  for (var i=0; i<noterefs.length; i++) {
+    const ref = noterefs[i];
+    tippyHover(ref, function() {
+      // use id or data attribute instead here
+      let href = ref.getAttribute('data-footnote-href') || ref.getAttribute('href');
+      try { href = new URL(href).hash; } catch {}
+      const id = href.replace(/^#\/?/, "");
+      const note = window.document.getElementById(id);
+      if (note) {
+        return note.innerHTML;
+      } else {
+        return "";
+      }
+    });
+  }
+  const xrefs = window.document.querySelectorAll('a.quarto-xref');
+  const processXRef = (id, note) => {
+    // Strip column container classes
+    const stripColumnClz = (el) => {
+      el.classList.remove("page-full", "page-columns");
+      if (el.children) {
+        for (const child of el.children) {
+          stripColumnClz(child);
+        }
+      }
+    }
+    stripColumnClz(note)
+    if (id === null || id.startsWith('sec-')) {
+      // Special case sections, only their first couple elements
+      const container = document.createElement("div");
+      if (note.children && note.children.length > 2) {
+        container.appendChild(note.children[0].cloneNode(true));
+        for (let i = 1; i < note.children.length; i++) {
+          const child = note.children[i];
+          if (child.tagName === "P" && child.innerText === "") {
+            continue;
+          } else {
+            container.appendChild(child.cloneNode(true));
+            break;
+          }
+        }
+        if (window.Quarto?.typesetMath) {
+          window.Quarto.typesetMath(container);
+        }
+        return container.innerHTML
+      } else {
+        if (window.Quarto?.typesetMath) {
+          window.Quarto.typesetMath(note);
+        }
+        return note.innerHTML;
+      }
+    } else {
+      // Remove any anchor links if they are present
+      const anchorLink = note.querySelector('a.anchorjs-link');
+      if (anchorLink) {
+        anchorLink.remove();
+      }
+      if (window.Quarto?.typesetMath) {
+        window.Quarto.typesetMath(note);
+      }
+      // TODO in 1.5, we should make sure this works without a callout special case
+      if (note.classList.contains("callout")) {
+        return note.outerHTML;
+      } else {
+        return note.innerHTML;
+      }
+    }
+  }
+  for (var i=0; i<xrefs.length; i++) {
+    const xref = xrefs[i];
+    tippyHover(xref, undefined, function(instance) {
+      instance.disable();
+      let url = xref.getAttribute('href');
+      let hash = undefined; 
+      if (url.startsWith('#')) {
+        hash = url;
+      } else {
+        try { hash = new URL(url).hash; } catch {}
+      }
+      if (hash) {
+        const id = hash.replace(/^#\/?/, "");
+        const note = window.document.getElementById(id);
+        if (note !== null) {
+          try {
+            const html = processXRef(id, note.cloneNode(true));
+            instance.setContent(html);
+          } finally {
+            instance.enable();
+            instance.show();
+          }
+        } else {
+          // See if we can fetch this
+          fetch(url.split('#')[0])
+          .then(res => res.text())
+          .then(html => {
+            const parser = new DOMParser();
+            const htmlDoc = parser.parseFromString(html, "text/html");
+            const note = htmlDoc.getElementById(id);
+            if (note !== null) {
+              const html = processXRef(id, note);
+              instance.setContent(html);
+            } 
+          }).finally(() => {
+            instance.enable();
+            instance.show();
+          });
+        }
+      } else {
+        // See if we can fetch a full url (with no hash to target)
+        // This is a special case and we should probably do some content thinning / targeting
+        fetch(url)
+        .then(res => res.text())
+        .then(html => {
+          const parser = new DOMParser();
+          const htmlDoc = parser.parseFromString(html, "text/html");
+          const note = htmlDoc.querySelector('main.content');
+          if (note !== null) {
+            // This should only happen for chapter cross references
+            // (since there is no id in the URL)
+            // remove the first header
+            if (note.children.length > 0 && note.children[0].tagName === "HEADER") {
+              note.children[0].remove();
+            }
+            const html = processXRef(null, note);
+            instance.setContent(html);
+          } 
+        }).finally(() => {
+          instance.enable();
+          instance.show();
+        });
+      }
+    }, function(instance) {
+    });
+  }
+      let selectedAnnoteEl;
+      const selectorForAnnotation = ( cell, annotation) => {
+        let cellAttr = 'data-code-cell="' + cell + '"';
+        let lineAttr = 'data-code-annotation="' +  annotation + '"';
+        const selector = 'span[' + cellAttr + '][' + lineAttr + ']';
+        return selector;
+      }
+      const selectCodeLines = (annoteEl) => {
+        const doc = window.document;
+        const targetCell = annoteEl.getAttribute("data-target-cell");
+        const targetAnnotation = annoteEl.getAttribute("data-target-annotation");
+        const annoteSpan = window.document.querySelector(selectorForAnnotation(targetCell, targetAnnotation));
+        const lines = annoteSpan.getAttribute("data-code-lines").split(",");
+        const lineIds = lines.map((line) => {
+          return targetCell + "-" + line;
+        })
+        let top = null;
+        let height = null;
+        let parent = null;
+        if (lineIds.length > 0) {
+            //compute the position of the single el (top and bottom and make a div)
+            const el = window.document.getElementById(lineIds[0]);
+            top = el.offsetTop;
+            height = el.offsetHeight;
+            parent = el.parentElement.parentElement;
+          if (lineIds.length > 1) {
+            const lastEl = window.document.getElementById(lineIds[lineIds.length - 1]);
+            const bottom = lastEl.offsetTop + lastEl.offsetHeight;
+            height = bottom - top;
+          }
+          if (top !== null && height !== null && parent !== null) {
+            // cook up a div (if necessary) and position it 
+            let div = window.document.getElementById("code-annotation-line-highlight");
+            if (div === null) {
+              div = window.document.createElement("div");
+              div.setAttribute("id", "code-annotation-line-highlight");
+              div.style.position = 'absolute';
+              parent.appendChild(div);
+            }
+            div.style.top = top - 2 + "px";
+            div.style.height = height + 4 + "px";
+            div.style.left = 0;
+            let gutterDiv = window.document.getElementById("code-annotation-line-highlight-gutter");
+            if (gutterDiv === null) {
+              gutterDiv = window.document.createElement("div");
+              gutterDiv.setAttribute("id", "code-annotation-line-highlight-gutter");
+              gutterDiv.style.position = 'absolute';
+              const codeCell = window.document.getElementById(targetCell);
+              const gutter = codeCell.querySelector('.code-annotation-gutter');
+              gutter.appendChild(gutterDiv);
+            }
+            gutterDiv.style.top = top - 2 + "px";
+            gutterDiv.style.height = height + 4 + "px";
+          }
+          selectedAnnoteEl = annoteEl;
+        }
+      };
+      const unselectCodeLines = () => {
+        const elementsIds = ["code-annotation-line-highlight", "code-annotation-line-highlight-gutter"];
+        elementsIds.forEach((elId) => {
+          const div = window.document.getElementById(elId);
+          if (div) {
+            div.remove();
+          }
+        });
+        selectedAnnoteEl = undefined;
+      };
+        // Handle positioning of the toggle
+    window.addEventListener(
+      "resize",
+      throttle(() => {
+        elRect = undefined;
+        if (selectedAnnoteEl) {
+          selectCodeLines(selectedAnnoteEl);
+        }
+      }, 10)
+    );
+    function throttle(fn, ms) {
+    let throttle = false;
+    let timer;
+      return (...args) => {
+        if(!throttle) { // first call gets through
+            fn.apply(this, args);
+            throttle = true;
+        } else { // all the others get throttled
+            if(timer) clearTimeout(timer); // cancel #2
+            timer = setTimeout(() => {
+              fn.apply(this, args);
+              timer = throttle = false;
+            }, ms);
+        }
+      };
+    }
+      // Attach click handler to the DT
+      const annoteDls = window.document.querySelectorAll('dt[data-target-cell]');
+      for (const annoteDlNode of annoteDls) {
+        annoteDlNode.addEventListener('click', (event) => {
+          const clickedEl = event.target;
+          if (clickedEl !== selectedAnnoteEl) {
+            unselectCodeLines();
+            const activeEl = window.document.querySelector('dt[data-target-cell].code-annotation-active');
+            if (activeEl) {
+              activeEl.classList.remove('code-annotation-active');
+            }
+            selectCodeLines(clickedEl);
+            clickedEl.classList.add('code-annotation-active');
+          } else {
+            // Unselect the line
+            unselectCodeLines();
+            clickedEl.classList.remove('code-annotation-active');
+          }
+        });
+      }
+  const findCites = (el) => {
+    const parentEl = el.parentElement;
+    if (parentEl) {
+      const cites = parentEl.dataset.cites;
+      if (cites) {
+        return {
+          el,
+          cites: cites.split(' ')
+        };
+      } else {
+        return findCites(el.parentElement)
+      }
+    } else {
+      return undefined;
+    }
+  };
+  var bibliorefs = window.document.querySelectorAll('a[role="doc-biblioref"]');
+  for (var i=0; i<bibliorefs.length; i++) {
+    const ref = bibliorefs[i];
+    const citeInfo = findCites(ref);
+    if (citeInfo) {
+      tippyHover(citeInfo.el, function() {
+        var popup = window.document.createElement('div');
+        citeInfo.cites.forEach(function(cite) {
+          var citeDiv = window.document.createElement('div');
+          citeDiv.classList.add('hanging-indent');
+          citeDiv.classList.add('csl-entry');
+          var biblioDiv = window.document.getElementById('ref-' + cite);
+          if (biblioDiv) {
+            citeDiv.innerHTML = biblioDiv.innerHTML;
+          }
+          popup.appendChild(citeDiv);
+        });
+        return popup.innerHTML;
+      });
+    }
+  }
+});
+</script><div class="modal fade" id="quarto-embedded-source-code-modal" tabindex="-1" aria-labelledby="quarto-embedded-source-code-modal-label" aria-hidden="true"><div class="modal-dialog modal-dialog-scrollable"><div class="modal-content"><div class="modal-header"><h5 class="modal-title" id="quarto-embedded-source-code-modal-label">Ejecutar el código</h5><button class="btn-close" data-bs-dismiss="modal"></button></div><div class="modal-body"><div class="">
+<div class="sourceCode" id="cb15" data-shortcodes="false"><pre class="sourceCode markdown code-with-copy"><code class="sourceCode markdown"><span id="cb15-1"><a href="#cb15-1" aria-hidden="true" tabindex="-1"></a><span class="co">---</span></span>
+<span id="cb15-2"><a href="#cb15-2" aria-hidden="true" tabindex="-1"></a><span class="an">title:</span><span class="co"> "Práctica 2: Parte 4 (Presentar tablas mejorado)"</span></span>
+<span id="cb15-3"><a href="#cb15-3" aria-hidden="true" tabindex="-1"></a><span class="an">lang:</span><span class="co"> es</span></span>
+<span id="cb15-4"><a href="#cb15-4" aria-hidden="true" tabindex="-1"></a><span class="an">toc:</span><span class="co"> true</span></span>
+<span id="cb15-5"><a href="#cb15-5" aria-hidden="true" tabindex="-1"></a><span class="an">toc-depth:</span><span class="co"> 4</span></span>
+<span id="cb15-6"><a href="#cb15-6" aria-hidden="true" tabindex="-1"></a><span class="an">number-sections:</span><span class="co"> true</span></span>
+<span id="cb15-7"><a href="#cb15-7" aria-hidden="true" tabindex="-1"></a><span class="an">format:</span></span>
+<span id="cb15-8"><a href="#cb15-8" aria-hidden="true" tabindex="-1"></a><span class="co">  html:</span></span>
+<span id="cb15-9"><a href="#cb15-9" aria-hidden="true" tabindex="-1"></a><span class="co">    code-tools: true</span></span>
+<span id="cb15-10"><a href="#cb15-10" aria-hidden="true" tabindex="-1"></a><span class="co">    #code-fold: true</span></span>
+<span id="cb15-11"><a href="#cb15-11" aria-hidden="true" tabindex="-1"></a><span class="co">    df-print: paged</span></span>
+<span id="cb15-12"><a href="#cb15-12" aria-hidden="true" tabindex="-1"></a><span class="co">  pdf: </span></span>
+<span id="cb15-13"><a href="#cb15-13" aria-hidden="true" tabindex="-1"></a><span class="co">    df-print: kable</span></span>
+<span id="cb15-14"><a href="#cb15-14" aria-hidden="true" tabindex="-1"></a><span class="co">    #keep-tex: true</span></span>
+<span id="cb15-15"><a href="#cb15-15" aria-hidden="true" tabindex="-1"></a><span class="co">    #header-includes:</span></span>
+<span id="cb15-16"><a href="#cb15-16" aria-hidden="true" tabindex="-1"></a><span class="co">    #  - \usepackage[graphicx]{realboxes}</span></span>
+<span id="cb15-17"><a href="#cb15-17" aria-hidden="true" tabindex="-1"></a><span class="co">    #  - \usepackage{booktabs}</span></span>
+<span id="cb15-18"><a href="#cb15-18" aria-hidden="true" tabindex="-1"></a><span class="co">    # documentclass: scrbook</span></span>
+<span id="cb15-19"><a href="#cb15-19" aria-hidden="true" tabindex="-1"></a><span class="co">    # classoption: ["oneside"]</span></span>
+<span id="cb15-20"><a href="#cb15-20" aria-hidden="true" tabindex="-1"></a><span class="co">    # template-partials: ["partials/before-body.tex"]</span></span>
+<span id="cb15-21"><a href="#cb15-21" aria-hidden="true" tabindex="-1"></a><span class="co">    # toc: true</span></span>
+<span id="cb15-22"><a href="#cb15-22" aria-hidden="true" tabindex="-1"></a><span class="co">    # toc-depth: 2</span></span>
+<span id="cb15-23"><a href="#cb15-23" aria-hidden="true" tabindex="-1"></a><span class="co">    # lof: true</span></span>
+<span id="cb15-24"><a href="#cb15-24" aria-hidden="true" tabindex="-1"></a><span class="co">    # lot: true</span></span>
+<span id="cb15-25"><a href="#cb15-25" aria-hidden="true" tabindex="-1"></a><span class="co">    # include-in-header: </span></span>
+<span id="cb15-26"><a href="#cb15-26" aria-hidden="true" tabindex="-1"></a><span class="co">    #   - partials/inheader.tex</span></span>
+<span id="cb15-27"><a href="#cb15-27" aria-hidden="true" tabindex="-1"></a><span class="co">    # geometry:</span></span>
+<span id="cb15-28"><a href="#cb15-28" aria-hidden="true" tabindex="-1"></a><span class="co">    #   - left=.75in</span></span>
+<span id="cb15-29"><a href="#cb15-29" aria-hidden="true" tabindex="-1"></a><span class="co">    #   - textwidth=4.5in</span></span>
+<span id="cb15-30"><a href="#cb15-30" aria-hidden="true" tabindex="-1"></a><span class="co">    #   - marginparsep=.25in</span></span>
+<span id="cb15-31"><a href="#cb15-31" aria-hidden="true" tabindex="-1"></a><span class="co">    #   - marginparwidth=2.25in</span></span>
+<span id="cb15-32"><a href="#cb15-32" aria-hidden="true" tabindex="-1"></a><span class="co">  </span></span>
+<span id="cb15-33"><a href="#cb15-33" aria-hidden="true" tabindex="-1"></a><span class="an">execute:</span><span class="co"> </span></span>
+<span id="cb15-34"><a href="#cb15-34" aria-hidden="true" tabindex="-1"></a><span class="co">  echo: true</span></span>
+<span id="cb15-35"><a href="#cb15-35" aria-hidden="true" tabindex="-1"></a><span class="co">  warnings: false</span></span>
+<span id="cb15-36"><a href="#cb15-36" aria-hidden="true" tabindex="-1"></a><span class="co">  message: false</span></span>
+<span id="cb15-37"><a href="#cb15-37" aria-hidden="true" tabindex="-1"></a><span class="an">knitr:</span></span>
+<span id="cb15-38"><a href="#cb15-38" aria-hidden="true" tabindex="-1"></a><span class="co">  opts_chunk:</span></span>
+<span id="cb15-39"><a href="#cb15-39" aria-hidden="true" tabindex="-1"></a><span class="co">    out.width: 90%</span></span>
+<span id="cb15-40"><a href="#cb15-40" aria-hidden="true" tabindex="-1"></a><span class="co">    collapse: true</span></span>
+<span id="cb15-41"><a href="#cb15-41" aria-hidden="true" tabindex="-1"></a><span class="co">    comment: "#&gt;"</span></span>
+<span id="cb15-42"><a href="#cb15-42" aria-hidden="true" tabindex="-1"></a><span class="co">---</span></span>
+<span id="cb15-43"><a href="#cb15-43" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb15-44"><a href="#cb15-44" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb15-45"><a href="#cb15-45" aria-hidden="true" tabindex="-1"></a>\bigskip</span>
+<span id="cb15-46"><a href="#cb15-46" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb15-47"><a href="#cb15-47" aria-hidden="true" tabindex="-1"></a>**Ver la cabecera yaml de este documento, contiene muchas opciones avanzadas**.</span>
+<span id="cb15-48"><a href="#cb15-48" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb15-49"><a href="#cb15-49" aria-hidden="true" tabindex="-1"></a>\bigskip</span>
+<span id="cb15-50"><a href="#cb15-50" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb15-53"><a href="#cb15-53" aria-hidden="true" tabindex="-1"></a><span class="in">```{r}</span></span>
+<span id="cb15-54"><a href="#cb15-54" aria-hidden="true" tabindex="-1"></a><span class="fu">suppressWarnings</span>(<span class="fu">suppressMessages</span>(<span class="fu">library</span>(DemographyBasic)))</span>
+<span id="cb15-55"><a href="#cb15-55" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
+<span id="cb15-56"><a href="#cb15-56" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb15-57"><a href="#cb15-57" aria-hidden="true" tabindex="-1"></a>En la cabecera yaml de este documento Quarto se han añadido las opciones</span>
+<span id="cb15-58"><a href="#cb15-58" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb15-59"><a href="#cb15-59" aria-hidden="true" tabindex="-1"></a><span class="ss">- </span><span class="in">`df-print: paged`</span> ("html"). Las tablas de información en la salida html aparecerán paginadas de un modo especial para que no se tenga que realizar "scroll" en la página web.</span>
+<span id="cb15-60"><a href="#cb15-60" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb15-61"><a href="#cb15-61" aria-hidden="true" tabindex="-1"></a><span class="ss">- </span><span class="in">`df-print: kable`</span> ("pdf"). Como se ha visto usa: "<span class="in">`knitr::kable()`</span>" para salidas pdf.</span>
+<span id="cb15-62"><a href="#cb15-62" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb15-63"><a href="#cb15-63" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb15-64"><a href="#cb15-64" aria-hidden="true" tabindex="-1"></a><span class="fu"># Tablas con la función `func_salida_tablas()` definida en "funciones_tablas.R"</span></span>
+<span id="cb15-65"><a href="#cb15-65" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb15-66"><a href="#cb15-66" aria-hidden="true" tabindex="-1"></a>Importamos el fichero csv: "datosPractica01.csv" con <span class="in">`read.table()`</span>:</span>
+<span id="cb15-67"><a href="#cb15-67" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb15-70"><a href="#cb15-70" aria-hidden="true" tabindex="-1"></a><span class="in">```{r}</span></span>
+<span id="cb15-71"><a href="#cb15-71" aria-hidden="true" tabindex="-1"></a>datos.csv <span class="ot">=</span> <span class="fu">read.table</span>(<span class="at">file =</span> <span class="st">"datosPractica01.csv"</span>, <span class="at">header =</span> <span class="cn">TRUE</span>, <span class="at">sep =</span> <span class="st">","</span>)</span>
+<span id="cb15-72"><a href="#cb15-72" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
+<span id="cb15-73"><a href="#cb15-73" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb15-74"><a href="#cb15-74" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb15-75"><a href="#cb15-75" aria-hidden="true" tabindex="-1"></a>En el paquete "DemographyBasic" se encuentra definida la función:</span>
+<span id="cb15-76"><a href="#cb15-76" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb15-77"><a href="#cb15-77" aria-hidden="true" tabindex="-1"></a><span class="in">```r</span></span>
+<span id="cb15-78"><a href="#cb15-78" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb15-79"><a href="#cb15-79" aria-hidden="true" tabindex="-1"></a>DemBas_presentadf <span class="ot">=</span> <span class="cf">function</span>(datos1,<span class="at">scaption =</span> <span class="cn">NULL</span>,</span>
+<span id="cb15-80"><a href="#cb15-80" aria-hidden="true" tabindex="-1"></a>                              <span class="at">apaisadalatex=</span><span class="cn">FALSE</span>,</span>
+<span id="cb15-81"><a href="#cb15-81" aria-hidden="true" tabindex="-1"></a>                              <span class="at">variaspaginas=</span><span class="cn">TRUE</span>,</span>
+<span id="cb15-82"><a href="#cb15-82" aria-hidden="true" tabindex="-1"></a>                              <span class="at">fuentesize=</span><span class="cn">NULL</span>,  <span class="co"># 8, 2, 12, ...</span></span>
+<span id="cb15-83"><a href="#cb15-83" aria-hidden="true" tabindex="-1"></a>                              <span class="at">CompletaAncho =</span> <span class="cn">FALSE</span>)   </span>
+<span id="cb15-84"><a href="#cb15-84" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
+<span id="cb15-85"><a href="#cb15-85" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb15-86"><a href="#cb15-86" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb15-87"><a href="#cb15-87" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb15-88"><a href="#cb15-88" aria-hidden="true" tabindex="-1"></a>**Nota importante**: usa el paquete "kableExtra".</span>
+<span id="cb15-89"><a href="#cb15-89" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb15-90"><a href="#cb15-90" aria-hidden="true" tabindex="-1"></a>**Referencias** para obtener más información:</span>
+<span id="cb15-91"><a href="#cb15-91" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb15-92"><a href="#cb15-92" aria-hidden="true" tabindex="-1"></a><span class="ss">- </span><span class="co">[</span><span class="ot">Libro: Cómo crear Tablas de información en R Markdown</span><span class="co">](http://destio.us.es/calvo/ficheros/ComoCrearTablasRMarkdown_PedroLuque_2019Sep_librodigital.pdf)</span>{target="_blank"}</span>
+<span id="cb15-93"><a href="#cb15-93" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb15-94"><a href="#cb15-94" aria-hidden="true" tabindex="-1"></a><span class="ss">- </span><span class="co">[</span><span class="ot">Chuleta sobre kableExtra</span><span class="co">](http://destio.us.es/calvo//ficheros/chuleta_kableExtra_ComoCrearTablasRMarkdown_PedroLuque_2019Sep_librodigital.pdf)</span>{target="_blank"}</span>
+<span id="cb15-95"><a href="#cb15-95" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb15-96"><a href="#cb15-96" aria-hidden="true" tabindex="-1"></a><span class="ss">- </span><span class="co">[</span><span class="ot">Cómo incluir una tabla o cuadro con información</span><span class="co">](http://destio.us.es/calvo/Qtutoriales/SobrePlantillaTFE/CuestionesPracticasSobrePlantillaTFE.html#cómo-incluir-una-tabla-o-cuadro-con-información)</span>{target="_blank"}</span>
+<span id="cb15-97"><a href="#cb15-97" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb15-98"><a href="#cb15-98" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb15-99"><a href="#cb15-99" aria-hidden="true" tabindex="-1"></a><span class="fu">## Ejemplo: básico</span></span>
+<span id="cb15-100"><a href="#cb15-100" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb15-101"><a href="#cb15-101" aria-hidden="true" tabindex="-1"></a>Al cargar el fichero de funciones: "funciones_tablas.R" se carga el paquete R "kableExtra" y las salidas son diferentes a las que se obtienen sin cargar este paquete. En la salida pdf, se ve en este ejemplo que no usa el modo multipágina.</span>
+<span id="cb15-102"><a href="#cb15-102" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb15-105"><a href="#cb15-105" aria-hidden="true" tabindex="-1"></a><span class="in">```{r}</span></span>
+<span id="cb15-106"><a href="#cb15-106" aria-hidden="true" tabindex="-1"></a>datos.csv</span>
+<span id="cb15-107"><a href="#cb15-107" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
+<span id="cb15-108"><a href="#cb15-108" aria-hidden="true" tabindex="-1"></a>Sin embargo, la siguiente no tiene el problema mencionado anteriormente.</span>
+<span id="cb15-111"><a href="#cb15-111" aria-hidden="true" tabindex="-1"></a><span class="in">```{r}</span></span>
+<span id="cb15-112"><a href="#cb15-112" aria-hidden="true" tabindex="-1"></a><span class="fu">DemBas_presentadf</span>(datos.csv)</span>
+<span id="cb15-113"><a href="#cb15-113" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
+<span id="cb15-114"><a href="#cb15-114" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb15-115"><a href="#cb15-115" aria-hidden="true" tabindex="-1"></a><span class="fu">## Ejemplo: básico (presenta las 6 primeras filas)</span></span>
+<span id="cb15-116"><a href="#cb15-116" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb15-119"><a href="#cb15-119" aria-hidden="true" tabindex="-1"></a><span class="in">```{r}</span></span>
+<span id="cb15-120"><a href="#cb15-120" aria-hidden="true" tabindex="-1"></a><span class="fu">DemBas_presentadf</span>(<span class="fu">head</span>(datos.csv))</span>
+<span id="cb15-121"><a href="#cb15-121" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
+<span id="cb15-122"><a href="#cb15-122" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb15-123"><a href="#cb15-123" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb15-124"><a href="#cb15-124" aria-hidden="true" tabindex="-1"></a><span class="fu">## Ejemplo: básico con leyenda (scaption)</span></span>
+<span id="cb15-125"><a href="#cb15-125" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb15-128"><a href="#cb15-128" aria-hidden="true" tabindex="-1"></a><span class="in">```{r}</span></span>
+<span id="cb15-129"><a href="#cb15-129" aria-hidden="true" tabindex="-1"></a><span class="fu">DemBas_presentadf</span>(datos.csv, <span class="at">scaption =</span> <span class="st">"Datos de España"</span>)</span>
+<span id="cb15-130"><a href="#cb15-130" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
+<span id="cb15-131"><a href="#cb15-131" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb15-132"><a href="#cb15-132" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb15-133"><a href="#cb15-133" aria-hidden="true" tabindex="-1"></a>Se podrían utilizar sobre data.frame mayores creados, por ejemplo con <span class="in">`rbind()`</span>:</span>
+<span id="cb15-134"><a href="#cb15-134" aria-hidden="true" tabindex="-1"></a><span class="in">```{r}</span></span>
+<span id="cb15-135"><a href="#cb15-135" aria-hidden="true" tabindex="-1"></a><span class="in">DemBas_presentadf(rbind(datos.csv,datos.csv), </span></span>
+<span id="cb15-136"><a href="#cb15-136" aria-hidden="true" tabindex="-1"></a><span class="in">                   scaption = "Tabla con kableExtra",</span></span>
+<span id="cb15-137"><a href="#cb15-137" aria-hidden="true" tabindex="-1"></a><span class="in">                   variaspaginas = T)</span></span>
+<span id="cb15-138"><a href="#cb15-138" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
+<span id="cb15-139"><a href="#cb15-139" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb15-140"><a href="#cb15-140" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb15-141"><a href="#cb15-141" aria-hidden="true" tabindex="-1"></a><span class="fu">## Ejemplo: básico</span></span>
+<span id="cb15-142"><a href="#cb15-142" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb15-143"><a href="#cb15-143" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb15-144"><a href="#cb15-144" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb15-145"><a href="#cb15-145" aria-hidden="true" tabindex="-1"></a>Importamos el fichero csv: "datosPractica01.csv"</span>
+<span id="cb15-146"><a href="#cb15-146" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb15-149"><a href="#cb15-149" aria-hidden="true" tabindex="-1"></a><span class="in">```{r}</span></span>
+<span id="cb15-150"><a href="#cb15-150" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(readr)</span>
+<span id="cb15-151"><a href="#cb15-151" aria-hidden="true" tabindex="-1"></a>datosPractica01 <span class="ot">&lt;-</span> <span class="fu">read_csv</span>(<span class="st">"datosPractica01.csv"</span>,</span>
+<span id="cb15-152"><a href="#cb15-152" aria-hidden="true" tabindex="-1"></a>                            <span class="at">col_types =</span> <span class="fu">cols</span>(<span class="at">...1 =</span> <span class="fu">col_skip</span>()))</span>
+<span id="cb15-153"><a href="#cb15-153" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
+<span id="cb15-154"><a href="#cb15-154" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb15-157"><a href="#cb15-157" aria-hidden="true" tabindex="-1"></a><span class="in">```{r}</span></span>
+<span id="cb15-158"><a href="#cb15-158" aria-hidden="true" tabindex="-1"></a><span class="fu">DemBas_presentadf</span>(<span class="fu">head</span>(datosPractica01,<span class="dv">20</span>), <span class="at">scaption =</span> <span class="st">"Tabla nueva"</span>)</span>
+<span id="cb15-159"><a href="#cb15-159" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
+<span id="cb15-160"><a href="#cb15-160" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb15-161"><a href="#cb15-161" aria-hidden="true" tabindex="-1"></a><span class="fu">## Ejemplo: se modifican las anchuras de algunas columnas</span></span>
+<span id="cb15-162"><a href="#cb15-162" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb15-165"><a href="#cb15-165" aria-hidden="true" tabindex="-1"></a><span class="in">```{r}</span></span>
+<span id="cb15-166"><a href="#cb15-166" aria-hidden="true" tabindex="-1"></a><span class="fu">DemBas_presentadf</span>(<span class="fu">head</span>(datosPractica01,<span class="dv">20</span>), </span>
+<span id="cb15-167"><a href="#cb15-167" aria-hidden="true" tabindex="-1"></a>                   <span class="at">scaption =</span> <span class="st">"Nueva Tabla 2"</span>) <span class="sc">|&gt;</span> </span>
+<span id="cb15-168"><a href="#cb15-168" aria-hidden="true" tabindex="-1"></a>      <span class="fu">column_spec</span>(<span class="fu">c</span>(<span class="dv">1</span>), <span class="at">width =</span> <span class="st">"2cm"</span>) <span class="sc">|&gt;</span> </span>
+<span id="cb15-169"><a href="#cb15-169" aria-hidden="true" tabindex="-1"></a>      <span class="fu">column_spec</span>(<span class="fu">c</span>(<span class="dv">2</span>), <span class="at">width =</span> <span class="st">"3cm"</span>)</span>
+<span id="cb15-170"><a href="#cb15-170" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
+<span id="cb15-171"><a href="#cb15-171" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb15-172"><a href="#cb15-172" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb15-173"><a href="#cb15-173" aria-hidden="true" tabindex="-1"></a>\newpage</span>
+<span id="cb15-174"><a href="#cb15-174" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb15-175"><a href="#cb15-175" aria-hidden="true" tabindex="-1"></a><span class="fu">## Ejemplo: tabla apaisada (pdf). Importar ficheros xlsx</span></span>
+<span id="cb15-176"><a href="#cb15-176" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb15-179"><a href="#cb15-179" aria-hidden="true" tabindex="-1"></a><span class="in">```{r}</span></span>
+<span id="cb15-180"><a href="#cb15-180" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(readxl)</span>
+<span id="cb15-181"><a href="#cb15-181" aria-hidden="true" tabindex="-1"></a>datos1 <span class="ot">=</span> <span class="fu">read_xlsx</span>(<span class="st">"2852.xlsx"</span>,<span class="at">sheet=</span><span class="dv">1</span>,<span class="at">range=</span><span class="st">"A8:U61"</span>)</span>
+<span id="cb15-182"><a href="#cb15-182" aria-hidden="true" tabindex="-1"></a><span class="fu">names</span>(datos1)[<span class="dv">1</span>] <span class="ot">=</span> <span class="st">"Provincias"</span></span>
+<span id="cb15-183"><a href="#cb15-183" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
+<span id="cb15-184"><a href="#cb15-184" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb15-185"><a href="#cb15-185" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb15-186"><a href="#cb15-186" aria-hidden="true" tabindex="-1"></a>Cuando se intenta presentar en un fichero pdf una tabla que necesita un ancho que supera los 21cm de un papel en formato a4 (los ficheros html no presentan limitación de ancho porque no está pensado inicialmente para imprimirse en papel), se puede utilizar la función definida <span class="in">`func_salida_tablas()`</span>, indicando los argumentos <span class="in">`apaisadalatex = TRUE,variaspaginas=FALSE`</span>:</span>
+<span id="cb15-187"><a href="#cb15-187" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb15-188"><a href="#cb15-188" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb15-191"><a href="#cb15-191" aria-hidden="true" tabindex="-1"></a><span class="in">```{r}</span></span>
+<span id="cb15-192"><a href="#cb15-192" aria-hidden="true" tabindex="-1"></a><span class="fu">DemBas_presentadf</span>(datos1,</span>
+<span id="cb15-193"><a href="#cb15-193" aria-hidden="true" tabindex="-1"></a>                   <span class="at">scaption =</span> <span class="st">"Tabla apaisada en una página"</span>,</span>
+<span id="cb15-194"><a href="#cb15-194" aria-hidden="true" tabindex="-1"></a>                   <span class="at">apaisadalatex =</span> <span class="cn">TRUE</span>,</span>
+<span id="cb15-195"><a href="#cb15-195" aria-hidden="true" tabindex="-1"></a>                   <span class="at">variaspaginas=</span><span class="cn">FALSE</span>)</span>
+<span id="cb15-196"><a href="#cb15-196" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
+<span id="cb15-197"><a href="#cb15-197" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb15-198"><a href="#cb15-198" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb15-199"><a href="#cb15-199" aria-hidden="true" tabindex="-1"></a><span class="fu">## Ejemplo: tabla apaisada varias páginas (pdf): reduciendo el número de columnas que se muestran</span></span>
+<span id="cb15-200"><a href="#cb15-200" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb15-203"><a href="#cb15-203" aria-hidden="true" tabindex="-1"></a><span class="in">```{r}</span></span>
+<span id="cb15-204"><a href="#cb15-204" aria-hidden="true" tabindex="-1"></a><span class="fu">DemBas_presentadf</span>(datos1[,<span class="dv">1</span><span class="sc">:</span><span class="dv">9</span>],</span>
+<span id="cb15-205"><a href="#cb15-205" aria-hidden="true" tabindex="-1"></a>                   <span class="at">scaption =</span> <span class="st">"Tabla apaisada en varias páginas"</span>,</span>
+<span id="cb15-206"><a href="#cb15-206" aria-hidden="true" tabindex="-1"></a>                   <span class="at">apaisadalatex =</span> <span class="cn">TRUE</span>,</span>
+<span id="cb15-207"><a href="#cb15-207" aria-hidden="true" tabindex="-1"></a>                   <span class="at">variaspaginas=</span><span class="cn">TRUE</span>,</span>
+<span id="cb15-208"><a href="#cb15-208" aria-hidden="true" tabindex="-1"></a>                   <span class="at">fuentesize =</span> <span class="dv">10</span>)</span>
+<span id="cb15-209"><a href="#cb15-209" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
+<span id="cb15-210"><a href="#cb15-210" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb15-211"><a href="#cb15-211" aria-hidden="true" tabindex="-1"></a></span>
+</code><button title="Copiar al portapapeles" class="code-copy-button" data-in-quarto-modal=""><i class="bi"></i></button></pre></div>
+</div></div></div></div></div>
+</div> <!-- /content -->
+
+
+
+
+</body></html>

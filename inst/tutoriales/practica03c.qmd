@@ -1,0 +1,237 @@
+---
+title: "Práctica 3: Parte 3 (ejemplos útiles)"
+lang: es
+toc: true
+toc-depth: 4
+number-sections: true
+format:
+  html:
+    df-print: paged
+    code-tools: true
+    #code-fold: true
+  pdf: 
+    df-print: kable
+    include-in-header: 
+       text: |
+         \usepackage{fvextra}
+         \DefineVerbatimEnvironment{Highlighting}{Verbatim}{breaklines,commandchars=\\\{\}}         
+    include-before-body:
+      text: |
+        \RecustomVerbatimEnvironment{verbatim}{Verbatim}{
+          showspaces = false,
+          showtabs = false,
+          breaksymbolleft={},
+          breaklines
+          % Note: setting commandchars=\\\{\} here will cause an error 
+        }                   
+
+execute: 
+  echo: true
+  warnings: false
+---
+
+
+
+\newcommand{\bcenter}{\begin{center}} 
+\newcommand{\ecenter}{\end{center}}
+\renewcommand{\footnotesize}{}
+
+\bigskip
+
+```{r message=FALSE}
+# source("FuncionesDemografia/funciones_px.R")
+# source("FuncionesDemografia/funciones_tablas.R")
+# library(tidyverse)
+library(DemographyBasic)
+```
+
+En este documento, para presentar la información en forma de tablas se utilizará la función R creada: `func_salida_tablas()`.
+
+# Agrupar en intervalos de edad a partir de edades simples `case_when()`
+
+Cargamos los datos almacenados en el fichero "RData": "`DatosINE_PLC.RData`", con la función R: `load()`:
+
+```{r}
+load("DatosINE_PLC.RData")
+```
+
+
+También se pueden cargar ficheros ".px" del INE (y también del IECA) con el paquete "pxR". Pero en este caso, se ha creado una función específica `read_px2()` (en el fichero: "`funciones_px.R`") para que las columnas de tipo "factor" sean convertidas a tipo "character".
+
+```{r}
+Nacimientos_CCAA_EdadMadre_px = DemBas_read_px2("02004.px") 
+head(Nacimientos_CCAA_EdadMadre_px) |> 
+  DemBas_presentadf(fuentesize = 9)
+```
+
+
+## Caso: estudio de "Cantabria en 2016" considerando "ambos sexos"
+
+Se tiene información de todas las CCAA y también de varios años de calendario. Nuestro objetivo es obtener la información exclusivamente para **Cantabria y 2016**.
+
+**Nota:** este procedimiento se podría generalizar para cualquier comunidad autónoma y año.
+
+
+```{r}
+Gano=2016
+GCCAA="Cantabria"
+nLxAmbos=TRUE
+```
+
+Con la función `unique()` obtenemos los valores diferentes (distintos o únicos) que aparecen en la columna `CCAA` y en la columna `Calendario` de `Nacimientos_CCAA_EdadMadre_2010a2016` (en "DatosINE_PLC.RData"):
+
+```{r}
+CCAAdif = unique(Nacimientos_CCAA_EdadMadre_2010a2016$CCAA)
+cualCCAA = which(CCAAdif==GCCAA)
+(anodif = unique(Nacimientos_CCAA_EdadMadre_2010a2016$Calendario))
+cualano = which(anodif==Gano)
+```
+También se ha obtenido el índice correspondiente a Cantabria y 2016: `cualCCAA` y `cualano`.
+
+{{< pagebreak >}}
+
+Se dispone de datos con edades simples (algunas vienen agrupadas) y además en formato de texto, como puede verse a continuación:
+
+```{r}
+unique(Nacimientos_CCAA_EdadMadre_px$Edad.de.la.madre) %>% 
+  head(20)
+```
+
+Queremos agrupar las edades simples, en grupos de edades. Para ello intentaremos construir una nueva variable o columna: "GEdades", con ayuda de `mutate()`, y la función del paquete "dplyr": `case_when()` como veremos en el siguiente ejemplo.
+
+```{r}
+Nacimientos_CCAA_EdadMadre_px %>% 
+    dplyr::filter(Comunidad.Autónoma==CCAAdif[cualCCAA], 
+           Estado.civil.de.la.madre=="Todos los nacimientos",
+           Sexo.del.nacido=="Ambos sexos") %>% 
+    dplyr::rename(Edades = Edad.de.la.madre) %>% 
+    dplyr::mutate(
+      GEdades = dplyr::case_when(
+        ((Edades >= "De 15 años") & (Edades <= 	"De 19 años")) ~ "15-19",
+        ((Edades >= "De 20 años") & (Edades <= 	"De 24 años")) ~ "20-24",
+        ((Edades >= "De 25 años") & (Edades <= 	"De 29 años")) ~ "25-29",
+        ((Edades >= "De 30 años") & (Edades <= 	"De 34 años")) ~ "30-34",
+        ((Edades >= "De 35 años") & (Edades <= 	"De 39 años")) ~ "35-39",
+        ((Edades >= "De 40 años") & (Edades <= 	"De 44 años")) ~ "40-44",
+        ((Edades >= "De 45 años") & (Edades <= 	"De 49 años")) ~ "45-49"
+      )
+    ) %>% 
+  head(20) |> 
+  DemBas_presentadf(fuentesize = 7)
+```
+
+Hay filas que no nos interesan, ya que aparecen en la nueva variable "GEdades" con el valor `NA`.
+
+**Nota:** Las miniherramientas del sistema tidyverse se pueden repetir en una misma construcción todas las veces que se necesiten.
+
+Por tanto, además de eliminar esas observaciones, necesitamos resumir esos datos al agrupar para los valores distintos de la nueva variable "GEdades", de la siguiente forma:
+```{r}
+tmp2a = Nacimientos_CCAA_EdadMadre_px %>% 
+    dplyr::filter(Comunidad.Autónoma==CCAAdif[cualCCAA], 
+           Estado.civil.de.la.madre=="Todos los nacimientos",
+           Sexo.del.nacido=="Ambos sexos") %>% 
+    dplyr::mutate(Edades = Edad.de.la.madre) %>% 
+    dplyr::mutate(
+      GEdades = case_when(
+        ((Edades >= "De 15 años") & (Edades <= 	"De 19 años")) ~ "15-19",
+        ((Edades >= "De 20 años") & (Edades <= 	"De 24 años")) ~ "20-24",
+        ((Edades >= "De 25 años") & (Edades <= 	"De 29 años")) ~ "25-29",
+        ((Edades >= "De 30 años") & (Edades <= 	"De 34 años")) ~ "30-34",
+        ((Edades >= "De 35 años") & (Edades <= 	"De 39 años")) ~ "35-39",
+        ((Edades >= "De 40 años") & (Edades <= 	"De 44 años")) ~ "40-44",
+        ((Edades >= "De 45 años") & (Edades <= 	"De 49 años")) ~ "45-49"
+      )
+    ) %>% 
+    dplyr::filter(!is.na(GEdades)) %>% 
+    dplyr::select(GEdades,value) %>% 
+    dplyr::group_by(GEdades) %>% 
+    dplyr::summarise(
+      CCAA = CCAAdif[cualCCAA],
+      Ano = anodif[cualano],
+      NacimientosAmbos = sum(value,na.rm = T)
+    )
+```
+
+De esta forma hemos obtenido el número de nacimientos de **ambos sexos**, que hay en Cantabria durante el 2016, por grupos de Edad de la madre:
+```{r}
+DemBas_presentadf(tmp2a)
+```
+
+
+## Caso: estudio de "Cantabria en 2016" considerando únicamente a los "niños"
+
+Ahora hacemos operaciones parecidas para obtener el número de nacimientos de **niños**, que hay en Cantabria durante el 2016, por grupos de Edad de la madre:
+
+```{r}
+tmp2Hombres = Nacimientos_CCAA_EdadMadre_px %>% 
+  filter(Comunidad.Autónoma==CCAAdif[cualCCAA], 
+         Estado.civil.de.la.madre=="Todos los nacimientos",
+         Sexo.del.nacido=="Hombres") %>% 
+  mutate(Edades = Edad.de.la.madre) %>% 
+  mutate(
+    GEdades = case_when(
+      ((Edades >= "De 15 años") & (Edades <= 	"De 19 años")) ~ "15-19",
+      ((Edades >= "De 20 años") & (Edades <= 	"De 24 años")) ~ "20-24",
+      ((Edades >= "De 25 años") & (Edades <= 	"De 29 años")) ~ "25-29",
+      ((Edades >= "De 30 años") & (Edades <= 	"De 34 años")) ~ "30-34",
+      ((Edades >= "De 35 años") & (Edades <= 	"De 39 años")) ~ "35-39",
+      ((Edades >= "De 40 años") & (Edades <= 	"De 44 años")) ~ "40-44",
+      ((Edades >= "De 45 años") & (Edades <= 	"De 49 años")) ~ "45-49"
+    )
+  ) %>% 
+  filter(!is.na(GEdades)) %>% 
+  select(GEdades,value) %>% 
+  group_by(GEdades) %>% 
+  dplyr::summarise(
+    CCAA = CCAAdif[cualCCAA],
+    Ano = anodif[cualano],
+    NacimientosHombres = sum(value,na.rm = T)
+  )
+```
+
+```{r}
+
+DemBas_presentadf(tmp2Hombres)
+```
+
+
+## Caso: estudio de "Cantabria en 2016" considerando únicamente a las "niñas"
+
+Y repetimos las mismas operaciones parecidas para obtener el número de nacimientos de **niñas**, que hay en Cantabria durante el 2016, por grupos de Edad de la madre:
+
+```{r}
+tmp2Mujeres = Nacimientos_CCAA_EdadMadre_px %>% 
+  filter(Comunidad.Autónoma==CCAAdif[cualCCAA], 
+         Estado.civil.de.la.madre=="Todos los nacimientos",
+         Sexo.del.nacido=="Mujeres") %>% 
+  mutate(Edades = Edad.de.la.madre) %>% 
+  mutate(
+    GEdades = case_when(
+      ((Edades >= "De 15 años") & (Edades <= 	"De 19 años")) ~ "15-19",
+      ((Edades >= "De 20 años") & (Edades <= 	"De 24 años")) ~ "20-24",
+      ((Edades >= "De 25 años") & (Edades <= 	"De 29 años")) ~ "25-29",
+      ((Edades >= "De 30 años") & (Edades <= 	"De 34 años")) ~ "30-34",
+      ((Edades >= "De 35 años") & (Edades <= 	"De 39 años")) ~ "35-39",
+      ((Edades >= "De 40 años") & (Edades <= 	"De 44 años")) ~ "40-44",
+      ((Edades >= "De 45 años") & (Edades <= 	"De 49 años")) ~ "45-49"
+    )
+  ) %>% 
+  filter(!is.na(GEdades)) %>% 
+  select(GEdades,value) %>% 
+  group_by(GEdades) %>% 
+  dplyr::summarise(
+    CCAA = CCAAdif[cualCCAA],
+    Ano = anodif[cualano],
+    NacimientosMujeres = sum(value,na.rm = T)
+  )
+
+```
+
+```{r}
+DemBas_presentadf(tmp2Mujeres)
+```
+
+
+
+
+

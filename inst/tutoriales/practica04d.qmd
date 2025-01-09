@@ -1,0 +1,335 @@
+---
+title: "Práctica 4: Parte 4 (Mapas Demográficos)"
+lang: es
+toc: true
+toc-depth: 4
+number-sections: true
+format:
+  html:
+    df-print: paged
+    code-tools: true
+    #code-fold: true
+  pdf: 
+    df-print: kable
+execute: 
+  echo: true
+  warnings: false
+---
+
+
+<!-- title: "Pruebas con los mapas: mapSpain" -->
+
+
+# Introducción
+
+```{r}
+suppressWarnings(suppressMessages(library(DemographyBasic)))
+```
+
+
+# Instalación de mapSpain
+
+Información obtenida:
+
+- <https://ropenspain.github.io/mapSpain/>
+
+Se recomienda utilizar la siguiente instrucción R para instalar el paquete R: "mapSpain".
+```{r}
+#| eval: false
+install.packages("mapSpain", dependencies = TRUE)
+```
+
+El primer ejemplo que se mostrará se ha obtenido del modelo de partida obtenido en la documentación de "mapSpain": <https://ropenspain.github.io/mapSpain/articles/x02_mapasesp.html>.
+
+Cargamos los paquetes necesarios y utilizamos la función `esp_get_prov_siane()` para obtener información para la representación de mapas de tipo provincial de España para unas determinadas provincias.
+
+```{r}
+library(mapSpain)
+library(ggplot2)
+provs <- esp_get_prov(c(
+  "Andalucía", "Ciudad Real",
+  "Murcia", "Ceuta", "Melilla"
+))
+dplyr::glimpse(provs)
+```
+
+A la geometría "ggplot2" `geom_sf()`, el paquete "mapSpain": facilita la información de la geometría (la coloca en el elemento `geometry` del objeto R anterior: "`provs`") necesaria para representar mapas de España, que permitirá crear por ejemplo un cartograma provincial con la metodología del paquete "ggplot2". Se colorea utilizando una función que genera colores: `hcl.colors()`.
+```{r}
+ggplot(provs) +
+  geom_sf(aes(fill = prov.shortname.es),
+    alpha = 0.9
+  ) +
+  scale_fill_discrete(type = hcl.colors(12, "Cividis")) +
+  theme_minimal() +
+  labs(fill = "Provincias")
+```
+
+{{< pagebreak >}}
+
+# Ejemplo 1: cartograma de provincias y provincias de comunidades autónomas
+
+
+Se va a representar la información del "Saldo Migratorio Interno de Andalucía"
+```{r}
+load("mapaejemplo01.RData")
+df_a_mapa = data.frame(
+  Codigo = DemBas_extrae_codigo_provincia(provs_filas),
+  Valor = SMInternoAnd
+)
+df_a_mapa
+```
+
+
+<!-- # antes:  -->
+<!-- # func_mapademografia_prov(df_a_mapa, -->
+<!-- #       Titulo = "Saldo Migratorio Interno (Andalucía 2010 a 2017)") -->
+
+
+
+En primer lugar obtenemos los datos necesarios con ayuda de tidyverse:
+
+```{r}
+#| message: false
+library(mapSpain)
+#library(ggplot2)
+library(tidyverse)
+
+provs = esp_get_prov(df_a_mapa$Codigo) |> # nombres provincias o codes
+  left_join(df_a_mapa, by = c("cpro" = "Codigo"))
+colnames(provs)
+```
+
+{{< pagebreak >}}
+
+El cartograma se obtendría con el siguiente código:
+```{r}
+ggplot(provs) +
+  #geom_sf(aes(fill = prov.shortname.es),
+  geom_sf(aes(fill = Valor),
+    alpha = 0.9
+  ) +
+  #scale_fill_discrete(type = hcl.colors(12, "Cividis")) +
+  scale_fill_continuous(type = "viridis", direction = -1) +  # <1>
+  # otros valores para "type": "gradient"
+  #theme_minimal() +
+  theme_void() +
+  labs(fill = "Provincias",
+       title = "Saldo Migratorio Interno (Andalucía 2010 a 2017)")
+  #theme_void() +
+  #theme(legend.position = c(0.1, 0.6))
+```
+1. "`direction=-1`": Si es "1", valor por defecto, los colores son ordenados asociando valores pequeños al color más oscuro y los valores mayores al más claro. Si es "-1", el orden de los colores es el inverso (es el que se ha seleccionado en este ejemplo), a mayor valor el color es más oscuro.
+
+::: {.callout-note}
+En este código se ha empleado por primera vez la miniherramienta del paquete "dplyr": `left_join()`, que nos permite combinar dos tablas relacionadas. 
+
+En este ejemplo, las dos tablas:
+
+- `esp_get_prov_siane(df_a_mapa$Codigo)`
+- `df_a_mapa`
+
+relacionadas por los campos: "cpro" en la primera tabla y "Codigo" en la segunda tabla.
+
+:::
+
+
+
+# Ejemplo 2: cartograma con todas las provincias de España
+
+Obtenemos los datos necesarios:
+```{r}
+dfej02b <- DemBas_read_px2("1489.px")
+head(dfej02b)
+tp4 = dfej02b %>% 
+  dplyr::filter(Periodo=="2017", 
+                Provincias!="Total Nacional")
+  
+df_a_mapa2 = data.frame(
+  Codigo = DemBas_extrae_codigo_provincia(tp4$Provincias),
+  Valor = tp4$value
+)
+head(df_a_mapa2)
+```
+
+Volvemos a combinar los datos con la información de los mapas que vamos a representar:
+```{r}
+provs = esp_get_prov(df_a_mapa2$Codigo) |> # nombres provincias o codes
+  left_join(df_a_mapa2, by = c("cpro" = "Codigo"))
+tmp = as.data.frame(provs[,c("prov.shortname.es","cpro","Valor")])
+head(tmp[,1:3],10)
+```
+
+{{< pagebreak >}}
+
+El cartograma de todas las provincias de España se obtiene con el siguiente código:
+```{r}
+ggplot(provs) +
+  geom_sf(aes(fill = Valor),
+    alpha = 0.9
+  ) +
+  scale_fill_continuous(type = "viridis", direction = -1) +  # "gradient"
+  #theme_minimal() +
+  theme_void() +
+  labs(fill = "Provincias",
+       title = "Índice de Envejecimiento provincial (España en 2017)")
+```
+
+
+
+
+# Ejemplo 3: comunidades autónomas en España
+
+
+Importamos y preparamos los datos que vamos a necesitar.
+```{r}
+dfej02c <- DemBas_read_px2("1452.px")
+head(dfej02c)
+```
+
+Se usa el sistema tidyverse:
+```{r}
+tp5 = dfej02c %>% 
+  dplyr::filter(Periodo=="2017", 
+                Comunidades.y.Ciudades.Autónomas!="Total Nacional")
+  
+df_a_mapa3 = data.frame(
+  Codigo = DemBas_extrae_codigo_ccaa(tp5$Comunidades.y.Ciudades.Autónomas,
+                                   ConvierteCodSIANE=FALSE),
+  Valor = tp5$value
+)
+head(df_a_mapa3)
+```
+
+{{< pagebreak >}}
+
+
+Para construir un mapa sobre comunidades autónomas se ha seguido el ejemplo de la [documentación de mapaSapin](https://ropenspain.github.io/mapSpain/articles/x02_mapasesp.html):
+
+```{r}
+ccaa <- esp_get_ccaa(ccaa = c(
+  "Catalunya",
+  "Comunidad Valenciana",
+  "Aragón",
+  "Baleares"
+))  # se puede seleccionar un subconjunto de comunidades a representar
+
+ccaa <- ccaa %>% mutate(
+  ccaa_cat = esp_dict_translate(ccaa$ine.ccaa.name, "ca")
+)
+
+ggplot(ccaa) +
+  geom_sf(aes(fill = ccaa_cat)) +
+  labs(fill = "Comunitats autònomes") +
+  theme_void() +
+  scale_fill_discrete(type = hcl.colors(4, "Plasma"))
+```
+
+{{< pagebreak >}}
+
+Ahora se representará el índice de envejecimiento para cada comunidad autónoma en un cartograma:
+
+
+```{r}
+ccaa <- esp_get_ccaa(ccaa = df_a_mapa3$Codigo) |> 
+  left_join(df_a_mapa3, by = c("codauto" = "Codigo"))
+tmp = as.data.frame(ccaa[,c("ccaa.shortname.es","codauto","Valor")])
+head(tmp[,1:3],15)
+```
+
+{{< pagebreak >}}
+
+El cartograma se construye con el siguiente código:
+```{r}
+ggplot(ccaa) +
+  geom_sf(aes(fill = Valor),alpha = 0.9,color = NA) +
+  labs(fill = "Índice envejecimiento") +
+  #theme_minimal() +
+  theme_void() +
+  labs(title = 
+         "Índice de Envejecimiento (Comunidades Autónomas, España  2017)") +
+  #scale_fill_continuous(type = "viridis", direction = -1)  # "gradient"
+  scale_fill_gradientn(   # <1>
+    colors = rev(hcl.colors(100, "Inferno")), # rev() para invertir la escala
+    n.breaks = 10, #10,
+    labels = scales::label_comma(),
+    guide = guide_legend()
+  )
+```
+
+1. `scale_fill_gradientn()`. Ha permitido hacer una agrupación de colores en 10 grupos (`n.breaks = 10`), y para conseguir cambiar la dirección de los colores (valores pequeños  son más claros y valores mayores son más oscuros) se ha usado la función `rev()` para invertir la presentación de los colores.
+
+
+```{r}
+colores = c("#FFFE9E", "#FEF997", "#FDF491", "#FCF08A", "#FBEC84", 
+            "#FBE77E", "#FAE378", "#FADF72", "#F9DB6C", "#F9D766", "#F9D360")
+ # "#F9CE5A" "#F8CA54" "#F8C64F" "#F8C249" "#F8BE44" "#F8BA3F" "#F8B63A" 
+ # "#F7B135" "#F7AD31" "#F7A92C" "#F7A529"
+```
+
+
+ <!-- # "#F7A026" "#F69C24" "#F69822" "#F69322" "#F58F22" "#F58A24" "#F58625"  -->
+ <!-- # "#F48128" "#F47C2B" "#F4782E" "#F37332" -->
+ <!-- # "#F36E35" "#F26839" "#F1643E" "#EE6045" "#EB5C4B" "#E95951" "#E65555"  -->
+ <!-- # "#E35159" "#E04E5D" "#DD4A60" "#DA4763" -->
+ <!-- # "#D74366" "#D44068" "#D13D6A" "#CD396C" "#CA366E" "#C73370" "#C33071"  -->
+ <!-- # "#C02D72" "#BC2A73" "#B82874" "#B52574" -->
+ <!-- # "#B12275" "#AD2075" "#A91D75" "#A51B75" "#A11975" "#9D1775" "#991674"  -->
+ <!-- # "#951474" "#911373" "#8D1272" "#891171" -->
+ <!-- # "#851170" "#80106F" "#7C106E" "#78106C" "#73106B" "#6F1069" "#6B1067"  -->
+ <!-- # "#661065" "#621163" "#5E1161" "#59115F" -->
+ <!-- # "#55125D" "#51125A" "#4C1258" "#481356" "#441353" "#401350" "#3C134D"  -->
+ <!-- # "#37134B" "#331348" "#2F1345" "#2B1242" -->
+ <!-- # "#27123E" "#24123B" "#201138" "#1C1135" "#191031" "#150F2D" "#120E29"  -->
+ <!-- # "#0E0D24" "#0B0B1F" "#080918" "#05060F" -->
+ <!-- # "#040404") -->
+
+
+{{< pagebreak >}}
+
+# Ejemplo 4: cartograma de municipios de provincias
+
+Cartograma de la población de los municipios de Segovia en 2019 según el INE:
+```{r}
+munic <- esp_get_munic(region = "Segovia") %>%  
+  # Datos de ejemplo: Población INE
+  left_join(mapSpain::pobmun19, by = c("cpro", "cmun"))
+tmp = as.data.frame(munic[,c("name.x","cpro","pob19")])
+head(tmp[,1:3],10)
+```
+{{< pagebreak >}}
+
+El cartograma se construye con el siguiente código:
+```{r}
+ggplot(munic) +
+  geom_sf(aes(fill = pob19), alpha = 0.9, color = NA) +
+  scale_fill_gradientn(
+    colors = rev(hcl.colors(100, "viridis")),  # rev() para invertir la escala
+    # otras plantillas de colores: "Inferno", "viridis", ...
+    n.breaks = 10,
+    labels = scales::label_comma(),
+    guide = guide_legend()
+  ) +
+  labs(
+    fill = "Habitantes",
+    title = "Población en Segovia",
+    subtitle = "Datos INE (2019)"
+  ) +
+  theme_void() +
+  theme(
+    plot.background = element_rect("grey80"),
+    text = element_text(face = "bold"),
+    plot.title = element_text(hjust = .5),
+    plot.subtitle = element_text(hjust = .5)
+  )
+```
+
+
+
+# Enlaces a las fuentes demográficas utilizadas
+
+
+- [INEBASE-Demografía y Población-Fenómenos demográficos](http://www.ine.es/dyngs/INEbase/es/categoria.htm?c=Estadistica_P&cid=1254735573002){target="_blank"}
+
+- [Movimiento Natural de Población: Nacimientos](http://www.ine.es/dyngs/INEbase/es/operacion.htm?c=Estadistica_C&cid=1254736177007&menu=resultados&secc=1254736195442&idp=1254735573002){target="_blank"}
+
+    - Ver enlace: [Paso final MNP Nacimientos](http://www.ine.es/jaxiT3/Tabla.htm?t=6506&L=0){target="_blank"}

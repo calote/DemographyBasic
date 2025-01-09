@@ -1,0 +1,63 @@
+---
+title: "Práctica 2: Parte 2 (Importar datos: px)"
+lang: es
+toc: true
+toc-depth: 4
+number-sections: true
+df-print: kable
+format:
+  html:
+    code-tools: true
+    #code-fold: true
+    code-summary: "Muestre el código"
+  pdf: default
+execute: 
+  echo: true
+  warning: false
+---
+
+
+\bigskip
+
+```{r}
+#library(DemographyBasic)
+suppressWarnings(suppressMessages(library(DemographyBasic)))
+```
+
+
+# Importar datos desde ficheros px
+
+El paquete R que nos va a facilitar la lectura de los ficheros con formato "px" es: "pxR". Se debe instalar como cualquier otro paquete.
+
+:::{.callout-note}
+El paquete "DemographyBasic" carga la librería "pxR" en el siguiente orden:
+
+```{r}
+#| eval: false
+library(pxR) #pxR carga el paquete: plyr, entra en conflictos con tidyverse
+library(tidyverse) #para solucionarlo carga tidyverse después
+```
+:::
+
+Pero se ha creado la función `DemBas_read_px2()` de la librería "DemographyBasic", que mejora el proceso de importar datos de ficheros con extensión px:
+
+```r
+DemBas_read_px2(nombreficheropx)
+```
+
+**Nota importante:** 
+
+- `DemBas_read_px2()` devuelve un objeto de tipo "data.frame" y además convierte todas las variables de tipo "factor" a tipo "character". 
+
+
+## Ejemplo inicial
+
+
+```{r}
+# download.file(
+#   "https://www.ine.es/jaxiT3/files/t/es/px/1452.px?nocab=1",
+#   "1452.px")
+datos = DemBas_read_px2("1452.px")
+head(datos,20)
+```
+

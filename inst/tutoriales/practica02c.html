@@ -1,0 +1,3651 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="es" xml:lang="es"><head>
+
+<meta charset="utf-8">
+<meta name="generator" content="quarto-1.6.32">
+
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+
+
+<title>Práctica 2: Parte 3 (Presentar tablas)</title>
+<style>
+code{white-space: pre-wrap;}
+span.smallcaps{font-variant: small-caps;}
+div.columns{display: flex; gap: min(4vw, 1.5em);}
+div.column{flex: auto; overflow-x: auto;}
+div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+ul.task-list{list-style: none;}
+ul.task-list li input[type="checkbox"] {
+  width: 0.8em;
+  margin: 0 0.8em 0.2em -1em; /* quarto-specific, see https://github.com/quarto-dev/quarto-cli/issues/4556 */ 
+  vertical-align: middle;
+}
+/* CSS for syntax highlighting */
+pre > code.sourceCode { white-space: pre; position: relative; }
+pre > code.sourceCode > span { line-height: 1.25; }
+pre > code.sourceCode > span:empty { height: 1.2em; }
+.sourceCode { overflow: visible; }
+code.sourceCode > span { color: inherit; text-decoration: inherit; }
+div.sourceCode { margin: 1em 0; }
+pre.sourceCode { margin: 0; }
+@media screen {
+div.sourceCode { overflow: auto; }
+}
+@media print {
+pre > code.sourceCode { white-space: pre-wrap; }
+pre > code.sourceCode > span { display: inline-block; text-indent: -5em; padding-left: 5em; }
+}
+pre.numberSource code
+  { counter-reset: source-line 0; }
+pre.numberSource code > span
+  { position: relative; left: -4em; counter-increment: source-line; }
+pre.numberSource code > span > a:first-child::before
+  { content: counter(source-line);
+    position: relative; left: -1em; text-align: right; vertical-align: baseline;
+    border: none; display: inline-block;
+    -webkit-touch-callout: none; -webkit-user-select: none;
+    -khtml-user-select: none; -moz-user-select: none;
+    -ms-user-select: none; user-select: none;
+    padding: 0 4px; width: 4em;
+  }
+pre.numberSource { margin-left: 3em;  padding-left: 4px; }
+div.sourceCode
+  {   }
+@media screen {
+pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
+}
+</style>
+
+
+<script src="practica02c_files/libs/clipboard/clipboard.min.js"></script>
+<script src="practica02c_files/libs/quarto-html/quarto.js"></script>
+<script src="practica02c_files/libs/quarto-html/popper.min.js"></script>
+<script src="practica02c_files/libs/quarto-html/tippy.umd.min.js"></script>
+<script src="practica02c_files/libs/quarto-html/anchor.min.js"></script>
+<link href="practica02c_files/libs/quarto-html/tippy.css" rel="stylesheet">
+<link href="practica02c_files/libs/quarto-html/quarto-syntax-highlighting-2486e1f0a3ee9ee1fc393803a1361cdb.css" rel="stylesheet" id="quarto-text-highlighting-styles">
+<script src="practica02c_files/libs/bootstrap/bootstrap.min.js"></script>
+<link href="practica02c_files/libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
+<link href="practica02c_files/libs/bootstrap/bootstrap-677b520d69fcc55ab41b4b425631e74d.min.css" rel="stylesheet" append-hash="true" id="quarto-bootstrap" data-mode="light">
+<script src="practica02c_files/libs/kePrint-0.0.1/kePrint.js"></script>
+<link href="practica02c_files/libs/lightable-0.0.1/lightable.css" rel="stylesheet">
+
+
+</head>
+
+<body>
+
+<div id="quarto-content" class="page-columns page-rows-contents page-layout-article">
+<div id="quarto-margin-sidebar" class="sidebar margin-sidebar">
+  <nav id="TOC" role="doc-toc" class="toc-active">
+    <h2 id="toc-title">Tabla de contenidos</h2>
+   
+  <ul>
+  <li><a href="#presentación-de-información-en-forma-de-tabla-con-kable-del-paquete-knitr" id="toc-presentación-de-información-en-forma-de-tabla-con-kable-del-paquete-knitr" class="nav-link active" data-scroll-target="#presentación-de-información-en-forma-de-tabla-con-kable-del-paquete-knitr"><span class="header-section-number">1</span> Presentación de información en forma de tabla con “kable” del paquete “knitr”</a></li>
+  <li><a href="#tablas-con-el-paquete-kableextra" id="toc-tablas-con-el-paquete-kableextra" class="nav-link" data-scroll-target="#tablas-con-el-paquete-kableextra"><span class="header-section-number">2</span> Tablas con el paquete kableExtra</a>
+  <ul>
+  <li><a href="#tabla-apaisada" id="toc-tabla-apaisada" class="nav-link" data-scroll-target="#tabla-apaisada"><span class="header-section-number">2.1</span> Tabla apaisada</a></li>
+  </ul></li>
+  <li><a href="#crear-funciones-r-para-facilitar-la-tarea-de-presentar-tablas" id="toc-crear-funciones-r-para-facilitar-la-tarea-de-presentar-tablas" class="nav-link" data-scroll-target="#crear-funciones-r-para-facilitar-la-tarea-de-presentar-tablas"><span class="header-section-number">3</span> Crear funciones R para facilitar la tarea de presentar tablas</a>
+  <ul>
+  <li><a href="#función-mejorada-para-html-y-latex-simultáneamente" id="toc-función-mejorada-para-html-y-latex-simultáneamente" class="nav-link" data-scroll-target="#función-mejorada-para-html-y-latex-simultáneamente"><span class="header-section-number">3.1</span> Función Mejorada para html y latex simultáneamente</a></li>
+  </ul></li>
+  </ul>
+<div class="quarto-alternate-formats"><h2>Otros formatos</h2><ul><li><a href="practica02c.pdf"><i class="bi bi-file-pdf"></i>PDF</a></li></ul></div></nav>
+</div>
+<main class="content" id="quarto-document-content">
+
+<header id="title-block-header" class="quarto-title-block default">
+<div class="quarto-title">
+<div class="quarto-title-block"><div><h1 class="title">Práctica 2: Parte 3 (Presentar tablas)</h1><button type="button" class="btn code-tools-button" id="quarto-code-tools-source"><i class="bi"></i> Código</button></div></div>
+</div>
+
+
+
+<div class="quarto-title-meta">
+
+    
+  
+    
+  </div>
+  
+
+
+</header>
+
+
+<section id="presentación-de-información-en-forma-de-tabla-con-kable-del-paquete-knitr" class="level1" data-number="1">
+<h1 data-number="1"><span class="header-section-number">1</span> Presentación de información en forma de tabla con “kable” del paquete “knitr”</h1>
+<p>Importamos el fichero csv: “datosPractica01.csv” con <code>read.table()</code>:</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb1"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a>datos.csv <span class="ot">=</span> <span class="fu">read.table</span>(<span class="at">file =</span> <span class="st">"datosPractica01.csv"</span>, </span>
+<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a>                       <span class="at">header =</span> <span class="cn">TRUE</span>, <span class="at">sep =</span> <span class="st">","</span>)</span></code><button title="Copiar al portapapeles" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<div class="callout callout-style-default callout-note callout-titled">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+Nota
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p>En la cabecera yaml de este documento se ha añadido la opción: <code>df-print: kable</code>, que le indica a Quarto que cada vez que se le pida en el código R de este documento que se muestre un “data.frame” o un “tibble”, se use: <code>knitr::kable()</code> con las opciones <code>booktabs=TRUE, longtable = TRUE</code> seleccionadas.</p>
+</div>
+</div>
+<p>Si se escribe el nombre de un data.frame (o tibble) en el código R se mostrarán todas sus filas y columnas. En este caso, Quarto las presenta en un formato amigable con <code>knitr::kable()</code>. En la salida pdf, eso significa que construye una tabla multipágina, repitiendo en cada página la fila cabecera. En html, la presentación multipágina no tiene el mismo sentido que un pdf.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb2"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a>datos.csv</span></code><button title="Copiar al portapapeles" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<div class="kable-table">
+<table class="caption-top table table-sm table-striped small">
+<colgroup>
+<col style="width: 3%">
+<col style="width: 31%">
+<col style="width: 35%">
+<col style="width: 9%">
+<col style="width: 9%">
+<col style="width: 9%">
+</colgroup>
+<thead>
+<tr class="header">
+<th style="text-align: right;">X</th>
+<th style="text-align: left;">Provincia</th>
+<th style="text-align: left;">CCAA</th>
+<th style="text-align: right;">TOTAL</th>
+<th style="text-align: right;">Varon</th>
+<th style="text-align: right;">Mujer</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td style="text-align: right;">1</td>
+<td style="text-align: left;">01-Álava</td>
+<td style="text-align: left;">País Vasco</td>
+<td style="text-align: right;">286387</td>
+<td style="text-align: right;">142036</td>
+<td style="text-align: right;">144351</td>
+</tr>
+<tr class="even">
+<td style="text-align: right;">2</td>
+<td style="text-align: left;">02-Albacete</td>
+<td style="text-align: left;">Castilla-La Mancha</td>
+<td style="text-align: right;">364835</td>
+<td style="text-align: right;">181461</td>
+<td style="text-align: right;">183374</td>
+</tr>
+<tr class="odd">
+<td style="text-align: right;">3</td>
+<td style="text-align: left;">03-Alicante/Alacant</td>
+<td style="text-align: left;">Comunidad Valenciana</td>
+<td style="text-align: right;">1461925</td>
+<td style="text-align: right;">722162</td>
+<td style="text-align: right;">739763</td>
+</tr>
+<tr class="even">
+<td style="text-align: right;">4</td>
+<td style="text-align: left;">04-Almería</td>
+<td style="text-align: left;">Andalucía</td>
+<td style="text-align: right;">536731</td>
+<td style="text-align: right;">272023</td>
+<td style="text-align: right;">264708</td>
+</tr>
+<tr class="odd">
+<td style="text-align: right;">5</td>
+<td style="text-align: left;">33-Asturias</td>
+<td style="text-align: left;">Asturias (Principado de)</td>
+<td style="text-align: right;">1062998</td>
+<td style="text-align: right;">508995</td>
+<td style="text-align: right;">554003</td>
+</tr>
+<tr class="even">
+<td style="text-align: right;">6</td>
+<td style="text-align: left;">05-Ávila</td>
+<td style="text-align: left;">Castilla y León</td>
+<td style="text-align: right;">163442</td>
+<td style="text-align: right;">81850</td>
+<td style="text-align: right;">81592</td>
+</tr>
+<tr class="odd">
+<td style="text-align: right;">7</td>
+<td style="text-align: left;">06-Badajoz</td>
+<td style="text-align: left;">Extremadura</td>
+<td style="text-align: right;">654882</td>
+<td style="text-align: right;">323541</td>
+<td style="text-align: right;">331341</td>
+</tr>
+<tr class="even">
+<td style="text-align: right;">8</td>
+<td style="text-align: left;">07-Balears (Illes)</td>
+<td style="text-align: left;">Balears (Illes)</td>
+<td style="text-align: right;">841669</td>
+<td style="text-align: right;">417314</td>
+<td style="text-align: right;">424355</td>
+</tr>
+<tr class="odd">
+<td style="text-align: right;">9</td>
+<td style="text-align: left;">08-Barcelona</td>
+<td style="text-align: left;">Cataluña</td>
+<td style="text-align: right;">4805927</td>
+<td style="text-align: right;">2341592</td>
+<td style="text-align: right;">2464335</td>
+</tr>
+<tr class="even">
+<td style="text-align: right;">10</td>
+<td style="text-align: left;">09-Burgos</td>
+<td style="text-align: left;">Castilla y León</td>
+<td style="text-align: right;">348934</td>
+<td style="text-align: right;">174576</td>
+<td style="text-align: right;">174358</td>
+</tr>
+<tr class="odd">
+<td style="text-align: right;">11</td>
+<td style="text-align: left;">10-Cáceres</td>
+<td style="text-align: left;">Extremadura</td>
+<td style="text-align: right;">403621</td>
+<td style="text-align: right;">200820</td>
+<td style="text-align: right;">202801</td>
+</tr>
+<tr class="even">
+<td style="text-align: right;">12</td>
+<td style="text-align: left;">11-Cádiz</td>
+<td style="text-align: left;">Andalucía</td>
+<td style="text-align: right;">1116491</td>
+<td style="text-align: right;">552463</td>
+<td style="text-align: right;">564028</td>
+</tr>
+<tr class="odd">
+<td style="text-align: right;">13</td>
+<td style="text-align: left;">39-Cantabria</td>
+<td style="text-align: left;">Cantabria</td>
+<td style="text-align: right;">535131</td>
+<td style="text-align: right;">260586</td>
+<td style="text-align: right;">274545</td>
+</tr>
+<tr class="even">
+<td style="text-align: right;">14</td>
+<td style="text-align: left;">12-Castellón/Castelló</td>
+<td style="text-align: left;">Comunidad Valenciana</td>
+<td style="text-align: right;">484566</td>
+<td style="text-align: right;">240673</td>
+<td style="text-align: right;">243893</td>
+</tr>
+<tr class="odd">
+<td style="text-align: right;">15</td>
+<td style="text-align: left;">51-Ceuta</td>
+<td style="text-align: left;">Ceuta</td>
+<td style="text-align: right;">71505</td>
+<td style="text-align: right;">35949</td>
+<td style="text-align: right;">35556</td>
+</tr>
+<tr class="even">
+<td style="text-align: right;">16</td>
+<td style="text-align: left;">13-Ciudad Real</td>
+<td style="text-align: left;">Castilla-La Mancha</td>
+<td style="text-align: right;">478957</td>
+<td style="text-align: right;">235189</td>
+<td style="text-align: right;">243768</td>
+</tr>
+<tr class="odd">
+<td style="text-align: right;">17</td>
+<td style="text-align: left;">14-Córdoba</td>
+<td style="text-align: left;">Andalucía</td>
+<td style="text-align: right;">761657</td>
+<td style="text-align: right;">372464</td>
+<td style="text-align: right;">389193</td>
+</tr>
+<tr class="even">
+<td style="text-align: right;">18</td>
+<td style="text-align: left;">15-Coruña (A)</td>
+<td style="text-align: left;">Galicia</td>
+<td style="text-align: right;">1096027</td>
+<td style="text-align: right;">525388</td>
+<td style="text-align: right;">570639</td>
+</tr>
+<tr class="odd">
+<td style="text-align: right;">19</td>
+<td style="text-align: left;">16-Cuenca</td>
+<td style="text-align: left;">Castilla-La Mancha</td>
+<td style="text-align: right;">200346</td>
+<td style="text-align: right;">99959</td>
+<td style="text-align: right;">100387</td>
+</tr>
+<tr class="even">
+<td style="text-align: right;">20</td>
+<td style="text-align: left;">17-Girona</td>
+<td style="text-align: left;">Cataluña</td>
+<td style="text-align: right;">565304</td>
+<td style="text-align: right;">280830</td>
+<td style="text-align: right;">284474</td>
+</tr>
+<tr class="odd">
+<td style="text-align: right;">21</td>
+<td style="text-align: left;">18-Granada</td>
+<td style="text-align: left;">Andalucía</td>
+<td style="text-align: right;">821660</td>
+<td style="text-align: right;">401638</td>
+<td style="text-align: right;">420022</td>
+</tr>
+<tr class="even">
+<td style="text-align: right;">22</td>
+<td style="text-align: left;">19-Guadalajara</td>
+<td style="text-align: left;">Castilla-La Mancha</td>
+<td style="text-align: right;">174999</td>
+<td style="text-align: right;">88535</td>
+<td style="text-align: right;">86464</td>
+</tr>
+<tr class="odd">
+<td style="text-align: right;">23</td>
+<td style="text-align: left;">20-Guipúzcoa</td>
+<td style="text-align: left;">País Vasco</td>
+<td style="text-align: right;">673563</td>
+<td style="text-align: right;">330288</td>
+<td style="text-align: right;">343275</td>
+</tr>
+<tr class="even">
+<td style="text-align: right;">24</td>
+<td style="text-align: left;">21-Huelva</td>
+<td style="text-align: left;">Andalucía</td>
+<td style="text-align: right;">462579</td>
+<td style="text-align: right;">229013</td>
+<td style="text-align: right;">233566</td>
+</tr>
+<tr class="odd">
+<td style="text-align: right;">25</td>
+<td style="text-align: left;">22-Huesca</td>
+<td style="text-align: left;">Aragón</td>
+<td style="text-align: right;">206502</td>
+<td style="text-align: right;">104089</td>
+<td style="text-align: right;">102413</td>
+</tr>
+<tr class="even">
+<td style="text-align: right;">26</td>
+<td style="text-align: left;">23-Jaén</td>
+<td style="text-align: left;">Andalucía</td>
+<td style="text-align: right;">643820</td>
+<td style="text-align: right;">317343</td>
+<td style="text-align: right;">326477</td>
+</tr>
+<tr class="odd">
+<td style="text-align: right;">27</td>
+<td style="text-align: left;">24-León</td>
+<td style="text-align: left;">Castilla y León</td>
+<td style="text-align: right;">488751</td>
+<td style="text-align: right;">238139</td>
+<td style="text-align: right;">250612</td>
+</tr>
+<tr class="even">
+<td style="text-align: right;">28</td>
+<td style="text-align: left;">25-Lleida</td>
+<td style="text-align: left;">Cataluña</td>
+<td style="text-align: right;">362206</td>
+<td style="text-align: right;">180425</td>
+<td style="text-align: right;">181781</td>
+</tr>
+<tr class="odd">
+<td style="text-align: right;">29</td>
+<td style="text-align: left;">27-Lugo</td>
+<td style="text-align: left;">Galicia</td>
+<td style="text-align: right;">357648</td>
+<td style="text-align: right;">173339</td>
+<td style="text-align: right;">184309</td>
+</tr>
+<tr class="even">
+<td style="text-align: right;">30</td>
+<td style="text-align: left;">28-Madrid</td>
+<td style="text-align: left;">Madrid (Comunidad de)</td>
+<td style="text-align: right;">5423384</td>
+<td style="text-align: right;">2609746</td>
+<td style="text-align: right;">2813638</td>
+</tr>
+<tr class="odd">
+<td style="text-align: right;">31</td>
+<td style="text-align: left;">29-Málaga</td>
+<td style="text-align: left;">Andalucía</td>
+<td style="text-align: right;">1287017</td>
+<td style="text-align: right;">630902</td>
+<td style="text-align: right;">656115</td>
+</tr>
+<tr class="even">
+<td style="text-align: right;">32</td>
+<td style="text-align: left;">52-Melilla</td>
+<td style="text-align: left;">Melilla</td>
+<td style="text-align: right;">66411</td>
+<td style="text-align: right;">33134</td>
+<td style="text-align: right;">33277</td>
+</tr>
+<tr class="odd">
+<td style="text-align: right;">33</td>
+<td style="text-align: left;">30-Murcia</td>
+<td style="text-align: left;">Murcia (Región de)</td>
+<td style="text-align: right;">1197646</td>
+<td style="text-align: right;">597265</td>
+<td style="text-align: right;">600381</td>
+</tr>
+<tr class="even">
+<td style="text-align: right;">34</td>
+<td style="text-align: left;">31-Navarra</td>
+<td style="text-align: left;">Navarra (Comunidad Foral de)</td>
+<td style="text-align: right;">555829</td>
+<td style="text-align: right;">276629</td>
+<td style="text-align: right;">279200</td>
+</tr>
+<tr class="odd">
+<td style="text-align: right;">35</td>
+<td style="text-align: left;">32-Ourense</td>
+<td style="text-align: left;">Galicia</td>
+<td style="text-align: right;">338446</td>
+<td style="text-align: right;">161968</td>
+<td style="text-align: right;">176478</td>
+</tr>
+<tr class="even">
+<td style="text-align: right;">36</td>
+<td style="text-align: left;">34-Palencia</td>
+<td style="text-align: left;">Castilla y León</td>
+<td style="text-align: right;">174143</td>
+<td style="text-align: right;">85955</td>
+<td style="text-align: right;">88188</td>
+</tr>
+<tr class="odd">
+<td style="text-align: right;">37</td>
+<td style="text-align: left;">35-Palmas (Las)</td>
+<td style="text-align: left;">Canarias</td>
+<td style="text-align: right;">887676</td>
+<td style="text-align: right;">444761</td>
+<td style="text-align: right;">442915</td>
+</tr>
+<tr class="even">
+<td style="text-align: right;">38</td>
+<td style="text-align: left;">36-Pontevedra</td>
+<td style="text-align: left;">Galicia</td>
+<td style="text-align: right;">903759</td>
+<td style="text-align: right;">433683</td>
+<td style="text-align: right;">470076</td>
+</tr>
+<tr class="odd">
+<td style="text-align: right;">39</td>
+<td style="text-align: left;">26-Rioja (La)</td>
+<td style="text-align: left;">Rioja (La)</td>
+<td style="text-align: right;">276702</td>
+<td style="text-align: right;">137827</td>
+<td style="text-align: right;">138875</td>
+</tr>
+<tr class="even">
+<td style="text-align: right;">40</td>
+<td style="text-align: left;">37-Salamanca</td>
+<td style="text-align: left;">Castilla y León</td>
+<td style="text-align: right;">345609</td>
+<td style="text-align: right;">167948</td>
+<td style="text-align: right;">177661</td>
+</tr>
+<tr class="odd">
+<td style="text-align: right;">41</td>
+<td style="text-align: left;">38-Santa Cruz de Tenerife</td>
+<td style="text-align: left;">Canarias</td>
+<td style="text-align: right;">806801</td>
+<td style="text-align: right;">398205</td>
+<td style="text-align: right;">408596</td>
+</tr>
+<tr class="even">
+<td style="text-align: right;">42</td>
+<td style="text-align: left;">40-Segovia</td>
+<td style="text-align: left;">Castilla y León</td>
+<td style="text-align: right;">147694</td>
+<td style="text-align: right;">73973</td>
+<td style="text-align: right;">73721</td>
+</tr>
+<tr class="odd">
+<td style="text-align: right;">43</td>
+<td style="text-align: left;">41-Sevilla</td>
+<td style="text-align: left;">Andalucía</td>
+<td style="text-align: right;">1727603</td>
+<td style="text-align: right;">846220</td>
+<td style="text-align: right;">881383</td>
+</tr>
+<tr class="even">
+<td style="text-align: right;">44</td>
+<td style="text-align: left;">42-Soria</td>
+<td style="text-align: left;">Castilla y León</td>
+<td style="text-align: right;">90717</td>
+<td style="text-align: right;">45443</td>
+<td style="text-align: right;">45274</td>
+</tr>
+<tr class="odd">
+<td style="text-align: right;">45</td>
+<td style="text-align: left;">43-Tarragona</td>
+<td style="text-align: left;">Cataluña</td>
+<td style="text-align: right;">609673</td>
+<td style="text-align: right;">303684</td>
+<td style="text-align: right;">305989</td>
+</tr>
+<tr class="even">
+<td style="text-align: right;">46</td>
+<td style="text-align: left;">44-Teruel</td>
+<td style="text-align: left;">Aragón</td>
+<td style="text-align: right;">135858</td>
+<td style="text-align: right;">68724</td>
+<td style="text-align: right;">67134</td>
+</tr>
+<tr class="odd">
+<td style="text-align: right;">47</td>
+<td style="text-align: left;">45-Toledo</td>
+<td style="text-align: left;">Castilla-La Mancha</td>
+<td style="text-align: right;">541379</td>
+<td style="text-align: right;">270406</td>
+<td style="text-align: right;">270973</td>
+</tr>
+<tr class="even">
+<td style="text-align: right;">48</td>
+<td style="text-align: left;">46-Valencia/València</td>
+<td style="text-align: left;">Comunidad Valenciana</td>
+<td style="text-align: right;">2216285</td>
+<td style="text-align: right;">1084149</td>
+<td style="text-align: right;">1132136</td>
+</tr>
+<tr class="odd">
+<td style="text-align: right;">49</td>
+<td style="text-align: left;">47-Valladolid</td>
+<td style="text-align: left;">Castilla y León</td>
+<td style="text-align: right;">498094</td>
+<td style="text-align: right;">243999</td>
+<td style="text-align: right;">254095</td>
+</tr>
+<tr class="even">
+<td style="text-align: right;">50</td>
+<td style="text-align: left;">48-Vizcaya</td>
+<td style="text-align: left;">País Vasco</td>
+<td style="text-align: right;">1122637</td>
+<td style="text-align: right;">545557</td>
+<td style="text-align: right;">577080</td>
+</tr>
+<tr class="odd">
+<td style="text-align: right;">51</td>
+<td style="text-align: left;">49-Zamora</td>
+<td style="text-align: left;">Castilla y León</td>
+<td style="text-align: right;">199090</td>
+<td style="text-align: right;">97991</td>
+<td style="text-align: right;">101099</td>
+</tr>
+<tr class="even">
+<td style="text-align: right;">52</td>
+<td style="text-align: left;">50-Zaragoza</td>
+<td style="text-align: left;">Aragón</td>
+<td style="text-align: right;">861855</td>
+<td style="text-align: right;">422033</td>
+<td style="text-align: right;">439822</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+</div>
+<p>En este caso, el anterior código es equivalente a las siguientes dos variantes:</p>
+<div class="sourceCode" id="cb3"><pre class="sourceCode markdown code-with-copy"><code class="sourceCode markdown"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a><span class="in">```{r}</span></span>
+<span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a><span class="in">library(knitr)</span></span>
+<span id="cb3-3"><a href="#cb3-3" aria-hidden="true" tabindex="-1"></a><span class="in">kable(datos.csv)</span></span>
+<span id="cb3-4"><a href="#cb3-4" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span></code><button title="Copiar al portapapeles" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode" id="cb4"><pre class="sourceCode markdown code-with-copy"><code class="sourceCode markdown"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a><span class="in">```{r}</span></span>
+<span id="cb4-2"><a href="#cb4-2" aria-hidden="true" tabindex="-1"></a><span class="in">knitr::kable(datos.csv)</span></span>
+<span id="cb4-3"><a href="#cb4-3" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span></code><button title="Copiar al portapapeles" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="callout callout-style-default callout-note callout-titled">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+Nota Importante
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p>Cuando el conjunto de datos (data.frame o tibble) o dataset es de más de 20 filas no es necesario presentar todas las filas en el documento, generalmente será suficiente mostrar las primeras 5 a 10 filas.</p>
+<p>Puede haber situaciones específicas en las que sí sea importante mostrar todas las filas y columnas del dataset.</p>
+</div>
+</div>
+<p>Una forma de mostrar las seis primeras filas (más la fila cabecera) sería con la función <code>head()</code>:</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb5"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a>knitr<span class="sc">::</span><span class="fu">kable</span>(<span class="fu">head</span>(datos.csv))</span></code><button title="Copiar al portapapeles" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<table class="caption-top table table-sm table-striped small">
+<colgroup>
+<col style="width: 4%">
+<col style="width: 28%">
+<col style="width: 35%">
+<col style="width: 11%">
+<col style="width: 10%">
+<col style="width: 10%">
+</colgroup>
+<thead>
+<tr class="header">
+<th style="text-align: right;">X</th>
+<th style="text-align: left;">Provincia</th>
+<th style="text-align: left;">CCAA</th>
+<th style="text-align: right;">TOTAL</th>
+<th style="text-align: right;">Varon</th>
+<th style="text-align: right;">Mujer</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td style="text-align: right;">1</td>
+<td style="text-align: left;">01-Álava</td>
+<td style="text-align: left;">País Vasco</td>
+<td style="text-align: right;">286387</td>
+<td style="text-align: right;">142036</td>
+<td style="text-align: right;">144351</td>
+</tr>
+<tr class="even">
+<td style="text-align: right;">2</td>
+<td style="text-align: left;">02-Albacete</td>
+<td style="text-align: left;">Castilla-La Mancha</td>
+<td style="text-align: right;">364835</td>
+<td style="text-align: right;">181461</td>
+<td style="text-align: right;">183374</td>
+</tr>
+<tr class="odd">
+<td style="text-align: right;">3</td>
+<td style="text-align: left;">03-Alicante/Alacant</td>
+<td style="text-align: left;">Comunidad Valenciana</td>
+<td style="text-align: right;">1461925</td>
+<td style="text-align: right;">722162</td>
+<td style="text-align: right;">739763</td>
+</tr>
+<tr class="even">
+<td style="text-align: right;">4</td>
+<td style="text-align: left;">04-Almería</td>
+<td style="text-align: left;">Andalucía</td>
+<td style="text-align: right;">536731</td>
+<td style="text-align: right;">272023</td>
+<td style="text-align: right;">264708</td>
+</tr>
+<tr class="odd">
+<td style="text-align: right;">5</td>
+<td style="text-align: left;">33-Asturias</td>
+<td style="text-align: left;">Asturias (Principado de)</td>
+<td style="text-align: right;">1062998</td>
+<td style="text-align: right;">508995</td>
+<td style="text-align: right;">554003</td>
+</tr>
+<tr class="even">
+<td style="text-align: right;">6</td>
+<td style="text-align: left;">05-Ávila</td>
+<td style="text-align: left;">Castilla y León</td>
+<td style="text-align: right;">163442</td>
+<td style="text-align: right;">81850</td>
+<td style="text-align: right;">81592</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+<div class="callout callout-style-default callout-note callout-titled">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+Nota Importante
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p>Generalmente, se aconseja que todas las tablas de información tengan una leyenda en la que se explique dicha información. Se puede hacer con la opción <code>caption</code> de la función <code>kable()</code>.</p>
+</div>
+</div>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb6"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(knitr)</span>
+<span id="cb6-2"><a href="#cb6-2" aria-hidden="true" tabindex="-1"></a><span class="fu">kable</span>(datos.csv[<span class="dv">1</span><span class="sc">:</span><span class="dv">10</span>,], <span class="at">caption =</span> <span class="st">"Datos de España"</span>)</span></code><button title="Copiar al portapapeles" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<table class="caption-top table table-sm table-striped small">
+<caption>Datos de España</caption>
+<colgroup>
+<col style="width: 4%">
+<col style="width: 27%">
+<col style="width: 34%">
+<col style="width: 11%">
+<col style="width: 11%">
+<col style="width: 11%">
+</colgroup>
+<thead>
+<tr class="header">
+<th style="text-align: right;">X</th>
+<th style="text-align: left;">Provincia</th>
+<th style="text-align: left;">CCAA</th>
+<th style="text-align: right;">TOTAL</th>
+<th style="text-align: right;">Varon</th>
+<th style="text-align: right;">Mujer</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td style="text-align: right;">1</td>
+<td style="text-align: left;">01-Álava</td>
+<td style="text-align: left;">País Vasco</td>
+<td style="text-align: right;">286387</td>
+<td style="text-align: right;">142036</td>
+<td style="text-align: right;">144351</td>
+</tr>
+<tr class="even">
+<td style="text-align: right;">2</td>
+<td style="text-align: left;">02-Albacete</td>
+<td style="text-align: left;">Castilla-La Mancha</td>
+<td style="text-align: right;">364835</td>
+<td style="text-align: right;">181461</td>
+<td style="text-align: right;">183374</td>
+</tr>
+<tr class="odd">
+<td style="text-align: right;">3</td>
+<td style="text-align: left;">03-Alicante/Alacant</td>
+<td style="text-align: left;">Comunidad Valenciana</td>
+<td style="text-align: right;">1461925</td>
+<td style="text-align: right;">722162</td>
+<td style="text-align: right;">739763</td>
+</tr>
+<tr class="even">
+<td style="text-align: right;">4</td>
+<td style="text-align: left;">04-Almería</td>
+<td style="text-align: left;">Andalucía</td>
+<td style="text-align: right;">536731</td>
+<td style="text-align: right;">272023</td>
+<td style="text-align: right;">264708</td>
+</tr>
+<tr class="odd">
+<td style="text-align: right;">5</td>
+<td style="text-align: left;">33-Asturias</td>
+<td style="text-align: left;">Asturias (Principado de)</td>
+<td style="text-align: right;">1062998</td>
+<td style="text-align: right;">508995</td>
+<td style="text-align: right;">554003</td>
+</tr>
+<tr class="even">
+<td style="text-align: right;">6</td>
+<td style="text-align: left;">05-Ávila</td>
+<td style="text-align: left;">Castilla y León</td>
+<td style="text-align: right;">163442</td>
+<td style="text-align: right;">81850</td>
+<td style="text-align: right;">81592</td>
+</tr>
+<tr class="odd">
+<td style="text-align: right;">7</td>
+<td style="text-align: left;">06-Badajoz</td>
+<td style="text-align: left;">Extremadura</td>
+<td style="text-align: right;">654882</td>
+<td style="text-align: right;">323541</td>
+<td style="text-align: right;">331341</td>
+</tr>
+<tr class="even">
+<td style="text-align: right;">8</td>
+<td style="text-align: left;">07-Balears (Illes)</td>
+<td style="text-align: left;">Balears (Illes)</td>
+<td style="text-align: right;">841669</td>
+<td style="text-align: right;">417314</td>
+<td style="text-align: right;">424355</td>
+</tr>
+<tr class="odd">
+<td style="text-align: right;">9</td>
+<td style="text-align: left;">08-Barcelona</td>
+<td style="text-align: left;">Cataluña</td>
+<td style="text-align: right;">4805927</td>
+<td style="text-align: right;">2341592</td>
+<td style="text-align: right;">2464335</td>
+</tr>
+<tr class="even">
+<td style="text-align: right;">10</td>
+<td style="text-align: left;">09-Burgos</td>
+<td style="text-align: left;">Castilla y León</td>
+<td style="text-align: right;">348934</td>
+<td style="text-align: right;">174576</td>
+<td style="text-align: right;">174358</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+<p>El formato de la salida siguiente es equivalente al del ejemplo anterior: <code>booktabs=TRUE</code> hace una presentación bonita de los datos, y <code>longtable = TRUE</code> activa el modo multipágina. Obsérvese también cómo se han seleccionado las filas que se muestran</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb7"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a><span class="fu">kable</span>(<span class="fu">rbind</span>(datos.csv[<span class="dv">1</span><span class="sc">:</span><span class="dv">5</span>,],datos.csv[<span class="dv">45</span><span class="sc">:</span><span class="dv">52</span>,]), <span class="co"># datos.csv[c(1:545:52),]</span></span>
+<span id="cb7-2"><a href="#cb7-2" aria-hidden="true" tabindex="-1"></a>      <span class="at">caption =</span> <span class="st">"Tabla"</span>, </span>
+<span id="cb7-3"><a href="#cb7-3" aria-hidden="true" tabindex="-1"></a>      <span class="at">booktabs=</span><span class="cn">TRUE</span>, <span class="at">longtable =</span> <span class="cn">TRUE</span>)</span></code><button title="Copiar al portapapeles" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<table class="caption-top table table-sm table-striped small">
+<caption>Tabla</caption>
+<colgroup>
+<col style="width: 3%">
+<col style="width: 3%">
+<col style="width: 27%">
+<col style="width: 32%">
+<col style="width: 10%">
+<col style="width: 10%">
+<col style="width: 10%">
+</colgroup>
+<thead>
+<tr class="header">
+<th style="text-align: left;"></th>
+<th style="text-align: right;">X</th>
+<th style="text-align: left;">Provincia</th>
+<th style="text-align: left;">CCAA</th>
+<th style="text-align: right;">TOTAL</th>
+<th style="text-align: right;">Varon</th>
+<th style="text-align: right;">Mujer</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td style="text-align: left;">1</td>
+<td style="text-align: right;">1</td>
+<td style="text-align: left;">01-Álava</td>
+<td style="text-align: left;">País Vasco</td>
+<td style="text-align: right;">286387</td>
+<td style="text-align: right;">142036</td>
+<td style="text-align: right;">144351</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">2</td>
+<td style="text-align: right;">2</td>
+<td style="text-align: left;">02-Albacete</td>
+<td style="text-align: left;">Castilla-La Mancha</td>
+<td style="text-align: right;">364835</td>
+<td style="text-align: right;">181461</td>
+<td style="text-align: right;">183374</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">3</td>
+<td style="text-align: right;">3</td>
+<td style="text-align: left;">03-Alicante/Alacant</td>
+<td style="text-align: left;">Comunidad Valenciana</td>
+<td style="text-align: right;">1461925</td>
+<td style="text-align: right;">722162</td>
+<td style="text-align: right;">739763</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">4</td>
+<td style="text-align: right;">4</td>
+<td style="text-align: left;">04-Almería</td>
+<td style="text-align: left;">Andalucía</td>
+<td style="text-align: right;">536731</td>
+<td style="text-align: right;">272023</td>
+<td style="text-align: right;">264708</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">5</td>
+<td style="text-align: right;">5</td>
+<td style="text-align: left;">33-Asturias</td>
+<td style="text-align: left;">Asturias (Principado de)</td>
+<td style="text-align: right;">1062998</td>
+<td style="text-align: right;">508995</td>
+<td style="text-align: right;">554003</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">45</td>
+<td style="text-align: right;">45</td>
+<td style="text-align: left;">43-Tarragona</td>
+<td style="text-align: left;">Cataluña</td>
+<td style="text-align: right;">609673</td>
+<td style="text-align: right;">303684</td>
+<td style="text-align: right;">305989</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">46</td>
+<td style="text-align: right;">46</td>
+<td style="text-align: left;">44-Teruel</td>
+<td style="text-align: left;">Aragón</td>
+<td style="text-align: right;">135858</td>
+<td style="text-align: right;">68724</td>
+<td style="text-align: right;">67134</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">47</td>
+<td style="text-align: right;">47</td>
+<td style="text-align: left;">45-Toledo</td>
+<td style="text-align: left;">Castilla-La Mancha</td>
+<td style="text-align: right;">541379</td>
+<td style="text-align: right;">270406</td>
+<td style="text-align: right;">270973</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">48</td>
+<td style="text-align: right;">48</td>
+<td style="text-align: left;">46-Valencia/València</td>
+<td style="text-align: left;">Comunidad Valenciana</td>
+<td style="text-align: right;">2216285</td>
+<td style="text-align: right;">1084149</td>
+<td style="text-align: right;">1132136</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">49</td>
+<td style="text-align: right;">49</td>
+<td style="text-align: left;">47-Valladolid</td>
+<td style="text-align: left;">Castilla y León</td>
+<td style="text-align: right;">498094</td>
+<td style="text-align: right;">243999</td>
+<td style="text-align: right;">254095</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">50</td>
+<td style="text-align: right;">50</td>
+<td style="text-align: left;">48-Vizcaya</td>
+<td style="text-align: left;">País Vasco</td>
+<td style="text-align: right;">1122637</td>
+<td style="text-align: right;">545557</td>
+<td style="text-align: right;">577080</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">51</td>
+<td style="text-align: right;">51</td>
+<td style="text-align: left;">49-Zamora</td>
+<td style="text-align: left;">Castilla y León</td>
+<td style="text-align: right;">199090</td>
+<td style="text-align: right;">97991</td>
+<td style="text-align: right;">101099</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">52</td>
+<td style="text-align: right;">52</td>
+<td style="text-align: left;">50-Zaragoza</td>
+<td style="text-align: left;">Aragón</td>
+<td style="text-align: right;">861855</td>
+<td style="text-align: right;">422033</td>
+<td style="text-align: right;">439822</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+</section>
+<section id="tablas-con-el-paquete-kableextra" class="level1" data-number="2">
+<h1 data-number="2"><span class="header-section-number">2</span> Tablas con el paquete kableExtra</h1>
+<p>Si se carga el paquete R kableExtra, no se comporta igual no poner en la función kable(): <code>booktabs=TRUE, longtable = TRUE</code>, que sí ponerlo (se ve más bonito incluyéndolos).</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb8"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(kableExtra)</span>
+<span id="cb8-2"><a href="#cb8-2" aria-hidden="true" tabindex="-1"></a><span class="fu">kable</span>(datos.csv[<span class="dv">1</span><span class="sc">:</span><span class="dv">5</span>,])</span></code><button title="Copiar al portapapeles" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<table class="caption-top table table-sm table-striped small">
+<colgroup>
+<col style="width: 4%">
+<col style="width: 28%">
+<col style="width: 35%">
+<col style="width: 11%">
+<col style="width: 10%">
+<col style="width: 10%">
+</colgroup>
+<thead>
+<tr class="header">
+<th style="text-align: right;">X</th>
+<th style="text-align: left;">Provincia</th>
+<th style="text-align: left;">CCAA</th>
+<th style="text-align: right;">TOTAL</th>
+<th style="text-align: right;">Varon</th>
+<th style="text-align: right;">Mujer</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td style="text-align: right;">1</td>
+<td style="text-align: left;">01-Álava</td>
+<td style="text-align: left;">País Vasco</td>
+<td style="text-align: right;">286387</td>
+<td style="text-align: right;">142036</td>
+<td style="text-align: right;">144351</td>
+</tr>
+<tr class="even">
+<td style="text-align: right;">2</td>
+<td style="text-align: left;">02-Albacete</td>
+<td style="text-align: left;">Castilla-La Mancha</td>
+<td style="text-align: right;">364835</td>
+<td style="text-align: right;">181461</td>
+<td style="text-align: right;">183374</td>
+</tr>
+<tr class="odd">
+<td style="text-align: right;">3</td>
+<td style="text-align: left;">03-Alicante/Alacant</td>
+<td style="text-align: left;">Comunidad Valenciana</td>
+<td style="text-align: right;">1461925</td>
+<td style="text-align: right;">722162</td>
+<td style="text-align: right;">739763</td>
+</tr>
+<tr class="even">
+<td style="text-align: right;">4</td>
+<td style="text-align: left;">04-Almería</td>
+<td style="text-align: left;">Andalucía</td>
+<td style="text-align: right;">536731</td>
+<td style="text-align: right;">272023</td>
+<td style="text-align: right;">264708</td>
+</tr>
+<tr class="odd">
+<td style="text-align: right;">5</td>
+<td style="text-align: left;">33-Asturias</td>
+<td style="text-align: left;">Asturias (Principado de)</td>
+<td style="text-align: right;">1062998</td>
+<td style="text-align: right;">508995</td>
+<td style="text-align: right;">554003</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb9"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb9-1"><a href="#cb9-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(kableExtra)</span>
+<span id="cb9-2"><a href="#cb9-2" aria-hidden="true" tabindex="-1"></a><span class="fu">kable</span>(datos.csv[<span class="dv">1</span><span class="sc">:</span><span class="dv">5</span>,],</span>
+<span id="cb9-3"><a href="#cb9-3" aria-hidden="true" tabindex="-1"></a>      <span class="at">booktabs=</span><span class="cn">TRUE</span>, <span class="at">longtable =</span> <span class="cn">TRUE</span>)</span></code><button title="Copiar al portapapeles" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<table class="caption-top table table-sm table-striped small">
+<colgroup>
+<col style="width: 4%">
+<col style="width: 28%">
+<col style="width: 35%">
+<col style="width: 11%">
+<col style="width: 10%">
+<col style="width: 10%">
+</colgroup>
+<thead>
+<tr class="header">
+<th style="text-align: right;">X</th>
+<th style="text-align: left;">Provincia</th>
+<th style="text-align: left;">CCAA</th>
+<th style="text-align: right;">TOTAL</th>
+<th style="text-align: right;">Varon</th>
+<th style="text-align: right;">Mujer</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td style="text-align: right;">1</td>
+<td style="text-align: left;">01-Álava</td>
+<td style="text-align: left;">País Vasco</td>
+<td style="text-align: right;">286387</td>
+<td style="text-align: right;">142036</td>
+<td style="text-align: right;">144351</td>
+</tr>
+<tr class="even">
+<td style="text-align: right;">2</td>
+<td style="text-align: left;">02-Albacete</td>
+<td style="text-align: left;">Castilla-La Mancha</td>
+<td style="text-align: right;">364835</td>
+<td style="text-align: right;">181461</td>
+<td style="text-align: right;">183374</td>
+</tr>
+<tr class="odd">
+<td style="text-align: right;">3</td>
+<td style="text-align: left;">03-Alicante/Alacant</td>
+<td style="text-align: left;">Comunidad Valenciana</td>
+<td style="text-align: right;">1461925</td>
+<td style="text-align: right;">722162</td>
+<td style="text-align: right;">739763</td>
+</tr>
+<tr class="even">
+<td style="text-align: right;">4</td>
+<td style="text-align: left;">04-Almería</td>
+<td style="text-align: left;">Andalucía</td>
+<td style="text-align: right;">536731</td>
+<td style="text-align: right;">272023</td>
+<td style="text-align: right;">264708</td>
+</tr>
+<tr class="odd">
+<td style="text-align: right;">5</td>
+<td style="text-align: left;">33-Asturias</td>
+<td style="text-align: left;">Asturias (Principado de)</td>
+<td style="text-align: right;">1062998</td>
+<td style="text-align: right;">508995</td>
+<td style="text-align: right;">554003</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+<p>El paquete “kableExtra” (ver: <a href="http://haozhu233.github.io/kableExtra/" target="_blank">Documentación de kableExtra</a>) añade nuevas funcionalidades a la función “<code>knitr::kable()</code>” con funciones adicionales como:</p>
+<ul>
+<li><code>kable_styling()</code></li>
+<li><code>column_spec()</code>, etc</li>
+</ul>
+<section id="tabla-apaisada" class="level2" data-number="2.1">
+<h2 data-number="2.1" class="anchored" data-anchor-id="tabla-apaisada"><span class="header-section-number">2.1</span> Tabla apaisada</h2>
+<p>A continuación se muestra una ejemplo para presentar una tabla de forma apaisada. Generalmente, las tablas apaisadas se necesitan en situaciones en las que se quieren mostrar muchas columnas o variables simultáneamente.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb10"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb10-1"><a href="#cb10-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(kableExtra)</span>
+<span id="cb10-2"><a href="#cb10-2" aria-hidden="true" tabindex="-1"></a><span class="fu">kable</span>(<span class="fu">rbind</span>(datos.csv,datos.csv), </span>
+<span id="cb10-3"><a href="#cb10-3" aria-hidden="true" tabindex="-1"></a>      <span class="at">caption =</span> <span class="st">"Tabla con kableExtra"</span>, </span>
+<span id="cb10-4"><a href="#cb10-4" aria-hidden="true" tabindex="-1"></a>      <span class="at">booktabs=</span><span class="cn">TRUE</span>, <span class="at">longtable =</span> <span class="cn">TRUE</span>) <span class="sc">|&gt;</span> </span>
+<span id="cb10-5"><a href="#cb10-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">kable_styling</span>(</span>
+<span id="cb10-6"><a href="#cb10-6" aria-hidden="true" tabindex="-1"></a>    <span class="at">bootstrap_options =</span> <span class="fu">c</span>(<span class="st">"striped"</span>,<span class="st">"hover"</span>,<span class="st">"condensed"</span>),</span>
+<span id="cb10-7"><a href="#cb10-7" aria-hidden="true" tabindex="-1"></a>    <span class="co">#latex_options = c("striped"),</span></span>
+<span id="cb10-8"><a href="#cb10-8" aria-hidden="true" tabindex="-1"></a>    <span class="co">#latex_options = c("striped","condensed", "HOLD_position")</span></span>
+<span id="cb10-9"><a href="#cb10-9" aria-hidden="true" tabindex="-1"></a>    <span class="at">latex_options =</span> <span class="fu">c</span>(<span class="st">"striped"</span>,  <span class="st">"repeat_header"</span>, <span class="st">"HOLD_position"</span>),</span>
+<span id="cb10-10"><a href="#cb10-10" aria-hidden="true" tabindex="-1"></a>    <span class="at">repeat_header_text=</span><span class="st">"(contin</span><span class="sc">\\</span><span class="st">'ua)"</span>,</span>
+<span id="cb10-11"><a href="#cb10-11" aria-hidden="true" tabindex="-1"></a>    <span class="at">font_size =</span> <span class="dv">6</span></span>
+<span id="cb10-12"><a href="#cb10-12" aria-hidden="true" tabindex="-1"></a>    )  <span class="sc">|&gt;</span> <span class="co"># basic, striped</span></span>
+<span id="cb10-13"><a href="#cb10-13" aria-hidden="true" tabindex="-1"></a>  <span class="fu">landscape</span>()</span></code><button title="Copiar al portapapeles" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<table class="table table-striped table-hover table-condensed caption-top table-sm small" data-quarto-postprocess="true">
+<caption>Tabla con kableExtra</caption>
+<thead>
+<tr class="header">
+<th style="text-align: right;" data-quarto-table-cell-role="th">X</th>
+<th style="text-align: left;" data-quarto-table-cell-role="th">Provincia</th>
+<th style="text-align: left;" data-quarto-table-cell-role="th">CCAA</th>
+<th style="text-align: right;" data-quarto-table-cell-role="th">TOTAL</th>
+<th style="text-align: right;" data-quarto-table-cell-role="th">Varon</th>
+<th style="text-align: right;" data-quarto-table-cell-role="th">Mujer</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td style="text-align: right;">1</td>
+<td style="text-align: left;">01-Álava</td>
+<td style="text-align: left;">País Vasco</td>
+<td style="text-align: right;">286387</td>
+<td style="text-align: right;">142036</td>
+<td style="text-align: right;">144351</td>
+</tr>
+<tr class="even">
+<td style="text-align: right;">2</td>
+<td style="text-align: left;">02-Albacete</td>
+<td style="text-align: left;">Castilla-La Mancha</td>
+<td style="text-align: right;">364835</td>
+<td style="text-align: right;">181461</td>
+<td style="text-align: right;">183374</td>
+</tr>
+<tr class="odd">
+<td style="text-align: right;">3</td>
+<td style="text-align: left;">03-Alicante/Alacant</td>
+<td style="text-align: left;">Comunidad Valenciana</td>
+<td style="text-align: right;">1461925</td>
+<td style="text-align: right;">722162</td>
+<td style="text-align: right;">739763</td>
+</tr>
+<tr class="even">
+<td style="text-align: right;">4</td>
+<td style="text-align: left;">04-Almería</td>
+<td style="text-align: left;">Andalucía</td>
+<td style="text-align: right;">536731</td>
+<td style="text-align: right;">272023</td>
+<td style="text-align: right;">264708</td>
+</tr>
+<tr class="odd">
+<td style="text-align: right;">5</td>
+<td style="text-align: left;">33-Asturias</td>
+<td style="text-align: left;">Asturias (Principado de)</td>
+<td style="text-align: right;">1062998</td>
+<td style="text-align: right;">508995</td>
+<td style="text-align: right;">554003</td>
+</tr>
+<tr class="even">
+<td style="text-align: right;">6</td>
+<td style="text-align: left;">05-Ávila</td>
+<td style="text-align: left;">Castilla y León</td>
+<td style="text-align: right;">163442</td>
+<td style="text-align: right;">81850</td>
+<td style="text-align: right;">81592</td>
+</tr>
+<tr class="odd">
+<td style="text-align: right;">7</td>
+<td style="text-align: left;">06-Badajoz</td>
+<td style="text-align: left;">Extremadura</td>
+<td style="text-align: right;">654882</td>
+<td style="text-align: right;">323541</td>
+<td style="text-align: right;">331341</td>
+</tr>
+<tr class="even">
+<td style="text-align: right;">8</td>
+<td style="text-align: left;">07-Balears (Illes)</td>
+<td style="text-align: left;">Balears (Illes)</td>
+<td style="text-align: right;">841669</td>
+<td style="text-align: right;">417314</td>
+<td style="text-align: right;">424355</td>
+</tr>
+<tr class="odd">
+<td style="text-align: right;">9</td>
+<td style="text-align: left;">08-Barcelona</td>
+<td style="text-align: left;">Cataluña</td>
+<td style="text-align: right;">4805927</td>
+<td style="text-align: right;">2341592</td>
+<td style="text-align: right;">2464335</td>
+</tr>
+<tr class="even">
+<td style="text-align: right;">10</td>
+<td style="text-align: left;">09-Burgos</td>
+<td style="text-align: left;">Castilla y León</td>
+<td style="text-align: right;">348934</td>
+<td style="text-align: right;">174576</td>
+<td style="text-align: right;">174358</td>
+</tr>
+<tr class="odd">
+<td style="text-align: right;">11</td>
+<td style="text-align: left;">10-Cáceres</td>
+<td style="text-align: left;">Extremadura</td>
+<td style="text-align: right;">403621</td>
+<td style="text-align: right;">200820</td>
+<td style="text-align: right;">202801</td>
+</tr>
+<tr class="even">
+<td style="text-align: right;">12</td>
+<td style="text-align: left;">11-Cádiz</td>
+<td style="text-align: left;">Andalucía</td>
+<td style="text-align: right;">1116491</td>
+<td style="text-align: right;">552463</td>
+<td style="text-align: right;">564028</td>
+</tr>
+<tr class="odd">
+<td style="text-align: right;">13</td>
+<td style="text-align: left;">39-Cantabria</td>
+<td style="text-align: left;">Cantabria</td>
+<td style="text-align: right;">535131</td>
+<td style="text-align: right;">260586</td>
+<td style="text-align: right;">274545</td>
+</tr>
+<tr class="even">
+<td style="text-align: right;">14</td>
+<td style="text-align: left;">12-Castellón/Castelló</td>
+<td style="text-align: left;">Comunidad Valenciana</td>
+<td style="text-align: right;">484566</td>
+<td style="text-align: right;">240673</td>
+<td style="text-align: right;">243893</td>
+</tr>
+<tr class="odd">
+<td style="text-align: right;">15</td>
+<td style="text-align: left;">51-Ceuta</td>
+<td style="text-align: left;">Ceuta</td>
+<td style="text-align: right;">71505</td>
+<td style="text-align: right;">35949</td>
+<td style="text-align: right;">35556</td>
+</tr>
+<tr class="even">
+<td style="text-align: right;">16</td>
+<td style="text-align: left;">13-Ciudad Real</td>
+<td style="text-align: left;">Castilla-La Mancha</td>
+<td style="text-align: right;">478957</td>
+<td style="text-align: right;">235189</td>
+<td style="text-align: right;">243768</td>
+</tr>
+<tr class="odd">
+<td style="text-align: right;">17</td>
+<td style="text-align: left;">14-Córdoba</td>
+<td style="text-align: left;">Andalucía</td>
+<td style="text-align: right;">761657</td>
+<td style="text-align: right;">372464</td>
+<td style="text-align: right;">389193</td>
+</tr>
+<tr class="even">
+<td style="text-align: right;">18</td>
+<td style="text-align: left;">15-Coruña (A)</td>
+<td style="text-align: left;">Galicia</td>
+<td style="text-align: right;">1096027</td>
+<td style="text-align: right;">525388</td>
+<td style="text-align: right;">570639</td>
+</tr>
+<tr class="odd">
+<td style="text-align: right;">19</td>
+<td style="text-align: left;">16-Cuenca</td>
+<td style="text-align: left;">Castilla-La Mancha</td>
+<td style="text-align: right;">200346</td>
+<td style="text-align: right;">99959</td>
+<td style="text-align: right;">100387</td>
+</tr>
+<tr class="even">
+<td style="text-align: right;">20</td>
+<td style="text-align: left;">17-Girona</td>
+<td style="text-align: left;">Cataluña</td>
+<td style="text-align: right;">565304</td>
+<td style="text-align: right;">280830</td>
+<td style="text-align: right;">284474</td>
+</tr>
+<tr class="odd">
+<td style="text-align: right;">21</td>
+<td style="text-align: left;">18-Granada</td>
+<td style="text-align: left;">Andalucía</td>
+<td style="text-align: right;">821660</td>
+<td style="text-align: right;">401638</td>
+<td style="text-align: right;">420022</td>
+</tr>
+<tr class="even">
+<td style="text-align: right;">22</td>
+<td style="text-align: left;">19-Guadalajara</td>
+<td style="text-align: left;">Castilla-La Mancha</td>
+<td style="text-align: right;">174999</td>
+<td style="text-align: right;">88535</td>
+<td style="text-align: right;">86464</td>
+</tr>
+<tr class="odd">
+<td style="text-align: right;">23</td>
+<td style="text-align: left;">20-Guipúzcoa</td>
+<td style="text-align: left;">País Vasco</td>
+<td style="text-align: right;">673563</td>
+<td style="text-align: right;">330288</td>
+<td style="text-align: right;">343275</td>
+</tr>
+<tr class="even">
+<td style="text-align: right;">24</td>
+<td style="text-align: left;">21-Huelva</td>
+<td style="text-align: left;">Andalucía</td>
+<td style="text-align: right;">462579</td>
+<td style="text-align: right;">229013</td>
+<td style="text-align: right;">233566</td>
+</tr>
+<tr class="odd">
+<td style="text-align: right;">25</td>
+<td style="text-align: left;">22-Huesca</td>
+<td style="text-align: left;">Aragón</td>
+<td style="text-align: right;">206502</td>
+<td style="text-align: right;">104089</td>
+<td style="text-align: right;">102413</td>
+</tr>
+<tr class="even">
+<td style="text-align: right;">26</td>
+<td style="text-align: left;">23-Jaén</td>
+<td style="text-align: left;">Andalucía</td>
+<td style="text-align: right;">643820</td>
+<td style="text-align: right;">317343</td>
+<td style="text-align: right;">326477</td>
+</tr>
+<tr class="odd">
+<td style="text-align: right;">27</td>
+<td style="text-align: left;">24-León</td>
+<td style="text-align: left;">Castilla y León</td>
+<td style="text-align: right;">488751</td>
+<td style="text-align: right;">238139</td>
+<td style="text-align: right;">250612</td>
+</tr>
+<tr class="even">
+<td style="text-align: right;">28</td>
+<td style="text-align: left;">25-Lleida</td>
+<td style="text-align: left;">Cataluña</td>
+<td style="text-align: right;">362206</td>
+<td style="text-align: right;">180425</td>
+<td style="text-align: right;">181781</td>
+</tr>
+<tr class="odd">
+<td style="text-align: right;">29</td>
+<td style="text-align: left;">27-Lugo</td>
+<td style="text-align: left;">Galicia</td>
+<td style="text-align: right;">357648</td>
+<td style="text-align: right;">173339</td>
+<td style="text-align: right;">184309</td>
+</tr>
+<tr class="even">
+<td style="text-align: right;">30</td>
+<td style="text-align: left;">28-Madrid</td>
+<td style="text-align: left;">Madrid (Comunidad de)</td>
+<td style="text-align: right;">5423384</td>
+<td style="text-align: right;">2609746</td>
+<td style="text-align: right;">2813638</td>
+</tr>
+<tr class="odd">
+<td style="text-align: right;">31</td>
+<td style="text-align: left;">29-Málaga</td>
+<td style="text-align: left;">Andalucía</td>
+<td style="text-align: right;">1287017</td>
+<td style="text-align: right;">630902</td>
+<td style="text-align: right;">656115</td>
+</tr>
+<tr class="even">
+<td style="text-align: right;">32</td>
+<td style="text-align: left;">52-Melilla</td>
+<td style="text-align: left;">Melilla</td>
+<td style="text-align: right;">66411</td>
+<td style="text-align: right;">33134</td>
+<td style="text-align: right;">33277</td>
+</tr>
+<tr class="odd">
+<td style="text-align: right;">33</td>
+<td style="text-align: left;">30-Murcia</td>
+<td style="text-align: left;">Murcia (Región de)</td>
+<td style="text-align: right;">1197646</td>
+<td style="text-align: right;">597265</td>
+<td style="text-align: right;">600381</td>
+</tr>
+<tr class="even">
+<td style="text-align: right;">34</td>
+<td style="text-align: left;">31-Navarra</td>
+<td style="text-align: left;">Navarra (Comunidad Foral de)</td>
+<td style="text-align: right;">555829</td>
+<td style="text-align: right;">276629</td>
+<td style="text-align: right;">279200</td>
+</tr>
+<tr class="odd">
+<td style="text-align: right;">35</td>
+<td style="text-align: left;">32-Ourense</td>
+<td style="text-align: left;">Galicia</td>
+<td style="text-align: right;">338446</td>
+<td style="text-align: right;">161968</td>
+<td style="text-align: right;">176478</td>
+</tr>
+<tr class="even">
+<td style="text-align: right;">36</td>
+<td style="text-align: left;">34-Palencia</td>
+<td style="text-align: left;">Castilla y León</td>
+<td style="text-align: right;">174143</td>
+<td style="text-align: right;">85955</td>
+<td style="text-align: right;">88188</td>
+</tr>
+<tr class="odd">
+<td style="text-align: right;">37</td>
+<td style="text-align: left;">35-Palmas (Las)</td>
+<td style="text-align: left;">Canarias</td>
+<td style="text-align: right;">887676</td>
+<td style="text-align: right;">444761</td>
+<td style="text-align: right;">442915</td>
+</tr>
+<tr class="even">
+<td style="text-align: right;">38</td>
+<td style="text-align: left;">36-Pontevedra</td>
+<td style="text-align: left;">Galicia</td>
+<td style="text-align: right;">903759</td>
+<td style="text-align: right;">433683</td>
+<td style="text-align: right;">470076</td>
+</tr>
+<tr class="odd">
+<td style="text-align: right;">39</td>
+<td style="text-align: left;">26-Rioja (La)</td>
+<td style="text-align: left;">Rioja (La)</td>
+<td style="text-align: right;">276702</td>
+<td style="text-align: right;">137827</td>
+<td style="text-align: right;">138875</td>
+</tr>
+<tr class="even">
+<td style="text-align: right;">40</td>
+<td style="text-align: left;">37-Salamanca</td>
+<td style="text-align: left;">Castilla y León</td>
+<td style="text-align: right;">345609</td>
+<td style="text-align: right;">167948</td>
+<td style="text-align: right;">177661</td>
+</tr>
+<tr class="odd">
+<td style="text-align: right;">41</td>
+<td style="text-align: left;">38-Santa Cruz de Tenerife</td>
+<td style="text-align: left;">Canarias</td>
+<td style="text-align: right;">806801</td>
+<td style="text-align: right;">398205</td>
+<td style="text-align: right;">408596</td>
+</tr>
+<tr class="even">
+<td style="text-align: right;">42</td>
+<td style="text-align: left;">40-Segovia</td>
+<td style="text-align: left;">Castilla y León</td>
+<td style="text-align: right;">147694</td>
+<td style="text-align: right;">73973</td>
+<td style="text-align: right;">73721</td>
+</tr>
+<tr class="odd">
+<td style="text-align: right;">43</td>
+<td style="text-align: left;">41-Sevilla</td>
+<td style="text-align: left;">Andalucía</td>
+<td style="text-align: right;">1727603</td>
+<td style="text-align: right;">846220</td>
+<td style="text-align: right;">881383</td>
+</tr>
+<tr class="even">
+<td style="text-align: right;">44</td>
+<td style="text-align: left;">42-Soria</td>
+<td style="text-align: left;">Castilla y León</td>
+<td style="text-align: right;">90717</td>
+<td style="text-align: right;">45443</td>
+<td style="text-align: right;">45274</td>
+</tr>
+<tr class="odd">
+<td style="text-align: right;">45</td>
+<td style="text-align: left;">43-Tarragona</td>
+<td style="text-align: left;">Cataluña</td>
+<td style="text-align: right;">609673</td>
+<td style="text-align: right;">303684</td>
+<td style="text-align: right;">305989</td>
+</tr>
+<tr class="even">
+<td style="text-align: right;">46</td>
+<td style="text-align: left;">44-Teruel</td>
+<td style="text-align: left;">Aragón</td>
+<td style="text-align: right;">135858</td>
+<td style="text-align: right;">68724</td>
+<td style="text-align: right;">67134</td>
+</tr>
+<tr class="odd">
+<td style="text-align: right;">47</td>
+<td style="text-align: left;">45-Toledo</td>
+<td style="text-align: left;">Castilla-La Mancha</td>
+<td style="text-align: right;">541379</td>
+<td style="text-align: right;">270406</td>
+<td style="text-align: right;">270973</td>
+</tr>
+<tr class="even">
+<td style="text-align: right;">48</td>
+<td style="text-align: left;">46-Valencia/València</td>
+<td style="text-align: left;">Comunidad Valenciana</td>
+<td style="text-align: right;">2216285</td>
+<td style="text-align: right;">1084149</td>
+<td style="text-align: right;">1132136</td>
+</tr>
+<tr class="odd">
+<td style="text-align: right;">49</td>
+<td style="text-align: left;">47-Valladolid</td>
+<td style="text-align: left;">Castilla y León</td>
+<td style="text-align: right;">498094</td>
+<td style="text-align: right;">243999</td>
+<td style="text-align: right;">254095</td>
+</tr>
+<tr class="even">
+<td style="text-align: right;">50</td>
+<td style="text-align: left;">48-Vizcaya</td>
+<td style="text-align: left;">País Vasco</td>
+<td style="text-align: right;">1122637</td>
+<td style="text-align: right;">545557</td>
+<td style="text-align: right;">577080</td>
+</tr>
+<tr class="odd">
+<td style="text-align: right;">51</td>
+<td style="text-align: left;">49-Zamora</td>
+<td style="text-align: left;">Castilla y León</td>
+<td style="text-align: right;">199090</td>
+<td style="text-align: right;">97991</td>
+<td style="text-align: right;">101099</td>
+</tr>
+<tr class="even">
+<td style="text-align: right;">52</td>
+<td style="text-align: left;">50-Zaragoza</td>
+<td style="text-align: left;">Aragón</td>
+<td style="text-align: right;">861855</td>
+<td style="text-align: right;">422033</td>
+<td style="text-align: right;">439822</td>
+</tr>
+<tr class="odd">
+<td style="text-align: right;">1</td>
+<td style="text-align: left;">01-Álava</td>
+<td style="text-align: left;">País Vasco</td>
+<td style="text-align: right;">286387</td>
+<td style="text-align: right;">142036</td>
+<td style="text-align: right;">144351</td>
+</tr>
+<tr class="even">
+<td style="text-align: right;">2</td>
+<td style="text-align: left;">02-Albacete</td>
+<td style="text-align: left;">Castilla-La Mancha</td>
+<td style="text-align: right;">364835</td>
+<td style="text-align: right;">181461</td>
+<td style="text-align: right;">183374</td>
+</tr>
+<tr class="odd">
+<td style="text-align: right;">3</td>
+<td style="text-align: left;">03-Alicante/Alacant</td>
+<td style="text-align: left;">Comunidad Valenciana</td>
+<td style="text-align: right;">1461925</td>
+<td style="text-align: right;">722162</td>
+<td style="text-align: right;">739763</td>
+</tr>
+<tr class="even">
+<td style="text-align: right;">4</td>
+<td style="text-align: left;">04-Almería</td>
+<td style="text-align: left;">Andalucía</td>
+<td style="text-align: right;">536731</td>
+<td style="text-align: right;">272023</td>
+<td style="text-align: right;">264708</td>
+</tr>
+<tr class="odd">
+<td style="text-align: right;">5</td>
+<td style="text-align: left;">33-Asturias</td>
+<td style="text-align: left;">Asturias (Principado de)</td>
+<td style="text-align: right;">1062998</td>
+<td style="text-align: right;">508995</td>
+<td style="text-align: right;">554003</td>
+</tr>
+<tr class="even">
+<td style="text-align: right;">6</td>
+<td style="text-align: left;">05-Ávila</td>
+<td style="text-align: left;">Castilla y León</td>
+<td style="text-align: right;">163442</td>
+<td style="text-align: right;">81850</td>
+<td style="text-align: right;">81592</td>
+</tr>
+<tr class="odd">
+<td style="text-align: right;">7</td>
+<td style="text-align: left;">06-Badajoz</td>
+<td style="text-align: left;">Extremadura</td>
+<td style="text-align: right;">654882</td>
+<td style="text-align: right;">323541</td>
+<td style="text-align: right;">331341</td>
+</tr>
+<tr class="even">
+<td style="text-align: right;">8</td>
+<td style="text-align: left;">07-Balears (Illes)</td>
+<td style="text-align: left;">Balears (Illes)</td>
+<td style="text-align: right;">841669</td>
+<td style="text-align: right;">417314</td>
+<td style="text-align: right;">424355</td>
+</tr>
+<tr class="odd">
+<td style="text-align: right;">9</td>
+<td style="text-align: left;">08-Barcelona</td>
+<td style="text-align: left;">Cataluña</td>
+<td style="text-align: right;">4805927</td>
+<td style="text-align: right;">2341592</td>
+<td style="text-align: right;">2464335</td>
+</tr>
+<tr class="even">
+<td style="text-align: right;">10</td>
+<td style="text-align: left;">09-Burgos</td>
+<td style="text-align: left;">Castilla y León</td>
+<td style="text-align: right;">348934</td>
+<td style="text-align: right;">174576</td>
+<td style="text-align: right;">174358</td>
+</tr>
+<tr class="odd">
+<td style="text-align: right;">11</td>
+<td style="text-align: left;">10-Cáceres</td>
+<td style="text-align: left;">Extremadura</td>
+<td style="text-align: right;">403621</td>
+<td style="text-align: right;">200820</td>
+<td style="text-align: right;">202801</td>
+</tr>
+<tr class="even">
+<td style="text-align: right;">12</td>
+<td style="text-align: left;">11-Cádiz</td>
+<td style="text-align: left;">Andalucía</td>
+<td style="text-align: right;">1116491</td>
+<td style="text-align: right;">552463</td>
+<td style="text-align: right;">564028</td>
+</tr>
+<tr class="odd">
+<td style="text-align: right;">13</td>
+<td style="text-align: left;">39-Cantabria</td>
+<td style="text-align: left;">Cantabria</td>
+<td style="text-align: right;">535131</td>
+<td style="text-align: right;">260586</td>
+<td style="text-align: right;">274545</td>
+</tr>
+<tr class="even">
+<td style="text-align: right;">14</td>
+<td style="text-align: left;">12-Castellón/Castelló</td>
+<td style="text-align: left;">Comunidad Valenciana</td>
+<td style="text-align: right;">484566</td>
+<td style="text-align: right;">240673</td>
+<td style="text-align: right;">243893</td>
+</tr>
+<tr class="odd">
+<td style="text-align: right;">15</td>
+<td style="text-align: left;">51-Ceuta</td>
+<td style="text-align: left;">Ceuta</td>
+<td style="text-align: right;">71505</td>
+<td style="text-align: right;">35949</td>
+<td style="text-align: right;">35556</td>
+</tr>
+<tr class="even">
+<td style="text-align: right;">16</td>
+<td style="text-align: left;">13-Ciudad Real</td>
+<td style="text-align: left;">Castilla-La Mancha</td>
+<td style="text-align: right;">478957</td>
+<td style="text-align: right;">235189</td>
+<td style="text-align: right;">243768</td>
+</tr>
+<tr class="odd">
+<td style="text-align: right;">17</td>
+<td style="text-align: left;">14-Córdoba</td>
+<td style="text-align: left;">Andalucía</td>
+<td style="text-align: right;">761657</td>
+<td style="text-align: right;">372464</td>
+<td style="text-align: right;">389193</td>
+</tr>
+<tr class="even">
+<td style="text-align: right;">18</td>
+<td style="text-align: left;">15-Coruña (A)</td>
+<td style="text-align: left;">Galicia</td>
+<td style="text-align: right;">1096027</td>
+<td style="text-align: right;">525388</td>
+<td style="text-align: right;">570639</td>
+</tr>
+<tr class="odd">
+<td style="text-align: right;">19</td>
+<td style="text-align: left;">16-Cuenca</td>
+<td style="text-align: left;">Castilla-La Mancha</td>
+<td style="text-align: right;">200346</td>
+<td style="text-align: right;">99959</td>
+<td style="text-align: right;">100387</td>
+</tr>
+<tr class="even">
+<td style="text-align: right;">20</td>
+<td style="text-align: left;">17-Girona</td>
+<td style="text-align: left;">Cataluña</td>
+<td style="text-align: right;">565304</td>
+<td style="text-align: right;">280830</td>
+<td style="text-align: right;">284474</td>
+</tr>
+<tr class="odd">
+<td style="text-align: right;">21</td>
+<td style="text-align: left;">18-Granada</td>
+<td style="text-align: left;">Andalucía</td>
+<td style="text-align: right;">821660</td>
+<td style="text-align: right;">401638</td>
+<td style="text-align: right;">420022</td>
+</tr>
+<tr class="even">
+<td style="text-align: right;">22</td>
+<td style="text-align: left;">19-Guadalajara</td>
+<td style="text-align: left;">Castilla-La Mancha</td>
+<td style="text-align: right;">174999</td>
+<td style="text-align: right;">88535</td>
+<td style="text-align: right;">86464</td>
+</tr>
+<tr class="odd">
+<td style="text-align: right;">23</td>
+<td style="text-align: left;">20-Guipúzcoa</td>
+<td style="text-align: left;">País Vasco</td>
+<td style="text-align: right;">673563</td>
+<td style="text-align: right;">330288</td>
+<td style="text-align: right;">343275</td>
+</tr>
+<tr class="even">
+<td style="text-align: right;">24</td>
+<td style="text-align: left;">21-Huelva</td>
+<td style="text-align: left;">Andalucía</td>
+<td style="text-align: right;">462579</td>
+<td style="text-align: right;">229013</td>
+<td style="text-align: right;">233566</td>
+</tr>
+<tr class="odd">
+<td style="text-align: right;">25</td>
+<td style="text-align: left;">22-Huesca</td>
+<td style="text-align: left;">Aragón</td>
+<td style="text-align: right;">206502</td>
+<td style="text-align: right;">104089</td>
+<td style="text-align: right;">102413</td>
+</tr>
+<tr class="even">
+<td style="text-align: right;">26</td>
+<td style="text-align: left;">23-Jaén</td>
+<td style="text-align: left;">Andalucía</td>
+<td style="text-align: right;">643820</td>
+<td style="text-align: right;">317343</td>
+<td style="text-align: right;">326477</td>
+</tr>
+<tr class="odd">
+<td style="text-align: right;">27</td>
+<td style="text-align: left;">24-León</td>
+<td style="text-align: left;">Castilla y León</td>
+<td style="text-align: right;">488751</td>
+<td style="text-align: right;">238139</td>
+<td style="text-align: right;">250612</td>
+</tr>
+<tr class="even">
+<td style="text-align: right;">28</td>
+<td style="text-align: left;">25-Lleida</td>
+<td style="text-align: left;">Cataluña</td>
+<td style="text-align: right;">362206</td>
+<td style="text-align: right;">180425</td>
+<td style="text-align: right;">181781</td>
+</tr>
+<tr class="odd">
+<td style="text-align: right;">29</td>
+<td style="text-align: left;">27-Lugo</td>
+<td style="text-align: left;">Galicia</td>
+<td style="text-align: right;">357648</td>
+<td style="text-align: right;">173339</td>
+<td style="text-align: right;">184309</td>
+</tr>
+<tr class="even">
+<td style="text-align: right;">30</td>
+<td style="text-align: left;">28-Madrid</td>
+<td style="text-align: left;">Madrid (Comunidad de)</td>
+<td style="text-align: right;">5423384</td>
+<td style="text-align: right;">2609746</td>
+<td style="text-align: right;">2813638</td>
+</tr>
+<tr class="odd">
+<td style="text-align: right;">31</td>
+<td style="text-align: left;">29-Málaga</td>
+<td style="text-align: left;">Andalucía</td>
+<td style="text-align: right;">1287017</td>
+<td style="text-align: right;">630902</td>
+<td style="text-align: right;">656115</td>
+</tr>
+<tr class="even">
+<td style="text-align: right;">32</td>
+<td style="text-align: left;">52-Melilla</td>
+<td style="text-align: left;">Melilla</td>
+<td style="text-align: right;">66411</td>
+<td style="text-align: right;">33134</td>
+<td style="text-align: right;">33277</td>
+</tr>
+<tr class="odd">
+<td style="text-align: right;">33</td>
+<td style="text-align: left;">30-Murcia</td>
+<td style="text-align: left;">Murcia (Región de)</td>
+<td style="text-align: right;">1197646</td>
+<td style="text-align: right;">597265</td>
+<td style="text-align: right;">600381</td>
+</tr>
+<tr class="even">
+<td style="text-align: right;">34</td>
+<td style="text-align: left;">31-Navarra</td>
+<td style="text-align: left;">Navarra (Comunidad Foral de)</td>
+<td style="text-align: right;">555829</td>
+<td style="text-align: right;">276629</td>
+<td style="text-align: right;">279200</td>
+</tr>
+<tr class="odd">
+<td style="text-align: right;">35</td>
+<td style="text-align: left;">32-Ourense</td>
+<td style="text-align: left;">Galicia</td>
+<td style="text-align: right;">338446</td>
+<td style="text-align: right;">161968</td>
+<td style="text-align: right;">176478</td>
+</tr>
+<tr class="even">
+<td style="text-align: right;">36</td>
+<td style="text-align: left;">34-Palencia</td>
+<td style="text-align: left;">Castilla y León</td>
+<td style="text-align: right;">174143</td>
+<td style="text-align: right;">85955</td>
+<td style="text-align: right;">88188</td>
+</tr>
+<tr class="odd">
+<td style="text-align: right;">37</td>
+<td style="text-align: left;">35-Palmas (Las)</td>
+<td style="text-align: left;">Canarias</td>
+<td style="text-align: right;">887676</td>
+<td style="text-align: right;">444761</td>
+<td style="text-align: right;">442915</td>
+</tr>
+<tr class="even">
+<td style="text-align: right;">38</td>
+<td style="text-align: left;">36-Pontevedra</td>
+<td style="text-align: left;">Galicia</td>
+<td style="text-align: right;">903759</td>
+<td style="text-align: right;">433683</td>
+<td style="text-align: right;">470076</td>
+</tr>
+<tr class="odd">
+<td style="text-align: right;">39</td>
+<td style="text-align: left;">26-Rioja (La)</td>
+<td style="text-align: left;">Rioja (La)</td>
+<td style="text-align: right;">276702</td>
+<td style="text-align: right;">137827</td>
+<td style="text-align: right;">138875</td>
+</tr>
+<tr class="even">
+<td style="text-align: right;">40</td>
+<td style="text-align: left;">37-Salamanca</td>
+<td style="text-align: left;">Castilla y León</td>
+<td style="text-align: right;">345609</td>
+<td style="text-align: right;">167948</td>
+<td style="text-align: right;">177661</td>
+</tr>
+<tr class="odd">
+<td style="text-align: right;">41</td>
+<td style="text-align: left;">38-Santa Cruz de Tenerife</td>
+<td style="text-align: left;">Canarias</td>
+<td style="text-align: right;">806801</td>
+<td style="text-align: right;">398205</td>
+<td style="text-align: right;">408596</td>
+</tr>
+<tr class="even">
+<td style="text-align: right;">42</td>
+<td style="text-align: left;">40-Segovia</td>
+<td style="text-align: left;">Castilla y León</td>
+<td style="text-align: right;">147694</td>
+<td style="text-align: right;">73973</td>
+<td style="text-align: right;">73721</td>
+</tr>
+<tr class="odd">
+<td style="text-align: right;">43</td>
+<td style="text-align: left;">41-Sevilla</td>
+<td style="text-align: left;">Andalucía</td>
+<td style="text-align: right;">1727603</td>
+<td style="text-align: right;">846220</td>
+<td style="text-align: right;">881383</td>
+</tr>
+<tr class="even">
+<td style="text-align: right;">44</td>
+<td style="text-align: left;">42-Soria</td>
+<td style="text-align: left;">Castilla y León</td>
+<td style="text-align: right;">90717</td>
+<td style="text-align: right;">45443</td>
+<td style="text-align: right;">45274</td>
+</tr>
+<tr class="odd">
+<td style="text-align: right;">45</td>
+<td style="text-align: left;">43-Tarragona</td>
+<td style="text-align: left;">Cataluña</td>
+<td style="text-align: right;">609673</td>
+<td style="text-align: right;">303684</td>
+<td style="text-align: right;">305989</td>
+</tr>
+<tr class="even">
+<td style="text-align: right;">46</td>
+<td style="text-align: left;">44-Teruel</td>
+<td style="text-align: left;">Aragón</td>
+<td style="text-align: right;">135858</td>
+<td style="text-align: right;">68724</td>
+<td style="text-align: right;">67134</td>
+</tr>
+<tr class="odd">
+<td style="text-align: right;">47</td>
+<td style="text-align: left;">45-Toledo</td>
+<td style="text-align: left;">Castilla-La Mancha</td>
+<td style="text-align: right;">541379</td>
+<td style="text-align: right;">270406</td>
+<td style="text-align: right;">270973</td>
+</tr>
+<tr class="even">
+<td style="text-align: right;">48</td>
+<td style="text-align: left;">46-Valencia/València</td>
+<td style="text-align: left;">Comunidad Valenciana</td>
+<td style="text-align: right;">2216285</td>
+<td style="text-align: right;">1084149</td>
+<td style="text-align: right;">1132136</td>
+</tr>
+<tr class="odd">
+<td style="text-align: right;">49</td>
+<td style="text-align: left;">47-Valladolid</td>
+<td style="text-align: left;">Castilla y León</td>
+<td style="text-align: right;">498094</td>
+<td style="text-align: right;">243999</td>
+<td style="text-align: right;">254095</td>
+</tr>
+<tr class="even">
+<td style="text-align: right;">50</td>
+<td style="text-align: left;">48-Vizcaya</td>
+<td style="text-align: left;">País Vasco</td>
+<td style="text-align: right;">1122637</td>
+<td style="text-align: right;">545557</td>
+<td style="text-align: right;">577080</td>
+</tr>
+<tr class="odd">
+<td style="text-align: right;">51</td>
+<td style="text-align: left;">49-Zamora</td>
+<td style="text-align: left;">Castilla y León</td>
+<td style="text-align: right;">199090</td>
+<td style="text-align: right;">97991</td>
+<td style="text-align: right;">101099</td>
+</tr>
+<tr class="even">
+<td style="text-align: right;">52</td>
+<td style="text-align: left;">50-Zaragoza</td>
+<td style="text-align: left;">Aragón</td>
+<td style="text-align: right;">861855</td>
+<td style="text-align: right;">422033</td>
+<td style="text-align: right;">439822</td>
+</tr>
+</tbody>
+</table>
+
+
+</div>
+</div>
+<p>Importamos el fichero csv: “datosPractica01.csv”</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb11"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb11-1"><a href="#cb11-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(readr)</span>
+<span id="cb11-2"><a href="#cb11-2" aria-hidden="true" tabindex="-1"></a>datosPractica01 <span class="ot">&lt;-</span> <span class="fu">read_csv</span>(<span class="st">"datosPractica01.csv"</span>,</span>
+<span id="cb11-3"><a href="#cb11-3" aria-hidden="true" tabindex="-1"></a>                            <span class="at">col_types =</span> <span class="fu">cols</span>(<span class="at">...1 =</span> <span class="fu">col_skip</span>()))</span></code><button title="Copiar al portapapeles" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<p>Y presentamos una tabla en formato multipágina, pero añadimos características adicionales:</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb12"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb12-1"><a href="#cb12-1" aria-hidden="true" tabindex="-1"></a><span class="fu">kable</span>(<span class="fu">head</span>(datosPractica01,<span class="dv">50</span>), <span class="at">booktabs =</span> T, </span>
+<span id="cb12-2"><a href="#cb12-2" aria-hidden="true" tabindex="-1"></a>      <span class="at">longtable =</span> T, <span class="at">caption =</span> <span class="st">"Tabla nueva"</span>) <span class="sc">|&gt;</span> </span>
+<span id="cb12-3"><a href="#cb12-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">kable_styling</span>(<span class="at">bootstrap_options =</span> <span class="fu">c</span>(<span class="st">"striped"</span>,<span class="st">"hover"</span>,<span class="st">"condensed"</span>), </span>
+<span id="cb12-4"><a href="#cb12-4" aria-hidden="true" tabindex="-1"></a>                <span class="at">latex_options =</span> <span class="fu">c</span>(<span class="st">"striped"</span>,<span class="st">"HOLD_position"</span>, <span class="st">"repeat_header"</span>),</span>
+<span id="cb12-5"><a href="#cb12-5" aria-hidden="true" tabindex="-1"></a>                <span class="at">repeat_header_text =</span> <span class="st">"(continúa)"</span></span>
+<span id="cb12-6"><a href="#cb12-6" aria-hidden="true" tabindex="-1"></a>  )</span></code><button title="Copiar al portapapeles" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<table class="table table-striped table-hover table-condensed caption-top table-sm small" data-quarto-postprocess="true">
+<caption>Tabla nueva</caption>
+<thead>
+<tr class="header">
+<th style="text-align: left;" data-quarto-table-cell-role="th">Provincia</th>
+<th style="text-align: left;" data-quarto-table-cell-role="th">CCAA</th>
+<th style="text-align: right;" data-quarto-table-cell-role="th">TOTAL</th>
+<th style="text-align: right;" data-quarto-table-cell-role="th">Varon</th>
+<th style="text-align: right;" data-quarto-table-cell-role="th">Mujer</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td style="text-align: left;">01-Álava</td>
+<td style="text-align: left;">País Vasco</td>
+<td style="text-align: right;">286387</td>
+<td style="text-align: right;">142036</td>
+<td style="text-align: right;">144351</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">02-Albacete</td>
+<td style="text-align: left;">Castilla-La Mancha</td>
+<td style="text-align: right;">364835</td>
+<td style="text-align: right;">181461</td>
+<td style="text-align: right;">183374</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">03-Alicante/Alacant</td>
+<td style="text-align: left;">Comunidad Valenciana</td>
+<td style="text-align: right;">1461925</td>
+<td style="text-align: right;">722162</td>
+<td style="text-align: right;">739763</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">04-Almería</td>
+<td style="text-align: left;">Andalucía</td>
+<td style="text-align: right;">536731</td>
+<td style="text-align: right;">272023</td>
+<td style="text-align: right;">264708</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">33-Asturias</td>
+<td style="text-align: left;">Asturias (Principado de)</td>
+<td style="text-align: right;">1062998</td>
+<td style="text-align: right;">508995</td>
+<td style="text-align: right;">554003</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">05-Ávila</td>
+<td style="text-align: left;">Castilla y León</td>
+<td style="text-align: right;">163442</td>
+<td style="text-align: right;">81850</td>
+<td style="text-align: right;">81592</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">06-Badajoz</td>
+<td style="text-align: left;">Extremadura</td>
+<td style="text-align: right;">654882</td>
+<td style="text-align: right;">323541</td>
+<td style="text-align: right;">331341</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">07-Balears (Illes)</td>
+<td style="text-align: left;">Balears (Illes)</td>
+<td style="text-align: right;">841669</td>
+<td style="text-align: right;">417314</td>
+<td style="text-align: right;">424355</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">08-Barcelona</td>
+<td style="text-align: left;">Cataluña</td>
+<td style="text-align: right;">4805927</td>
+<td style="text-align: right;">2341592</td>
+<td style="text-align: right;">2464335</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">09-Burgos</td>
+<td style="text-align: left;">Castilla y León</td>
+<td style="text-align: right;">348934</td>
+<td style="text-align: right;">174576</td>
+<td style="text-align: right;">174358</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">10-Cáceres</td>
+<td style="text-align: left;">Extremadura</td>
+<td style="text-align: right;">403621</td>
+<td style="text-align: right;">200820</td>
+<td style="text-align: right;">202801</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">11-Cádiz</td>
+<td style="text-align: left;">Andalucía</td>
+<td style="text-align: right;">1116491</td>
+<td style="text-align: right;">552463</td>
+<td style="text-align: right;">564028</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">39-Cantabria</td>
+<td style="text-align: left;">Cantabria</td>
+<td style="text-align: right;">535131</td>
+<td style="text-align: right;">260586</td>
+<td style="text-align: right;">274545</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">12-Castellón/Castelló</td>
+<td style="text-align: left;">Comunidad Valenciana</td>
+<td style="text-align: right;">484566</td>
+<td style="text-align: right;">240673</td>
+<td style="text-align: right;">243893</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">51-Ceuta</td>
+<td style="text-align: left;">Ceuta</td>
+<td style="text-align: right;">71505</td>
+<td style="text-align: right;">35949</td>
+<td style="text-align: right;">35556</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">13-Ciudad Real</td>
+<td style="text-align: left;">Castilla-La Mancha</td>
+<td style="text-align: right;">478957</td>
+<td style="text-align: right;">235189</td>
+<td style="text-align: right;">243768</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">14-Córdoba</td>
+<td style="text-align: left;">Andalucía</td>
+<td style="text-align: right;">761657</td>
+<td style="text-align: right;">372464</td>
+<td style="text-align: right;">389193</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">15-Coruña (A)</td>
+<td style="text-align: left;">Galicia</td>
+<td style="text-align: right;">1096027</td>
+<td style="text-align: right;">525388</td>
+<td style="text-align: right;">570639</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">16-Cuenca</td>
+<td style="text-align: left;">Castilla-La Mancha</td>
+<td style="text-align: right;">200346</td>
+<td style="text-align: right;">99959</td>
+<td style="text-align: right;">100387</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">17-Girona</td>
+<td style="text-align: left;">Cataluña</td>
+<td style="text-align: right;">565304</td>
+<td style="text-align: right;">280830</td>
+<td style="text-align: right;">284474</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">18-Granada</td>
+<td style="text-align: left;">Andalucía</td>
+<td style="text-align: right;">821660</td>
+<td style="text-align: right;">401638</td>
+<td style="text-align: right;">420022</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">19-Guadalajara</td>
+<td style="text-align: left;">Castilla-La Mancha</td>
+<td style="text-align: right;">174999</td>
+<td style="text-align: right;">88535</td>
+<td style="text-align: right;">86464</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">20-Guipúzcoa</td>
+<td style="text-align: left;">País Vasco</td>
+<td style="text-align: right;">673563</td>
+<td style="text-align: right;">330288</td>
+<td style="text-align: right;">343275</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">21-Huelva</td>
+<td style="text-align: left;">Andalucía</td>
+<td style="text-align: right;">462579</td>
+<td style="text-align: right;">229013</td>
+<td style="text-align: right;">233566</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">22-Huesca</td>
+<td style="text-align: left;">Aragón</td>
+<td style="text-align: right;">206502</td>
+<td style="text-align: right;">104089</td>
+<td style="text-align: right;">102413</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">23-Jaén</td>
+<td style="text-align: left;">Andalucía</td>
+<td style="text-align: right;">643820</td>
+<td style="text-align: right;">317343</td>
+<td style="text-align: right;">326477</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">24-León</td>
+<td style="text-align: left;">Castilla y León</td>
+<td style="text-align: right;">488751</td>
+<td style="text-align: right;">238139</td>
+<td style="text-align: right;">250612</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">25-Lleida</td>
+<td style="text-align: left;">Cataluña</td>
+<td style="text-align: right;">362206</td>
+<td style="text-align: right;">180425</td>
+<td style="text-align: right;">181781</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">27-Lugo</td>
+<td style="text-align: left;">Galicia</td>
+<td style="text-align: right;">357648</td>
+<td style="text-align: right;">173339</td>
+<td style="text-align: right;">184309</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">28-Madrid</td>
+<td style="text-align: left;">Madrid (Comunidad de)</td>
+<td style="text-align: right;">5423384</td>
+<td style="text-align: right;">2609746</td>
+<td style="text-align: right;">2813638</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">29-Málaga</td>
+<td style="text-align: left;">Andalucía</td>
+<td style="text-align: right;">1287017</td>
+<td style="text-align: right;">630902</td>
+<td style="text-align: right;">656115</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">52-Melilla</td>
+<td style="text-align: left;">Melilla</td>
+<td style="text-align: right;">66411</td>
+<td style="text-align: right;">33134</td>
+<td style="text-align: right;">33277</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">30-Murcia</td>
+<td style="text-align: left;">Murcia (Región de)</td>
+<td style="text-align: right;">1197646</td>
+<td style="text-align: right;">597265</td>
+<td style="text-align: right;">600381</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">31-Navarra</td>
+<td style="text-align: left;">Navarra (Comunidad Foral de)</td>
+<td style="text-align: right;">555829</td>
+<td style="text-align: right;">276629</td>
+<td style="text-align: right;">279200</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">32-Ourense</td>
+<td style="text-align: left;">Galicia</td>
+<td style="text-align: right;">338446</td>
+<td style="text-align: right;">161968</td>
+<td style="text-align: right;">176478</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">34-Palencia</td>
+<td style="text-align: left;">Castilla y León</td>
+<td style="text-align: right;">174143</td>
+<td style="text-align: right;">85955</td>
+<td style="text-align: right;">88188</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">35-Palmas (Las)</td>
+<td style="text-align: left;">Canarias</td>
+<td style="text-align: right;">887676</td>
+<td style="text-align: right;">444761</td>
+<td style="text-align: right;">442915</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">36-Pontevedra</td>
+<td style="text-align: left;">Galicia</td>
+<td style="text-align: right;">903759</td>
+<td style="text-align: right;">433683</td>
+<td style="text-align: right;">470076</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">26-Rioja (La)</td>
+<td style="text-align: left;">Rioja (La)</td>
+<td style="text-align: right;">276702</td>
+<td style="text-align: right;">137827</td>
+<td style="text-align: right;">138875</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">37-Salamanca</td>
+<td style="text-align: left;">Castilla y León</td>
+<td style="text-align: right;">345609</td>
+<td style="text-align: right;">167948</td>
+<td style="text-align: right;">177661</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">38-Santa Cruz de Tenerife</td>
+<td style="text-align: left;">Canarias</td>
+<td style="text-align: right;">806801</td>
+<td style="text-align: right;">398205</td>
+<td style="text-align: right;">408596</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">40-Segovia</td>
+<td style="text-align: left;">Castilla y León</td>
+<td style="text-align: right;">147694</td>
+<td style="text-align: right;">73973</td>
+<td style="text-align: right;">73721</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">41-Sevilla</td>
+<td style="text-align: left;">Andalucía</td>
+<td style="text-align: right;">1727603</td>
+<td style="text-align: right;">846220</td>
+<td style="text-align: right;">881383</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">42-Soria</td>
+<td style="text-align: left;">Castilla y León</td>
+<td style="text-align: right;">90717</td>
+<td style="text-align: right;">45443</td>
+<td style="text-align: right;">45274</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">43-Tarragona</td>
+<td style="text-align: left;">Cataluña</td>
+<td style="text-align: right;">609673</td>
+<td style="text-align: right;">303684</td>
+<td style="text-align: right;">305989</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">44-Teruel</td>
+<td style="text-align: left;">Aragón</td>
+<td style="text-align: right;">135858</td>
+<td style="text-align: right;">68724</td>
+<td style="text-align: right;">67134</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">45-Toledo</td>
+<td style="text-align: left;">Castilla-La Mancha</td>
+<td style="text-align: right;">541379</td>
+<td style="text-align: right;">270406</td>
+<td style="text-align: right;">270973</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">46-Valencia/València</td>
+<td style="text-align: left;">Comunidad Valenciana</td>
+<td style="text-align: right;">2216285</td>
+<td style="text-align: right;">1084149</td>
+<td style="text-align: right;">1132136</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">47-Valladolid</td>
+<td style="text-align: left;">Castilla y León</td>
+<td style="text-align: right;">498094</td>
+<td style="text-align: right;">243999</td>
+<td style="text-align: right;">254095</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">48-Vizcaya</td>
+<td style="text-align: left;">País Vasco</td>
+<td style="text-align: right;">1122637</td>
+<td style="text-align: right;">545557</td>
+<td style="text-align: right;">577080</td>
+</tr>
+</tbody>
+</table>
+
+
+</div>
+</div>
+<div style="page-break-after: always;"></div>
+</section>
+</section>
+<section id="crear-funciones-r-para-facilitar-la-tarea-de-presentar-tablas" class="level1" data-number="3">
+<h1 data-number="3"><span class="header-section-number">3</span> Crear funciones R para facilitar la tarea de presentar tablas</h1>
+<p>En este apartado se van a crear funciones R para que nos simplifique la presentación de tablas de información, que es una tarea que se realizará frecuentemente. Estas funciones R generalmente se recopilan en ficheros de código R que se pueden cargar en cualquier cálculo con ayuda de la función R: <code>source("ficheroconfunciones.R")</code> colocada antes de las líneas de código que las usarán.</p>
+<p>La primera que se crea es una función muy sencilla y que nos ahorraría teclear mucho código.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb13"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb13-1"><a href="#cb13-1" aria-hidden="true" tabindex="-1"></a>func_Tabla <span class="ot">=</span> <span class="cf">function</span>(datos, <span class="at">scaption =</span> <span class="st">"Tabla ..."</span>) {</span>
+<span id="cb13-2"><a href="#cb13-2" aria-hidden="true" tabindex="-1"></a> <span class="fu">kable</span>(datos, <span class="at">booktabs =</span> T, <span class="at">longtable =</span> T, <span class="at">caption =</span> scaption) <span class="sc">|&gt;</span> </span>
+<span id="cb13-3"><a href="#cb13-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">kable_styling</span>(<span class="at">bootstrap_options =</span> <span class="fu">c</span>(<span class="st">"striped"</span>,<span class="st">"hover"</span>,<span class="st">"condensed"</span>), </span>
+<span id="cb13-4"><a href="#cb13-4" aria-hidden="true" tabindex="-1"></a>                <span class="at">latex_options =</span> <span class="fu">c</span>(<span class="st">"striped"</span>,<span class="st">"HOLD_position"</span>, <span class="st">"repeat_header"</span>),</span>
+<span id="cb13-5"><a href="#cb13-5" aria-hidden="true" tabindex="-1"></a>                <span class="at">repeat_header_text =</span> <span class="st">"(continúa)"</span></span>
+<span id="cb13-6"><a href="#cb13-6" aria-hidden="true" tabindex="-1"></a>  )</span>
+<span id="cb13-7"><a href="#cb13-7" aria-hidden="true" tabindex="-1"></a>}</span></code><button title="Copiar al portapapeles" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<p>Una vez creada, su uso es muy sencillo (RStudio también nos mostrará sus argumentos).</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb14"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb14-1"><a href="#cb14-1" aria-hidden="true" tabindex="-1"></a><span class="fu">func_Tabla</span>(<span class="fu">head</span>(datosPractica01,<span class="dv">20</span>), <span class="st">"Nueva Tabla 2"</span>)</span></code><button title="Copiar al portapapeles" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<table class="table table-striped table-hover table-condensed caption-top table-sm small" data-quarto-postprocess="true">
+<caption>Nueva Tabla 2</caption>
+<thead>
+<tr class="header">
+<th style="text-align: left;" data-quarto-table-cell-role="th">Provincia</th>
+<th style="text-align: left;" data-quarto-table-cell-role="th">CCAA</th>
+<th style="text-align: right;" data-quarto-table-cell-role="th">TOTAL</th>
+<th style="text-align: right;" data-quarto-table-cell-role="th">Varon</th>
+<th style="text-align: right;" data-quarto-table-cell-role="th">Mujer</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td style="text-align: left;">01-Álava</td>
+<td style="text-align: left;">País Vasco</td>
+<td style="text-align: right;">286387</td>
+<td style="text-align: right;">142036</td>
+<td style="text-align: right;">144351</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">02-Albacete</td>
+<td style="text-align: left;">Castilla-La Mancha</td>
+<td style="text-align: right;">364835</td>
+<td style="text-align: right;">181461</td>
+<td style="text-align: right;">183374</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">03-Alicante/Alacant</td>
+<td style="text-align: left;">Comunidad Valenciana</td>
+<td style="text-align: right;">1461925</td>
+<td style="text-align: right;">722162</td>
+<td style="text-align: right;">739763</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">04-Almería</td>
+<td style="text-align: left;">Andalucía</td>
+<td style="text-align: right;">536731</td>
+<td style="text-align: right;">272023</td>
+<td style="text-align: right;">264708</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">33-Asturias</td>
+<td style="text-align: left;">Asturias (Principado de)</td>
+<td style="text-align: right;">1062998</td>
+<td style="text-align: right;">508995</td>
+<td style="text-align: right;">554003</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">05-Ávila</td>
+<td style="text-align: left;">Castilla y León</td>
+<td style="text-align: right;">163442</td>
+<td style="text-align: right;">81850</td>
+<td style="text-align: right;">81592</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">06-Badajoz</td>
+<td style="text-align: left;">Extremadura</td>
+<td style="text-align: right;">654882</td>
+<td style="text-align: right;">323541</td>
+<td style="text-align: right;">331341</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">07-Balears (Illes)</td>
+<td style="text-align: left;">Balears (Illes)</td>
+<td style="text-align: right;">841669</td>
+<td style="text-align: right;">417314</td>
+<td style="text-align: right;">424355</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">08-Barcelona</td>
+<td style="text-align: left;">Cataluña</td>
+<td style="text-align: right;">4805927</td>
+<td style="text-align: right;">2341592</td>
+<td style="text-align: right;">2464335</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">09-Burgos</td>
+<td style="text-align: left;">Castilla y León</td>
+<td style="text-align: right;">348934</td>
+<td style="text-align: right;">174576</td>
+<td style="text-align: right;">174358</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">10-Cáceres</td>
+<td style="text-align: left;">Extremadura</td>
+<td style="text-align: right;">403621</td>
+<td style="text-align: right;">200820</td>
+<td style="text-align: right;">202801</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">11-Cádiz</td>
+<td style="text-align: left;">Andalucía</td>
+<td style="text-align: right;">1116491</td>
+<td style="text-align: right;">552463</td>
+<td style="text-align: right;">564028</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">39-Cantabria</td>
+<td style="text-align: left;">Cantabria</td>
+<td style="text-align: right;">535131</td>
+<td style="text-align: right;">260586</td>
+<td style="text-align: right;">274545</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">12-Castellón/Castelló</td>
+<td style="text-align: left;">Comunidad Valenciana</td>
+<td style="text-align: right;">484566</td>
+<td style="text-align: right;">240673</td>
+<td style="text-align: right;">243893</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">51-Ceuta</td>
+<td style="text-align: left;">Ceuta</td>
+<td style="text-align: right;">71505</td>
+<td style="text-align: right;">35949</td>
+<td style="text-align: right;">35556</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">13-Ciudad Real</td>
+<td style="text-align: left;">Castilla-La Mancha</td>
+<td style="text-align: right;">478957</td>
+<td style="text-align: right;">235189</td>
+<td style="text-align: right;">243768</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">14-Córdoba</td>
+<td style="text-align: left;">Andalucía</td>
+<td style="text-align: right;">761657</td>
+<td style="text-align: right;">372464</td>
+<td style="text-align: right;">389193</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">15-Coruña (A)</td>
+<td style="text-align: left;">Galicia</td>
+<td style="text-align: right;">1096027</td>
+<td style="text-align: right;">525388</td>
+<td style="text-align: right;">570639</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">16-Cuenca</td>
+<td style="text-align: left;">Castilla-La Mancha</td>
+<td style="text-align: right;">200346</td>
+<td style="text-align: right;">99959</td>
+<td style="text-align: right;">100387</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">17-Girona</td>
+<td style="text-align: left;">Cataluña</td>
+<td style="text-align: right;">565304</td>
+<td style="text-align: right;">280830</td>
+<td style="text-align: right;">284474</td>
+</tr>
+</tbody>
+</table>
+
+
+</div>
+</div>
+<section id="función-mejorada-para-html-y-latex-simultáneamente" class="level2" data-number="3.1">
+<h2 data-number="3.1" class="anchored" data-anchor-id="función-mejorada-para-html-y-latex-simultáneamente"><span class="header-section-number">3.1</span> Función Mejorada para html y latex simultáneamente</h2>
+<p>La siguiente función <code>DemBas_presen()</code> contiene muchas más posibilidades como se muestra en el siguiente código. Se puede observar la ventaja de que algunos argumentos de esta función tienen ya definidos unos valores por defecto que no se necesitarían introducir al llamarla si coinciden con nuestros requisitos.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb15"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb15-1"><a href="#cb15-1" aria-hidden="true" tabindex="-1"></a><span class="fu">suppressWarnings</span>(<span class="fu">suppressMessages</span>(<span class="fu">library</span>(DemographyBasic)))</span>
+<span id="cb15-2"><a href="#cb15-2" aria-hidden="true" tabindex="-1"></a>DemBas_presentadf</span></code><button title="Copiar al portapapeles" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>function (datos1, scaption = NULL, apaisadalatex = FALSE, variaspaginas = TRUE, 
+    fuentesize = NULL, CompletaAncho = FALSE) 
+{
+    if (apaisadalatex) {
+        if (variaspaginas) {
+            if (!is.null(fuentesize)) {
+                landscape(kable_styling(kable(datos1, longtable = TRUE, 
+                  booktabs = TRUE, caption = scaption), bootstrap_options = c("striped", 
+                  "hover", "condensed", "responsive"), latex_options = c("striped", 
+                  "repeat_header", "HOLD_position"), font_size = fuentesize, 
+                  repeat_header_text = "(continúa)"))
+            }
+            else {
+                landscape(kable_styling(kable(datos1, longtable = TRUE, 
+                  booktabs = TRUE, caption = scaption), bootstrap_options = c("striped", 
+                  "hover", "condensed", "responsive"), latex_options = c("striped", 
+                  "repeat_header", "HOLD_position"), repeat_header_text = "(continúa)", 
+                  full_width = CompletaAncho))
+            }
+        }
+        else {
+            landscape(kable_styling(kable(datos1, booktabs = TRUE, 
+                caption = scaption), bootstrap_options = c("striped", 
+                "hover", "condensed", "responsive"), latex_options = c("striped", 
+                "scale_down", "HOLD_position"), full_width = CompletaAncho))
+        }
+    }
+    else {
+        if (!is.null(fuentesize)) {
+            kable_styling(kable(datos1, longtable = TRUE, booktabs = TRUE, 
+                caption = scaption), bootstrap_options = c("striped", 
+                "hover", "condensed", "responsive"), latex_options = c("striped", 
+                "repeat_header", "HOLD_position"), font_size = fuentesize, 
+                repeat_header_text = "(continúa)")
+        }
+        else {
+            kable_styling(kable(datos1, longtable = TRUE, booktabs = TRUE, 
+                caption = scaption), bootstrap_options = c("striped", 
+                "hover", "condensed", "responsive"), latex_options = c("striped", 
+                "repeat_header", "HOLD_position"), repeat_header_text = "(continúa)", 
+                full_width = CompletaAncho)
+        }
+    }
+}
+&lt;bytecode: 0x1098ef820&gt;
+&lt;environment: namespace:DemographyBasic&gt;</code></pre>
+</div>
+</div>
+<p>Esta función se ha incluido en el paquete: “<code>DemographyBasic</code>” para facilitar su uso.</p>
+<p>Una vez definida se puede usar como se muestra a continuación.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb17"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb17-1"><a href="#cb17-1" aria-hidden="true" tabindex="-1"></a><span class="fu">DemBas_presentadf</span>(datosPractica01)</span></code><button title="Copiar al portapapeles" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<div class="table-responsive">
+<table class="table table-striped table-hover table-condensed caption-top table-sm small" data-quarto-postprocess="true">
+<thead>
+<tr class="header">
+<th style="text-align: left;" data-quarto-table-cell-role="th">Provincia</th>
+<th style="text-align: left;" data-quarto-table-cell-role="th">CCAA</th>
+<th style="text-align: right;" data-quarto-table-cell-role="th">TOTAL</th>
+<th style="text-align: right;" data-quarto-table-cell-role="th">Varon</th>
+<th style="text-align: right;" data-quarto-table-cell-role="th">Mujer</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td style="text-align: left;">01-Álava</td>
+<td style="text-align: left;">País Vasco</td>
+<td style="text-align: right;">286387</td>
+<td style="text-align: right;">142036</td>
+<td style="text-align: right;">144351</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">02-Albacete</td>
+<td style="text-align: left;">Castilla-La Mancha</td>
+<td style="text-align: right;">364835</td>
+<td style="text-align: right;">181461</td>
+<td style="text-align: right;">183374</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">03-Alicante/Alacant</td>
+<td style="text-align: left;">Comunidad Valenciana</td>
+<td style="text-align: right;">1461925</td>
+<td style="text-align: right;">722162</td>
+<td style="text-align: right;">739763</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">04-Almería</td>
+<td style="text-align: left;">Andalucía</td>
+<td style="text-align: right;">536731</td>
+<td style="text-align: right;">272023</td>
+<td style="text-align: right;">264708</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">33-Asturias</td>
+<td style="text-align: left;">Asturias (Principado de)</td>
+<td style="text-align: right;">1062998</td>
+<td style="text-align: right;">508995</td>
+<td style="text-align: right;">554003</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">05-Ávila</td>
+<td style="text-align: left;">Castilla y León</td>
+<td style="text-align: right;">163442</td>
+<td style="text-align: right;">81850</td>
+<td style="text-align: right;">81592</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">06-Badajoz</td>
+<td style="text-align: left;">Extremadura</td>
+<td style="text-align: right;">654882</td>
+<td style="text-align: right;">323541</td>
+<td style="text-align: right;">331341</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">07-Balears (Illes)</td>
+<td style="text-align: left;">Balears (Illes)</td>
+<td style="text-align: right;">841669</td>
+<td style="text-align: right;">417314</td>
+<td style="text-align: right;">424355</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">08-Barcelona</td>
+<td style="text-align: left;">Cataluña</td>
+<td style="text-align: right;">4805927</td>
+<td style="text-align: right;">2341592</td>
+<td style="text-align: right;">2464335</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">09-Burgos</td>
+<td style="text-align: left;">Castilla y León</td>
+<td style="text-align: right;">348934</td>
+<td style="text-align: right;">174576</td>
+<td style="text-align: right;">174358</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">10-Cáceres</td>
+<td style="text-align: left;">Extremadura</td>
+<td style="text-align: right;">403621</td>
+<td style="text-align: right;">200820</td>
+<td style="text-align: right;">202801</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">11-Cádiz</td>
+<td style="text-align: left;">Andalucía</td>
+<td style="text-align: right;">1116491</td>
+<td style="text-align: right;">552463</td>
+<td style="text-align: right;">564028</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">39-Cantabria</td>
+<td style="text-align: left;">Cantabria</td>
+<td style="text-align: right;">535131</td>
+<td style="text-align: right;">260586</td>
+<td style="text-align: right;">274545</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">12-Castellón/Castelló</td>
+<td style="text-align: left;">Comunidad Valenciana</td>
+<td style="text-align: right;">484566</td>
+<td style="text-align: right;">240673</td>
+<td style="text-align: right;">243893</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">51-Ceuta</td>
+<td style="text-align: left;">Ceuta</td>
+<td style="text-align: right;">71505</td>
+<td style="text-align: right;">35949</td>
+<td style="text-align: right;">35556</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">13-Ciudad Real</td>
+<td style="text-align: left;">Castilla-La Mancha</td>
+<td style="text-align: right;">478957</td>
+<td style="text-align: right;">235189</td>
+<td style="text-align: right;">243768</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">14-Córdoba</td>
+<td style="text-align: left;">Andalucía</td>
+<td style="text-align: right;">761657</td>
+<td style="text-align: right;">372464</td>
+<td style="text-align: right;">389193</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">15-Coruña (A)</td>
+<td style="text-align: left;">Galicia</td>
+<td style="text-align: right;">1096027</td>
+<td style="text-align: right;">525388</td>
+<td style="text-align: right;">570639</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">16-Cuenca</td>
+<td style="text-align: left;">Castilla-La Mancha</td>
+<td style="text-align: right;">200346</td>
+<td style="text-align: right;">99959</td>
+<td style="text-align: right;">100387</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">17-Girona</td>
+<td style="text-align: left;">Cataluña</td>
+<td style="text-align: right;">565304</td>
+<td style="text-align: right;">280830</td>
+<td style="text-align: right;">284474</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">18-Granada</td>
+<td style="text-align: left;">Andalucía</td>
+<td style="text-align: right;">821660</td>
+<td style="text-align: right;">401638</td>
+<td style="text-align: right;">420022</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">19-Guadalajara</td>
+<td style="text-align: left;">Castilla-La Mancha</td>
+<td style="text-align: right;">174999</td>
+<td style="text-align: right;">88535</td>
+<td style="text-align: right;">86464</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">20-Guipúzcoa</td>
+<td style="text-align: left;">País Vasco</td>
+<td style="text-align: right;">673563</td>
+<td style="text-align: right;">330288</td>
+<td style="text-align: right;">343275</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">21-Huelva</td>
+<td style="text-align: left;">Andalucía</td>
+<td style="text-align: right;">462579</td>
+<td style="text-align: right;">229013</td>
+<td style="text-align: right;">233566</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">22-Huesca</td>
+<td style="text-align: left;">Aragón</td>
+<td style="text-align: right;">206502</td>
+<td style="text-align: right;">104089</td>
+<td style="text-align: right;">102413</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">23-Jaén</td>
+<td style="text-align: left;">Andalucía</td>
+<td style="text-align: right;">643820</td>
+<td style="text-align: right;">317343</td>
+<td style="text-align: right;">326477</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">24-León</td>
+<td style="text-align: left;">Castilla y León</td>
+<td style="text-align: right;">488751</td>
+<td style="text-align: right;">238139</td>
+<td style="text-align: right;">250612</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">25-Lleida</td>
+<td style="text-align: left;">Cataluña</td>
+<td style="text-align: right;">362206</td>
+<td style="text-align: right;">180425</td>
+<td style="text-align: right;">181781</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">27-Lugo</td>
+<td style="text-align: left;">Galicia</td>
+<td style="text-align: right;">357648</td>
+<td style="text-align: right;">173339</td>
+<td style="text-align: right;">184309</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">28-Madrid</td>
+<td style="text-align: left;">Madrid (Comunidad de)</td>
+<td style="text-align: right;">5423384</td>
+<td style="text-align: right;">2609746</td>
+<td style="text-align: right;">2813638</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">29-Málaga</td>
+<td style="text-align: left;">Andalucía</td>
+<td style="text-align: right;">1287017</td>
+<td style="text-align: right;">630902</td>
+<td style="text-align: right;">656115</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">52-Melilla</td>
+<td style="text-align: left;">Melilla</td>
+<td style="text-align: right;">66411</td>
+<td style="text-align: right;">33134</td>
+<td style="text-align: right;">33277</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">30-Murcia</td>
+<td style="text-align: left;">Murcia (Región de)</td>
+<td style="text-align: right;">1197646</td>
+<td style="text-align: right;">597265</td>
+<td style="text-align: right;">600381</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">31-Navarra</td>
+<td style="text-align: left;">Navarra (Comunidad Foral de)</td>
+<td style="text-align: right;">555829</td>
+<td style="text-align: right;">276629</td>
+<td style="text-align: right;">279200</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">32-Ourense</td>
+<td style="text-align: left;">Galicia</td>
+<td style="text-align: right;">338446</td>
+<td style="text-align: right;">161968</td>
+<td style="text-align: right;">176478</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">34-Palencia</td>
+<td style="text-align: left;">Castilla y León</td>
+<td style="text-align: right;">174143</td>
+<td style="text-align: right;">85955</td>
+<td style="text-align: right;">88188</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">35-Palmas (Las)</td>
+<td style="text-align: left;">Canarias</td>
+<td style="text-align: right;">887676</td>
+<td style="text-align: right;">444761</td>
+<td style="text-align: right;">442915</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">36-Pontevedra</td>
+<td style="text-align: left;">Galicia</td>
+<td style="text-align: right;">903759</td>
+<td style="text-align: right;">433683</td>
+<td style="text-align: right;">470076</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">26-Rioja (La)</td>
+<td style="text-align: left;">Rioja (La)</td>
+<td style="text-align: right;">276702</td>
+<td style="text-align: right;">137827</td>
+<td style="text-align: right;">138875</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">37-Salamanca</td>
+<td style="text-align: left;">Castilla y León</td>
+<td style="text-align: right;">345609</td>
+<td style="text-align: right;">167948</td>
+<td style="text-align: right;">177661</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">38-Santa Cruz de Tenerife</td>
+<td style="text-align: left;">Canarias</td>
+<td style="text-align: right;">806801</td>
+<td style="text-align: right;">398205</td>
+<td style="text-align: right;">408596</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">40-Segovia</td>
+<td style="text-align: left;">Castilla y León</td>
+<td style="text-align: right;">147694</td>
+<td style="text-align: right;">73973</td>
+<td style="text-align: right;">73721</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">41-Sevilla</td>
+<td style="text-align: left;">Andalucía</td>
+<td style="text-align: right;">1727603</td>
+<td style="text-align: right;">846220</td>
+<td style="text-align: right;">881383</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">42-Soria</td>
+<td style="text-align: left;">Castilla y León</td>
+<td style="text-align: right;">90717</td>
+<td style="text-align: right;">45443</td>
+<td style="text-align: right;">45274</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">43-Tarragona</td>
+<td style="text-align: left;">Cataluña</td>
+<td style="text-align: right;">609673</td>
+<td style="text-align: right;">303684</td>
+<td style="text-align: right;">305989</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">44-Teruel</td>
+<td style="text-align: left;">Aragón</td>
+<td style="text-align: right;">135858</td>
+<td style="text-align: right;">68724</td>
+<td style="text-align: right;">67134</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">45-Toledo</td>
+<td style="text-align: left;">Castilla-La Mancha</td>
+<td style="text-align: right;">541379</td>
+<td style="text-align: right;">270406</td>
+<td style="text-align: right;">270973</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">46-Valencia/València</td>
+<td style="text-align: left;">Comunidad Valenciana</td>
+<td style="text-align: right;">2216285</td>
+<td style="text-align: right;">1084149</td>
+<td style="text-align: right;">1132136</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">47-Valladolid</td>
+<td style="text-align: left;">Castilla y León</td>
+<td style="text-align: right;">498094</td>
+<td style="text-align: right;">243999</td>
+<td style="text-align: right;">254095</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">48-Vizcaya</td>
+<td style="text-align: left;">País Vasco</td>
+<td style="text-align: right;">1122637</td>
+<td style="text-align: right;">545557</td>
+<td style="text-align: right;">577080</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">49-Zamora</td>
+<td style="text-align: left;">Castilla y León</td>
+<td style="text-align: right;">199090</td>
+<td style="text-align: right;">97991</td>
+<td style="text-align: right;">101099</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">50-Zaragoza</td>
+<td style="text-align: left;">Aragón</td>
+<td style="text-align: right;">861855</td>
+<td style="text-align: right;">422033</td>
+<td style="text-align: right;">439822</td>
+</tr>
+</tbody>
+</table>
+</div>
+
+
+</div>
+</div>
+<!-- -->
+
+</section>
+</section>
+
+</main>
+<!-- /main column -->
+<script id="quarto-html-after-body" type="application/javascript">
+window.document.addEventListener("DOMContentLoaded", function (event) {
+  const toggleBodyColorMode = (bsSheetEl) => {
+    const mode = bsSheetEl.getAttribute("data-mode");
+    const bodyEl = window.document.querySelector("body");
+    if (mode === "dark") {
+      bodyEl.classList.add("quarto-dark");
+      bodyEl.classList.remove("quarto-light");
+    } else {
+      bodyEl.classList.add("quarto-light");
+      bodyEl.classList.remove("quarto-dark");
+    }
+  }
+  const toggleBodyColorPrimary = () => {
+    const bsSheetEl = window.document.querySelector("link#quarto-bootstrap");
+    if (bsSheetEl) {
+      toggleBodyColorMode(bsSheetEl);
+    }
+  }
+  toggleBodyColorPrimary();  
+  const icon = "";
+  const anchorJS = new window.AnchorJS();
+  anchorJS.options = {
+    placement: 'right',
+    icon: icon
+  };
+  anchorJS.add('.anchored');
+  const isCodeAnnotation = (el) => {
+    for (const clz of el.classList) {
+      if (clz.startsWith('code-annotation-')) {                     
+        return true;
+      }
+    }
+    return false;
+  }
+  const onCopySuccess = function(e) {
+    // button target
+    const button = e.trigger;
+    // don't keep focus
+    button.blur();
+    // flash "checked"
+    button.classList.add('code-copy-button-checked');
+    var currentTitle = button.getAttribute("title");
+    button.setAttribute("title", "Copiado");
+    let tooltip;
+    if (window.bootstrap) {
+      button.setAttribute("data-bs-toggle", "tooltip");
+      button.setAttribute("data-bs-placement", "left");
+      button.setAttribute("data-bs-title", "Copiado");
+      tooltip = new bootstrap.Tooltip(button, 
+        { trigger: "manual", 
+          customClass: "code-copy-button-tooltip",
+          offset: [0, -8]});
+      tooltip.show();    
+    }
+    setTimeout(function() {
+      if (tooltip) {
+        tooltip.hide();
+        button.removeAttribute("data-bs-title");
+        button.removeAttribute("data-bs-toggle");
+        button.removeAttribute("data-bs-placement");
+      }
+      button.setAttribute("title", currentTitle);
+      button.classList.remove('code-copy-button-checked');
+    }, 1000);
+    // clear code selection
+    e.clearSelection();
+  }
+  const getTextToCopy = function(trigger) {
+      const codeEl = trigger.previousElementSibling.cloneNode(true);
+      for (const childEl of codeEl.children) {
+        if (isCodeAnnotation(childEl)) {
+          childEl.remove();
+        }
+      }
+      return codeEl.innerText;
+  }
+  const clipboard = new window.ClipboardJS('.code-copy-button:not([data-in-quarto-modal])', {
+    text: getTextToCopy
+  });
+  clipboard.on('success', onCopySuccess);
+  if (window.document.getElementById('quarto-embedded-source-code-modal')) {
+    // For code content inside modals, clipBoardJS needs to be initialized with a container option
+    // TODO: Check when it could be a function (https://github.com/zenorocha/clipboard.js/issues/860)
+    const clipboardModal = new window.ClipboardJS('.code-copy-button[data-in-quarto-modal]', {
+      text: getTextToCopy,
+      container: window.document.getElementById('quarto-embedded-source-code-modal')
+    });
+    clipboardModal.on('success', onCopySuccess);
+  }
+  const viewSource = window.document.getElementById('quarto-view-source') ||
+                     window.document.getElementById('quarto-code-tools-source');
+  if (viewSource) {
+    const sourceUrl = viewSource.getAttribute("data-quarto-source-url");
+    viewSource.addEventListener("click", function(e) {
+      if (sourceUrl) {
+        // rstudio viewer pane
+        if (/\bcapabilities=\b/.test(window.location)) {
+          window.open(sourceUrl);
+        } else {
+          window.location.href = sourceUrl;
+        }
+      } else {
+        const modal = new bootstrap.Modal(document.getElementById('quarto-embedded-source-code-modal'));
+        modal.show();
+      }
+      return false;
+    });
+  }
+  function toggleCodeHandler(show) {
+    return function(e) {
+      const detailsSrc = window.document.querySelectorAll(".cell > details > .sourceCode");
+      for (let i=0; i<detailsSrc.length; i++) {
+        const details = detailsSrc[i].parentElement;
+        if (show) {
+          details.open = true;
+        } else {
+          details.removeAttribute("open");
+        }
+      }
+      const cellCodeDivs = window.document.querySelectorAll(".cell > .sourceCode");
+      const fromCls = show ? "hidden" : "unhidden";
+      const toCls = show ? "unhidden" : "hidden";
+      for (let i=0; i<cellCodeDivs.length; i++) {
+        const codeDiv = cellCodeDivs[i];
+        if (codeDiv.classList.contains(fromCls)) {
+          codeDiv.classList.remove(fromCls);
+          codeDiv.classList.add(toCls);
+        } 
+      }
+      return false;
+    }
+  }
+  const hideAllCode = window.document.getElementById("quarto-hide-all-code");
+  if (hideAllCode) {
+    hideAllCode.addEventListener("click", toggleCodeHandler(false));
+  }
+  const showAllCode = window.document.getElementById("quarto-show-all-code");
+  if (showAllCode) {
+    showAllCode.addEventListener("click", toggleCodeHandler(true));
+  }
+    var localhostRegex = new RegExp(/^(?:http|https):\/\/localhost\:?[0-9]*\//);
+    var mailtoRegex = new RegExp(/^mailto:/);
+      var filterRegex = new RegExp('/' + window.location.host + '/');
+    var isInternal = (href) => {
+        return filterRegex.test(href) || localhostRegex.test(href) || mailtoRegex.test(href);
+    }
+    // Inspect non-navigation links and adorn them if external
+ 	var links = window.document.querySelectorAll('a[href]:not(.nav-link):not(.navbar-brand):not(.toc-action):not(.sidebar-link):not(.sidebar-item-toggle):not(.pagination-link):not(.no-external):not([aria-hidden]):not(.dropdown-item):not(.quarto-navigation-tool):not(.about-link)');
+    for (var i=0; i<links.length; i++) {
+      const link = links[i];
+      if (!isInternal(link.href)) {
+        // undo the damage that might have been done by quarto-nav.js in the case of
+        // links that we want to consider external
+        if (link.dataset.originalHref !== undefined) {
+          link.href = link.dataset.originalHref;
+        }
+      }
+    }
+  function tippyHover(el, contentFn, onTriggerFn, onUntriggerFn) {
+    const config = {
+      allowHTML: true,
+      maxWidth: 500,
+      delay: 100,
+      arrow: false,
+      appendTo: function(el) {
+          return el.parentElement;
+      },
+      interactive: true,
+      interactiveBorder: 10,
+      theme: 'quarto',
+      placement: 'bottom-start',
+    };
+    if (contentFn) {
+      config.content = contentFn;
+    }
+    if (onTriggerFn) {
+      config.onTrigger = onTriggerFn;
+    }
+    if (onUntriggerFn) {
+      config.onUntrigger = onUntriggerFn;
+    }
+    window.tippy(el, config); 
+  }
+  const noterefs = window.document.querySelectorAll('a[role="doc-noteref"]');
+  for (var i=0; i<noterefs.length; i++) {
+    const ref = noterefs[i];
+    tippyHover(ref, function() {
+      // use id or data attribute instead here
+      let href = ref.getAttribute('data-footnote-href') || ref.getAttribute('href');
+      try { href = new URL(href).hash; } catch {}
+      const id = href.replace(/^#\/?/, "");
+      const note = window.document.getElementById(id);
+      if (note) {
+        return note.innerHTML;
+      } else {
+        return "";
+      }
+    });
+  }
+  const xrefs = window.document.querySelectorAll('a.quarto-xref');
+  const processXRef = (id, note) => {
+    // Strip column container classes
+    const stripColumnClz = (el) => {
+      el.classList.remove("page-full", "page-columns");
+      if (el.children) {
+        for (const child of el.children) {
+          stripColumnClz(child);
+        }
+      }
+    }
+    stripColumnClz(note)
+    if (id === null || id.startsWith('sec-')) {
+      // Special case sections, only their first couple elements
+      const container = document.createElement("div");
+      if (note.children && note.children.length > 2) {
+        container.appendChild(note.children[0].cloneNode(true));
+        for (let i = 1; i < note.children.length; i++) {
+          const child = note.children[i];
+          if (child.tagName === "P" && child.innerText === "") {
+            continue;
+          } else {
+            container.appendChild(child.cloneNode(true));
+            break;
+          }
+        }
+        if (window.Quarto?.typesetMath) {
+          window.Quarto.typesetMath(container);
+        }
+        return container.innerHTML
+      } else {
+        if (window.Quarto?.typesetMath) {
+          window.Quarto.typesetMath(note);
+        }
+        return note.innerHTML;
+      }
+    } else {
+      // Remove any anchor links if they are present
+      const anchorLink = note.querySelector('a.anchorjs-link');
+      if (anchorLink) {
+        anchorLink.remove();
+      }
+      if (window.Quarto?.typesetMath) {
+        window.Quarto.typesetMath(note);
+      }
+      // TODO in 1.5, we should make sure this works without a callout special case
+      if (note.classList.contains("callout")) {
+        return note.outerHTML;
+      } else {
+        return note.innerHTML;
+      }
+    }
+  }
+  for (var i=0; i<xrefs.length; i++) {
+    const xref = xrefs[i];
+    tippyHover(xref, undefined, function(instance) {
+      instance.disable();
+      let url = xref.getAttribute('href');
+      let hash = undefined; 
+      if (url.startsWith('#')) {
+        hash = url;
+      } else {
+        try { hash = new URL(url).hash; } catch {}
+      }
+      if (hash) {
+        const id = hash.replace(/^#\/?/, "");
+        const note = window.document.getElementById(id);
+        if (note !== null) {
+          try {
+            const html = processXRef(id, note.cloneNode(true));
+            instance.setContent(html);
+          } finally {
+            instance.enable();
+            instance.show();
+          }
+        } else {
+          // See if we can fetch this
+          fetch(url.split('#')[0])
+          .then(res => res.text())
+          .then(html => {
+            const parser = new DOMParser();
+            const htmlDoc = parser.parseFromString(html, "text/html");
+            const note = htmlDoc.getElementById(id);
+            if (note !== null) {
+              const html = processXRef(id, note);
+              instance.setContent(html);
+            } 
+          }).finally(() => {
+            instance.enable();
+            instance.show();
+          });
+        }
+      } else {
+        // See if we can fetch a full url (with no hash to target)
+        // This is a special case and we should probably do some content thinning / targeting
+        fetch(url)
+        .then(res => res.text())
+        .then(html => {
+          const parser = new DOMParser();
+          const htmlDoc = parser.parseFromString(html, "text/html");
+          const note = htmlDoc.querySelector('main.content');
+          if (note !== null) {
+            // This should only happen for chapter cross references
+            // (since there is no id in the URL)
+            // remove the first header
+            if (note.children.length > 0 && note.children[0].tagName === "HEADER") {
+              note.children[0].remove();
+            }
+            const html = processXRef(null, note);
+            instance.setContent(html);
+          } 
+        }).finally(() => {
+          instance.enable();
+          instance.show();
+        });
+      }
+    }, function(instance) {
+    });
+  }
+      let selectedAnnoteEl;
+      const selectorForAnnotation = ( cell, annotation) => {
+        let cellAttr = 'data-code-cell="' + cell + '"';
+        let lineAttr = 'data-code-annotation="' +  annotation + '"';
+        const selector = 'span[' + cellAttr + '][' + lineAttr + ']';
+        return selector;
+      }
+      const selectCodeLines = (annoteEl) => {
+        const doc = window.document;
+        const targetCell = annoteEl.getAttribute("data-target-cell");
+        const targetAnnotation = annoteEl.getAttribute("data-target-annotation");
+        const annoteSpan = window.document.querySelector(selectorForAnnotation(targetCell, targetAnnotation));
+        const lines = annoteSpan.getAttribute("data-code-lines").split(",");
+        const lineIds = lines.map((line) => {
+          return targetCell + "-" + line;
+        })
+        let top = null;
+        let height = null;
+        let parent = null;
+        if (lineIds.length > 0) {
+            //compute the position of the single el (top and bottom and make a div)
+            const el = window.document.getElementById(lineIds[0]);
+            top = el.offsetTop;
+            height = el.offsetHeight;
+            parent = el.parentElement.parentElement;
+          if (lineIds.length > 1) {
+            const lastEl = window.document.getElementById(lineIds[lineIds.length - 1]);
+            const bottom = lastEl.offsetTop + lastEl.offsetHeight;
+            height = bottom - top;
+          }
+          if (top !== null && height !== null && parent !== null) {
+            // cook up a div (if necessary) and position it 
+            let div = window.document.getElementById("code-annotation-line-highlight");
+            if (div === null) {
+              div = window.document.createElement("div");
+              div.setAttribute("id", "code-annotation-line-highlight");
+              div.style.position = 'absolute';
+              parent.appendChild(div);
+            }
+            div.style.top = top - 2 + "px";
+            div.style.height = height + 4 + "px";
+            div.style.left = 0;
+            let gutterDiv = window.document.getElementById("code-annotation-line-highlight-gutter");
+            if (gutterDiv === null) {
+              gutterDiv = window.document.createElement("div");
+              gutterDiv.setAttribute("id", "code-annotation-line-highlight-gutter");
+              gutterDiv.style.position = 'absolute';
+              const codeCell = window.document.getElementById(targetCell);
+              const gutter = codeCell.querySelector('.code-annotation-gutter');
+              gutter.appendChild(gutterDiv);
+            }
+            gutterDiv.style.top = top - 2 + "px";
+            gutterDiv.style.height = height + 4 + "px";
+          }
+          selectedAnnoteEl = annoteEl;
+        }
+      };
+      const unselectCodeLines = () => {
+        const elementsIds = ["code-annotation-line-highlight", "code-annotation-line-highlight-gutter"];
+        elementsIds.forEach((elId) => {
+          const div = window.document.getElementById(elId);
+          if (div) {
+            div.remove();
+          }
+        });
+        selectedAnnoteEl = undefined;
+      };
+        // Handle positioning of the toggle
+    window.addEventListener(
+      "resize",
+      throttle(() => {
+        elRect = undefined;
+        if (selectedAnnoteEl) {
+          selectCodeLines(selectedAnnoteEl);
+        }
+      }, 10)
+    );
+    function throttle(fn, ms) {
+    let throttle = false;
+    let timer;
+      return (...args) => {
+        if(!throttle) { // first call gets through
+            fn.apply(this, args);
+            throttle = true;
+        } else { // all the others get throttled
+            if(timer) clearTimeout(timer); // cancel #2
+            timer = setTimeout(() => {
+              fn.apply(this, args);
+              timer = throttle = false;
+            }, ms);
+        }
+      };
+    }
+      // Attach click handler to the DT
+      const annoteDls = window.document.querySelectorAll('dt[data-target-cell]');
+      for (const annoteDlNode of annoteDls) {
+        annoteDlNode.addEventListener('click', (event) => {
+          const clickedEl = event.target;
+          if (clickedEl !== selectedAnnoteEl) {
+            unselectCodeLines();
+            const activeEl = window.document.querySelector('dt[data-target-cell].code-annotation-active');
+            if (activeEl) {
+              activeEl.classList.remove('code-annotation-active');
+            }
+            selectCodeLines(clickedEl);
+            clickedEl.classList.add('code-annotation-active');
+          } else {
+            // Unselect the line
+            unselectCodeLines();
+            clickedEl.classList.remove('code-annotation-active');
+          }
+        });
+      }
+  const findCites = (el) => {
+    const parentEl = el.parentElement;
+    if (parentEl) {
+      const cites = parentEl.dataset.cites;
+      if (cites) {
+        return {
+          el,
+          cites: cites.split(' ')
+        };
+      } else {
+        return findCites(el.parentElement)
+      }
+    } else {
+      return undefined;
+    }
+  };
+  var bibliorefs = window.document.querySelectorAll('a[role="doc-biblioref"]');
+  for (var i=0; i<bibliorefs.length; i++) {
+    const ref = bibliorefs[i];
+    const citeInfo = findCites(ref);
+    if (citeInfo) {
+      tippyHover(citeInfo.el, function() {
+        var popup = window.document.createElement('div');
+        citeInfo.cites.forEach(function(cite) {
+          var citeDiv = window.document.createElement('div');
+          citeDiv.classList.add('hanging-indent');
+          citeDiv.classList.add('csl-entry');
+          var biblioDiv = window.document.getElementById('ref-' + cite);
+          if (biblioDiv) {
+            citeDiv.innerHTML = biblioDiv.innerHTML;
+          }
+          popup.appendChild(citeDiv);
+        });
+        return popup.innerHTML;
+      });
+    }
+  }
+});
+</script><div class="modal fade" id="quarto-embedded-source-code-modal" tabindex="-1" aria-labelledby="quarto-embedded-source-code-modal-label" aria-hidden="true"><div class="modal-dialog modal-dialog-scrollable"><div class="modal-content"><div class="modal-header"><h5 class="modal-title" id="quarto-embedded-source-code-modal-label">Ejecutar el código</h5><button class="btn-close" data-bs-dismiss="modal"></button></div><div class="modal-body"><div class="">
+<div class="sourceCode" id="cb18" data-shortcodes="false"><pre class="sourceCode markdown code-with-copy"><code class="sourceCode markdown"><span id="cb18-1"><a href="#cb18-1" aria-hidden="true" tabindex="-1"></a><span class="co">---</span></span>
+<span id="cb18-2"><a href="#cb18-2" aria-hidden="true" tabindex="-1"></a><span class="an">title:</span><span class="co"> "Práctica 2: Parte 3 (Presentar tablas)"</span></span>
+<span id="cb18-3"><a href="#cb18-3" aria-hidden="true" tabindex="-1"></a><span class="an">lang:</span><span class="co"> es</span></span>
+<span id="cb18-4"><a href="#cb18-4" aria-hidden="true" tabindex="-1"></a><span class="an">toc:</span><span class="co"> true</span></span>
+<span id="cb18-5"><a href="#cb18-5" aria-hidden="true" tabindex="-1"></a><span class="an">toc-depth:</span><span class="co"> 4</span></span>
+<span id="cb18-6"><a href="#cb18-6" aria-hidden="true" tabindex="-1"></a><span class="an">number-sections:</span><span class="co"> true</span></span>
+<span id="cb18-7"><a href="#cb18-7" aria-hidden="true" tabindex="-1"></a><span class="an">df-print:</span><span class="co"> kable</span></span>
+<span id="cb18-8"><a href="#cb18-8" aria-hidden="true" tabindex="-1"></a><span class="an">format:</span></span>
+<span id="cb18-9"><a href="#cb18-9" aria-hidden="true" tabindex="-1"></a><span class="co">  html:</span></span>
+<span id="cb18-10"><a href="#cb18-10" aria-hidden="true" tabindex="-1"></a><span class="co">    code-tools: true</span></span>
+<span id="cb18-11"><a href="#cb18-11" aria-hidden="true" tabindex="-1"></a><span class="co">    #code-fold: true</span></span>
+<span id="cb18-12"><a href="#cb18-12" aria-hidden="true" tabindex="-1"></a><span class="co">  pdf: default</span></span>
+<span id="cb18-13"><a href="#cb18-13" aria-hidden="true" tabindex="-1"></a><span class="an">execute:</span><span class="co"> </span></span>
+<span id="cb18-14"><a href="#cb18-14" aria-hidden="true" tabindex="-1"></a><span class="co">  echo: true</span></span>
+<span id="cb18-15"><a href="#cb18-15" aria-hidden="true" tabindex="-1"></a><span class="co">  warning: false</span></span>
+<span id="cb18-16"><a href="#cb18-16" aria-hidden="true" tabindex="-1"></a><span class="co">---</span></span>
+<span id="cb18-17"><a href="#cb18-17" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb18-18"><a href="#cb18-18" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb18-19"><a href="#cb18-19" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb18-20"><a href="#cb18-20" aria-hidden="true" tabindex="-1"></a><span class="fu"># Presentación de información en forma de tabla con "kable" del paquete "knitr"</span></span>
+<span id="cb18-21"><a href="#cb18-21" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb18-22"><a href="#cb18-22" aria-hidden="true" tabindex="-1"></a>Importamos el fichero csv: "datosPractica01.csv" con <span class="in">`read.table()`</span>:</span>
+<span id="cb18-23"><a href="#cb18-23" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb18-26"><a href="#cb18-26" aria-hidden="true" tabindex="-1"></a><span class="in">```{r}</span></span>
+<span id="cb18-27"><a href="#cb18-27" aria-hidden="true" tabindex="-1"></a>datos.csv <span class="ot">=</span> <span class="fu">read.table</span>(<span class="at">file =</span> <span class="st">"datosPractica01.csv"</span>, </span>
+<span id="cb18-28"><a href="#cb18-28" aria-hidden="true" tabindex="-1"></a>                       <span class="at">header =</span> <span class="cn">TRUE</span>, <span class="at">sep =</span> <span class="st">","</span>)</span>
+<span id="cb18-29"><a href="#cb18-29" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
+<span id="cb18-30"><a href="#cb18-30" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb18-31"><a href="#cb18-31" aria-hidden="true" tabindex="-1"></a>:::{.callout-note}</span>
+<span id="cb18-32"><a href="#cb18-32" aria-hidden="true" tabindex="-1"></a>En la cabecera yaml de este documento se ha añadido la opción: <span class="in">`df-print: kable`</span>, que le indica a Quarto que cada vez que se le pida en el código R de este documento que se muestre un "data.frame" o un "tibble", se use: <span class="in">`knitr::kable()`</span> con las opciones <span class="in">`booktabs=TRUE, longtable = TRUE`</span> seleccionadas.</span>
+<span id="cb18-33"><a href="#cb18-33" aria-hidden="true" tabindex="-1"></a>:::</span>
+<span id="cb18-34"><a href="#cb18-34" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb18-35"><a href="#cb18-35" aria-hidden="true" tabindex="-1"></a>Si se escribe el nombre de un data.frame (o tibble) en el código R se mostrarán todas sus filas y columnas. En este caso, Quarto las presenta en un formato amigable con <span class="in">`knitr::kable()`</span>. En la salida pdf, eso significa que construye una tabla multipágina, repitiendo en cada página la fila cabecera. En html, la presentación multipágina no tiene el mismo sentido que un pdf.</span>
+<span id="cb18-36"><a href="#cb18-36" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb18-39"><a href="#cb18-39" aria-hidden="true" tabindex="-1"></a><span class="in">```{r}</span></span>
+<span id="cb18-40"><a href="#cb18-40" aria-hidden="true" tabindex="-1"></a>datos.csv</span>
+<span id="cb18-41"><a href="#cb18-41" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
+<span id="cb18-42"><a href="#cb18-42" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb18-43"><a href="#cb18-43" aria-hidden="true" tabindex="-1"></a>En este caso, el anterior código es equivalente a las siguientes dos variantes:</span>
+<span id="cb18-44"><a href="#cb18-44" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb18-45"><a href="#cb18-45" aria-hidden="true" tabindex="-1"></a><span class="in">```{r}</span></span>
+<span id="cb18-46"><a href="#cb18-46" aria-hidden="true" tabindex="-1"></a><span class="in">library(knitr)</span></span>
+<span id="cb18-47"><a href="#cb18-47" aria-hidden="true" tabindex="-1"></a><span class="in">kable(datos.csv)</span></span>
+<span id="cb18-48"><a href="#cb18-48" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
+<span id="cb18-49"><a href="#cb18-49" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb18-50"><a href="#cb18-50" aria-hidden="true" tabindex="-1"></a><span class="in">```{r}</span></span>
+<span id="cb18-51"><a href="#cb18-51" aria-hidden="true" tabindex="-1"></a><span class="in">knitr::kable(datos.csv)</span></span>
+<span id="cb18-52"><a href="#cb18-52" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
+<span id="cb18-53"><a href="#cb18-53" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb18-54"><a href="#cb18-54" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb18-55"><a href="#cb18-55" aria-hidden="true" tabindex="-1"></a>:::{.callout-note}</span>
+<span id="cb18-56"><a href="#cb18-56" aria-hidden="true" tabindex="-1"></a><span class="fu">## Nota Importante</span></span>
+<span id="cb18-57"><a href="#cb18-57" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb18-58"><a href="#cb18-58" aria-hidden="true" tabindex="-1"></a>Cuando el conjunto de datos (data.frame o tibble) o dataset es de más de 20 filas no es necesario presentar todas las filas en el documento, generalmente será suficiente mostrar las primeras 5 a 10 filas. </span>
+<span id="cb18-59"><a href="#cb18-59" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb18-60"><a href="#cb18-60" aria-hidden="true" tabindex="-1"></a>Puede haber situaciones específicas en las que sí sea importante mostrar todas las filas y columnas del dataset.</span>
+<span id="cb18-61"><a href="#cb18-61" aria-hidden="true" tabindex="-1"></a>:::</span>
+<span id="cb18-62"><a href="#cb18-62" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb18-63"><a href="#cb18-63" aria-hidden="true" tabindex="-1"></a>Una forma de mostrar las seis primeras filas (más la fila cabecera) sería con la función <span class="in">`head()`</span>:</span>
+<span id="cb18-66"><a href="#cb18-66" aria-hidden="true" tabindex="-1"></a><span class="in">```{r}</span></span>
+<span id="cb18-67"><a href="#cb18-67" aria-hidden="true" tabindex="-1"></a>knitr<span class="sc">::</span><span class="fu">kable</span>(<span class="fu">head</span>(datos.csv))</span>
+<span id="cb18-68"><a href="#cb18-68" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
+<span id="cb18-69"><a href="#cb18-69" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb18-70"><a href="#cb18-70" aria-hidden="true" tabindex="-1"></a>:::{.callout-note}</span>
+<span id="cb18-71"><a href="#cb18-71" aria-hidden="true" tabindex="-1"></a><span class="fu">## Nota Importante</span></span>
+<span id="cb18-72"><a href="#cb18-72" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb18-73"><a href="#cb18-73" aria-hidden="true" tabindex="-1"></a>Generalmente, se aconseja que todas las tablas de información tengan una leyenda en la que se explique dicha información. Se puede hacer con la opción <span class="in">`caption`</span> de la función <span class="in">`kable()`</span>.</span>
+<span id="cb18-74"><a href="#cb18-74" aria-hidden="true" tabindex="-1"></a>:::</span>
+<span id="cb18-75"><a href="#cb18-75" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb18-78"><a href="#cb18-78" aria-hidden="true" tabindex="-1"></a><span class="in">```{r}</span></span>
+<span id="cb18-79"><a href="#cb18-79" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(knitr)</span>
+<span id="cb18-80"><a href="#cb18-80" aria-hidden="true" tabindex="-1"></a><span class="fu">kable</span>(datos.csv[<span class="dv">1</span><span class="sc">:</span><span class="dv">10</span>,], <span class="at">caption =</span> <span class="st">"Datos de España"</span>)</span>
+<span id="cb18-81"><a href="#cb18-81" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
+<span id="cb18-82"><a href="#cb18-82" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb18-83"><a href="#cb18-83" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb18-84"><a href="#cb18-84" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb18-85"><a href="#cb18-85" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb18-86"><a href="#cb18-86" aria-hidden="true" tabindex="-1"></a>El formato de la salida siguiente es equivalente al del ejemplo anterior: <span class="in">`booktabs=TRUE`</span> hace una presentación bonita de los datos, y <span class="in">`longtable = TRUE`</span> activa el modo multipágina. Obsérvese también cómo se han seleccionado las filas que se muestran</span>
+<span id="cb18-87"><a href="#cb18-87" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb18-90"><a href="#cb18-90" aria-hidden="true" tabindex="-1"></a><span class="in">```{r}</span></span>
+<span id="cb18-91"><a href="#cb18-91" aria-hidden="true" tabindex="-1"></a><span class="fu">kable</span>(<span class="fu">rbind</span>(datos.csv[<span class="dv">1</span><span class="sc">:</span><span class="dv">5</span>,],datos.csv[<span class="dv">45</span><span class="sc">:</span><span class="dv">52</span>,]), <span class="co"># datos.csv[c(1:545:52),]</span></span>
+<span id="cb18-92"><a href="#cb18-92" aria-hidden="true" tabindex="-1"></a>      <span class="at">caption =</span> <span class="st">"Tabla"</span>, </span>
+<span id="cb18-93"><a href="#cb18-93" aria-hidden="true" tabindex="-1"></a>      <span class="at">booktabs=</span><span class="cn">TRUE</span>, <span class="at">longtable =</span> <span class="cn">TRUE</span>)</span>
+<span id="cb18-94"><a href="#cb18-94" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
+<span id="cb18-95"><a href="#cb18-95" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb18-96"><a href="#cb18-96" aria-hidden="true" tabindex="-1"></a><span class="fu"># Tablas con el paquete kableExtra</span></span>
+<span id="cb18-97"><a href="#cb18-97" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb18-98"><a href="#cb18-98" aria-hidden="true" tabindex="-1"></a>Si se carga el paquete R kableExtra, no se comporta igual no poner en la función kable(): <span class="in">`booktabs=TRUE, longtable = TRUE`</span>, que sí ponerlo (se ve más bonito incluyéndolos).</span>
+<span id="cb18-99"><a href="#cb18-99" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb18-100"><a href="#cb18-100" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb18-103"><a href="#cb18-103" aria-hidden="true" tabindex="-1"></a><span class="in">```{r}</span></span>
+<span id="cb18-104"><a href="#cb18-104" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(kableExtra)</span>
+<span id="cb18-105"><a href="#cb18-105" aria-hidden="true" tabindex="-1"></a><span class="fu">kable</span>(datos.csv[<span class="dv">1</span><span class="sc">:</span><span class="dv">5</span>,])</span>
+<span id="cb18-106"><a href="#cb18-106" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
+<span id="cb18-107"><a href="#cb18-107" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb18-108"><a href="#cb18-108" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb18-111"><a href="#cb18-111" aria-hidden="true" tabindex="-1"></a><span class="in">```{r}</span></span>
+<span id="cb18-112"><a href="#cb18-112" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(kableExtra)</span>
+<span id="cb18-113"><a href="#cb18-113" aria-hidden="true" tabindex="-1"></a><span class="fu">kable</span>(datos.csv[<span class="dv">1</span><span class="sc">:</span><span class="dv">5</span>,],</span>
+<span id="cb18-114"><a href="#cb18-114" aria-hidden="true" tabindex="-1"></a>      <span class="at">booktabs=</span><span class="cn">TRUE</span>, <span class="at">longtable =</span> <span class="cn">TRUE</span>)</span>
+<span id="cb18-115"><a href="#cb18-115" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
+<span id="cb18-116"><a href="#cb18-116" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb18-117"><a href="#cb18-117" aria-hidden="true" tabindex="-1"></a>El paquete "kableExtra" (ver: <span class="co">[</span><span class="ot">Documentación de kableExtra</span><span class="co">](http://haozhu233.github.io/kableExtra/)</span>{target="_blank"}) añade nuevas funcionalidades a la función "<span class="in">`knitr::kable()`</span>" con funciones adicionales como:</span>
+<span id="cb18-118"><a href="#cb18-118" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb18-119"><a href="#cb18-119" aria-hidden="true" tabindex="-1"></a><span class="ss">- </span><span class="in">`kable_styling()`</span></span>
+<span id="cb18-120"><a href="#cb18-120" aria-hidden="true" tabindex="-1"></a><span class="ss">- </span><span class="in">`column_spec()`</span>, etc</span>
+<span id="cb18-121"><a href="#cb18-121" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb18-122"><a href="#cb18-122" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb18-123"><a href="#cb18-123" aria-hidden="true" tabindex="-1"></a><span class="fu">## Tabla apaisada</span></span>
+<span id="cb18-124"><a href="#cb18-124" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb18-125"><a href="#cb18-125" aria-hidden="true" tabindex="-1"></a>A continuación se muestra una ejemplo para presentar una tabla de forma apaisada. Generalmente, las tablas apaisadas se necesitan en situaciones en las que se quieren mostrar muchas columnas o variables simultáneamente.</span>
+<span id="cb18-126"><a href="#cb18-126" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb18-127"><a href="#cb18-127" aria-hidden="true" tabindex="-1"></a><span class="in">```{r warning=FALSE}</span></span>
+<span id="cb18-128"><a href="#cb18-128" aria-hidden="true" tabindex="-1"></a><span class="in">library(kableExtra)</span></span>
+<span id="cb18-129"><a href="#cb18-129" aria-hidden="true" tabindex="-1"></a><span class="in">kable(rbind(datos.csv,datos.csv), </span></span>
+<span id="cb18-130"><a href="#cb18-130" aria-hidden="true" tabindex="-1"></a><span class="in">      caption = "Tabla con kableExtra", </span></span>
+<span id="cb18-131"><a href="#cb18-131" aria-hidden="true" tabindex="-1"></a><span class="in">      booktabs=TRUE, longtable = TRUE) |&gt; </span></span>
+<span id="cb18-132"><a href="#cb18-132" aria-hidden="true" tabindex="-1"></a><span class="in">  kable_styling(</span></span>
+<span id="cb18-133"><a href="#cb18-133" aria-hidden="true" tabindex="-1"></a><span class="in">    bootstrap_options = c("striped","hover","condensed"),</span></span>
+<span id="cb18-134"><a href="#cb18-134" aria-hidden="true" tabindex="-1"></a><span class="in">    #latex_options = c("striped"),</span></span>
+<span id="cb18-135"><a href="#cb18-135" aria-hidden="true" tabindex="-1"></a><span class="in">    #latex_options = c("striped","condensed", "HOLD_position")</span></span>
+<span id="cb18-136"><a href="#cb18-136" aria-hidden="true" tabindex="-1"></a><span class="in">    latex_options = c("striped",  "repeat_header", "HOLD_position"),</span></span>
+<span id="cb18-137"><a href="#cb18-137" aria-hidden="true" tabindex="-1"></a><span class="in">    repeat_header_text="(contin\\'ua)",</span></span>
+<span id="cb18-138"><a href="#cb18-138" aria-hidden="true" tabindex="-1"></a><span class="in">    font_size = 6</span></span>
+<span id="cb18-139"><a href="#cb18-139" aria-hidden="true" tabindex="-1"></a><span class="in">    )  |&gt; # basic, striped</span></span>
+<span id="cb18-140"><a href="#cb18-140" aria-hidden="true" tabindex="-1"></a><span class="in">  landscape()</span></span>
+<span id="cb18-141"><a href="#cb18-141" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
+<span id="cb18-142"><a href="#cb18-142" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb18-143"><a href="#cb18-143" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb18-144"><a href="#cb18-144" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb18-145"><a href="#cb18-145" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb18-146"><a href="#cb18-146" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb18-147"><a href="#cb18-147" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb18-148"><a href="#cb18-148" aria-hidden="true" tabindex="-1"></a>Importamos el fichero csv: "datosPractica01.csv"</span>
+<span id="cb18-149"><a href="#cb18-149" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb18-152"><a href="#cb18-152" aria-hidden="true" tabindex="-1"></a><span class="in">```{r}</span></span>
+<span id="cb18-153"><a href="#cb18-153" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(readr)</span>
+<span id="cb18-154"><a href="#cb18-154" aria-hidden="true" tabindex="-1"></a>datosPractica01 <span class="ot">&lt;-</span> <span class="fu">read_csv</span>(<span class="st">"datosPractica01.csv"</span>,</span>
+<span id="cb18-155"><a href="#cb18-155" aria-hidden="true" tabindex="-1"></a>                            <span class="at">col_types =</span> <span class="fu">cols</span>(<span class="at">...1 =</span> <span class="fu">col_skip</span>()))</span>
+<span id="cb18-156"><a href="#cb18-156" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
+<span id="cb18-157"><a href="#cb18-157" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb18-158"><a href="#cb18-158" aria-hidden="true" tabindex="-1"></a>Y presentamos una tabla en formato multipágina, pero añadimos características adicionales:</span>
+<span id="cb18-159"><a href="#cb18-159" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb18-162"><a href="#cb18-162" aria-hidden="true" tabindex="-1"></a><span class="in">```{r}</span></span>
+<span id="cb18-163"><a href="#cb18-163" aria-hidden="true" tabindex="-1"></a><span class="fu">kable</span>(<span class="fu">head</span>(datosPractica01,<span class="dv">50</span>), <span class="at">booktabs =</span> T, </span>
+<span id="cb18-164"><a href="#cb18-164" aria-hidden="true" tabindex="-1"></a>      <span class="at">longtable =</span> T, <span class="at">caption =</span> <span class="st">"Tabla nueva"</span>) <span class="sc">|&gt;</span> </span>
+<span id="cb18-165"><a href="#cb18-165" aria-hidden="true" tabindex="-1"></a>  <span class="fu">kable_styling</span>(<span class="at">bootstrap_options =</span> <span class="fu">c</span>(<span class="st">"striped"</span>,<span class="st">"hover"</span>,<span class="st">"condensed"</span>), </span>
+<span id="cb18-166"><a href="#cb18-166" aria-hidden="true" tabindex="-1"></a>                <span class="at">latex_options =</span> <span class="fu">c</span>(<span class="st">"striped"</span>,<span class="st">"HOLD_position"</span>, <span class="st">"repeat_header"</span>),</span>
+<span id="cb18-167"><a href="#cb18-167" aria-hidden="true" tabindex="-1"></a>                <span class="at">repeat_header_text =</span> <span class="st">"(continúa)"</span></span>
+<span id="cb18-168"><a href="#cb18-168" aria-hidden="true" tabindex="-1"></a>  )</span>
+<span id="cb18-169"><a href="#cb18-169" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
+<span id="cb18-170"><a href="#cb18-170" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb18-171"><a href="#cb18-171" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb18-172"><a href="#cb18-172" aria-hidden="true" tabindex="-1"></a>{{&lt; pagebreak &gt;}}</span>
+<span id="cb18-173"><a href="#cb18-173" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb18-174"><a href="#cb18-174" aria-hidden="true" tabindex="-1"></a><span class="fu"># Crear funciones R para facilitar la tarea de presentar tablas</span></span>
+<span id="cb18-175"><a href="#cb18-175" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb18-176"><a href="#cb18-176" aria-hidden="true" tabindex="-1"></a>En este apartado se van a crear funciones R para que nos simplifique la presentación de tablas de información, que es una tarea que se realizará frecuentemente. Estas funciones R generalmente se recopilan en ficheros de código R que se pueden cargar en cualquier cálculo con ayuda de la función R: <span class="in">`source("ficheroconfunciones.R")`</span> colocada antes de las líneas de código que las usarán.</span>
+<span id="cb18-177"><a href="#cb18-177" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb18-178"><a href="#cb18-178" aria-hidden="true" tabindex="-1"></a>La primera que se crea es una función muy sencilla y que nos ahorraría teclear mucho código.</span>
+<span id="cb18-179"><a href="#cb18-179" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb18-182"><a href="#cb18-182" aria-hidden="true" tabindex="-1"></a><span class="in">```{r}</span></span>
+<span id="cb18-183"><a href="#cb18-183" aria-hidden="true" tabindex="-1"></a>func_Tabla <span class="ot">=</span> <span class="cf">function</span>(datos, <span class="at">scaption =</span> <span class="st">"Tabla ..."</span>) {</span>
+<span id="cb18-184"><a href="#cb18-184" aria-hidden="true" tabindex="-1"></a> <span class="fu">kable</span>(datos, <span class="at">booktabs =</span> T, <span class="at">longtable =</span> T, <span class="at">caption =</span> scaption) <span class="sc">|&gt;</span> </span>
+<span id="cb18-185"><a href="#cb18-185" aria-hidden="true" tabindex="-1"></a>  <span class="fu">kable_styling</span>(<span class="at">bootstrap_options =</span> <span class="fu">c</span>(<span class="st">"striped"</span>,<span class="st">"hover"</span>,<span class="st">"condensed"</span>), </span>
+<span id="cb18-186"><a href="#cb18-186" aria-hidden="true" tabindex="-1"></a>                <span class="at">latex_options =</span> <span class="fu">c</span>(<span class="st">"striped"</span>,<span class="st">"HOLD_position"</span>, <span class="st">"repeat_header"</span>),</span>
+<span id="cb18-187"><a href="#cb18-187" aria-hidden="true" tabindex="-1"></a>                <span class="at">repeat_header_text =</span> <span class="st">"(continúa)"</span></span>
+<span id="cb18-188"><a href="#cb18-188" aria-hidden="true" tabindex="-1"></a>  )</span>
+<span id="cb18-189"><a href="#cb18-189" aria-hidden="true" tabindex="-1"></a>}</span>
+<span id="cb18-190"><a href="#cb18-190" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
+<span id="cb18-191"><a href="#cb18-191" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb18-192"><a href="#cb18-192" aria-hidden="true" tabindex="-1"></a>Una vez creada, su uso es muy sencillo (RStudio también nos mostrará sus argumentos).</span>
+<span id="cb18-193"><a href="#cb18-193" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb18-196"><a href="#cb18-196" aria-hidden="true" tabindex="-1"></a><span class="in">```{r}</span></span>
+<span id="cb18-197"><a href="#cb18-197" aria-hidden="true" tabindex="-1"></a><span class="fu">func_Tabla</span>(<span class="fu">head</span>(datosPractica01,<span class="dv">20</span>), <span class="st">"Nueva Tabla 2"</span>)</span>
+<span id="cb18-198"><a href="#cb18-198" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
+<span id="cb18-199"><a href="#cb18-199" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb18-200"><a href="#cb18-200" aria-hidden="true" tabindex="-1"></a><span class="fu">## Función Mejorada para html y latex simultáneamente</span></span>
+<span id="cb18-201"><a href="#cb18-201" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb18-202"><a href="#cb18-202" aria-hidden="true" tabindex="-1"></a>La siguiente función <span class="in">`DemBas_presen()`</span> contiene muchas más posibilidades como se muestra en el siguiente código. Se puede observar la ventaja de que algunos argumentos de esta función tienen ya definidos unos valores por defecto que no se necesitarían introducir al llamarla si coinciden con nuestros requisitos.</span>
+<span id="cb18-203"><a href="#cb18-203" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb18-206"><a href="#cb18-206" aria-hidden="true" tabindex="-1"></a><span class="in">```{r}</span></span>
+<span id="cb18-207"><a href="#cb18-207" aria-hidden="true" tabindex="-1"></a><span class="fu">suppressWarnings</span>(<span class="fu">suppressMessages</span>(<span class="fu">library</span>(DemographyBasic)))</span>
+<span id="cb18-208"><a href="#cb18-208" aria-hidden="true" tabindex="-1"></a>DemBas_presentadf</span>
+<span id="cb18-209"><a href="#cb18-209" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb18-210"><a href="#cb18-210" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
+<span id="cb18-211"><a href="#cb18-211" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb18-212"><a href="#cb18-212" aria-hidden="true" tabindex="-1"></a>Esta función se ha incluido en el paquete: "<span class="in">`DemographyBasic`</span>" para facilitar su uso.</span>
+<span id="cb18-213"><a href="#cb18-213" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb18-214"><a href="#cb18-214" aria-hidden="true" tabindex="-1"></a>Una vez definida se puede usar como se muestra a continuación.</span>
+<span id="cb18-217"><a href="#cb18-217" aria-hidden="true" tabindex="-1"></a><span class="in">```{r}</span></span>
+<span id="cb18-218"><a href="#cb18-218" aria-hidden="true" tabindex="-1"></a><span class="fu">DemBas_presentadf</span>(datosPractica01)</span>
+<span id="cb18-219"><a href="#cb18-219" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
+<span id="cb18-220"><a href="#cb18-220" aria-hidden="true" tabindex="-1"></a></span>
+</code><button title="Copiar al portapapeles" class="code-copy-button" data-in-quarto-modal=""><i class="bi"></i></button></pre></div>
+</div></div></div></div></div>
+</div> <!-- /content -->
+
+
+
+
+</body></html>

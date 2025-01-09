@@ -1,0 +1,147 @@
+---
+title: "Práctica 3: Parte 2 (Tidyverse: paquete tidyr)"
+lang: es
+toc: true
+toc-depth: 4
+number-sections: true
+format:
+  html:
+    df-print: kable # paged
+    code-tools: true
+    #code-fold: true
+    code-summary: "Muestre el código"
+  pdf: 
+    df-print: kable
+execute: 
+  echo: true
+  warnings: false
+---
+
+
+\newcommand{\bcenter}{\begin{center}} 
+\newcommand{\ecenter}{\end{center}}
+\renewcommand{\footnotesize}{}
+
+\bigskip
+
+
+# Uso del paquete "tidyr"
+
+## Formato largo-formato ancho
+
+Esta configuración de miniherramientas que usa el paquete **dplyr** invita a otros paquetes a extenderlo. Uno de tales paquetes es el paquete **tidyr** que forma parte del sistema "tidyverse".
+
+En general, el sistema **tidyverse** supone que cada fila es una observación, y cada columna es una variable. A esta disposición se la conoce como **FORMATO LARGO**.
+
+En el siguiente ejemplo se presenta una situación diferente que aparece habitualmente. Hay una variable, lluvia o cantidad de precipitación, que se extiende sobre tres columnas ("lluvia_estacion01" a "lluvia_estacion03"). Esta disposición de los datos se conoce como  **FORMATO ANCHO**.
+
+
+\footnotesize
+```{r}
+set.seed(24)
+dat = data.frame(temper = runif(3, 15, 25), 
+                 lluvia_estacion01 = runif(3, 1, 3), 
+                 lluvia_estacion02 = runif(3, 1, 3),
+                 lluvia_estacion03 = runif(3, 1, 3))
+dat
+```
+\normalsize
+
+
+Como se ha comentado anteriormente, el sistema tidyverse espera que los datos se encuentren en "formato largo". En algunas situaciones se necesita transformar los datos de "formato ancho" a "formato largo". Es decir, en estos datos se necesita reunir todos los valores de precipitaciones en una única columna, y añadir una columna de identificación adicional que especifique la estación a la que pertenece. 
+
+
+## Formato ancho a formato largo o combinación:  pivot_longer o gather
+
+La **operación de combinación** que convierte datos **de formato ancho a formato largo**
+puede realizarse usando la función **`pivot_longer()`** o también con **`gather()`**.
+
+\footnotesize
+```{r eval=FALSE}
+pivot_longer(
+  data,
+  cols,
+  names_to = "name",
+  values_to = "value",
+  # más argumentos
+  ...
+)
+#gather(data, key, value, ...)
+```
+\normalsize
+
+donde:
+
+- `data`, es el data.frame de entrada.
+- `names_to` (`key`), el nombre de la columna con la identificación en el data.frame resultante.
+- `values_to` (`value`), el nombre de la columna con los valores (precipitacion en nuestro ejemplo) en el data.frame resultante.
+- `cols` (`...`), especificación de qué columnas deberían ser reunidas/combinadas. Se pueden usar nombres de columnas con un menos delante para excluir esas columnas de la combinación. 
+
+El siguiente código llama a **`pivot_longer()`** para transformar los datos del ejemplo anterior (aparece comentada el modo equivalente de hacerlo con la función: **`gather()`**).
+
+\footnotesize
+
+```{r}
+library(tidyr)
+dat_nuevos = dat %>%
+  pivot_longer(cols = -temper,
+               names_to = "id_estacion",
+               values_to = "precipitacion")
+# dat_nuevos = gather(dat, key = id_estacion, value = precipitacion, -temper)
+head(dat_nuevos)
+```
+
+\normalsize
+
+## Formato largo a formato ancho o extensión: pivot_wider o spread
+
+La **operación contraria de extensión** se realiza usando la función **`pivot_wider()`** o la función **`spread()`**, las cuales convierten de **formato largo a formato ancho**. En el siguiente ejemplo, se transforman a formato ancho los datos en formato largo creados en el apartado anterior: "dat_nuevos".
+
+\footnotesize
+
+```{r}
+pivot_wider(dat_nuevos,
+            names_from = "id_estacion",
+            values_from = "precipitacion")
+#spread(dat_nuevos,key = id_estacion, value = precipitacion)
+```
+
+\normalsize
+
+## Algunas curiosidades del paquete tidyr: separate() y unite()
+
+La función `separate()` permite obtener nuevas columnas a partir de una columna de partida, al indicar una cadena de texto como separador. Por ejemplo, tenemos una columna fecha y queremos separarla en 3 columnas nuevas: día, mes y año. 
+
+Su complementario es `unite()`, que construye una nueva columna a partir de unir varias columnas con un separador que indiquemos.
+
+
+**Ejemplo**. En la columna "Provincia" del conjunto de datos de población del censo de 2001 empleado anteriormente, aparece el código junto al nombre de la provincia separado por un guión.
+```{r}
+load("datosPobEspCenso2001.RData",verbose = TRUE)
+head(datos)
+```
+
+Para separarlo en dos columnas, se haría del siguiente modo:
+```{r}
+datos_sep = datos %>% 
+  separate(col = Provincia,into = c("Codigo","Provincia"),sep="-")
+head(datos_sep)
+```
+
+Por defecto, elimina la columna de partida, pero esto podría cambiarse (consultar la sintaxis de la función).
+
+Ahora podría ordenarse por código o por el nombre de la provincia.
+
+**Ejemplo**. Con `unite()` podríamos volver a unirla, pero por ejemplo, poniendo el código detrás, del siguiente modo:
+
+```{r}
+datos_sep %>% 
+  unite(col="Provincia",sep="-", Provincia,Codigo) %>% 
+  head()
+```
+
+
+
+
+
+

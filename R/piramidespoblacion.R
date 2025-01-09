@@ -218,7 +218,23 @@ DemBas_piramide_ggplot2 = function(datosPiramide,
 ####
 ####
 
-func_piramides_enfrentadas_ggplot2 = function(datosPiramide,
+#' @title DemBas_piramides_enfrentadas_ggplot2
+#'
+#' @param datosPiramide 
+#' @param porcentajes 
+#' @param etiquetas 
+#' @param etiquetas.size 
+#' @param UsaCaso 
+#' @param etiq.hombre 
+#' @param etiq.mujer 
+#' @param colorear 
+#' @param colores 
+#' @param nfilas 
+#' @param ncols 
+#'
+#' @returns
+#' @export
+DemBas_piramides_enfrentadas_ggplot2 = function(datosPiramide,
                                               porcentajes=TRUE,
                                               etiquetas=FALSE,etiquetas.size=4,
                                               UsaCaso=TRUE,
@@ -226,7 +242,7 @@ func_piramides_enfrentadas_ggplot2 = function(datosPiramide,
                                               colorear="Sexo",colores=NULL,
                                               nfilas=NULL,ncols=NULL) {
   #browser()
-  p = func_piramide_ggplot2(datosPiramide,porcentajes,
+  p = DemBas_piramide_ggplot2(datosPiramide,porcentajes,
                             etiquetas,etiquetas.size,UsaCaso,
                             etiq.hombre,etiq.mujer,
                             colorear,colores)

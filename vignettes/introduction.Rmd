@@ -396,8 +396,7 @@ Pob_And_ASexos = Poblacion_CCAA_TAnd_Edades_Sexo_2010a2017 %>%
   filter(Sexo=="AmbosSexos",Codigo=="01",Edades=="TOTAL EDADES") %>%
   select(`2016`,`2015`,`2014`,`2013`,`2012`,`2011`,`2010`) %>% 
   as.numeric()
-TBN_2016a2010 = func_dem_TasaBruta_t(as.numeric(Nac_And[,1]),Pob_And_ASexos)
-# func_dem_TasaBruta_t() definida en el fichero R: funciones_demografia.R
+TBN_2016a2010 = DemBas_dem_TasaBruta_t(as.numeric(Nac_And[,1]),Pob_And_ASexos)
 ```
 
 Nos quedamos con la información en el siguiente formato:
