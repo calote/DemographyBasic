@@ -1,0 +1,553 @@
+---
+title: "Quarto Markdown Básico: Parte 3 (tablas)"
+format: 
+  html:
+    code-tools: true
+  pdf:
+    keep-tex: true
+    # https://community.rstudio.com/t/force-table-placement/149954/2
+    header-includes:
+      - \usepackage{float}
+      - \floatplacement{table}{H}
+      - \floatplacement{figure}{H}
+      - \newcommand{\legend}[1]{\textcolor{red}{\textbf{\textit{#1}}}}
+lang: es
+toc: true
+tbl-cap-location: top
+#df-print: paged
+---
+
+
+
+# Tablas
+
+Algunas referencias:
+
+- <https://quarto.org/docs/authoring/tables.html>
+
+## Una tabla básica
+
+
+Esta tabla tiene dos columnas y tres filas de contenido. Use la barra vertical y el guión horizontal para dibujar la tabla. El estilo predeterminado que se aplica le añade contenido alineado a la izquierda, líneas horizontales y un formato para una apariencia limpia simple.
+
+| Columna A    | Columna B    |
+|--------------|--------------|
+| contenido A1 | contenido B1 |
+| contenido A2 | contenido B2 |
+| contenido A3 | contenido B3 |
+
+
+Al escribir:
+
+```{.markdown}
+| Columna A    | Columna B    |
+|--------------|--------------|
+| contenido A1 | contenido B1 |
+| contenido A2 | contenido B2 |
+| contenido A3 | contenido B3 |
+```
+
+
+## Alineación de columnas
+
+Use el símbolo de los dos puntos `:` para indicar la alineación a la izquierda, derecha o centrada. Observe como se ha ajustado la línea con guiones:
+
+-   `|-----------------------------------|`
+-   `|:----------|----------:|:---------:|`
+
+| \<-Izquierda    |   Derecha-\> |   Centrada   |
+|:----------------|-------------:|:------------:|
+| contenido A1    | contenido B1 | contenido C1 |
+| contenido A2    | contenido B2 | contenido C2 |
+| contenido A3    | contenido B3 | contenido C3 |
+
+## Leyendas o "captions"
+
+En los documentos las tablas generalmente requieren subtítulos o leyendas y se colocan sobre la tabla (encima). La solución más fácil es modificar el encabezado del documento quarto y agregar `tbl-cap-location: top` para especificar que los subtítulos se colocan sobre cada tabla. Los subtítulos para figuras (imágenes, gráficos, etc.) generalmente se colocan a continuación (debajo).
+
+<!-- **En documentos html** los subtítulos se colocan a continuación (debajo). -->
+
+
+Antes:
+
+> `---`
+>
+> `title: "Quarto Markdown Básico: Parte 3"`
+>
+> `format: pdf`
+>
+> `---`
+
+Después:
+
+> `---`
+>
+> `title: "Quarto Markdown Básico: Parte 3"`
+>
+> `format: pdf`
+>
+> `tbl-cap-location: top`
+>
+> `---`
+
+### Anchos de columnas: ajuste preciso
+
+Después de escribir la tabla, añadir en la línea siguiente `:{tbl-colwidths="[20,30,50]"}` para especificar las anchuras de columnas que se desean. En ese ejemplo, se han definido los valores como `[20,30,50]` para indicar 3 columnas y que la primera columna debería ocupar un 20% de la anchura, la segunda debería ocupar 30%, y la última columna debería ocupar el 50% restante de la anchura (no tienen porque sumar el 100%).
+
+| Centrado 20% | Centrado 30% | Centrado 50% |
+|:------------:|:------------:|:------------:|
+| contenido A1 | contenido B1 | contenido C1 |
+| contenido A2 | contenido B2 | contenido C2 |
+| contenido A3 | contenido B3 | contenido C3 |
+
+: Alineación en tabla {tbl-colwidths="[20,30,50]"}
+
+
+Al escribir: 
+```{.markdown}
+| Centrado 20% | Centrado 30% | Centrado 50% |
+|:------------:|:------------:|:------------:|
+| contenido A1 | contenido B1 | contenido C1 |
+| contenido A2 | contenido B2 | contenido C2 |
+| contenido A3 | contenido B3 | contenido C3 |
+
+: Alineación en tabla {tbl-colwidths="[20,30,50]"}
+```
+
+
+#### Otro ejemplo
+
+| Especies|Frecuencia|Localización|Entorno            |
+|:--------|---------:|:-----------|:------------------|
+| A       | 43       |   MA       | Deciduous Forest  |
+| B       | 16       |   LA       | Marsh             |
+| C       | 28       |   FL       | Ephemeral Wetland |
+
+: Tabla de especies {tbl-colwidths="[15,15,25,35]"}
+
+
+## Tablas: referencias
+
+| Col1 | Col2 | Col3 |
+|------|------|------|
+| A    | B    | C    |
+| E    | F    | G    |
+| A    | G    | G    |
+
+: Mi leyenda {#tbl-letters}
+
+Véase @tbl-letters.
+
+Al escribir:
+```{.markdown}
+| Col1 | Col2 | Col3 |
+|------|------|------|
+| A    | B    | C    |
+| E    | F    | G    |
+| A    | G    | G    |
+
+: Mi leyenda {#tbl-letters}
+
+Véase @tbl-letters.
+```
+
+
+## Tablas: subtablas
+
+
+::: {#tbl-panel layout-ncol=2}
+| Col1 | Col2 | Col3 |
+|------|------|------|
+| A    | B    | C    |
+| E    | F    | G    |
+| A    | G    | G    |
+
+: Primera Tabla {#tbl-primera}
+
+| Col1 | Col2 | Col3 |
+|------|------|------|
+| A    | B    | C    |
+| E    | F    | G    |
+| A    | G    | G    |
+
+: Segunda Tabla {#tbl-segunda}
+
+Leynda Principal
+:::
+
+Véase @tbl-panel para detalles, especialmente @tbl-segunda.
+
+Al escribir:
+```{.markdown}
+::: {#tbl-panel layout-ncol=2}
+| Col1 | Col2 | Col3 |
+|------|------|------|
+| A    | B    | C    |
+| E    | F    | G    |
+| A    | G    | G    |
+
+: Primera Tabla {#tbl-primera}
+
+| Col1 | Col2 | Col3 |
+|------|------|------|
+| A    | B    | C    |
+| E    | F    | G    |
+| A    | G    | G    |
+
+: Segunda Tabla {#tbl-segunda}
+
+Leynda Principal
+:::
+
+Véase @tbl-panel para detalles, especialmente @tbl-segunda.
+```
+
+{{< pagebreak >}}
+
+## Tablas en listas anidadas y gráficos
+
+
+1.  Inicio del enunciado de un ejercicio
+
+    | Marca | valor   |
+    |-------|---------|
+    | A     | 0.05    |
+    | B     | 0.03    |
+    | C     | 0.3     |
+    | D     | 0.35    |
+
+    Para un nivel $\alpha=0.02$, se concluye lo siguiente:
+
+    a.  Respuesta 1.
+
+    b.  Respuesta 2.
+
+    c.  Respuesta 3.
+
+    d.  Respuesta 4.
+
+
+2.  El siguiente gráfico  
+
+    ![](tree_01.png){width="40%"}
+
+    (A) ¿Qué podemos decir sobre este gráfico?
+    
+        a. Respuesta A.a
+        b. Respuesta A.b
+        c. Respuesta A.c
+        d. Respuesta A.d
+
+        <!-- Comentarios no se  muestran -->
+
+    (B) Con respecto al código ...:
+
+        a. Respuesta B.a
+        b. Respuesta B.b
+        c. Respuesta B.c
+        d. Respuesta B.d
+
+        <!-- Comentarios no se  muestran -->
+      
+El texto sigue por aquí...
+
+
+Al escribir (**atención a las tabulaciones de 4 espacios**): 
+```{.markdown}
+1.  Inicio del enunciado de un ejercicio
+
+    | Marca | valor   |
+    |-------|---------|
+    | A     | 0.05    |
+    | B     | 0.03    |
+    | C     | 0.3     |
+    | D     | 0.35    |
+
+    Para un nivel $\alpha=0.02$, se concluye lo siguiente:
+
+    a.  Respuesta 1.
+
+    b.  Respuesta 2.
+
+    c.  Respuesta 3.
+
+    d.  Respuesta 4.
+
+
+2.  El siguiente gráfico  
+
+    ![](tree_01.png){width="40%"}
+
+    (A) ¿Qué podemos decir sobre este gráfico?
+    
+        a. Respuesta A.a
+        b. Respuesta A.b
+        c. Respuesta A.c
+        d. Respuesta A.d
+
+        <!-- Comentarios no se  muestran -->
+
+    (B) Con respecto al código ...:
+
+        a. Respuesta B.a
+        b. Respuesta B.b
+        c. Respuesta B.c
+        d. Respuesta B.d
+
+        <!-- Comentarios no se  muestran -->
+      
+El texto sigue por aquí...
+```
+
+
+
+{{< pagebreak >}}
+
+
+## Tablas: Grid
+
+Admiten contenido markdown en las celdas.
+
+### Ejemplo 1
+
++-----------+-----------+--------------------+
+| Fruit     | Price     | Advantages         |
++===========+===========+====================+
+| Bananas   | $1.34     | - built-in wrapper |
+|           |           | - bright color     |
++-----------+-----------+--------------------+
+| Oranges   | $2.10     | - cures scurvy     |
+|           |           | - tasty            |
++-----------+-----------+--------------------+
+
+: Ejemplo de tabla de tipo grid.
+
+
+
+Al escribir:
+
+```{.markdown}
++-----------+-----------+--------------------+
+| Fruit     | Price     | Advantages         |
++===========+===========+====================+
+| Bananas   | $1.34     | - built-in wrapper |
+|           |           | - bright color     |
++-----------+-----------+--------------------+
+| Oranges   | $2.10     | - cures scurvy     |
+|           |           | - tasty            |
++-----------+-----------+--------------------+
+
+: Ejemplo de tabla de tipo grid.
+```
+
+
+### Ejemplo 2: alinear columnas
+
++---------+--------+------------------+
+| Right   | Left   | Centered         |
++========:+:=======+:================:+
+| Bananas | $1.34  | built-in wrapper |
++---------+--------+------------------+
+
+Al escribir:
+```{.markdown}
++---------+--------+------------------+
+| Right   | Left   | Centered         |
++========:+:=======+:================:+
+| Bananas | $1.34  | built-in wrapper |
++---------+--------+------------------+
+```
+
+
+### Ejemplo 3: sin cabecera
+
++----------:+:----------+:--------:+
+| Right     | Left      | Centered |
++-----------+-----------+----------+
+
+Al escribir:
+```{.markdown}
++----------:+:----------+:--------:+
+| Right     | Left      | Centered |
++-----------+-----------+----------+
+```
+
+
+### Ejemplo 4: gráfico y otro elemento
+
++------------------+---------------------------+
+| Gráfico          | Comentarios               |
++:=================+:==========================+
+|                  | 1. Primer comentario      |
+| ![](tree_01.png) | 2. Segundo **comentario** |  
++------------------+---------------------------+
+
+
+O variante 1:
+
+:::: {layout="[40,-20,40]" layout-valign="top"}
+
+![](tree_01.png){width=100}
+
+1. Primer comentario
+2. Segundo **comentario**
+
+::::
+
+O variante 2:
+
+:::: {layout="[40,-20,40]" layout-valign="top"}
+
+![](tree_01.png){width=80%}
+
+| Col1 | Col2 | Col3 |
+|------|------|------|
+| A    | B    | C    |
+| E    | F    | G    |
+| A    | G    | G    |
+: Segunda Tabla {#tbl-segundabb}
+
+::::
+
+
+Esta variante 2 se obtiene al escribir:
+
+```{.markdown}
+:::: {layout="[40,-20,40]" layout-valign="top"}
+
+![](tree_01.png){width=80%}
+
+| Col1 | Col2 | Col3 |
+|------|------|------|
+| A    | B    | C    |
+| E    | F    | G    |
+| A    | G    | G    |
+: Segunda Tabla {#tbl-segundabb}
+
+::::
+```
+
+
+{{< pagebreak >}}
+
+## Tablas a partir de cálculos con R
+
+
+```{r}
+#| tbl-cap: "Datos en el dataset: cars"
+library(knitr)
+kable(head(cars))
+```
+
+Al escribir:
+```{r}
+#| tbl-cap: "Datos en el dataset: cars"
+library(knitr)
+kable(head(cars))
+```
+
+
+### Ejemplo 2:
+
+```{r}
+#| label: tbl-cars
+#| tbl-cap: "Datos en el dataset: cars"
+#| tbl-colwidths: [60,40]
+kable(head(cars))
+```
+
+Al escribir:
+```{r}
+#| label: tbl-cars2
+#| tbl-cap: "Datos en el dataset: cars"
+#| tbl-colwidths: [60,40]
+kable(head(cars))
+```
+
+
+### Ejemplo 3:
+
+```{r}
+#| label: tbl-example
+#| tbl-cap: "Ejemplo de subtablas"
+#| tbl-subcap: 
+#|   - "Dataset: cars"
+#|   - "Dataset: pressure"
+#| layout-ncol: 2
+library(knitr)
+kable(head(cars))
+kable(head(pressure))
+```
+
+
+Al escribir:
+```{r}
+#| label: tbl-example2
+#| tbl-cap: "Ejemplo de subtablas"
+#| tbl-subcap: 
+#|   - "Dataset: cars"
+#|   - "Dataset: pressure"
+#| layout-ncol: 2
+library(knitr)
+kable(head(cars))
+kable(head(pressure))
+```
+
+
+# Diagramas de flujo con "mermaid"
+
+```{mermaid}
+%%| fig-width: 6.0
+flowchart LR
+  A[Leer la tarea]--> B(Pequeña discusión en grupo)
+  B --> C{Decisión}
+  C --> D[Selecciones en Grupos] 
+  C --> E[Rechazos en Grupo]
+```
+
+Al escribir:
+```{mermaid}
+%%| fig-width: 6.0
+flowchart LR
+  A[Leer la tarea]--> B(Pequeña discusión en grupo)
+  B --> C{Decisión}
+  C --> D[Selecciones en Grupos] 
+  C --> E[Rechazos en Grupo]
+```
+
+
+# Figuras
+
+::: {#fig-1}
+
+::: {.figure-content}
+This is the figure content.
+:::
+
+`\legend{This is plain text turned as LaTeX caption.}`{=latex}
+
+This is a caption.
+
+:::
+
+
+
+## Ejemplo 2
+
+::: {#fig-2}
+![](https://placehold.co/600x400@2x.png)
+
+This is a caption.  
+`\legend{This is plain text turned as LaTeX caption.}`{=latex}
+:::
+
+Al escribir: 
+
+```{.markdown}
+::: {#fig-2}
+![](https://placehold.co/600x400@2x.png)
+
+This is a caption.  
+`\legend{This is plain text turned as LaTeX caption.}`{=latex}
+:::
+```

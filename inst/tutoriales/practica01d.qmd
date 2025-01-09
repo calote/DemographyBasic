@@ -1,0 +1,226 @@
+---
+title: "Quarto Markdown Básico: Parte 4 (referencias)"
+lang: es
+toc: true
+number-sections: true
+format:
+  html:
+    code-tools: true
+  pdf:
+    keep-tex: true
+    papersize: a4
+    fontsize: 11pt  # defecto: 11,
+    geometry:
+      - margin=2.5cm
+    hyperrefoptions: 
+      #- backref=section
+      - backref=page
+    citeproc: false
+    cite-method: natbib
+    natbiboptions: 
+      #- numbers
+      - authoryear
+    header-includes:
+      - \usepackage{float}
+      - \floatplacement{table}{H}
+      - \floatplacement{figure}{H}
+      #- \usepackage[backref=page]{hyperref}
+bibliography: local.bib
+---
+
+
+
+# Referencias bibliográficas y citaciones
+
+En la mayoría de los informes o publicaciones científicas se hacen continuamente referencia a los documentos de los cuales se ha obtenido la información o documentación. Aparecen frases del tipo: "se puede encontrar más información en @navarro2022".
+
+Se debe ir recopilando los datos de cada uno de los documentos que se hayan utilizado en la publicación, para incluirlas, generalmente al final del documento. Se recopilan en un fichero de base de datos, donde el formato más utilizado es "bibtex", por ejemplo en un fichero llamado: "`local.bib`". 
+
+Pero en la redacción de la publicación se debe **citar** o **hacer referencia** al documento concreto que se haya utilizado en ese apartado.
+
+En el ejemplo anterior se ha citado la referencia: "**Navarro [2022]**" mediante el código markdown: `@navarro2022` (`@` + identificador en la base de datos de esa referencia bibliográfica).
+
+En cada una de las referencias bibliográficas que se muestran al final de la publicación, en el apartado que habitualmente se llama: "Referencias" o "Referencias bibliográficas, suelen aparecer:
+
+- Autor o autores
+- Año de publicación
+- Título
+- Editorial
+- Etc.
+
+
+::: {.callout-note}
+Se puede añadir en el apartado "Referencias" asociada a cada referencia las páginas o secciones en las que ha sido citada. A esto se le suele llamar "backref" o "referencia hacia atrás".
+
+En quarto es posible obtenerlo cuando se genera en formato "pdf" (se puede consultar en la cabecera yaml de este documento).
+:::
+
+
+
+La cabecera yaml de este documento es la siguiente:
+
+```yaml
+title: "Quarto Markdown Básico: Parte 4 (referencias)"
+lang: es
+toc: true
+number-sections: true
+format:
+  html: default
+  pdf:
+    hyperrefoptions:        # <1>
+      - backref=page        # <2>
+    citeproc: false         # <3>  
+    cite-method: natbib     # <4>  
+    natbiboptions:          # <5>
+      - authoryear          # <6>  
+bibliography: local.bib     # <7>  
+```
+
+1. En salidas pdf, para añadir opciones al paquete LaTeX: "hyperref".
+2. Esta opción permite hacer "backref" utilizando en qué páginas se citan. Se puede escribir: `backref=section` para que aparezcan en qué secciones se citan.
+3. `citeproc: false`, indica que no use el sistema "Pandoc" para construir la bibliografía.
+4. Se indica que se use el método de generación de bibliografía: LaTeX-natbib.
+5. En salidas pdf, para añadir opciones al paquete LaTeX: "natbib".
+6. Esta opción permite indicar que la bibliografía sea con el estilo autor-año: `Navarro [2022], ...`. Se puede escribir: `numbers` para que aparezca la bibliografía con el estilo numerado: `[1], [2], ...`.
+7. Se indica cuál es el fichero bibtex con la información de las referencias bibliográficas, en este ejemplo: "local.bib".
+
+# El fichero bibtex: ".bib"
+
+El fichero bibtex: "local.bib", que se muestra a continuación tiene dos referencias bibliográficas del tipo "manual" y "InCollection" (existen 14 tipos diferentes):
+
+```{.bibtex filename="local.bib"}
+@manual{navarro2022,
+  author = {Navarro, Danielle},
+  title = {Porting a Distill Blog to Quarto},
+  date = {2022-04-20},
+  year = {2022},
+  url = {https://blog.djnavarro.net/posts/2022-04-20_porting-to-quarto},
+  langid = {en}
+}
+
+@InCollection{xie2014,
+  booktitle = {Implementing Reproducible Computational Research},
+  editor = {Victoria Stodden and Friedrich Leisch and Roger D. Peng},
+  title = {knitr: A Comprehensive Tool for Reproducible Research in {R}},
+  author = {Yihui Xie},
+  publisher = {Chapman and Hall/CRC},
+  year = {2014},
+  note = {ISBN 978-1466561595},
+}
+```
+
+- `navarro2022`: es el identificador de la referencia bibliográfica, que se escribe inmediatamente después de la llave que abre `{`.
+
+Los paquetes de R también pueden ser citados. Un comando útil para obtener en formato bibtex los datos para citarlo sería: `citation()`. Por ejemplo:
+
+```{r}
+toBibtex(citation("knitr"))
+```
+
+Con esa información, copiamos el elemento o elementos que más nos interesan en el fichero bibtex. En este caso, se ha elegido el tercero (tipo: "InCollection") al que se le ha añadido el identificador: `xie2014` (se suele utilizar: primer autor + año publicación). Se puede decir que en @xie2014 se obtiene más información sobre el paquete R: "knitr".
+
+
+Parte de la información de este pequeño tutorial se ha obtenido de las siguientes páginas web:
+
+- <https://quarto.org/docs/authoring/footnotes-and-citations.html>{target="_blank"}
+- <https://quarto.org/docs/output-formats/pdf-basics.html>{target="_blank"}
+- <https://nhigham.com/2021/11/04/top-bibtex-tips/>{target="_blank"}
+  + <https://nhigham.com/handbook-of-writing-for-the-mathematical-sciences/>{target="_blank"}
+  + <https://nhigham.com/tag/bibtex/>{target="_blank"}
+- **EDITOR VISUAL EN RSTUDIO**: <https://quarto.org/docs/visual-editor/>  
+
+
+{{< pagebreak >}}
+
+
+
+# Referencias cruzadas
+
+Se puede encontrar información más detallada de este apartado en la siguiente url:
+
+- <https://quarto.org/docs/authoring/cross-references.html>{target="_blank"}
+
+
+Hay que añadir etiquetas ("label") a los elementos que se quiere hacer referencia dentro de nuestro fichero "qmd". Las etiquetas empiezan con el símbolo: `#`, seguido de un prefijo y un guión ("-"). Los más usados son:
+
+- `#fig-label`: para figuras. Por ejemplo: `#fig-arbol01`, `#fig-arbol01a`.
+
+- `#tbl-label`: para tablas. Por ejemplo: `#tbl-tablaine`, `#tbl-ieca01`.
+
+- `#eq-label`: para ecuaciones. Por ejemplo: `#eq-bayes`, `#eq-mx`.
+
+- `#sec-label`: para secciones, subsecciones. Por ejemplo: `#sec-intro`, `#sec-modelo01`.
+
+- `#lst-label`: para bloques de código. Por ejemplo: `#lst-regresion`, `#lst-tfrecuencia`.
+
+- `#thm-label`, `#lem-label`, `#cor-label`, `#prp-label`, `#def-label`, `#exm-label`,  `#exr-label`: para teoremas, lemas, corolario, proposición, definición, ejemplo, ejercicio.
+
+
+
+Como ejemplo, se añade el siguiente gráfico al cual se hará referencias cruzadas a continuación:
+
+![Árbol](tree_01.png){#fig-arbol01 width=200}
+
+
+Algunos ejemplos de inclusión de etiquetas:
+
+- `![Árbol](tree_01.png){#fig-arbol01 width=200}` y luego se puede **citar** usando el símbolo `@` seguido de la etiqueta completa del elemento que nos interesa citar: 
+  
+  + Vea `@fig-arbol01` como ilustración: Vea @fig-arbol01 como ilustración
+  + `@Fig-arbol01`: @Fig-arbol01
+  + `[Fig. @fig-arbol01]`: [Fig. @fig-arbol01]
+  + `[-@fig-arbol01]`: [-@fig-arbol01]
+
+
+
+Un ejemplo de definición, sería:
+
+::: {#def-linea}
+
+## Línea recta
+
+La ecuación de una línea recta, llamada ecuación lineal, puede escribirse como:
+
+$$
+y = mx + b
+$$ {#eq-linea}
+:::
+
+Véase [def. @def-linea] y @eq-linea.
+
+Se ha escrito:
+
+```{.markdown}
+::: {#def-linea}
+
+## Línea recta
+
+La ecuación de una línea recta, llamada ecuación lineal, puede escribirse como:
+
+$$
+y = mx + b
+$$ {#eq-linea}
+:::
+
+Véase [def. @def-linea] y @eq-linea.
+```
+
+
+Existen entornos matemáticos que no se suelen numerar: "demostraciones" ("proof"), "soluciones" ("solution"), "notas" ("remark"). Por ejemplo, escribir un entorno con la solución de algún ejercicio:
+
+::: {.solution}
+La solución del ejercicio es ...
+:::
+
+Se ha escrito:
+```{.markdown}
+::: {.solution}
+La solución del ejercicio es ...
+:::
+```
+
+
+:::{.callout-note}
+Al final del documento, **automáticamente** se muestra el apartado correspondiente a la bibliografía o referencias bibliográficas que han sido citadas-incluidas en este documento, formateadas.
+:::
+

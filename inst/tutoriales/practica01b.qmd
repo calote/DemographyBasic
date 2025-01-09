@@ -1,0 +1,141 @@
+---
+title: "Quarto Markdown Básico: Parte 2 (figuras)"
+lang: es
+toc: true
+format: 
+  html:
+    code-tools: true
+  pdf:
+    keep-tex: true
+    header-includes:
+      - \usepackage{float}
+      - \floatplacement{table}{H}
+      - \floatplacement{figure}{H}
+---
+
+
+# Imágenes
+
+Algunas referencias interesantes sobre figuras o imágenes en Quarto:
+
+- <https://quarto.org/docs/authoring/figures.html>
+
+
+La cabecera yaml de este documento es:
+
+```yaml
+---
+title: "Quarto Markdown Básico: Parte 2 (figuras)"
+lang: es
+toc: true
+format: 
+  html:
+    code-tools: true
+  pdf: 
+    keep-tex: true                  # <1>
+    header-includes:                # <2>
+      - \usepackage{float}          # <3>
+      - \floatplacement{table}{H}   # <4>
+      - \floatplacement{figure}{H}  # <5>
+---
+```
+1. En la salida pdf, indica que el fichero LaTeX intermedio generado no se elimine (para consultarlo).
+2. En la salida pdf, permite incluir instrucciones LaTeX en la cabecera del fichero LaTeX (".tex") intermedio que se genera.
+3. Carga el paquete LaTeX: "float".
+4. Le indica que todas las tablas que se generan se colocarán justo en donde se han escrito (no "flotan" a otros lugares).
+5. Le indica que todas las figuras que se generan se colocarán justo en donde se han escrito (no "flotan" a otros lugares).
+
+## Solamente la imagen
+
+Escriba `![](img/puente.jpg)` para producir:
+
+![](img/puente.jpg)
+
+{{< pagebreak >}}
+
+## Una imagen con una descripción
+
+Escriba `![Esto es una foto de un puente](img/puente.jpg)` para producir:
+
+![Esto es una foto de un puente](img/puente.jpg)
+
+{{< pagebreak >}}
+
+## Una imagen con un enlace
+
+Añadir corchetes y un enlace entre paréntesis como el siguiente: `[![Esto es una foto de un puente enlazada a una web](img/puente.jpg)](https://es.wikipedia.org/wiki/Puente)` para crear un imagen con un enlace como la siguiente:
+
+[![Esto es una foto de un puente enlazada a una web](img/puente.jpg)](https://es.wikipedia.org/wiki/Puente)
+
+{{< pagebreak >}}
+
+## Una imagen con una descripción en un menú emergente o "pop-up"
+
+Para crear un menú emergente o "pop-up" con una etiqueta que aparece cuando el usuario pasa el ratón sobre la imagen, añadir un texto en entre los paréntesis entre comillas como se muestra a continuación: `[![Esto es una foto de un puente enlazada con una web y con una descripción como pop-up](img/puente.jpg)](https://es.wikipedia.org/wiki/Puente "Puente romano en Córdoba!")` para crear una imagen como esta:
+
+[![Esto es una foto de un puente enlazada con una web y con una descripción como pop-up](img/puente.jpg)](https://es.wikipedia.org/wiki/Puente "Puente romano en Córdoba!")
+
+{{< pagebreak >}}
+
+## Una imagen con un texto alternativo
+
+Para una mejor accesibilidad, se debería añadir un texto alternativo como este: `[![Esto es una foto de un puente enlazada con una web y con texto alternativo y una descripción como pop-up](img/puente.jpg){fig-alt="Texto alternativo para la imagen del puente."}](https://es.wikipedia.org/wiki/Puente_romano_de_Córdoba "Puente romano en Córdoba!")`.
+
+[![Esto es una foto de un puente enlazada con una web y con texto alternativo y una descripción como pop-up](img/puente.jpg){fig-alt="Texto alternativo para la imagen del puente."}](https://es.wikipedia.org/wiki/Puente_romano_de_Córdoba "Puente romano en Córdoba!")
+
+
+{{< pagebreak >}}
+
+## Varias imágenes unidas
+
+::: {layout="[30,30,30]" layout-valign="bottom"}
+![Especie A](tree_01.png){height=300}
+
+![Especie B](tree_02.png){height=300}
+
+![Especie C](tree_03.png){height=300}
+:::
+
+
+
+Al escribir: 
+
+```
+::: {layout="[30,30,30]" layout-valign="bottom"}
+![Especie A](tree_01.png){height=300}
+
+![Especie B](tree_02.png){height=300}
+
+![Especie C](tree_03.png){height=300}
+:::
+
+```
+
+{{< pagebreak >}}
+
+## Incluir imágenes con ayuda de knitr
+
+
+Se hace con ayuda de código R y la función: `knitr::include_graphics()`.
+
+```{r}
+#| echo: false
+#| label: fig-arbol03knitr
+#| fig-cap: "Imagen de un árbol" 
+#| out-width: 50%
+#| fig-pos: "H"
+knitr::include_graphics("tree_03.png")
+```
+
+
+El código utilizado ha sido: 
+
+```{r}
+#| echo: false
+#| label: fig-arbol03knitr2
+#| fig-cap: "Imagen de un árbol" 
+#| out-width: 50%
+#| fig-pos: "H"
+knitr::include_graphics("tree_03.png")
+```
+
