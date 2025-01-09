@@ -22,5 +22,5 @@ Depends:
     glue,
     mapSpain,
     kableExtra
-
-
+URL: https://github.com/calote/DemographyBasic
+BugReports: https://github.com/calote/DemographyBasic/issues
