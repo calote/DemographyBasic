@@ -1,16 +1,26 @@
 Package: DemographyBasic
 Type: Package
-Title: What the Package Does (Title Case)
+Title: Calculate Basic Procedures Of Demography
 Version: 0.1.0
 Authors@R: c(
     person(
-      "Jane", "Doe",
-      email = "jane@example.com",
+      "Pedro", "Luque-Calvo",
+      email = "calvo@us.es",
       role = c("aut", "cre")
     )
   )
-Description: More about what it does (maybe more than one line).
-    Continuation lines should be indented.
-License: What license is it under?
+Description: Functions Have Been Implemented To Calculate: Life Tables (Complete And Abbreviated), 
+    Overall Rates, Specific Rates, Lexis Diagrams, Population Pyramids, And Demographic Maps.
+License: MIT + file LICENSE
 Encoding: UTF-8
 LazyData: true
+RoxygenNote: 7.3.2
+Depends:
+    pxR,
+    tidyverse,
+    ggthemes,
+    glue,
+    mapSpain,
+    kableExtra
+
+
