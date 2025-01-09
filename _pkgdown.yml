@@ -1,0 +1,7 @@
+navbar:
+  structure:
+    - Home: index.html
+    - Reference:
+        - Title: reference.html
+    - Articles:
+        - Title: articles.html
