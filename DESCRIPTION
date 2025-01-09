@@ -24,3 +24,7 @@ Depends:
     kableExtra
 URL: https://github.com/calote/DemographyBasic
 BugReports: https://github.com/calote/DemographyBasic/issues
+Suggests: 
+    knitr,
+    rmarkdown
+VignetteBuilder: knitr

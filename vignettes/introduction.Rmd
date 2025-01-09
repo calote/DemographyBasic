@@ -1,0 +1,67 @@
+---
+title: "Introduction to DemographyBasic"
+output: 
+  rmarkdown::pdf_document:
+    toc: true
+    number_sections: true
+    fig_caption: true
+    keep_tex: true
+  rmarkdown::html_document:
+    toc: true
+    number_sections: true
+    fig_caption: true
+    keep_md: true
+vignette: >
+  %\VignetteIndexEntry{Introduction to DemographyBasic}
+  %\VignetteEncoding{UTF-8}
+  %\VignetteEngine{knitr::rmarkdown}
+---
+
+```{r, include = FALSE}
+knitr::opts_chunk$set(
+  collapse = TRUE,
+  comment = "#>"
+)
+```
+
+# Instalation
+
+``` r
+# Instalar el paquete desde GitHub
+install.packages("remotes")
+remotes::install_github("calote/DemographyBasic")
+```
+
+# Use
+
+```{r setup}
+library(DemographyBasic,quietly = TRUE)
+```
+
+
+## Example
+
+This is a basic example which shows you how to solve a common problem:
+
+```{r}
+library(DemographyBasic)
+(mx0 = 1733/441881) # TMI = D^t_0/N^t 
+# Defunciones de menores de un año durante 2003: 1733
+# Nacimientos en España en 2003: 441881
+mx = c(mx0,0.00027, 0.00013, 0.00016, 0.00043, 0.00057, 0.00059, 0.00081,
+     0.00115, 0.00174, 0.00258, 0.00376, 0.00569, 0.00818, 0.01346,
+     0.02206, 0.03844, 0.06981, 0.12872, 0.21674, 0.31705, 0.48258)
+tv = DemBas_tablavida_abreviada(mx)
+tv
+```
+
+
+<!-- # a: Traduce al inglés: "Para presentar los resultados de la tabla de vida abreviada de un modo más amigable, se puede usar la función `DemBas_presentadf`:" -->
+
+To present the results of the abridged life table in a more friendly way, you can use the `DemBas_presentadf` function:
+
+
+```{r}
+DemBas_presentadf(tv)
+```
+
