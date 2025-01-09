@@ -4,7 +4,7 @@
 \alias{DemBas_tablavida_completa}
 \title{Calcula la tabla de vida para edades simples o completa}
 \usage{
-DemBas_tablavida_completa(Mx, l0 = 1e+05, noredondeo = TRUE)
+DemBas_tablavida_completa(Mx, l0 = 1e+05, redondeo = TRUE)
 }
 \arguments{
 \item{mx}{vector de tasas de mortalidad para edades simples: 0,1,2,...}

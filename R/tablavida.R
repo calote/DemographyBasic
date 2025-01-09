@@ -366,7 +366,8 @@ f_tb_Sx = function(Lx,lx) {
 #' tb01
 #' 
 #' @export
-DemBas_tablavida_completa = function(Mx,l0=100000,noredondeo=TRUE) {
+DemBas_tablavida_completa = function(Mx,l0=100000,redondeo=TRUE) {
+  noredondeo=!redondeo
   edades = as.character((1:length(Mx))-1)
   edades[length(edades)] = paste0(edades[length(edades)],"+")
   qx = f_tb_qx(Mx)
@@ -480,7 +481,8 @@ f_tba_Sx = function(Lx,lx) {
 #'      0.00115, 0.00174, 0.00258, 0.00376, 0.00569, 0.00818, 0.01346,
 #'      0.02206, 0.03844, 0.06981, 0.12872, 0.21674, 0.31705, 0.48258)
 #' tv = DemBas_tablavida_abreviada(mx)
-DemBas_tablavida_abreviada = function(nMx,l0=100000,noredondeo=TRUE) {
+DemBas_tablavida_abreviada = function(nMx,l0=100000,redondeo=TRUE) {
+  noredondeo=!redondeo
   vn = rep(5,length(nMx))
   vn[1] = 1
   vn[2] = 4

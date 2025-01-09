@@ -1,16 +1,16 @@
 ---
 title: "Introduction to DemographyBasic"
 output: 
-  rmarkdown::pdf_document:
-    toc: true
-    number_sections: true
-    fig_caption: true
-    keep_tex: true
   rmarkdown::html_document:
     toc: true
     number_sections: true
     fig_caption: true
     keep_md: true
+  rmarkdown::pdf_document:
+    toc: true
+    number_sections: true
+    fig_caption: true
+    keep_tex: true
 vignette: >
   %\VignetteIndexEntry{Introduction to DemographyBasic}
   %\VignetteEncoding{UTF-8}
@@ -35,11 +35,12 @@ remotes::install_github("calote/DemographyBasic")
 # Use
 
 ```{r setup}
-library(DemographyBasic,quietly = TRUE)
+#library(DemographyBasic)
+suppressWarnings(suppressMessages(library(DemographyBasic)))
 ```
 
 
-## Example
+## Example lifetable 
 
 This is a basic example which shows you how to solve a common problem:
 
@@ -51,7 +52,7 @@ library(DemographyBasic)
 mx = c(mx0,0.00027, 0.00013, 0.00016, 0.00043, 0.00057, 0.00059, 0.00081,
      0.00115, 0.00174, 0.00258, 0.00376, 0.00569, 0.00818, 0.01346,
      0.02206, 0.03844, 0.06981, 0.12872, 0.21674, 0.31705, 0.48258)
-tv = DemBas_tablavida_abreviada(mx)
+tv = DemBas_tablavida_abreviada(mx,)
 tv
 ```
 
@@ -64,4 +65,1030 @@ To present the results of the abridged life table in a more friendly way, you ca
 ```{r}
 DemBas_presentadf(tv)
 ```
+
+
+
+## Example of lifetable simple
+
+```{r}
+Mx1000 = c(9.12160, 0.84807,0.49502,0.33352,0.27296,
+0.23258,0.20229,0.19221,0.19225,0.18219,
+0.18219,0.18223,0.19239,0.21268,0.25325,
+0.31411,0.38518,0.44618,0.47682,0.48721,
+0.48744,0.48768,0.48792,0.48816,0.48840,
+0.48864,0.49907,0.49932,0.49957,0.51002,
+0.52049,0.55140,0.58236,0.62360,0.67515,
+0.72681,0.79907,0.89203,0.99549,1.09927,
+1.22398,1.35944,1.50578,1.68380,1.87305,
+2.07374,2.28609,2.52075,2.76762,3.04801,
+3.34149,3.64844,3.99052,4.35799,4.76231,
+5.19386,5.68611,6.20842,6.79514,7.42672,
+8.12774,8.89053,9.74129,10.68500,11.73947,
+12.91226,14.22468,15.71228,17.35403,19.16595,
+21.20612,23.43628,25.96366,28.83038,32.10259,
+35.83456,40.09691,44.96477,50.47392,56.71130,
+63.73696,71.61161,80.38833,90.15169,100.87032,
+112.56462,125.25733,138.92967,153.57492,169.22923,
+185.87183,203.41806,222.05303,241.69867,262.24030,
+283.83279,306.41026,329.80973,354.16667,379.65616,
+406.15058,434.57189,462.12121,491.86992,832.50000)
+mx = Mx1000/1000
+tb01 = DemBas_tablavida_completa(mx)
+tb01
+```
+
+
+To present the results of the abridged life table in a more friendly way, you can use the `DemBas_presentadf` function:
+
+
+```{r}
+DemBas_presentadf(tb01)
+```
+
+
+## Example of pyramids with porcentages
+
+```{r}
+load(file = system.file("examples/04003px.RData", package = "DemographyBasic"))
+
+ano_selec = 2020
+Espanoles_Extranjeros = "Españoles" 
+CCAA_Prov = "Sevilla"
+
+datosPiramide =  datos |> 
+  dplyr::filter(Ano == ano_selec & 
+                  Sexo %in% c("Mujeres", "Hombres") & 
+                  Edad != "TOTAL" & 
+                  CCAA.Prov == CCAA_Prov &
+                  Espanoles.Extranjeros == Espanoles_Extranjeros) |> 
+  dplyr::rename(Poblacion = value) |> 
+  dplyr::select(Edad, Sexo, Poblacion) 
+(g_pir1 = DemBas_piramidePorc(datosPiramide, 
+                            Gtitulo = "Pirámide Población de la provincia de Sevilla",
+                            Gsubtitulo = "Año 2020  (españoles)",
+                            GSegmentos = FALSE))
+     
+```
+
+
+## Example of import px file
+
+<!-- # a: Traduce al inglés: Se utiliza la función DemBas_read_px2() para leer ficheros px. Por ejemplo, para leer el fichero 9663.px que se encuentra en la carpeta examples del paquete DemographyBasic se puede hacer: -->
+
+The function `DemBas_read_px2()` is used to read px files. For example, to read the file 9663.px that is located in the examples folder of the DemographyBasic package, you can do:
+
+```{r}
+dfej02a <- DemBas_read_px2(system.file("examples/9663.px", package = "DemographyBasic"))
+head(dfej02a)
+```
+
+
+## Example of pyramids with segments
+
+```{r}
+tp1 = dfej02a %>% 
+  dplyr::filter(Periodo=="1 de enero de  2017",Edad.simple=="Total") %>%  
+  # hay dos espacios entre "de" y "2017"
+  dplyr::select("Sexo","value")
+
+PV = round(tp1$value[tp1$Sexo=="Hombres"]/tp1$value[tp1$Sexo=="Ambos sexos"],
+           4)*100
+#### España a 1 de enero de 2017.
+
+x1 = as.character(DemBas_extrae_codigo_provincia(dfej02a$Edad.simple))
+x1n = as.numeric(x1)
+
+x1ngr = DemBas_agrupar_variable(x1n,metodo=2,final=100)
+
+dfej02a$EdadGrupos = x1ngr
+
+tp3 = dfej02a %>% 
+  dplyr::filter( Periodo=="1 de enero de  2017", 
+                 !(Edad.simple %in% c("100 y más años","Total"))) %>% 
+  dplyr::group_by(Sexo,EdadGrupos) %>% 
+  dplyr::summarise(Poblacion = round(sum(value,na.rm=T),0), .groups = "keep")
+
+
+dfPir2017 = dfej02a %>% 
+  dplyr::filter( Periodo=="1 de enero de  2017", 
+                 !(Sexo=="Ambos sexos"),
+                 !(Edad.simple %in% c("100 y más años","Total"))) %>% 
+  dplyr::select(Edadchar=Edad.simple,
+                Sexo,
+                Poblacion = value)
+dfPir2017$Edad = DemBas_extrae_codigo_provincia(dfPir2017$Edadchar)
+dfPir2017$Edad = factor(dfPir2017$Edad,levels =unique(dfPir2017$Edad))
+dfPir2017$Poblacion[is.na(dfPir2017$Poblacion)] = 0 
+head(dfPir2017)
+```
+
+
+```{r}
+DemBas_piramide_ggplot2(dfPir2017,
+                      #etiquetas = T,etiquetas.size = 2,
+                      etiq.hombre = "Hombres",etiq.mujer = "Mujeres") +
+  labs(title = "Pirámide de Población de España en 2017") +
+  scale_x_discrete(
+    # si la variable edad fuera numeric debería usarse scale_x_continuous
+    breaks = seq(0,105,by=5),
+    labels = paste0(as.character(seq(0,105,by=5)), ""))  
+```
+
+
+## Example of pyramids with segments and porcentages
+
+```{r}
+DemBas_piramide_ggplot2_linea(dfPir2017,colorear = "Sexo",
+                            etiq.hombre = "Hombres",etiq.mujer = "Mujeres") + 
+  labs(title = "Perfil de la Pirámide de Población de España en 2017") +
+  scale_x_discrete(
+    # si la variable edad fuera numeric debería usarse scale_x_continuous
+    breaks = seq(0,105,by=5),
+    labels = paste0(as.character(seq(0,105,by=5)), "")) +
+  guides(colour="none")
+
+```
+
+
+## Example of pyramids superimposed
+
+```{r}
+dfPir2002 = dfej02a %>% 
+  dplyr::filter( Periodo=="1 de enero de  2002", 
+                 !(Sexo=="Ambos sexos"),
+                 !(Edad.simple %in% c("100 y más años","Total"))) %>% 
+  dplyr::select(Edadchar=Edad.simple,
+                Sexo,
+                Poblacion = value)
+dfPir2002$Edad = DemBas_extrae_codigo_provincia(dfPir2002$Edadchar)
+dfPir2002$Edad = factor(dfPir2002$Edad,levels =unique(dfPir2002$Edad))
+dfPir2002$Poblacion[is.na(dfPir2002$Poblacion)] = 0
+dfPir2002y2017 = rbind(dfPir2002,dfPir2017)
+dfPir2002y2017$Caso = c(rep(2002,nrow(dfPir2002)),rep(2017,nrow(dfPir2017)))
+head(dfPir2002y2017)
+```
+
+
+```{r}
+DemBas_piramide_superpuestas_ggplot2(dfPir2002y2017,
+                                   etiq.hombre = "Hombres",etiq.mujer = "Mujeres",
+                                   transparente = T) + 
+  labs(title = "Pirámides de Población de España en 2002 y 2017 superpuestas") +
+  scale_x_discrete(
+    breaks = seq(0,105,by=5),
+    labels = paste0(as.character(seq(0,105,by=5)), "")) 
+```
+
+\newpage
+
+# Crear gráficos con ggplot2
+
+En este apartado haremos una introducción muy básica a las capacidades gráficas del paquete "**ggplot2**" que forma parte del **sistema "tidyverse"** y es posiblemente el paquete R de **tratamiento gráfico más usado en la actualidad**.
+
+La idea que se usa en este paquete es añadir paso a paso las distintas capas que constituirán el gráfico final: 
+
+1. Especificar los datos (tibble o data.frame).
+2. Indicar las columnas que se van a utilizar y el papel que desempeñarán en el gráfico (`aes()`).
+3. Añadir el tipo o tipos de gráficos que se van a representar.
+4. Especificar las características particulares del gráfico, en particular las leyendas o texto explicativo que llevará.
+
+
+Veremos a través de ejemplos cómo se construyen gráficos con el paquete "ggplot2", en concreto construiremos los siguientes tipos de gráficos:
+
+- Diagramas de barras o columnas
+- Diagramas de líneas
+
+Se van a usar dos ficheros RData:
+
+- `datos2_mej.RData`
+
+- `DatosINE_PLC.RData`
+
+```{r}
+load(system.file("examples/datos2_mej.RData", package = "DemographyBasic"))
+load(system.file("examples/DatosINE_PLC.RData", package = "DemographyBasic"))
+```
+
+
+
+# Diagrama de barras o columnas
+
+Utilizaremos el dataset: `datos2_mej` contenidos en `datos2_mej.RData`.
+
+```{r}
+DemBas_presentadf(head(datos2_mej))
+```
+
+
+
+
+## Ejemplo
+
+En el siguiente código veremos como se construye un **diagrama de columnas de la variable "Poblacion" de las comunidades autónomas (CCAA) para el censo del 2001**.
+
+En primer lugar, preparamos los datos que se van a necesitar con ayuda del sistema tidyverse:
+
+```{r}
+datos_CCAA = datos2_mej %>% 
+  dplyr::group_by(CCAA) %>% 
+  dplyr::summarise(TOTALCCAA = sum(TOTAL),
+            TOTALVarón = sum(Varon),
+            TOTALMujer = sum(Mujer)) %>% 
+  dplyr::arrange(desc(TOTALCCAA))
+
+datos_CCAA %>% 
+  #glimpse()   # versión mejorada de la función str() en tidyverse
+  head(10) %>%
+  DemBas_presentadf()
+```
+
+
+Los pasos para la **construcción con "ggplot2"** del diagrama de barras  son:
+
+1. Usar la llamada a la función: `ggplot()`
+
+    - con los datos que utilizaremos (en el ejemplo: `datos_CCAA`)
+    - y la función `aes()`, en la que se especifican quién irá al eje X e Y.
+    
+2. Sumamos o añadimos la geometría de representación o el tipo de gráfico. En este caso:
+
+    - `geom_col()``
+    - y especificamos algunas características. Para este tipo de gráfico el color de las barras a través de "`fill`".
+    
+3. Y por último, usamos la función: `labs()`, en la que indicaremos las distintas leyendas del gráfico.
+
+\newpage
+
+Podemos verlo en el siguiente código R:
+
+```{r}
+#library(ggplot2)
+ggplot(datos_CCAA,aes(x=CCAA,y=TOTALCCAA)) + 
+  geom_col(fill="blue") +
+    labs(title="Población Española en 2001",
+         subtitle="por Comunidades Autónomas",
+       y="Población",x="Comunidades Autónomas",
+       caption="Fuente: Elaboración propia") +
+  scale_y_continuous(labels = scales::comma) +
+  theme(axis.text.x = element_text(angle = 90, hjust = 1))  
+```
+
+\newpage
+
+**Ejemplo**. Si queremos hacer la misma representación pero intercambiando los ejes, añadiremos `coord_flip()`. 
+
+En este gráfico además hemos modificado la forma de representar los números de las etiquetas del eje en el que aparecen las cifras de población.
+
+```{r}
+ggplot(datos_CCAA,aes(x=CCAA,y=TOTALCCAA)) + 
+  geom_col(fill="blue") +
+    labs(title="Población Española en 2001",
+         subtitle = "por Comunidades Autónomas",
+       y="Población",x="Comunidades Autónomas",
+       caption="Fuente: Elaboración propia") +
+  scale_y_continuous(labels = scales::comma) +
+  theme(axis.text.y = element_text(angle = 0, hjust = 1)) +  
+  coord_flip()
+
+```
+
+
+\newpage
+
+### Ordenar barras por orden descendente de valor
+
+**Ejemplo**. Para presentar las columnas siguiendo algún tipo de orden (por defecto, las ordena según el orden alfabético) se puede utilizar la función `reorder()`. Cuando se llama a `reorder()` el primer argumento indica la columna que se usará para las etiquetas, y la segunda columna será para indicar el orden en el que aparecerán (si se quiere presentar en orden contrario se debe colocar un signo "-" delante del segundo argumento). 
+
+```{r}
+ggplot(datos_CCAA,aes(x=reorder(CCAA,TOTALCCAA),y=TOTALCCAA)) + 
+  geom_col(fill="blue") +
+    labs(title="Población Española en 2001",
+         subtitle = "por Comunidades Autónomas",
+       y="Población",x="Comunidades Autónomas",
+       caption="Fuente: Elaboración propia") +
+  scale_y_continuous(labels = scales::comma) +
+  theme(axis.text.y = element_text(angle = 0, hjust = 1)) +  
+  coord_flip()
+
+```
+
+Esta representación nos permite identificar rápidamente la ordenación de las comunidades autónomas según el número de habitantes.
+
+\newpage
+
+## Diagrama de líneas
+
+### Ejemplo 1
+
+Veamos ahora como representar un diagrama de líneas. El procedimiento es prácticamente el mismo que el anterior, pero se cambiará la geometría o tipo de gráfico, que en este caso es: `geom_line()`. 
+
+Vamos a construir un **diagrama de líneas con el que representaremos la evolución de la tasa bruta de natalidad de 2010 a 2016**. 
+
+Manipulamos los datos que vamos a necesitar:
+```{r}
+# library(dplyr)  # ya cargado con library(tidyverse)
+Nac_And = Nacimientos_CCAA_EdadMadre_2010a2016 %>% 
+  filter(Edades=="Todas las edades",CCAA=="Andalucía") %>% 
+  select(Nacimientos)
+Pob_And_ASexos = Poblacion_CCAA_TAnd_Edades_Sexo_2010a2017 %>% 
+  filter(Sexo=="AmbosSexos",Codigo=="01",Edades=="TOTAL EDADES") %>%
+  select(`2016`,`2015`,`2014`,`2013`,`2012`,`2011`,`2010`) %>% 
+  as.numeric()
+TBN_2016a2010 = func_dem_TasaBruta_t(as.numeric(Nac_And[,1]),Pob_And_ASexos)
+# func_dem_TasaBruta_t() definida en el fichero R: funciones_demografia.R
+```
+
+Nos quedamos con la información en el siguiente formato:
+
+```{r}
+df.rep = data.frame(Año = 2016:2010,
+                    TBN = TBN_2016a2010)
+head(df.rep) |> 
+  DemBas_presentadf()
+```
+
+\newpage
+
+El código para el gráfico se recoge a continuación:
+```{r}
+#library(ggplot2)   # ya cargado con library(tidyverse)
+#library(ggthemes)
+ggplot(df.rep, aes(x = Año, y=TBN)) + 
+  geom_line(alpha = 1,linetype = "solid", colour="blue",linewidth = 1) +
+  geom_point(size = 2) +
+  labs(title="Tasa bruta de Natalidad (x 1.000) ",
+       subtitle = "Andalucía. 2010-2016",
+       y="Tasa bruta de natalidad", 
+       x="Años",
+       caption="Fuente: Elaboración propia") +
+  #scale_y_continuous(labels = scales::comma,breaks = seq(0,3.5,by=0.25)) +
+  scale_x_continuous(breaks = seq(2010,2016,by=1)) + 
+  theme(axis.text.y = element_text(angle = 0, hjust = 1)) + 
+  theme_solarized()
+```
+
+En este gráfico también hemos sumado la geometría `geom_point()`, para añadir los puntos sobre el gráfico de líneas para resaltar sus valores.
+
+\newpage
+
+### Ejemplo 2
+
+En este nuevo ejemplo, representaremos las defunciones teóricas (función $dx$ de la tabla de vida) en Andalucía en 2015, para edades simples, distinguiendo según el sexo.
+
+```{r codigoej02a, echo=FALSE}
+
+## Extraemos los datos necesarios de defunciones y poblaciones medias 
+## para obtener las tasas específicas de mortalidad para Andalucía 
+## para los años 2015 y 2016:
+
+df_def01_15 = Defunciones_CCAA_Edades_Sexo_2015 %>% 
+  filter(Codigo=="01") %>% 
+  select(EdadesNum,`Ambos sexos`)
+df_def01_15[101,2] = df_def01_15[101,2] + df_def01_15[102,2]
+df_def01_15 = df_def01_15[-102,]
+names(df_def01_15)[2] = "Defunciones"
+
+df_pob01_T_15 = Poblacion_CCAA_Edades_Sexo_2015julio %>% 
+  filter(CodigosCCAA=="01",Sexo=="AmbosSexos",!is.na(EdadesNum)) %>% 
+  select(EdadesNum,Poblacion)
+
+
+df_def01_16 = Defunciones_CCAA_Edades_Sexo_2016 %>% 
+  filter(Codigo=="01") %>% 
+  select(EdadesNum,`Ambos sexos`)
+df_def01_16[101,2] = df_def01_16[101,2] + df_def01_16[102,2]
+df_def01_16 = df_def01_16[-102,]
+names(df_def01_16)[2] = "Defunciones"
+
+df_pob01_T_16 = Poblacion_CCAA_Edades_Sexo_2016julio %>% 
+  filter(CodigosCCAA=="01",Sexo=="AmbosSexos",!is.na(EdadesNum)) %>% 
+  select(EdadesNum,Poblacion)
+
+## tabla de mortalidad de edades simples para el **año 2015**:
+
+mx_simples_15 = DemBas_mx(Px = df_pob01_T_15$Poblacion,
+                                     Dx = df_def01_15$Defunciones,
+                                     N0 = df_pob01_T_15$Poblacion[1],
+                                     D0 = df_def01_15$Defunciones[1])
+tmortalidad2015_AndAmb = DemBas_tablavida_completa(mx_simples_15)
+
+
+
+## tabla de mortalidad de edades simples para el **año 2016**:
+
+mx_simples_16 = DemBas_mx(Px = df_pob01_T_16$Poblacion,
+                                     Dx = df_def01_16$Defunciones,
+                                     N0 = df_pob01_T_16$Poblacion[1],
+                                     D0 = df_def01_16$Defunciones[1])
+tmortalidad2016_AndAmb = DemBas_tablavida_completa(mx_simples_16)
+
+
+## Tablas de mortalidad de Hombres en Andalucía para 2016
+## Extraemos los datos necesarios de defunciones y poblaciones medias 
+## para obtener las tasas específicas de mortalidad para Andalucía 
+## para los años 2015 y 2016:
+
+df_def01h_15 = Defunciones_CCAA_Edades_Sexo_2015 %>% 
+  filter(Codigo=="01") %>% 
+  select(EdadesNum,Hombres)
+df_def01h_15[101,2] = df_def01h_15[101,2] + df_def01h_15[102,2]
+df_def01h_15 = df_def01h_15[-102,]
+names(df_def01h_15)[2] = "Defunciones"
+
+df_pob01_T_15 = Poblacion_CCAA_Edades_Sexo_2015julio %>% 
+  filter(CodigosCCAA=="01",Sexo=="Hombres",!is.na(EdadesNum)) %>% 
+  select(EdadesNum,Poblacion)
+
+df_def01h_16 = Defunciones_CCAA_Edades_Sexo_2016 %>% 
+  filter(Codigo=="01") %>% 
+  select(EdadesNum,Hombres)
+df_def01h_16[101,2] = df_def01h_16[101,2] + df_def01h_16[102,2]
+df_def01h_16 = df_def01h_16[-102,]
+names(df_def01h_16)[2] = "Defunciones"
+
+df_pob01_T_16 = Poblacion_CCAA_Edades_Sexo_2016julio %>% 
+  filter(CodigosCCAA=="01",Sexo=="Hombres",!is.na(EdadesNum)) %>% 
+  select(EdadesNum,Poblacion)
+
+## tabla de mortalidad de edades simples para el **año 2015**:
+
+mx_simples_15 = DemBas_mx(Px = df_pob01_T_15$Poblacion,
+                                     Dx = df_def01h_15$Defunciones,
+                                     N0 = df_pob01_T_15$Poblacion[1],
+                                     D0 = df_def01h_15$Defunciones[1])
+tmortalidad2015_AndHom = DemBas_tablavida_completa(mx_simples_15)
+
+
+
+## tabla de mortalidad de edades simples para el **año 2016**:
+
+mx_simples_16 = DemBas_mx(Px = df_pob01_T_16$Poblacion,
+                                     Dx = df_def01h_16$Defunciones,
+                                     N0 = df_pob01_T_16$Poblacion[1],
+                                     D0 = df_def01h_16$Defunciones[1])
+tmortalidad2016_AndHom = DemBas_tablavida_completa(mx_simples_16)
+
+
+## Tablas de mortalidad de Mujeres en Andalucía para 2016
+## Extraemos los datos necesarios de defunciones y poblaciones medias para 
+## obtener las tasas específicas de mortalidad para España:
+
+df_def01m_15 = Defunciones_CCAA_Edades_Sexo_2015 %>% 
+  filter(Codigo=="01") %>% 
+  select(EdadesNum,Mujeres)
+df_def01m_15[101,2] = df_def01m_15[101,2] + df_def01m_15[102,2]
+df_def01m_15 = df_def01m_15[-102,]
+names(df_def01m_15)[2] = "Defunciones"
+
+df_pob01_T_15 = Poblacion_CCAA_Edades_Sexo_2015julio %>% 
+  filter(CodigosCCAA=="01",Sexo=="Mujeres",!is.na(EdadesNum)) %>% 
+  select(EdadesNum,Poblacion)
+
+df_def01m_16 = Defunciones_CCAA_Edades_Sexo_2016 %>% 
+  filter(Codigo=="01") %>% 
+  select(EdadesNum,Mujeres)
+df_def01m_16[101,2] = df_def01m_16[101,2] + df_def01m_16[102,2]
+df_def01m_16 = df_def01m_16[-102,]
+names(df_def01m_16)[2] = "Defunciones"
+
+df_pob01_T_16 = Poblacion_CCAA_Edades_Sexo_2016julio %>% 
+  filter(CodigosCCAA=="01",Sexo=="Mujeres",!is.na(EdadesNum)) %>% 
+  select(EdadesNum,Poblacion)
+
+## tabla de mortalidad de edades simples para el **año 2015**:
+mx_simples_15 = DemBas_mx(Px = df_pob01_T_15$Poblacion,
+                                     Dx = df_def01m_15$Defunciones,
+                                     N0 = df_pob01_T_15$Poblacion[1],
+                                     D0 = df_def01m_15$Defunciones[1])
+tmortalidad2015_AndMuj = DemBas_tablavida_completa(mx_simples_15)
+
+
+#- tabla de mortalidad de edades simples para el **año 2016**:
+
+mx_simples_16 = DemBas_mx(Px = df_pob01_T_16$Poblacion,
+                                     Dx = df_def01m_16$Defunciones,
+                                     N0 = df_pob01_T_16$Poblacion[1],
+                                     D0 = df_def01m_16$Defunciones[1])
+tmortalidad2016_AndMuj = DemBas_tablavida_completa(mx_simples_16)
+```
+
+Los datos que se utilizarán por sexo son (para obtenerlos se han realizado previamente otras manipulaciones de los datos con el sistema tidyverse, ver @sec-apendicecodigo):
+```{r}
+df.rep = data.frame(
+  Edades = c(tmortalidad2015_AndAmb$Edad,
+             tmortalidad2015_AndHom$Edad,
+             tmortalidad2015_AndMuj$Edad),
+  dx = c(tmortalidad2015_AndAmb$dx,
+         tmortalidad2015_AndHom$dx,
+         tmortalidad2015_AndMuj$dx),
+  Sexo = c(rep("Total",nrow(tmortalidad2015_AndAmb)),
+    rep("Hombre",nrow(tmortalidad2015_AndHom)),
+           rep("Mujer",nrow(tmortalidad2015_AndMuj)))
+)
+df.rep |>  
+  slice(1:6,102:104,203:205) |> 
+  DemBas_presentadf()
+```
+
+En el argumento `aes()` se ha utilizado el papel "colour=Sexo", para que se haga el diagrama de líneas con un color distinto para cada modalidad de la variable "Sexo". El código para constuir el gráfico de líneas sería el siguiente:
+
+```{r out.width="95%",fig.align="center",fig.caption=""}
+ggplot(df.rep, aes(x = Edades, y=dx, group = Sexo, colour = Sexo))  + 
+  geom_line(alpha = 1,
+            linetype = "solid",
+            linewidth = 1) +
+  labs(title="Defunciones teóricas por sexo. Tablas Vida", 
+       subtitle = "Andalucía. 2015.",
+       y="Defunciones teóricas (dx)",
+       x="Edades",
+       caption="Fuente: Elaboración propia") +
+  #scale_y_continuous(labels = scales::comma,breaks = seq(0,1,by=0.1)) +
+  #scale_x_continuous(breaks = c(0,seq(5,100,by=5))) +
+  scale_x_discrete(breaks = c(0,seq(5,100,by=5))) +
+  theme(axis.text.y = element_text(angle = 0, hjust = 1)) +
+  theme_solarized() 
+  
+```
+
+
+Se ha añadido la función "`theme_solarized()`" que permite cambiar el aspecto general del gráfico (el tema "solarized" fija un fondo amarillo y otras características). Existen otros muchos tipos de temas predefinidos (consultar la ayuda de "ggplot2" y del paquete "ggthemes").
+
+\newpage
+
+### Código tidyverse utilizado para obtener los datos de este ejemplo {#sec-apendicecodigo}
+
+**Nota:** Aquí se ha utilizado un truco para mostrar código R escrito y ejecutado-utilizado previamente en el fichero Quarto, y mostrarlo en un punto posterior del fichero (como en un apéndice).
+
+```{r codigoej02a}
+```
+
+
+\newpage
+
+# Crear diagramas de Lexis
+
+Para facilitar la elaboración de diagramas de Lexis en R se recomienda el uso del paquete R: "**LexisPlotR**". Este paquete se basa en el paquete "**ggplot2**", por tanto, podrían añadirse nuevas capas o características, con todas las posibilidades que admite "ggplot2".
+
+Este paquete se puede instalar como cualquier otro paquete R. Una vez instalado, podría usarse con tan solo cargarlo.
+
+```{r}
+library(LexisPlotR)
+```
+
+Veamos algunos ejemplos de lo que se puede representar con este paquete extraídas de la página en Github de este paquete. El código usado en los siguientes ejemplos son autoexplicativos.
+
+<!-- **Nota importante**. En este manual se ha usado la versión 0.40 de "LexisPlotR", pero la versión anterior fue la 0.32. Se han producido cambios importantes, que pueden producir que el código usado para la versión 0.32 no funcione para la versión 0.40. **Fundamentalmente** es que en la versión 0.32 se utilizaba el punto "." para separar los elementos y en la versión 0.40 se utiliza el guión bajo "_". En los ejemplos, que se mostrarán a continuación, aparecerá el código de la versión 0.40. -->
+
+
+## Ejemplo: `lexis_grid()`
+
+Con la función `lexis_grid()` se representa un diagrama de Lexis desde el año 2000 a 2005, representando las edades desde 0 a 5.
+
+
+```{r fig.align='center', out.width="50%"}
+#lexis.grid(year.start = 2000, year.end = 2005, age.start = 0, age.end = 5)
+lexis_grid(year_start = 2000, year_end = 2005, 
+           age_start = 0, age_end = 5)
+```
+
+\newpage
+
+### Ejemplo adicional
+
+
+```{r fig.align='center', out.width="50%"}
+lexis_grid(year_start = 1900, year_end = 1950, age_start = 0, 
+           age_end = 50, delta = 5)
+```
+
+\newpage
+
+## Ejemplo: `lexis_age()`
+
+
+```{r fig.align='center', out.width="50%"}
+lexis <- lexis_grid(year_start = 1900, year_end = 1905, 
+                    age_start = 0, age_end = 5)
+lexis_age(lg = lexis, age = 2)
+```
+
+
+\newpage
+
+## Ejemplo: `lexis_year()`
+
+
+```{r fig.align='center', out.width="50%"}
+lexis <- lexis_grid(year_start = 1900, year_end = 1905, 
+                    age_start = 0, age_end = 5)
+lexis_year(lg = lexis, year = 1903)
+```
+
+\newpage
+
+## Ejemplo: `lexis_cohort()`
+
+
+
+```{r fig.align='center', out.width="50%"}
+lexis <- lexis_grid(year_start = 1900, year_end = 1905, 
+                    age_start = 0, age_end = 5)
+lexis_cohort(lg = lexis, cohort = 1898)
+```
+
+\newpage
+
+## Ejemplo: `lexis_polygon()`
+
+
+```{r fig.align='center', out.width="50%"}
+lexis <- lexis_grid(year_start = 1900, year_end = 1905, 
+                    age_start = 0, age_end = 5)
+
+polygons <- data.frame(group = c(1, 1, 1, 2, 2, 2),
+                       x = c("1901-01-01", "1902-01-01", 
+                             "1902-01-01", "1903-01-01", 
+                             "1904-01-01", "1904-01-01"),
+                       y = c(1, 1, 2, 1, 1, 2))
+
+lexis_polygon(lg = lexis, x = polygons$x, y = polygons$y, 
+              group = polygons$group)
+```
+
+\newpage
+
+## Ejemplo: `lexis_lifeline()`
+
+
+
+```{r fig.align='center', out.width="50%"}
+lg <- lexis_grid(year_start = 1900, year_end = 1905, age_start = 0, 
+                 age_end = 5)
+lexis_lifeline(lg = lg, birth = "1901-09-23", lwd = 1.5)
+```
+
+\newpage
+
+### Ejemplo adicional 1
+
+
+```{r fig.align='center', out.width="50%"}
+lexis_lifeline(lg = lg, birth = "1901-09-23", entry = "1902-04-01", 
+               lwd = 1.5)
+```
+
+\newpage
+
+### Ejemplo adicional 2
+
+
+```{r fig.align='center', out.width="50%"}
+lexis_lifeline(lg = lg, birth = "1901-09-23", entry = "1902-04-01", 
+               exit = "1904-10-31", lwd = 1.5)
+```
+
+
+\newpage
+
+## Ejemplo con operador "tubería"
+
+
+Se puede utilizar con el operador de "tubería" del paquete "magrittr" (incluido en tidyverse) y "sumar" elementos del paquete ggplot2.
+
+
+```{r fig.align='center', out.width="50%",warning=FALSE,message=FALSE}
+library(magrittr)
+library(ggplot2)
+
+p <- lexis_grid(year_start = 1990, year_end = 2000, 
+                age_start = 0, age_end = 10) %>%
+  lexis_age(age = 3) %>%
+  lexis_cohort(cohort = 1988) %>%
+  lexis_year(year = 1998) %>%
+  lexis_lifeline(birth = "1991-09-23", lwd = 1.5)
+
+p <- p + labs(x = "Año", y = "Edad", "title" = "LexisPlotR")
+p
+```
+
+
+
+## Referencias
+
+A continuación se facilitan algunos enlaces útiles sobre este paquete:
+
+
+- [LexisPlotR en CRAN](https://cran.rstudio.com/web/packages/LexisPlotR/index.html){target="_blank"}
+- [LexisPlotR en Github](https://github.com/ottlngr/LexisPlotR){target="_blank"}
+
+
+
+# Instalación de mapSpain
+
+Información obtenida:
+
+- <https://ropenspain.github.io/mapSpain/>
+
+Se recomienda utilizar la siguiente instrucción R para instalar el paquete R: "mapSpain".
+```{r}
+#| eval: false
+install.packages("mapSpain", dependencies = TRUE)
+```
+
+El primer ejemplo que se mostrará se ha obtenido del modelo de partida obtenido en la documentación de "mapSpain": <https://ropenspain.github.io/mapSpain/articles/x02_mapasesp.html>.
+
+Cargamos los paquetes necesarios y utilizamos la función `esp_get_prov_siane()` para obtener información para la representación de mapas de tipo provincial de España para unas determinadas provincias.
+
+```{r}
+library(mapSpain)
+library(ggplot2)
+provs <- esp_get_prov(c(
+  "Andalucía", "Ciudad Real",
+  "Murcia", "Ceuta", "Melilla"
+))
+dplyr::glimpse(provs)
+```
+
+A la geometría "ggplot2" `geom_sf()`, el paquete "mapSpain": facilita la información de la geometría (la coloca en el elemento `geometry` del objeto R anterior: "`provs`") necesaria para representar mapas de España, que permitirá crear por ejemplo un cartograma provincial con la metodología del paquete "ggplot2". Se colorea utilizando una función que genera colores: `hcl.colors()`.
+```{r}
+ggplot(provs) +
+  geom_sf(aes(fill = prov.shortname.es),
+    alpha = 0.9
+  ) +
+  scale_fill_discrete(type = hcl.colors(12, "Cividis")) +
+  theme_minimal() +
+  labs(fill = "Provincias")
+```
+
+\newpage
+
+# Ejemplo 1: cartograma de provincias y provincias de comunidades autónomas
+
+
+Se va a representar la información del "Saldo Migratorio Interno de Andalucía"
+```{r}
+#load("mapaejemplo01.RData")
+load(system.file("examples/mapaejemplo01.RData", package = "DemographyBasic"))
+df_a_mapa = data.frame(
+  Codigo = DemBas_extrae_codigo_provincia(provs_filas),
+  Valor = SMInternoAnd
+)
+df_a_mapa
+```
+
+
+<!-- # antes:  -->
+<!-- # func_mapademografia_prov(df_a_mapa, -->
+<!-- #       Titulo = "Saldo Migratorio Interno (Andalucía 2010 a 2017)") -->
+
+
+
+En primer lugar obtenemos los datos necesarios con ayuda de tidyverse:
+
+```{r}
+#| message: false
+library(mapSpain)
+#library(ggplot2)
+library(tidyverse)
+
+provs = esp_get_prov(df_a_mapa$Codigo) |> # nombres provincias o codes
+  left_join(df_a_mapa, by = c("cpro" = "Codigo"))
+colnames(provs)
+```
+
+\newpage
+
+El cartograma se obtendría con el siguiente código:
+```{r}
+ggplot(provs) +
+  #geom_sf(aes(fill = prov.shortname.es),
+  geom_sf(aes(fill = Valor),
+    alpha = 0.9
+  ) +
+  #scale_fill_discrete(type = hcl.colors(12, "Cividis")) +
+  scale_fill_continuous(type = "viridis", direction = -1) +  # <1>
+  # otros valores para "type": "gradient"
+  #theme_minimal() +
+  theme_void() +
+  labs(fill = "Provincias",
+       title = "Saldo Migratorio Interno (Andalucía 2010 a 2017)")
+  #theme_void() +
+  #theme(legend.position = c(0.1, 0.6))
+```
+1. "`direction=-1`": Si es "1", valor por defecto, los colores son ordenados asociando valores pequeños al color más oscuro y los valores mayores al más claro. Si es "-1", el orden de los colores es el inverso (es el que se ha seleccionado en este ejemplo), a mayor valor el color es más oscuro.
+
+::: {.callout-note}
+En este código se ha empleado por primera vez la miniherramienta del paquete "dplyr": `left_join()`, que nos permite combinar dos tablas relacionadas. 
+
+En este ejemplo, las dos tablas:
+
+- `esp_get_prov_siane(df_a_mapa$Codigo)`
+- `df_a_mapa`
+
+relacionadas por los campos: "cpro" en la primera tabla y "Codigo" en la segunda tabla.
+
+:::
+
+
+
+# Ejemplo 2: cartograma con todas las provincias de España
+
+Obtenemos los datos necesarios:
+```{r}
+dfej02b = DemBas_read_px2(system.file("examples/1489.px", package = "DemographyBasic"))
+
+head(dfej02b)
+tp4 = dfej02b %>% 
+  dplyr::filter(Periodo=="2017", 
+                Provincias!="Total Nacional")
+  
+df_a_mapa2 = data.frame(
+  Codigo = DemBas_extrae_codigo_provincia(tp4$Provincias),
+  Valor = tp4$value
+)
+head(df_a_mapa2)
+```
+
+Volvemos a combinar los datos con la información de los mapas que vamos a representar:
+```{r}
+provs = esp_get_prov(df_a_mapa2$Codigo) |> # nombres provincias o codes
+  left_join(df_a_mapa2, by = c("cpro" = "Codigo"))
+tmp = as.data.frame(provs[,c("prov.shortname.es","cpro","Valor")])
+head(tmp[,1:3],10)
+```
+
+\newpage
+
+El cartograma de todas las provincias de España se obtiene con el siguiente código:
+```{r}
+ggplot(provs) +
+  geom_sf(aes(fill = Valor),
+    alpha = 0.9
+  ) +
+  scale_fill_continuous(type = "viridis", direction = -1) +  # "gradient"
+  #theme_minimal() +
+  theme_void() +
+  labs(fill = "Provincias",
+       title = "Índice de Envejecimiento provincial (España en 2017)")
+```
+
+
+
+
+# Ejemplo 3: comunidades autónomas en España
+
+
+Importamos y preparamos los datos que vamos a necesitar.
+```{r}
+dfej02c = DemBas_read_px2(system.file("examples/1452.px", package = "DemographyBasic"))
+head(dfej02c)
+```
+
+Se usa el sistema tidyverse:
+```{r}
+tp5 = dfej02c %>% 
+  dplyr::filter(Periodo=="2017", 
+                Comunidades.y.Ciudades.Autónomas!="Total Nacional")
+  
+df_a_mapa3 = data.frame(
+  Codigo = DemBas_extrae_codigo_ccaa(tp5$Comunidades.y.Ciudades.Autónomas,
+                                   ConvierteCodSIANE=FALSE),
+  Valor = tp5$value
+)
+head(df_a_mapa3)
+```
+
+\newpage
+
+
+Para construir un mapa sobre comunidades autónomas se ha seguido el ejemplo de la [documentación de mapaSapin](https://ropenspain.github.io/mapSpain/articles/x02_mapasesp.html):
+
+```{r}
+ccaa <- esp_get_ccaa(ccaa = c(
+  "Catalunya",
+  "Comunidad Valenciana",
+  "Aragón",
+  "Baleares"
+))  # se puede seleccionar un subconjunto de comunidades a representar
+
+ccaa <- ccaa %>% mutate(
+  ccaa_cat = esp_dict_translate(ccaa$ine.ccaa.name, "ca")
+)
+
+ggplot(ccaa) +
+  geom_sf(aes(fill = ccaa_cat)) +
+  labs(fill = "Comunitats autònomes") +
+  theme_void() +
+  scale_fill_discrete(type = hcl.colors(4, "Plasma"))
+```
+
+\newpage
+
+Ahora se representará el índice de envejecimiento para cada comunidad autónoma en un cartograma:
+
+
+```{r}
+ccaa <- esp_get_ccaa(ccaa = df_a_mapa3$Codigo) |> 
+  left_join(df_a_mapa3, by = c("codauto" = "Codigo"))
+tmp = as.data.frame(ccaa[,c("ccaa.shortname.es","codauto","Valor")])
+head(tmp[,1:3],15)
+```
+
+\newpage
+
+El cartograma se construye con el siguiente código:
+```{r}
+ggplot(ccaa) +
+  geom_sf(aes(fill = Valor),alpha = 0.9,color = NA) +
+  labs(fill = "Índice envejecimiento") +
+  #theme_minimal() +
+  theme_void() +
+  labs(title = 
+         "Índice de Envejecimiento (Comunidades Autónomas, España  2017)") +
+  #scale_fill_continuous(type = "viridis", direction = -1)  # "gradient"
+  scale_fill_gradientn(   # <1>
+    colors = rev(hcl.colors(100, "Inferno")), # rev() para invertir la escala
+    n.breaks = 10, #10,
+    labels = scales::label_comma(),
+    guide = guide_legend()
+  )
+```
+
+1. `scale_fill_gradientn()`. Ha permitido hacer una agrupación de colores en 10 grupos (`n.breaks = 10`), y para conseguir cambiar la dirección de los colores (valores pequeños  son más claros y valores mayores son más oscuros) se ha usado la función `rev()` para invertir la presentación de los colores.
+
+
+```{r}
+colores = c("#FFFE9E", "#FEF997", "#FDF491", "#FCF08A", "#FBEC84", 
+            "#FBE77E", "#FAE378", "#FADF72", "#F9DB6C", "#F9D766", "#F9D360")
+ # "#F9CE5A" "#F8CA54" "#F8C64F" "#F8C249" "#F8BE44" "#F8BA3F" "#F8B63A" 
+ # "#F7B135" "#F7AD31" "#F7A92C" "#F7A529"
+```
+
+
+ <!-- # "#F7A026" "#F69C24" "#F69822" "#F69322" "#F58F22" "#F58A24" "#F58625"  -->
+ <!-- # "#F48128" "#F47C2B" "#F4782E" "#F37332" -->
+ <!-- # "#F36E35" "#F26839" "#F1643E" "#EE6045" "#EB5C4B" "#E95951" "#E65555"  -->
+ <!-- # "#E35159" "#E04E5D" "#DD4A60" "#DA4763" -->
+ <!-- # "#D74366" "#D44068" "#D13D6A" "#CD396C" "#CA366E" "#C73370" "#C33071"  -->
+ <!-- # "#C02D72" "#BC2A73" "#B82874" "#B52574" -->
+ <!-- # "#B12275" "#AD2075" "#A91D75" "#A51B75" "#A11975" "#9D1775" "#991674"  -->
+ <!-- # "#951474" "#911373" "#8D1272" "#891171" -->
+ <!-- # "#851170" "#80106F" "#7C106E" "#78106C" "#73106B" "#6F1069" "#6B1067"  -->
+ <!-- # "#661065" "#621163" "#5E1161" "#59115F" -->
+ <!-- # "#55125D" "#51125A" "#4C1258" "#481356" "#441353" "#401350" "#3C134D"  -->
+ <!-- # "#37134B" "#331348" "#2F1345" "#2B1242" -->
+ <!-- # "#27123E" "#24123B" "#201138" "#1C1135" "#191031" "#150F2D" "#120E29"  -->
+ <!-- # "#0E0D24" "#0B0B1F" "#080918" "#05060F" -->
+ <!-- # "#040404") -->
+
+
+\newpage
+
+# Ejemplo 4: cartograma de municipios de provincias
+
+Cartograma de la población de los municipios de Segovia en 2019 según el INE:
+```{r}
+munic <- esp_get_munic(region = "Segovia") %>%  
+  # Datos de ejemplo: Población INE
+  left_join(mapSpain::pobmun19, by = c("cpro", "cmun"))
+tmp = as.data.frame(munic[,c("name.x","cpro","pob19")])
+head(tmp[,1:3],10)
+```
+\newpage
+
+El cartograma se construye con el siguiente código:
+```{r}
+ggplot(munic) +
+  geom_sf(aes(fill = pob19), alpha = 0.9, color = NA) +
+  scale_fill_gradientn(
+    colors = rev(hcl.colors(100, "viridis")),  # rev() para invertir la escala
+    # otras plantillas de colores: "Inferno", "viridis", ...
+    n.breaks = 10,
+    labels = scales::label_comma(),
+    guide = guide_legend()
+  ) +
+  labs(
+    fill = "Habitantes",
+    title = "Población en Segovia",
+    subtitle = "Datos INE (2019)"
+  ) +
+  theme_void() +
+  theme(
+    plot.background = element_rect("grey80"),
+    text = element_text(face = "bold"),
+    plot.title = element_text(hjust = .5),
+    plot.subtitle = element_text(hjust = .5)
+  )
+```
+
+
+
+# Enlaces a las fuentes demográficas utilizadas
+
+
+- [INEBASE-Demografía y Población-Fenómenos demográficos](http://www.ine.es/dyngs/INEbase/es/categoria.htm?c=Estadistica_P&cid=1254735573002){target="_blank"}
+
+- [Movimiento Natural de Población: Nacimientos](http://www.ine.es/dyngs/INEbase/es/operacion.htm?c=Estadistica_C&cid=1254736177007&menu=resultados&secc=1254736195442&idp=1254735573002){target="_blank"}
+
+    - Ver enlace: [Paso final MNP Nacimientos](http://www.ine.es/jaxiT3/Tabla.htm?t=6506&L=0){target="_blank"}
 
