@@ -1,42 +1,126 @@
-<urlset xmlns = 'http://www.sitemaps.org/schemas/sitemap/0.9'>
-<url><loc>https://DemographyBasic.github.io/404.html</loc></url>
-<url><loc>https://DemographyBasic.github.io/LICENSE-text.html</loc></url>
-<url><loc>https://DemographyBasic.github.io/LICENSE.html</loc></url>
-<url><loc>https://DemographyBasic.github.io/articles/index.html</loc></url>
-<url><loc>https://DemographyBasic.github.io/articles/introduction.html</loc></url>
-<url><loc>https://DemographyBasic.github.io/authors.html</loc></url>
-<url><loc>https://DemographyBasic.github.io/index.html</loc></url>
-<url><loc>https://DemographyBasic.github.io/reference/DemBas_agrupar_variable.html</loc></url>
-<url><loc>https://DemographyBasic.github.io/reference/DemBas_asigna_codigos_CCAA.html</loc></url>
-<url><loc>https://DemographyBasic.github.io/reference/DemBas_crea_colores_brewer.html</loc></url>
-<url><loc>https://DemographyBasic.github.io/reference/DemBas_datos_piramidePorc.html</loc></url>
-<url><loc>https://DemographyBasic.github.io/reference/DemBas_dem_EdadMedia_t.html</loc></url>
-<url><loc>https://DemographyBasic.github.io/reference/DemBas_dem_ISinteticoCoyuntural_t.html</loc></url>
-<url><loc>https://DemographyBasic.github.io/reference/DemBas_dem_TasaBruta_t.html</loc></url>
-<url><loc>https://DemographyBasic.github.io/reference/DemBas_dem_TasaEspecifica_t.html</loc></url>
-<url><loc>https://DemographyBasic.github.io/reference/DemBas_dem_TasaGeneral_t.html</loc></url>
-<url><loc>https://DemographyBasic.github.io/reference/DemBas_elimina_codigo_CCAA.html</loc></url>
-<url><loc>https://DemographyBasic.github.io/reference/DemBas_etiquetas_gruposEdad.html</loc></url>
-<url><loc>https://DemographyBasic.github.io/reference/DemBas_extrae_Num_Edad.html</loc></url>
-<url><loc>https://DemographyBasic.github.io/reference/DemBas_extrae_codigo_ccaa.html</loc></url>
-<url><loc>https://DemographyBasic.github.io/reference/DemBas_extrae_codigo_provincia.html</loc></url>
-<url><loc>https://DemographyBasic.github.io/reference/DemBas_extrae_notienen_codigos.html</loc></url>
-<url><loc>https://DemographyBasic.github.io/reference/DemBas_fmt_num.html</loc></url>
-<url><loc>https://DemographyBasic.github.io/reference/DemBas_mx.html</loc></url>
-<url><loc>https://DemographyBasic.github.io/reference/DemBas_mx_abreviada.html</loc></url>
-<url><loc>https://DemographyBasic.github.io/reference/DemBas_piramidePorc.html</loc></url>
-<url><loc>https://DemographyBasic.github.io/reference/DemBas_piramide_compuestasCateg_ggplot2.html</loc></url>
-<url><loc>https://DemographyBasic.github.io/reference/DemBas_piramide_ggplot2.html</loc></url>
-<url><loc>https://DemographyBasic.github.io/reference/DemBas_piramide_ggplot2_linea.html</loc></url>
-<url><loc>https://DemographyBasic.github.io/reference/DemBas_piramide_superpuestas_ggplot2.html</loc></url>
-<url><loc>https://DemographyBasic.github.io/reference/DemBas_piramides_enfrentadas_ggplot2.html</loc></url>
-<url><loc>https://DemographyBasic.github.io/reference/DemBas_presentadf.html</loc></url>
-<url><loc>https://DemographyBasic.github.io/reference/DemBas_presentadf_modelo01.html</loc></url>
-<url><loc>https://DemographyBasic.github.io/reference/DemBas_read_px2.html</loc></url>
-<url><loc>https://DemographyBasic.github.io/reference/DemBas_tablavida2.html</loc></url>
-<url><loc>https://DemographyBasic.github.io/reference/DemBas_tablavida_abreviada.html</loc></url>
-<url><loc>https://DemographyBasic.github.io/reference/DemBas_tablavida_abreviada2.html</loc></url>
-<url><loc>https://DemographyBasic.github.io/reference/DemBas_tablavida_completa.html</loc></url>
-<url><loc>https://DemographyBasic.github.io/reference/index.html</loc></url>
+<?xml version="1.0" encoding="UTF-8"?>
+<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
+  <url>
+    <loc>https://DemographyBasic.github.io/404.html</loc>
+  </url>
+  <url>
+    <loc>https://DemographyBasic.github.io/LICENSE-text.html</loc>
+  </url>
+  <url>
+    <loc>https://DemographyBasic.github.io/LICENSE.html</loc>
+  </url>
+  <url>
+    <loc>https://DemographyBasic.github.io/articles/index.html</loc>
+  </url>
+  <url>
+    <loc>https://DemographyBasic.github.io/articles/introduction.html</loc>
+  </url>
+  <url>
+    <loc>https://DemographyBasic.github.io/authors.html</loc>
+  </url>
+  <url>
+    <loc>https://DemographyBasic.github.io/index.html</loc>
+  </url>
+  <url>
+    <loc>https://DemographyBasic.github.io/reference/DemBas_agrupar_variable.html</loc>
+  </url>
+  <url>
+    <loc>https://DemographyBasic.github.io/reference/DemBas_asigna_codigos_CCAA.html</loc>
+  </url>
+  <url>
+    <loc>https://DemographyBasic.github.io/reference/DemBas_crea_colores_brewer.html</loc>
+  </url>
+  <url>
+    <loc>https://DemographyBasic.github.io/reference/DemBas_datos_piramidePorc.html</loc>
+  </url>
+  <url>
+    <loc>https://DemographyBasic.github.io/reference/DemBas_dem_EdadMedia_t.html</loc>
+  </url>
+  <url>
+    <loc>https://DemographyBasic.github.io/reference/DemBas_dem_ISinteticoCoyuntural_t.html</loc>
+  </url>
+  <url>
+    <loc>https://DemographyBasic.github.io/reference/DemBas_dem_TasaBruta_t.html</loc>
+  </url>
+  <url>
+    <loc>https://DemographyBasic.github.io/reference/DemBas_dem_TasaEspecifica_t.html</loc>
+  </url>
+  <url>
+    <loc>https://DemographyBasic.github.io/reference/DemBas_dem_TasaGeneral_t.html</loc>
+  </url>
+  <url>
+    <loc>https://DemographyBasic.github.io/reference/DemBas_elimina_codigo_CCAA.html</loc>
+  </url>
+  <url>
+    <loc>https://DemographyBasic.github.io/reference/DemBas_etiquetas_gruposEdad.html</loc>
+  </url>
+  <url>
+    <loc>https://DemographyBasic.github.io/reference/DemBas_extrae_Num_Edad.html</loc>
+  </url>
+  <url>
+    <loc>https://DemographyBasic.github.io/reference/DemBas_extrae_codigo_CCAA.html</loc>
+  </url>
+  <url>
+    <loc>https://DemographyBasic.github.io/reference/DemBas_extrae_codigo_ccaa.html</loc>
+  </url>
+  <url>
+    <loc>https://DemographyBasic.github.io/reference/DemBas_extrae_codigo_provincia.html</loc>
+  </url>
+  <url>
+    <loc>https://DemographyBasic.github.io/reference/DemBas_extrae_notienen_codigos.html</loc>
+  </url>
+  <url>
+    <loc>https://DemographyBasic.github.io/reference/DemBas_fmt_num.html</loc>
+  </url>
+  <url>
+    <loc>https://DemographyBasic.github.io/reference/DemBas_mx.html</loc>
+  </url>
+  <url>
+    <loc>https://DemographyBasic.github.io/reference/DemBas_mx_abreviada.html</loc>
+  </url>
+  <url>
+    <loc>https://DemographyBasic.github.io/reference/DemBas_piramidePorc.html</loc>
+  </url>
+  <url>
+    <loc>https://DemographyBasic.github.io/reference/DemBas_piramide_compuestasCateg_ggplot2.html</loc>
+  </url>
+  <url>
+    <loc>https://DemographyBasic.github.io/reference/DemBas_piramide_ggplot2.html</loc>
+  </url>
+  <url>
+    <loc>https://DemographyBasic.github.io/reference/DemBas_piramide_ggplot2_linea.html</loc>
+  </url>
+  <url>
+    <loc>https://DemographyBasic.github.io/reference/DemBas_piramide_superpuestas_ggplot2.html</loc>
+  </url>
+  <url>
+    <loc>https://DemographyBasic.github.io/reference/DemBas_piramides_enfrentadas_ggplot2.html</loc>
+  </url>
+  <url>
+    <loc>https://DemographyBasic.github.io/reference/DemBas_presentadf.html</loc>
+  </url>
+  <url>
+    <loc>https://DemographyBasic.github.io/reference/DemBas_presentadf_modelo01.html</loc>
+  </url>
+  <url>
+    <loc>https://DemographyBasic.github.io/reference/DemBas_read_px.html</loc>
+  </url>
+  <url>
+    <loc>https://DemographyBasic.github.io/reference/DemBas_read_px2.html</loc>
+  </url>
+  <url>
+    <loc>https://DemographyBasic.github.io/reference/DemBas_tablavida2.html</loc>
+  </url>
+  <url>
+    <loc>https://DemographyBasic.github.io/reference/DemBas_tablavida_abreviada.html</loc>
+  </url>
+  <url>
+    <loc>https://DemographyBasic.github.io/reference/DemBas_tablavida_abreviada2.html</loc>
+  </url>
+  <url>
+    <loc>https://DemographyBasic.github.io/reference/DemBas_tablavida_completa.html</loc>
+  </url>
+  <url>
+    <loc>https://DemographyBasic.github.io/reference/index.html</loc>
+  </url>
 </urlset>
-

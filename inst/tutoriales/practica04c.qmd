@@ -24,7 +24,7 @@ suppressWarnings(suppressMessages(library(DemographyBasic)))
 
 # Crear pirámides de población
 
-Para facilitar la elaboración de pirámides de población se han definido una serie de funciones, las cuales se encuentran definidas en el fichero **"funciones_piramides.R"**. Las funciones son las siguientes:
+Para facilitar la elaboración de pirámides de población se han definido una serie de funciones en el paquete "DemographyBasic". Las funciones son las siguientes:
 
 -   `DemBas_piramide_ggplot2()`
 -   `DemBas_piramide_ggplot2_linea()`
@@ -180,7 +180,7 @@ Recurriendo a la web del INE, obtener la siguiente información en formato "px":
 **Paso 2.** Importamos los datos en R:
 
 ```{r}
-dfej02a <- DemBas_read_px2("9663.px")
+dfej02a <- DemBas_read_px("9663.px")
 head(dfej02a)
 ```
 A continuación se muestra el código tidyverse que nos permitirá obtener los datos que necesitamos: "población española en 2017 por edades simples".

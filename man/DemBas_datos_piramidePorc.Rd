@@ -11,10 +11,6 @@ DemBas_datos_piramidePorc(
 )
 }
 \arguments{
-\item{datosPiramide}{}
-
-\item{GEdad_final}{}
-
 \item{etiq.hombre}{}
 }
 \description{

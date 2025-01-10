@@ -17,22 +17,6 @@ DemBas_piramide_ggplot2(
 )
 }
 \arguments{
-\item{datosPiramide}{}
-
-\item{porcentajes}{}
-
-\item{etiquetas}{}
-
-\item{etiquetas.size}{}
-
-\item{UsaCaso}{}
-
-\item{etiq.hombre}{}
-
-\item{etiq.mujer}{}
-
-\item{colorear}{}
-
 \item{colores}{}
 }
 \value{
@@ -42,10 +26,10 @@ ggplot2 graphics
 Función para crear pirámides poblacionales con ggplot2
 }
 \examples{
-dfej02a <- DemBas_read_px2(system.file("examples/9663.px", package = "DemographyBasic"))
+dfej02a <- DemBas_read_px(system.file("examples/9663.px", package = "DemographyBasic"))
 head(dfej02a)
-tp1 = dfej02a \%>\% 
-  dplyr::filter(Periodo=="1 de enero de  2017",Edad.simple=="Total") \%>\%  
+tp1 = dfej02a \%>\%
+  dplyr::filter(Periodo=="1 de enero de  2017",Edad.simple=="Total") \%>\%
   # hay dos espacios entre "de" y "2017"
   dplyr::select("Sexo","value")
 
@@ -60,23 +44,23 @@ x1ngr = DemBas_agrupar_variable(x1n,metodo=2,final=100)
 
 dfej02a$EdadGrupos = x1ngr
 
-tp3 = dfej02a \%>\% 
-  dplyr::filter( Periodo=="1 de enero de  2017", 
-                 !(Edad.simple \%in\% c("100 y más años","Total"))) \%>\% 
-  dplyr::group_by(Sexo,EdadGrupos) \%>\% 
+tp3 = dfej02a \%>\%
+  dplyr::filter( Periodo=="1 de enero de  2017",
+                 !(Edad.simple \%in\% c("100 y más años","Total"))) \%>\%
+  dplyr::group_by(Sexo,EdadGrupos) \%>\%
   dplyr::summarise(Poblacion = round(sum(value,na.rm=T),0), .groups = "keep")
 
 
-dfPir2017 = dfej02a \%>\% 
-  dplyr::filter( Periodo=="1 de enero de  2017", 
+dfPir2017 = dfej02a \%>\%
+  dplyr::filter( Periodo=="1 de enero de  2017",
                  !(Sexo=="Ambos sexos"),
-                 !(Edad.simple \%in\% c("100 y más años","Total"))) \%>\% 
+                 !(Edad.simple \%in\% c("100 y más años","Total"))) \%>\%
   dplyr::select(Edadchar=Edad.simple,
                 Sexo,
                 Poblacion = value)
 dfPir2017$Edad = DemBas_extrae_codigo_provincia(dfPir2017$Edadchar)
 dfPir2017$Edad = factor(dfPir2017$Edad,levels =unique(dfPir2017$Edad))
-dfPir2017$Poblacion[is.na(dfPir2017$Poblacion)] = 0 
+dfPir2017$Poblacion[is.na(dfPir2017$Poblacion)] = 0
 head(dfPir2017)
 DemBas_piramide_ggplot2(dfPir2017,
                       #etiquetas = T,etiquetas.size = 2,
@@ -85,5 +69,5 @@ DemBas_piramide_ggplot2(dfPir2017,
   scale_x_discrete(
     # si la variable edad fuera numeric debería usarse scale_x_continuous
     breaks = seq(0,105,by=5),
-    labels = paste0(as.character(seq(0,105,by=5)), ""))  
+    labels = paste0(as.character(seq(0,105,by=5)), ""))
 }

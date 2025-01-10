@@ -1,125 +1,125 @@
 
-#' @title Calcula la tabla de vida para edades simples o completa
-#' @description Calcula la tabla de vida a partir de las tasas de mortalidad para edades simples: 0,1,2,...
-#' @param mx vector de tasas de mortalidad para edades simples: 0,1,2,...
-#' 
-#' @returns devuelve un data.frame con la tabla de vida
-#' @examples
-#' Mx1000 = c(9.12160, 0.84807,0.49502,0.33352,0.27296,
-#' 0.23258,0.20229,0.19221,0.19225,0.18219,
-#' 0.18219,0.18223,0.19239,0.21268,0.25325,
-#' 0.31411,0.38518,0.44618,0.47682,0.48721,
-#' 0.48744,0.48768,0.48792,0.48816,0.48840,
-#' 0.48864,0.49907,0.49932,0.49957,0.51002,
-#' 0.52049,0.55140,0.58236,0.62360,0.67515,
-#' 0.72681,0.79907,0.89203,0.99549,1.09927,
-#' 1.22398,1.35944,1.50578,1.68380,1.87305,
-#' 2.07374,2.28609,2.52075,2.76762,3.04801,
-#' 3.34149,3.64844,3.99052,4.35799,4.76231,
-#' 5.19386,5.68611,6.20842,6.79514,7.42672,
-#' 8.12774,8.89053,9.74129,10.68500,11.73947,
-#' 12.91226,14.22468,15.71228,17.35403,19.16595,
-#' 21.20612,23.43628,25.96366,28.83038,32.10259,
-#' 35.83456,40.09691,44.96477,50.47392,56.71130,
-#' 63.73696,71.61161,80.38833,90.15169,100.87032,
-#' 112.56462,125.25733,138.92967,153.57492,169.22923,
-#' 185.87183,203.41806,222.05303,241.69867,262.24030,
-#' 283.83279,306.41026,329.80973,354.16667,379.65616,
-#' 406.15058,434.57189,462.12121,491.86992,832.50000)
-#' mx = Mx1000/1000
-#' tb01 = DemBas_tablavida(mx)
-#' tb01
+# @title Calcula la tabla de vida para edades simples o completa
+# @description Calcula la tabla de vida a partir de las tasas de mortalidad para edades simples: 0,1,2,...
+# @param mx vector de tasas de mortalidad para edades simples: 0,1,2,...
+#
+# @returns devuelve un data.frame con la tabla de vida
+# @examples
+# Mx1000 = c(9.12160, 0.84807,0.49502,0.33352,0.27296,
+# 0.23258,0.20229,0.19221,0.19225,0.18219,
+# 0.18219,0.18223,0.19239,0.21268,0.25325,
+# 0.31411,0.38518,0.44618,0.47682,0.48721,
+# 0.48744,0.48768,0.48792,0.48816,0.48840,
+# 0.48864,0.49907,0.49932,0.49957,0.51002,
+# 0.52049,0.55140,0.58236,0.62360,0.67515,
+# 0.72681,0.79907,0.89203,0.99549,1.09927,
+# 1.22398,1.35944,1.50578,1.68380,1.87305,
+# 2.07374,2.28609,2.52075,2.76762,3.04801,
+# 3.34149,3.64844,3.99052,4.35799,4.76231,
+# 5.19386,5.68611,6.20842,6.79514,7.42672,
+# 8.12774,8.89053,9.74129,10.68500,11.73947,
+# 12.91226,14.22468,15.71228,17.35403,19.16595,
+# 21.20612,23.43628,25.96366,28.83038,32.10259,
+# 35.83456,40.09691,44.96477,50.47392,56.71130,
+# 63.73696,71.61161,80.38833,90.15169,100.87032,
+# 112.56462,125.25733,138.92967,153.57492,169.22923,
+# 185.87183,203.41806,222.05303,241.69867,262.24030,
+# 283.83279,306.41026,329.80973,354.16667,379.65616,
+# 406.15058,434.57189,462.12121,491.86992,832.50000)
+# mx = Mx1000/1000
+# tb01 = DemBas_tablavida(mx)
+# tb01
 
 #' @export
 DemBas_tablavida2 = function(mx) {
-  
+
   nn = length(mx)  # cuantos: 0,1,2, ..., 100+  -> nn=101
   ## Paso 1
   x = 0:(nn-1)
-  
+
   ult = nn
   qx = rep(NA,ult)
   qx = (2*mx)/(2+mx)
-  (qx[1] = mx[1]) # TMI = D^t_0/N^t 
+  (qx[1] = mx[1]) # TMI = D^t_0/N^t
   #(qx[2:5] = (4*mx[2:5])/(1+4*(1-0.4)*mx[2:5]))
   (qx[ult] = 1)
   #  round(qx,5)
-  
+
   ## Paso 2
-  ## 
-  
+  ##
+
   px = 1 - qx
   #  round(px,5)
-  
+
   ## Paso 3
-  ## 
-  
+  ##
+
   dx = rep(NA,ult)
   lx = rep(NA,ult)
   lx[1] = 100000
   dx[1] = lx[1] * qx[1]
-  
+
   for (i in 2:ult) {
     lx[i] = lx[i-1] - dx[i-1]
     dx[i] = lx[i] * qx[i]
   }
   #  round(dx,0)
   #  round(lx,0)
-  
-  
+
+
   ## Paso 4
-  ## 
-  
+  ##
+
   Lx = rep(NA,ult)
   Lx[6:(ult-1)] = ((lx[6:(ult-1)]+lx[7:ult]))/2
   Lx[1] = (lx[2] + 0.1*dx[1])
   Lx[2:5] = (lx[3:6] + 0.4*dx[2:5])
   Lx[ult] = lx[ult]/mx[ult]
   #  round(Lx,0)
-  
+
   ##Paso 5
-  ##' 
-  
+  ##'
+
   Tx = rep(NA,ult)
   Tx[ult] = Lx[ult]
   for (i in seq(ult-1,1,by=-1)) {
     Tx[i] = Tx[i+1] + Lx[i]
   }
   #  round(Tx,0)
-  
+
   ##Paso 6
-  ##' 
-  
+  ##'
+
   ex = Tx/lx
   #  round(ex,2)
-  
+
   ##Paso 7
-  ##' 
-  
+  ##'
+
   Sx = rep(NA,ult)
   #Sx[1] = (Lx[1] + Lx[2])/(5*lx[1])
   Sx[1] = (Lx[2])/(Lx[1])
   Sx[ult-1] = Lx[ult]/(Lx[ult-1]+Lx[ult])
   Sx[2:(ult-2)] = Lx[3:(ult-1)]/Lx[2:(ult-2)]
   #  round(Sx,5)
-  
+
   ##Tabla de mortalidad
-  ##' 
-  
+  ##'
+
   tablamortalidad = cbind(x,round(mx,5),round(qx,5),round(px,5),round(lx,0),
                           round(dx,0),round(Lx,0),
                           round(Tx,0),round(ex,2),round(Sx,5))
   colnames(tablamortalidad) = c("x","mx","qx","dx","lx","px","Lx","Tx","ex","Sx")
   df.tablamortalidad = as.data.frame(tablamortalidad)
   return(df.tablamortalidad)
-  
+
 }
 
 
 
 #' @title Calcula las tasas especificas de mortalidad para edades simples
 #' @description Calcula las tasas especificas de mortalidad para edades simplex a partir de las defunciones y población
-#' @param Px vector de población media por edad 
+#' @param Px vector de población media por edad
 #' @param Dx vector de defunciones por edad
 #' @param N0 nacimientos en el periodo
 #' @param D0 defunciones en el periodo
@@ -143,100 +143,100 @@ DemBas_mx = function(Px,Dx,N0,D0) {
 
 
 
-#' @title Calcula la tabla de vida para edades agrupadas
-#' @description Calcula la tabla de vida abreviada a partir de las tasas de mortalidad para edades agrupadas: 0,1,2,...
-#' @param mx vector de tasas de mortalidad para edades simples: 0,1,2,...
-#' 
-#' @returns devuelve un data.frame con la tabla de vida
-#' @export
-#' @examples
-#' (mx0 = 1733/441881) # TMI = D^t_0/N^t 
-#' # Defunciones de menores de un año durante 2003: 1733
-#' # Nacimientos en España en 2003: 441881
-#' mx = c(mx0,0.00027, 0.00013, 0.00016, 0.00043, 0.00057, 0.00059, 0.00081,
-#'      0.00115, 0.00174, 0.00258, 0.00376, 0.00569, 0.00818, 0.01346,
-#'      0.02206, 0.03844, 0.06981, 0.12872, 0.21674, 0.31705, 0.48258)
-#' tv = DemBas_tablavida_abreviada2(mx)
+# @title Calcula la tabla de vida para edades agrupadas
+# @description Calcula la tabla de vida abreviada a partir de las tasas de mortalidad para edades agrupadas: 0,1,2,...
+# @param mx vector de tasas de mortalidad para edades simples: 0,1,2,...
+#
+# @returns devuelve un data.frame con la tabla de vida
+# @export
+# @examples
+# (mx0 = 1733/441881) # TMI = D^t_0/N^t
+# # Defunciones de menores de un año durante 2003: 1733
+# # Nacimientos en España en 2003: 441881
+# mx = c(mx0,0.00027, 0.00013, 0.00016, 0.00043, 0.00057, 0.00059, 0.00081,
+#      0.00115, 0.00174, 0.00258, 0.00376, 0.00569, 0.00818, 0.01346,
+#      0.02206, 0.03844, 0.06981, 0.12872, 0.21674, 0.31705, 0.48258)
+# tv = DemBas_tablavida_abreviada2(mx)
 DemBas_tablavida_abreviada2 = function(mx) {
-  
+
   ## Paso 1
   x = c(0,1,seq(5,100,by=5))
-  
+
   ult = length(mx)
   qx = rep(NA,ult)
   qx = (2*5*mx)/(2+5*mx)
-  (qx[1] = mx[1]) # TMI = D^t_0/N^t 
+  (qx[1] = mx[1]) # TMI = D^t_0/N^t
   (qx[2] = (4*mx[2])/(1+4*(1-0.4)*mx[2]))
   (qx[ult] = 1)
   #  round(qx,5)
-  
+
   ## Paso 2
-  ## 
-  
+  ##
+
   dx = rep(NA,ult)
   lx = rep(NA,ult)
   lx[1] = 100000
   dx[1] = lx[1] * qx[1]
-  
+
   for (i in 2:ult) {
     lx[i] = lx[i-1] - dx[i-1]
     dx[i] = lx[i] * qx[i]
   }
   #  round(dx,0)
   #  round(lx,0)
-  
+
   ## Paso 3
-  ## 
-  
+  ##
+
   px = 1 - qx
   #  round(px,5)
-  
+
   ## Paso 4
-  ## 
-  
+  ##
+
   Lx = rep(NA,ult)
   Lx[3:(ult-1)] = (5*(lx[3:(ult-1)]+lx[4:ult]))/2
   Lx[1] = 1 * (lx[2] + 0.1*dx[1])
   Lx[2] = 4 * (lx[3] + 0.4*dx[2])
   Lx[ult] = lx[ult]/mx[ult]
   #  round(Lx,0)
-  
+
   ##Paso 5
-  ##' 
-  
+  ##'
+
   Tx = rep(NA,ult)
   Tx[ult] = Lx[ult]
   for (i in seq(ult-1,1,by=-1)) {
     Tx[i] = Tx[i+1] + Lx[i]
   }
   #  round(Tx,0)
-  
+
   ##Paso 6
-  ##' 
-  
+  ##'
+
   ex = Tx/lx
   #  round(ex,2)
-  
+
   ##Paso 7
-  ##' 
-  
+  ##'
+
   Sx = rep(NA,ult)
   Sx[1] = (Lx[1] + Lx[2])/(5*lx[1])
   Sx[2] = (Lx[3]/(Lx[1]+Lx[2]))
   Sx[ult-1] = Lx[ult]/(Lx[ult-1]+Lx[ult])
   Sx[3:(ult-2)] = Lx[4:(ult-1)]/Lx[3:(ult-2)]
   #  round(Sx,5)
-  
+
   ##Tabla de mortalidad
-  ##' 
-  
+  ##'
+
   tablamortalidad = cbind(x,round(mx,5),round(qx,5),round(px,5),
                           round(lx,0),round(dx,0),round(Lx,0),
                           round(Tx,0),round(ex,2),round(Sx,5))
   colnames(tablamortalidad) = c("x","mx","qx","dx","lx","px","Lx","Tx","ex","Sx")
   df.tablamortalidad = as.data.frame(tablamortalidad)
   return(df.tablamortalidad)
-  
+
 }
 
 
@@ -244,7 +244,7 @@ DemBas_tablavida_abreviada2 = function(mx) {
 
 #' @title Calcula las tasas especificas de mortalidad para edades agrupadas
 #' @description Calcula las tasas especificas de mortalidad para edades agrupadas a partir de las defunciones y población
-#' @param Px vector de población media por edad 
+#' @param Px vector de población media por edad
 #' @param Dx vector de defunciones por edad
 #' @param N0 nacimientos en el periodo
 #' @param D0 defunciones en el periodo
@@ -264,7 +264,7 @@ DemBas_tablavida_abreviada2 = function(mx) {
 #' mx = DemBas_mx(Px,Dx,N0,D0)
 #' mx
 DemBas_mx_abreviada = function(Px,Dx,N0,D0) {
-  
+
   x = c(0,1,seq(5,100,by=5))
   mx0 = D0/N0
   mx = round(Dx/Px,5)
@@ -330,13 +330,13 @@ f_tb_Sx = function(Lx,lx) {
   Sx[ult-1] = Lx[ult]/(Lx[ult-1]+Lx[ult])
   Sx[2:(ult-2)] = Lx[3:(ult-1)]/Lx[2:(ult-2)]
   Sx
-  
+
 }
 
 #' @title Calcula la tabla de vida para edades simples o completa
 #' @description Calcula la tabla de vida a partir de las tasas de mortalidad para edades simples: 0,1,2,...
 #' @param mx vector de tasas de mortalidad para edades simples: 0,1,2,...
-#' 
+#'
 #' @returns devuelve un data.frame con la tabla de vida
 #' @Import tibble tibble
 #' @examples
@@ -364,7 +364,7 @@ f_tb_Sx = function(Lx,lx) {
 #' mx = Mx1000/1000
 #' tb01 = DemBas_tablavida_completa(mx)
 #' tb01
-#' 
+#'
 #' @export
 DemBas_tablavida_completa = function(Mx,l0=100000,redondeo=TRUE) {
   noredondeo=!redondeo
@@ -464,17 +464,17 @@ f_tba_Sx = function(Lx,lx) {
   Sx[ult-1] = Lx[ult]/(Lx[ult-1]+Lx[ult])
   Sx[3:(ult-2)] = Lx[4:(ult-1)]/Lx[3:(ult-2)]
   Sx
-  
+
 }
 
 #' @title Calcula la tabla de vida para edades agrupadas
 #' @description Calcula la tabla de vida abreviada a partir de las tasas de mortalidad para edades agrupadas: 0,1,2,...
 #' @param mx vector de tasas de mortalidad para edades simples: 0,1,2,...
-#' 
+#'
 #' @returns devuelve un data.frame con la tabla de vida
 #' @export
 #' @examples
-#' (mx0 = 1733/441881) # TMI = D^t_0/N^t 
+#' (mx0 = 1733/441881) # TMI = D^t_0/N^t
 #' # Defunciones de menores de un año durante 2003: 1733
 #' # Nacimientos en España en 2003: 441881
 #' mx = c(mx0,0.00027, 0.00013, 0.00016, 0.00043, 0.00057, 0.00059, 0.00081,
@@ -510,7 +510,7 @@ DemBas_tablavida_abreviada = function(nMx,l0=100000,redondeo=TRUE) {
                  Tx = round(Tx,0),
                  ex = round(ex,2),
                  Sx = round(Sx,5))
-  } else {  
+  } else {
     tba = tibble(Edad = edades,
                  n = vn,
                  nMx1000 = nMx*1000,

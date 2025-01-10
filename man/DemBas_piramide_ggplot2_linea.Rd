@@ -17,22 +17,6 @@ DemBas_piramide_ggplot2_linea(
 )
 }
 \arguments{
-\item{datosPiramide}{}
-
-\item{porcentajes}{}
-
-\item{etiquetas}{}
-
-\item{etiquetas.size}{}
-
-\item{UsaCaso}{}
-
-\item{etiq.hombre}{}
-
-\item{etiq.mujer}{}
-
-\item{colorear}{}
-
 \item{colores}{}
 }
 \description{
@@ -41,7 +25,7 @@ DemBas_piramide_ggplot2_linea
 \examples{
 # Ejecutar ejemplo de función DemBas_piramide_ggplot2()
 DemBas_piramide_ggplot2_linea(dfPir2017,colorear = "Sexo",
-                            etiq.hombre = "Hombres",etiq.mujer = "Mujeres") + 
+                            etiq.hombre = "Hombres",etiq.mujer = "Mujeres") +
   labs(title = "Perfil de la Pirámide de Población de España en 2017") +
   scale_x_discrete(
     # si la variable edad fuera numeric debería usarse scale_x_continuous

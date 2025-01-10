@@ -39,15 +39,15 @@ library(tidyverse) #para solucionarlo carga tidyverse después
 ```
 :::
 
-Pero se ha creado la función `DemBas_read_px2()` de la librería "DemographyBasic", que mejora el proceso de importar datos de ficheros con extensión px:
+Pero se ha creado la función `DemBas_read_px()` de la librería "DemographyBasic", que mejora el proceso de importar datos de ficheros con extensión px:
 
 ```r
-DemBas_read_px2(nombreficheropx)
+DemBas_read_px(nombreficheropx)
 ```
 
 **Nota importante:** 
 
-- `DemBas_read_px2()` devuelve un objeto de tipo "data.frame" y además convierte todas las variables de tipo "factor" a tipo "character". 
+- `DemBas_read_px()` devuelve un objeto de tipo "data.frame" y además convierte todas las variables de tipo "factor" a tipo "character". 
 
 
 ## Ejemplo inicial
@@ -57,7 +57,7 @@ DemBas_read_px2(nombreficheropx)
 # download.file(
 #   "https://www.ine.es/jaxiT3/files/t/es/px/1452.px?nocab=1",
 #   "1452.px")
-datos = DemBas_read_px2("1452.px")
+datos = DemBas_read_px("1452.px")
 head(datos,20)
 ```
 

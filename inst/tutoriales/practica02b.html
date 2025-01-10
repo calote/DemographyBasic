@@ -2,7 +2,7 @@
 <html xmlns="http://www.w3.org/1999/xhtml" lang="es" xml:lang="es"><head>
 
 <meta charset="utf-8">
-<meta name="generator" content="quarto-1.6.32">
+<meta name="generator" content="quarto-1.6.37">
 
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 
@@ -63,10 +63,10 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <script src="practica02b_files/libs/quarto-html/tippy.umd.min.js"></script>
 <script src="practica02b_files/libs/quarto-html/anchor.min.js"></script>
 <link href="practica02b_files/libs/quarto-html/tippy.css" rel="stylesheet">
-<link href="practica02b_files/libs/quarto-html/quarto-syntax-highlighting-2486e1f0a3ee9ee1fc393803a1361cdb.css" rel="stylesheet" id="quarto-text-highlighting-styles">
+<link href="practica02b_files/libs/quarto-html/quarto-syntax-highlighting-29e2c20b02301cfff04dc8050bf30c7e.css" rel="stylesheet" id="quarto-text-highlighting-styles">
 <script src="practica02b_files/libs/bootstrap/bootstrap.min.js"></script>
 <link href="practica02b_files/libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
-<link href="practica02b_files/libs/bootstrap/bootstrap-677b520d69fcc55ab41b4b425631e74d.min.css" rel="stylesheet" append-hash="true" id="quarto-bootstrap" data-mode="light">
+<link href="practica02b_files/libs/bootstrap/bootstrap-933a14f46f0e4d1503cecf416b5e09b4.min.css" rel="stylesheet" append-hash="true" id="quarto-bootstrap" data-mode="light">
 
 
 </head>
@@ -131,11 +131,11 @@ Nota
 </div>
 </div>
 </div>
-<p>Pero se ha creado la función <code>DemBas_read_px2()</code> de la librería “DemographyBasic”, que mejora el proceso de importar datos de ficheros con extensión px:</p>
-<div class="sourceCode" id="cb3"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a><span class="fu">DemBas_read_px2</span>(nombreficheropx)</span></code><button title="Copiar al portapapeles" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<p>Pero se ha creado la función <code>DemBas_read_px()</code> de la librería “DemographyBasic”, que mejora el proceso de importar datos de ficheros con extensión px:</p>
+<div class="sourceCode" id="cb3"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a><span class="fu">DemBas_read_px</span>(nombreficheropx)</span></code><button title="Copiar al portapapeles" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <p><strong>Nota importante:</strong></p>
 <ul>
-<li><code>DemBas_read_px2()</code> devuelve un objeto de tipo “data.frame” y además convierte todas las variables de tipo “factor” a tipo “character”.</li>
+<li><code>DemBas_read_px()</code> devuelve un objeto de tipo “data.frame” y además convierte todas las variables de tipo “factor” a tipo “character”.</li>
 </ul>
 <section id="ejemplo-inicial" class="level2" data-number="1.1">
 <h2 data-number="1.1" class="anchored" data-anchor-id="ejemplo-inicial"><span class="header-section-number">1.1</span> Ejemplo inicial</h2>
@@ -143,118 +143,244 @@ Nota
 <div class="sourceCode cell-code" id="cb4"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a><span class="co"># download.file(</span></span>
 <span id="cb4-2"><a href="#cb4-2" aria-hidden="true" tabindex="-1"></a><span class="co">#   "https://www.ine.es/jaxiT3/files/t/es/px/1452.px?nocab=1",</span></span>
 <span id="cb4-3"><a href="#cb4-3" aria-hidden="true" tabindex="-1"></a><span class="co">#   "1452.px")</span></span>
-<span id="cb4-4"><a href="#cb4-4" aria-hidden="true" tabindex="-1"></a>datos <span class="ot">=</span> <span class="fu">DemBas_read_px2</span>(<span class="st">"1452.px"</span>)</span>
+<span id="cb4-4"><a href="#cb4-4" aria-hidden="true" tabindex="-1"></a>datos <span class="ot">=</span> <span class="fu">DemBas_read_px</span>(<span class="st">"1452.px"</span>)</span>
 <span id="cb4-5"><a href="#cb4-5" aria-hidden="true" tabindex="-1"></a><span class="fu">head</span>(datos,<span class="dv">20</span>)</span></code><button title="Copiar al portapapeles" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output-display">
 <div class="kable-table">
-<table class="caption-top table table-sm table-striped small">
+<table>
 <thead>
-<tr class="header">
-<th style="text-align: left;">Periodo</th>
-<th style="text-align: left;">Comunidades.y.Ciudades.Autónomas</th>
-<th style="text-align: right;">value</th>
+<tr>
+<th style="text-align:left;">
+Periodo
+</th>
+<th style="text-align:left;">
+Comunidades.y.Ciudades.Autónomas
+</th>
+<th style="text-align:right;">
+value
+</th>
 </tr>
 </thead>
 <tbody>
-<tr class="odd">
-<td style="text-align: left;">2018</td>
-<td style="text-align: left;">Total Nacional</td>
-<td style="text-align: right;">120.45981</td>
+<tr>
+<td style="text-align:left;">
+2018
+</td>
+<td style="text-align:left;">
+Total Nacional
+</td>
+<td style="text-align:right;">
+120.45981
+</td>
 </tr>
-<tr class="even">
-<td style="text-align: left;">2017</td>
-<td style="text-align: left;">Total Nacional</td>
-<td style="text-align: right;">118.26247</td>
+<tr>
+<td style="text-align:left;">
+2017
+</td>
+<td style="text-align:left;">
+Total Nacional
+</td>
+<td style="text-align:right;">
+118.26247
+</td>
 </tr>
-<tr class="odd">
-<td style="text-align: left;">2016</td>
-<td style="text-align: left;">Total Nacional</td>
-<td style="text-align: right;">116.27982</td>
+<tr>
+<td style="text-align:left;">
+2016
+</td>
+<td style="text-align:left;">
+Total Nacional
+</td>
+<td style="text-align:right;">
+116.27982
+</td>
 </tr>
-<tr class="even">
-<td style="text-align: left;">2015</td>
-<td style="text-align: left;">Total Nacional</td>
-<td style="text-align: right;">114.72207</td>
+<tr>
+<td style="text-align:left;">
+2015
+</td>
+<td style="text-align:left;">
+Total Nacional
+</td>
+<td style="text-align:right;">
+114.72207
+</td>
 </tr>
-<tr class="odd">
-<td style="text-align: left;">2014</td>
-<td style="text-align: left;">Total Nacional</td>
-<td style="text-align: right;">112.23860</td>
+<tr>
+<td style="text-align:left;">
+2014
+</td>
+<td style="text-align:left;">
+Total Nacional
+</td>
+<td style="text-align:right;">
+112.23860
+</td>
 </tr>
-<tr class="even">
-<td style="text-align: left;">2013</td>
-<td style="text-align: left;">Total Nacional</td>
-<td style="text-align: right;">109.52819</td>
+<tr>
+<td style="text-align:left;">
+2013
+</td>
+<td style="text-align:left;">
+Total Nacional
+</td>
+<td style="text-align:right;">
+109.52819
+</td>
 </tr>
-<tr class="odd">
-<td style="text-align: left;">2012</td>
-<td style="text-align: left;">Total Nacional</td>
-<td style="text-align: right;">108.33890</td>
+<tr>
+<td style="text-align:left;">
+2012
+</td>
+<td style="text-align:left;">
+Total Nacional
+</td>
+<td style="text-align:right;">
+108.33890
+</td>
 </tr>
-<tr class="even">
-<td style="text-align: left;">2011</td>
-<td style="text-align: left;">Total Nacional</td>
-<td style="text-align: right;">107.35091</td>
+<tr>
+<td style="text-align:left;">
+2011
+</td>
+<td style="text-align:left;">
+Total Nacional
+</td>
+<td style="text-align:right;">
+107.35091
+</td>
 </tr>
-<tr class="odd">
-<td style="text-align: left;">2010</td>
-<td style="text-align: left;">Total Nacional</td>
-<td style="text-align: right;">106.12444</td>
+<tr>
+<td style="text-align:left;">
+2010
+</td>
+<td style="text-align:left;">
+Total Nacional
+</td>
+<td style="text-align:right;">
+106.12444
+</td>
 </tr>
-<tr class="even">
-<td style="text-align: left;">2009</td>
-<td style="text-align: left;">Total Nacional</td>
-<td style="text-align: right;">105.26217</td>
+<tr>
+<td style="text-align:left;">
+2009
+</td>
+<td style="text-align:left;">
+Total Nacional
+</td>
+<td style="text-align:right;">
+105.26217
+</td>
 </tr>
-<tr class="odd">
-<td style="text-align: left;">2008</td>
-<td style="text-align: left;">Total Nacional</td>
-<td style="text-align: right;">105.25337</td>
+<tr>
+<td style="text-align:left;">
+2008
+</td>
+<td style="text-align:left;">
+Total Nacional
+</td>
+<td style="text-align:right;">
+105.25337
+</td>
 </tr>
-<tr class="even">
-<td style="text-align: left;">2007</td>
-<td style="text-align: left;">Total Nacional</td>
-<td style="text-align: right;">106.33874</td>
+<tr>
+<td style="text-align:left;">
+2007
+</td>
+<td style="text-align:left;">
+Total Nacional
+</td>
+<td style="text-align:right;">
+106.33874
+</td>
 </tr>
-<tr class="odd">
-<td style="text-align: left;">2006</td>
-<td style="text-align: left;">Total Nacional</td>
-<td style="text-align: right;">107.39183</td>
+<tr>
+<td style="text-align:left;">
+2006
+</td>
+<td style="text-align:left;">
+Total Nacional
+</td>
+<td style="text-align:right;">
+107.39183
+</td>
 </tr>
-<tr class="even">
-<td style="text-align: left;">2005</td>
-<td style="text-align: left;">Total Nacional</td>
-<td style="text-align: right;">106.92945</td>
+<tr>
+<td style="text-align:left;">
+2005
+</td>
+<td style="text-align:left;">
+Total Nacional
+</td>
+<td style="text-align:right;">
+106.92945
+</td>
 </tr>
-<tr class="odd">
-<td style="text-align: left;">2004</td>
-<td style="text-align: left;">Total Nacional</td>
-<td style="text-align: right;">108.14708</td>
+<tr>
+<td style="text-align:left;">
+2004
+</td>
+<td style="text-align:left;">
+Total Nacional
+</td>
+<td style="text-align:right;">
+108.14708
+</td>
 </tr>
-<tr class="even">
-<td style="text-align: left;">2003</td>
-<td style="text-align: left;">Total Nacional</td>
-<td style="text-align: right;">109.16273</td>
+<tr>
+<td style="text-align:left;">
+2003
+</td>
+<td style="text-align:left;">
+Total Nacional
+</td>
+<td style="text-align:right;">
+109.16273
+</td>
 </tr>
-<tr class="odd">
-<td style="text-align: left;">2002</td>
-<td style="text-align: left;">Total Nacional</td>
-<td style="text-align: right;">109.03207</td>
+<tr>
+<td style="text-align:left;">
+2002
+</td>
+<td style="text-align:left;">
+Total Nacional
+</td>
+<td style="text-align:right;">
+109.03207
+</td>
 </tr>
-<tr class="even">
-<td style="text-align: left;">2001</td>
-<td style="text-align: left;">Total Nacional</td>
-<td style="text-align: right;">106.48422</td>
+<tr>
+<td style="text-align:left;">
+2001
+</td>
+<td style="text-align:left;">
+Total Nacional
+</td>
+<td style="text-align:right;">
+106.48422
+</td>
 </tr>
-<tr class="odd">
-<td style="text-align: left;">2000</td>
-<td style="text-align: left;">Total Nacional</td>
-<td style="text-align: right;">103.32573</td>
+<tr>
+<td style="text-align:left;">
+2000
+</td>
+<td style="text-align:left;">
+Total Nacional
+</td>
+<td style="text-align:right;">
+103.32573
+</td>
 </tr>
-<tr class="even">
-<td style="text-align: left;">1999</td>
-<td style="text-align: left;">Total Nacional</td>
-<td style="text-align: right;">99.87783</td>
+<tr>
+<td style="text-align:left;">
+1999
+</td>
+<td style="text-align:left;">
+Total Nacional
+</td>
+<td style="text-align:right;">
+99.87783
+</td>
 </tr>
 </tbody>
 </table>
@@ -350,8 +476,6 @@ window.document.addEventListener("DOMContentLoaded", function (event) {
   });
   clipboard.on('success', onCopySuccess);
   if (window.document.getElementById('quarto-embedded-source-code-modal')) {
-    // For code content inside modals, clipBoardJS needs to be initialized with a container option
-    // TODO: Check when it could be a function (https://github.com/zenorocha/clipboard.js/issues/860)
     const clipboardModal = new window.ClipboardJS('.code-copy-button[data-in-quarto-modal]', {
       text: getTextToCopy,
       container: window.document.getElementById('quarto-embedded-source-code-modal')
@@ -513,7 +637,6 @@ window.document.addEventListener("DOMContentLoaded", function (event) {
       if (window.Quarto?.typesetMath) {
         window.Quarto.typesetMath(note);
       }
-      // TODO in 1.5, we should make sure this works without a callout special case
       if (note.classList.contains("callout")) {
         return note.outerHTML;
       } else {
@@ -780,15 +903,15 @@ window.document.addEventListener("DOMContentLoaded", function (event) {
 <span id="cb5-43"><a href="#cb5-43" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
 <span id="cb5-44"><a href="#cb5-44" aria-hidden="true" tabindex="-1"></a>:::</span>
 <span id="cb5-45"><a href="#cb5-45" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb5-46"><a href="#cb5-46" aria-hidden="true" tabindex="-1"></a>Pero se ha creado la función <span class="in">`DemBas_read_px2()`</span> de la librería "DemographyBasic", que mejora el proceso de importar datos de ficheros con extensión px:</span>
+<span id="cb5-46"><a href="#cb5-46" aria-hidden="true" tabindex="-1"></a>Pero se ha creado la función <span class="in">`DemBas_read_px()`</span> de la librería "DemographyBasic", que mejora el proceso de importar datos de ficheros con extensión px:</span>
 <span id="cb5-47"><a href="#cb5-47" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb5-48"><a href="#cb5-48" aria-hidden="true" tabindex="-1"></a><span class="in">```r</span></span>
-<span id="cb5-49"><a href="#cb5-49" aria-hidden="true" tabindex="-1"></a><span class="fu">DemBas_read_px2</span>(nombreficheropx)</span>
+<span id="cb5-49"><a href="#cb5-49" aria-hidden="true" tabindex="-1"></a><span class="fu">DemBas_read_px</span>(nombreficheropx)</span>
 <span id="cb5-50"><a href="#cb5-50" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
 <span id="cb5-51"><a href="#cb5-51" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb5-52"><a href="#cb5-52" aria-hidden="true" tabindex="-1"></a>**Nota importante:** </span>
 <span id="cb5-53"><a href="#cb5-53" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb5-54"><a href="#cb5-54" aria-hidden="true" tabindex="-1"></a><span class="ss">- </span><span class="in">`DemBas_read_px2()`</span> devuelve un objeto de tipo "data.frame" y además convierte todas las variables de tipo "factor" a tipo "character". </span>
+<span id="cb5-54"><a href="#cb5-54" aria-hidden="true" tabindex="-1"></a><span class="ss">- </span><span class="in">`DemBas_read_px()`</span> devuelve un objeto de tipo "data.frame" y además convierte todas las variables de tipo "factor" a tipo "character". </span>
 <span id="cb5-55"><a href="#cb5-55" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb5-56"><a href="#cb5-56" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb5-57"><a href="#cb5-57" aria-hidden="true" tabindex="-1"></a><span class="fu">## Ejemplo inicial</span></span>
@@ -798,7 +921,7 @@ window.document.addEventListener("DOMContentLoaded", function (event) {
 <span id="cb5-63"><a href="#cb5-63" aria-hidden="true" tabindex="-1"></a><span class="co"># download.file(</span></span>
 <span id="cb5-64"><a href="#cb5-64" aria-hidden="true" tabindex="-1"></a><span class="co">#   "https://www.ine.es/jaxiT3/files/t/es/px/1452.px?nocab=1",</span></span>
 <span id="cb5-65"><a href="#cb5-65" aria-hidden="true" tabindex="-1"></a><span class="co">#   "1452.px")</span></span>
-<span id="cb5-66"><a href="#cb5-66" aria-hidden="true" tabindex="-1"></a>datos <span class="ot">=</span> <span class="fu">DemBas_read_px2</span>(<span class="st">"1452.px"</span>)</span>
+<span id="cb5-66"><a href="#cb5-66" aria-hidden="true" tabindex="-1"></a>datos <span class="ot">=</span> <span class="fu">DemBas_read_px</span>(<span class="st">"1452.px"</span>)</span>
 <span id="cb5-67"><a href="#cb5-67" aria-hidden="true" tabindex="-1"></a><span class="fu">head</span>(datos,<span class="dv">20</span>)</span>
 <span id="cb5-68"><a href="#cb5-68" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
 </code><button title="Copiar al portapapeles" class="code-copy-button" data-in-quarto-modal=""><i class="bi"></i></button></pre></div>

@@ -16,7 +16,7 @@ devuelve un data.frame con la tabla de vida
 Calcula la tabla de vida abreviada a partir de las tasas de mortalidad para edades agrupadas: 0,1,2,...
 }
 \examples{
-(mx0 = 1733/441881) # TMI = D^t_0/N^t 
+(mx0 = 1733/441881) # TMI = D^t_0/N^t
 # Defunciones de menores de un año durante 2003: 1733
 # Nacimientos en España en 2003: 441881
 mx = c(mx0,0.00027, 0.00013, 0.00016, 0.00043, 0.00057, 0.00059, 0.00081,

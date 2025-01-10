@@ -18,24 +18,6 @@ DemBas_piramide_superpuestas_ggplot2(
 )
 }
 \arguments{
-\item{datosPiramide}{}
-
-\item{porcentajes}{}
-
-\item{etiquetas}{}
-
-\item{etiquetas.size}{}
-
-\item{colores}{}
-
-\item{transparente}{}
-
-\item{alfa}{}
-
-\item{bar.size}{}
-
-\item{etiq.hombre}{}
-
 \item{etiq.mujer}{}
 }
 \description{
@@ -43,10 +25,10 @@ DemBas_piramide_superpuestas_ggplot2
 }
 \examples{
 # Ejecutar el código ejemplo de la función DemBas_piramide_ggplot2
-dfPir2002 = dfej02a \%>\% 
-  dplyr::filter( Periodo=="1 de enero de  2002", 
+dfPir2002 = dfej02a \%>\%
+  dplyr::filter( Periodo=="1 de enero de  2002",
                  !(Sexo=="Ambos sexos"),
-                 !(Edad.simple \%in\% c("100 y más años","Total"))) \%>\% 
+                 !(Edad.simple \%in\% c("100 y más años","Total"))) \%>\%
   dplyr::select(Edadchar=Edad.simple,
                 Sexo,
                 Poblacion = value)
@@ -58,9 +40,9 @@ dfPir2002y2017$Caso = c(rep(2002,nrow(dfPir2002)),rep(2017,nrow(dfPir2017)))
 head(dfPir2002y2017)
 DemBas_piramide_superpuestas_ggplot2(dfPir2002y2017,
                                    etiq.hombre = "Hombres",etiq.mujer = "Mujeres",
-                                   transparente = T) + 
+                                   transparente = T) +
   labs(title = "Pirámides de Población de España en 2002 y 2017 superpuestas") +
   scale_x_discrete(
     breaks = seq(0,105,by=5),
-    labels = paste0(as.character(seq(0,105,by=5)), "")) 
+    labels = paste0(as.character(seq(0,105,by=5)), ""))
 }

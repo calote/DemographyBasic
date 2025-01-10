@@ -59,7 +59,7 @@ load("DatosINE_PLC.RData")
 También se pueden cargar ficheros ".px" del INE (y también del IECA) con el paquete "pxR". Pero en este caso, se ha creado una función específica `read_px2()` (en el fichero: "`funciones_px.R`") para que las columnas de tipo "factor" sean convertidas a tipo "character".
 
 ```{r}
-Nacimientos_CCAA_EdadMadre_px = DemBas_read_px2("02004.px") 
+Nacimientos_CCAA_EdadMadre_px = DemBas_read_px("02004.px") 
 head(Nacimientos_CCAA_EdadMadre_px) |> 
   DemBas_presentadf(fuentesize = 9)
 ```

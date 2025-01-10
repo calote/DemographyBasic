@@ -135,12 +135,12 @@ datosPiramide =  datos |>
 
 ## Example of import px file
 
-<!-- # a: Traduce al inglés: Se utiliza la función DemBas_read_px2() para leer ficheros px. Por ejemplo, para leer el fichero 9663.px que se encuentra en la carpeta examples del paquete DemographyBasic se puede hacer: -->
+<!-- # a: Traduce al inglés: Se utiliza la función DemBas_read_px() para leer ficheros px. Por ejemplo, para leer el fichero 9663.px que se encuentra en la carpeta examples del paquete DemographyBasic se puede hacer: -->
 
-The function `DemBas_read_px2()` is used to read px files. For example, to read the file 9663.px that is located in the examples folder of the DemographyBasic package, you can do:
+The function `DemBas_read_px()` is used to read px files. For example, to read the file 9663.px that is located in the examples folder of the DemographyBasic package, you can do:
 
 ```{r}
-dfej02a <- DemBas_read_px2(system.file("examples/9663.px", package = "DemographyBasic"))
+dfej02a <- DemBas_read_px(system.file("examples/9663.px", package = "DemographyBasic"))
 head(dfej02a)
 ```
 
@@ -896,7 +896,7 @@ relacionadas por los campos: "cpro" en la primera tabla y "Codigo" en la segunda
 
 Obtenemos los datos necesarios:
 ```{r}
-dfej02b = DemBas_read_px2(system.file("examples/1489.px", package = "DemographyBasic"))
+dfej02b = DemBas_read_px(system.file("examples/1489.px", package = "DemographyBasic"))
 
 head(dfej02b)
 tp4 = dfej02b %>% 
@@ -941,7 +941,7 @@ ggplot(provs) +
 
 Importamos y preparamos los datos que vamos a necesitar.
 ```{r}
-dfej02c = DemBas_read_px2(system.file("examples/1452.px", package = "DemographyBasic"))
+dfej02c = DemBas_read_px(system.file("examples/1452.px", package = "DemographyBasic"))
 head(dfej02c)
 ```
 

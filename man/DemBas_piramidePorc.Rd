@@ -20,28 +20,6 @@ DemBas_piramidePorc(
 )
 }
 \arguments{
-\item{datosPiramide}{}
-
-\item{Gtitulo}{}
-
-\item{Gsubtitulo}{}
-
-\item{Gtitulo.X}{}
-
-\item{GHombresEtiq}{}
-
-\item{GMujeresEtiq}{}
-
-\item{Gedadfinal}{}
-
-\item{Gext_izq}{}
-
-\item{Gext_der}{}
-
-\item{Glimite}{}
-
-\item{Gsizeletra}{}
-
 \item{GSegmentos}{}
 }
 \value{
@@ -54,20 +32,20 @@ DemBas_piramidePorc
 load(file = system.file("examples/04003px.RData", package = "DemographyBasic"))
 
 ano_selec = 2020
-Espanoles_Extranjeros = "Españoles" 
+Espanoles_Extranjeros = "Españoles"
 CCAA_Prov = "Sevilla"
 
-datosPiramide =  datos |> 
-  dplyr::filter(Ano == ano_selec & 
-                  Sexo \%in\% c("Mujeres", "Hombres") & 
-                  Edad != "TOTAL" & 
+datosPiramide =  datos |>
+  dplyr::filter(Ano == ano_selec &
+                  Sexo \%in\% c("Mujeres", "Hombres") &
+                  Edad != "TOTAL" &
                   CCAA.Prov == CCAA_Prov &
-                  Espanoles.Extranjeros == Espanoles_Extranjeros) |> 
-  dplyr::rename(Poblacion = value) |> 
-  dplyr::select(Edad, Sexo, Poblacion) 
-(g_pir1 = DemBas_piramidePorc(datosPiramide, 
+                  Espanoles.Extranjeros == Espanoles_Extranjeros) |>
+  dplyr::rename(Poblacion = value) |>
+  dplyr::select(Edad, Sexo, Poblacion)
+(g_pir1 = DemBas_piramidePorc(datosPiramide,
                             Gtitulo = "Pirámide Población de la provincia de Sevilla",
                             Gsubtitulo = "Año 2020  (españoles)",
                             GSegmentos = FALSE))
-                            
+
 }

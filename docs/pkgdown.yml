@@ -1,9 +1,10 @@
-pandoc: '3.4'
-pkgdown: 2.1.1
+pandoc: 3.1.1
+pkgdown: 2.0.6
 pkgdown_sha: ~
 articles:
   introduction: introduction.html
-last_built: 2025-01-09T20:21Z
+last_built: 2025-01-10T10:39Z
 urls:
   reference: https://DemographyBasic.github.io/reference
   article: https://DemographyBasic.github.io/articles
+

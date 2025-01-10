@@ -2,7 +2,7 @@
 <html xmlns="http://www.w3.org/1999/xhtml" lang="es" xml:lang="es"><head>
 
 <meta charset="utf-8">
-<meta name="generator" content="quarto-1.6.32">
+<meta name="generator" content="quarto-1.6.37">
 
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 
@@ -63,10 +63,10 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <script src="practica04c_files/libs/quarto-html/tippy.umd.min.js"></script>
 <script src="practica04c_files/libs/quarto-html/anchor.min.js"></script>
 <link href="practica04c_files/libs/quarto-html/tippy.css" rel="stylesheet">
-<link href="practica04c_files/libs/quarto-html/quarto-syntax-highlighting-2486e1f0a3ee9ee1fc393803a1361cdb.css" rel="stylesheet" id="quarto-text-highlighting-styles">
+<link href="practica04c_files/libs/quarto-html/quarto-syntax-highlighting-29e2c20b02301cfff04dc8050bf30c7e.css" rel="stylesheet" id="quarto-text-highlighting-styles">
 <script src="practica04c_files/libs/bootstrap/bootstrap.min.js"></script>
 <link href="practica04c_files/libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
-<link href="practica04c_files/libs/bootstrap/bootstrap-677b520d69fcc55ab41b4b425631e74d.min.css" rel="stylesheet" append-hash="true" id="quarto-bootstrap" data-mode="light">
+<link href="practica04c_files/libs/bootstrap/bootstrap-933a14f46f0e4d1503cecf416b5e09b4.min.css" rel="stylesheet" append-hash="true" id="quarto-bootstrap" data-mode="light">
 <link href="practica04c_files/libs/pagedtable-1.1/css/pagedtable.css" rel="stylesheet">
 <script src="practica04c_files/libs/pagedtable-1.1/js/pagedtable.js"></script>
 
@@ -122,7 +122,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </div>
 <section id="crear-pirámides-de-población" class="level1" data-number="1">
 <h1 data-number="1"><span class="header-section-number">1</span> Crear pirámides de población</h1>
-<p>Para facilitar la elaboración de pirámides de población se han definido una serie de funciones, las cuales se encuentran definidas en el fichero <strong>“funciones_piramides.R”</strong>. Las funciones son las siguientes:</p>
+<p>Para facilitar la elaboración de pirámides de población se han definido una serie de funciones en el paquete “DemographyBasic”. Las funciones son las siguientes:</p>
 <ul>
 <li><code>DemBas_piramide_ggplot2()</code></li>
 <li><code>DemBas_piramide_ggplot2_linea()</code></li>
@@ -259,7 +259,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <p><strong>Paso 1.</strong> Descargamos el fichero “px” de la página: <a href="http://www.ine.es/jaxiT3/Tabla.htm?t=9663&amp;L=0" class="uri">http://www.ine.es/jaxiT3/Tabla.htm?t=9663&amp;L=0</a> (INEBASE, Demografía y Población, Cifras de Población, Resultados nacionales)</p>
 <p><strong>Paso 2.</strong> Importamos los datos en R:</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb13"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb13-1"><a href="#cb13-1" aria-hidden="true" tabindex="-1"></a>dfej02a <span class="ot">&lt;-</span> <span class="fu">DemBas_read_px2</span>(<span class="st">"9663.px"</span>)</span>
+<div class="sourceCode cell-code" id="cb13"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb13-1"><a href="#cb13-1" aria-hidden="true" tabindex="-1"></a>dfej02a <span class="ot">&lt;-</span> <span class="fu">DemBas_read_px</span>(<span class="st">"9663.px"</span>)</span>
 <span id="cb13-2"><a href="#cb13-2" aria-hidden="true" tabindex="-1"></a><span class="fu">head</span>(dfej02a)</span></code><button title="Copiar al portapapeles" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output-display">
 <div data-pagedtable="false">
@@ -574,8 +574,6 @@ window.document.addEventListener("DOMContentLoaded", function (event) {
   });
   clipboard.on('success', onCopySuccess);
   if (window.document.getElementById('quarto-embedded-source-code-modal')) {
-    // For code content inside modals, clipBoardJS needs to be initialized with a container option
-    // TODO: Check when it could be a function (https://github.com/zenorocha/clipboard.js/issues/860)
     const clipboardModal = new window.ClipboardJS('.code-copy-button[data-in-quarto-modal]', {
       text: getTextToCopy,
       container: window.document.getElementById('quarto-embedded-source-code-modal')
@@ -737,7 +735,6 @@ window.document.addEventListener("DOMContentLoaded", function (event) {
       if (window.Quarto?.typesetMath) {
         window.Quarto.typesetMath(note);
       }
-      // TODO in 1.5, we should make sure this works without a callout special case
       if (note.classList.contains("callout")) {
         return note.outerHTML;
       } else {
@@ -989,7 +986,7 @@ window.document.addEventListener("DOMContentLoaded", function (event) {
 <span id="cb24-24"><a href="#cb24-24" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb24-25"><a href="#cb24-25" aria-hidden="true" tabindex="-1"></a><span class="fu"># Crear pirámides de población</span></span>
 <span id="cb24-26"><a href="#cb24-26" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb24-27"><a href="#cb24-27" aria-hidden="true" tabindex="-1"></a>Para facilitar la elaboración de pirámides de población se han definido una serie de funciones, las cuales se encuentran definidas en el fichero **"funciones_piramides.R"**. Las funciones son las siguientes:</span>
+<span id="cb24-27"><a href="#cb24-27" aria-hidden="true" tabindex="-1"></a>Para facilitar la elaboración de pirámides de población se han definido una serie de funciones en el paquete "DemographyBasic". Las funciones son las siguientes:</span>
 <span id="cb24-28"><a href="#cb24-28" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb24-29"><a href="#cb24-29" aria-hidden="true" tabindex="-1"></a><span class="ss">-   </span><span class="in">`DemBas_piramide_ggplot2()`</span></span>
 <span id="cb24-30"><a href="#cb24-30" aria-hidden="true" tabindex="-1"></a><span class="ss">-   </span><span class="in">`DemBas_piramide_ggplot2_linea()`</span></span>
@@ -1145,7 +1142,7 @@ window.document.addEventListener("DOMContentLoaded", function (event) {
 <span id="cb24-186"><a href="#cb24-186" aria-hidden="true" tabindex="-1"></a>**Paso 2.** Importamos los datos en R:</span>
 <span id="cb24-187"><a href="#cb24-187" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb24-190"><a href="#cb24-190" aria-hidden="true" tabindex="-1"></a><span class="in">```{r}</span></span>
-<span id="cb24-191"><a href="#cb24-191" aria-hidden="true" tabindex="-1"></a>dfej02a <span class="ot">&lt;-</span> <span class="fu">DemBas_read_px2</span>(<span class="st">"9663.px"</span>)</span>
+<span id="cb24-191"><a href="#cb24-191" aria-hidden="true" tabindex="-1"></a>dfej02a <span class="ot">&lt;-</span> <span class="fu">DemBas_read_px</span>(<span class="st">"9663.px"</span>)</span>
 <span id="cb24-192"><a href="#cb24-192" aria-hidden="true" tabindex="-1"></a><span class="fu">head</span>(dfej02a)</span>
 <span id="cb24-193"><a href="#cb24-193" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
 <span id="cb24-194"><a href="#cb24-194" aria-hidden="true" tabindex="-1"></a>A continuación se muestra el código tidyverse que nos permitirá obtener los datos que necesitamos: "población española en 2017 por edades simples".</span>
