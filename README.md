@@ -8,7 +8,7 @@ Calculate Basic Procedures Of Demography.
 
 
 Functions Have Been Implemented To Calculate: Life Tables (Complete And Abbreviated), 
-    Overall Rates, Specific Rates, Lexis Diagrams, Population Pyramids, And Demographic Maps.
+Overall Rates, Specific Rates, Lexis Diagrams, Population Pyramids, And Demographic Maps.
 
 ## Installation
 
@@ -17,8 +17,10 @@ You can install the development version of DemographyBasic like so:
 ``` r
 # Instalar el paquete desde GitHub
 install.packages("remotes")
-remotes::install_github("calote/DemographyBasic")
+remotes::install_github("calote/DemographyBasic", build_vignettes = TRUE)
 ```
+
+When installing the package 'DemographyBasic', it will ask where to install the necessary packages. In that case, it is recommended to **install only packages from CRAN**, and when asked whether to install them from the source code, initially select 'no'. If there are issues with the installation, repeat the process but select 'yes' for the installation from the source code.
 
 ## Example
 
