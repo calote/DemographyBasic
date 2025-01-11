@@ -11,6 +11,8 @@ DemBas_datos_piramidePorc(
 )
 }
 \arguments{
+\item{datosPiramide}{data.frame o tibble con columnas: Edad (fac,num, simples: 0,1,2,...), Sexo (factor), Poblacion (num)}
+
 \item{etiq.hombre}{}
 }
 \description{

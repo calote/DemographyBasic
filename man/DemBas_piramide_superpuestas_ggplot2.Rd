@@ -14,7 +14,9 @@ DemBas_piramide_superpuestas_ggplot2(
   alfa = 0.1,
   bar.size = 1,
   etiq.hombre = "Hombre",
-  etiq.mujer = "Mujer"
+  etiq.mujer = "Mujer",
+  porc.X.ini = 0,
+  porc.X.by = 0.2
 )
 }
 \arguments{

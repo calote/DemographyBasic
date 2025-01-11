@@ -13,11 +13,17 @@ DemBas_piramide_ggplot2(
   etiq.hombre = "Hombre",
   etiq.mujer = "Mujer",
   colorear = "Sexo",
-  colores = NULL
+  colores = NULL,
+  porc.X.ini = 0,
+  porc.X.by = 0.2
 )
 }
 \arguments{
-\item{colores}{}
+\item{datosPiramide}{data.frame o tibble, deben tener tres o cuatro columnas:
+Edad (chr o fct) (simples o grupos edad),
+Sexo (chr o fct) ("Hombre" o "Mujer"),
+Poblacion (num) (absolutos)
+Caso (chr o fct) (variable categórica para pirámides compuestasCateg)}
 }
 \value{
 ggplot2 graphics

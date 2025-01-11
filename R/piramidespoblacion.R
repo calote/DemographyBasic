@@ -37,7 +37,6 @@ library(glue)
 #' @param etiq.mujer
 #' @param colorear
 #' @param colores
-#'
 #' @returns ggplot2 graphics
 #' @examples
 #' dfej02a <- DemBas_read_px(system.file("examples/9663.px", package = "DemographyBasic"))
@@ -791,7 +790,7 @@ DemBas_datos_piramidePorc = function(datosPiramide,
 
   df2 = datosPiramide
   Edad2 = func_factor_to_numeric(df2$Edad)
-  fct_Edad2 = func_agrupar_variable(Edad2, metodo = 2, final = GEdad_final)
+  fct_Edad2 = DemBas_agrupar_variable(Edad2, metodo = 2, final = GEdad_final)
   #length(fct_Edad2)
   df2$Edad = fct_Edad2
 
@@ -831,7 +830,7 @@ DemBas_datos_piramidePorc = function(datosPiramide,
 # names(datosPiramide)
 # datosPiramide = datosPiramide[,c(1,2,4)]
 # names(datosPiramide)
-# pop3b = func_datos_piramidePorc(datosPiramide,
+# pop3b = DemBas_datos_piramidePorc(datosPiramide,
 #                                 GEdad_final = 100,
 #                                 etiq.hombre = "Hombres")
 # head(pop3b)
@@ -907,7 +906,7 @@ DemBas_piramidePorc = function(datosPiramide,
 
   #Glimite = 0.5
 
-  pop3 = func_datos_piramidePorc(datosPiramide,
+  pop3 = DemBas_datos_piramidePorc(datosPiramide,
                                  GEdad_final = Gedadfinal,
                                  etiq.hombre = GHombresEtiq)
 
