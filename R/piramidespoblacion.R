@@ -24,7 +24,11 @@ library(glue)
 
 #' @title DemBas_piramide_ggplot2
 #' @description Función para crear pirámides poblacionales con ggplot2
-#' @param datosPiramide
+#' @param datosPiramide data.frame o tibble, deben tener tres o cuatro columnas:
+#'   Edad (chr o fct) (simples o grupos edad),
+#'   Sexo (chr o fct) ("Hombre" o "Mujer"),
+#'   Poblacion (num) (absolutos)
+#'   Caso (chr o fct) (variable categórica para pirámides compuestasCateg)
 #' @param porcentajes
 #' @param etiquetas
 #' @param etiquetas.size
@@ -84,11 +88,12 @@ library(glue)
 
 #' @export
 DemBas_piramide_ggplot2 = function(datosPiramide,
-                                 porcentajes=TRUE,
-                                 etiquetas=FALSE,etiquetas.size=4,
-                                 UsaCaso=FALSE,
-                                 etiq.hombre="Hombre",etiq.mujer="Mujer",
-                                 colorear="Sexo",colores=NULL) {
+                                   porcentajes=TRUE,
+                                   etiquetas=FALSE,etiquetas.size=4,
+                                   UsaCaso=FALSE,
+                                   etiq.hombre="Hombre",etiq.mujer="Mujer",
+                                   colorear="Sexo",colores=NULL,
+                                   porc.X.ini = 0, porc.X.by = 0.2) {
   #colnames(datos)[2] = "Genero"
   #browser()
   df2 = datosPiramide
@@ -157,9 +162,9 @@ DemBas_piramide_ggplot2 = function(datosPiramide,
   if (porcentajes) {
     Vmax = round(max(abs(df2$Poblacion)),0) + 1
     pyramidGH <- pyramidGH +
-      scale_y_continuous(breaks = c(seq(-Vmax, 0, 1), seq(1, Vmax, 1)),
-                         labels = paste0(as.character(c(seq(Vmax, 0, -1),
-                                                        seq(1, Vmax, 1))), "%"))
+      scale_y_continuous(breaks = c(seq(-Vmax, 0, porc.X.by), seq(porc.X.ini, Vmax, porc.X.by)),
+                         labels = paste0(as.character(c(seq(Vmax, 0, -porc.X.by),
+                                                        seq(porc.X.ini, Vmax, porc.X.by))), "%"))
 
   } else {
     tmp1 = max(round(range(df2$Poblacion/1000000),0))
@@ -201,7 +206,7 @@ DemBas_piramide_ggplot2 = function(datosPiramide,
 
   if (colorear!="Sexo") {
     pyramidGH <- pyramidGH +
-      guides(fill="none")  # antes FALSE
+      guides(fill=FALSE)
   }
 
   pyramidGH <- pyramidGH +
@@ -298,16 +303,20 @@ DemBas_piramides_enfrentadas_ggplot2 = function(datosPiramide,
 #'     labels = paste0(as.character(seq(0,105,by=5)), ""))
 #' @export
 DemBas_piramide_superpuestas_ggplot2 = function(datosPiramide,
-                                              porcentajes=TRUE,
-                                              etiquetas=FALSE,etiquetas.size=4,
-                                              colores = NULL,
-                                              transparente=FALSE,
-                                              alfa=0.1,bar.size=1,
-                                              etiq.hombre="Hombre",etiq.mujer="Mujer") {
+                                                porcentajes=TRUE,
+                                                etiquetas=FALSE,etiquetas.size=4,
+                                                colores = NULL,
+                                                transparente=FALSE,
+                                                alfa=0.1,bar.size=1,
+                                                etiq.hombre="Hombre",etiq.mujer="Mujer",
+                                                porc.X.ini = 0, porc.X.by = 0.2) {
   #colnames(datos)[2] = "Genero"
   #browser()
   UsaCaso=TRUE
   df2 = datosPiramide
+  if (!is.factor(df2$Sexo)) {
+    df2$Sexo = factor(df2$Sexo)
+  }
   df2$Caso = factor(df2$Caso)
   df2$Poblacion[df2$Sexo==etiq.hombre] = - df2$Poblacion[df2$Sexo==etiq.hombre]
   Gcadporcen = ""
@@ -379,9 +388,9 @@ DemBas_piramide_superpuestas_ggplot2 = function(datosPiramide,
   if (porcentajes) {
     Vmax = round(max(abs(df2$Poblacion)),0) + 1
     pyramidGH <- pyramidGH +
-      scale_y_continuous(breaks = c(seq(-Vmax, 0, 1), seq(1, Vmax, 1)),
-                         labels = paste0(as.character(c(seq(Vmax, 0, -1),
-                                                        seq(1, Vmax, 1))), "%"))
+      scale_y_continuous(breaks = c(seq(-Vmax, 0, porc.X.by), seq(porc.X.ini, Vmax, porc.X.by)),
+                         labels = paste0(as.character(c(seq(Vmax, 0, -porc.X.by),
+                                                        seq(porc.X.ini, Vmax, porc.X.by))), "%"))
 
   } else {
     tmp1 = max(round(range(df2$Poblacion/1000000),0))
@@ -453,11 +462,11 @@ DemBas_piramide_superpuestas_ggplot2 = function(datosPiramide,
 #' @returns
 #' @export
 DemBas_piramide_compuestasCateg_ggplot2 = function(datosPiramide,
-                                                 porcentajes=TRUE,
-                                                 etiquetas=FALSE,etiquetas.size=4,
-                                                 colores = NULL,ordeninverso=FALSE,
-                                                 alfa=1,bar.size=1,
-                                                 etiq.hombre="Hombre",etiq.mujer="Mujer") {
+                                                   porcentajes=TRUE,
+                                                   etiquetas=FALSE,etiquetas.size=4,
+                                                   colores = NULL,ordeninverso=FALSE,
+                                                   alfa=1,bar.size=1,
+                                                   etiq.hombre="Hombre",etiq.mujer="Mujer") {
   #colnames(datos)[2] = "Genero"
   #browser()
   UsaCaso=FALSE
@@ -601,11 +610,11 @@ DemBas_piramide_compuestasCateg_ggplot2 = function(datosPiramide,
 #'   guides(colour="none")
 #' @export
 DemBas_piramide_ggplot2_linea = function(datosPiramide,
-                                       porcentajes=TRUE,
-                                       etiquetas=FALSE,etiquetas.size=4,
-                                       UsaCaso=FALSE,
-                                       etiq.hombre="Hombre",etiq.mujer="Mujer",
-                                       colorear="Sexo",colores=NULL) {
+                                         porcentajes=TRUE,
+                                         etiquetas=FALSE,etiquetas.size=4,
+                                         UsaCaso=FALSE,
+                                         etiq.hombre="Hombre",etiq.mujer="Mujer",
+                                         colorear="Sexo",colores=NULL) {
   #colnames(datos)[2] = "Genero"
   #browser()
   df2 = datosPiramide
@@ -721,7 +730,7 @@ DemBas_piramide_ggplot2_linea = function(datosPiramide,
 
   if (colorear!="Sexo") {
     pyramidGH <- pyramidGH +
-      guides(colour="none")  # antes FALSE
+      guides(colour=FALSE)
     #guides(fill=FALSE)
   }
 
@@ -770,19 +779,19 @@ func_factor_to_numeric = function(x) {
 
 #' @title DemBas_datos_piramidePorc
 #'
-#' @param datosPiramide
+#' @param datosPiramide data.frame o tibble con columnas: Edad (fac,num, simples: 0,1,2,...), Sexo (factor), Poblacion (num)
 #' @param GEdad_final
 #' @param etiq.hombre
 #'
 #' @returns
 #' @export
 DemBas_datos_piramidePorc = function(datosPiramide,
-                                   GEdad_final = 100,
-                                   etiq.hombre = "Hombres") {
+                                     GEdad_final = 100,
+                                     etiq.hombre = "Hombres") {
 
   df2 = datosPiramide
   Edad2 = func_factor_to_numeric(df2$Edad)
-  fct_Edad2 = DemBas_agrupar_variable(Edad2, metodo = 2, final = GEdad_final)
+  fct_Edad2 = func_agrupar_variable(Edad2, metodo = 2, final = GEdad_final)
   #length(fct_Edad2)
   df2$Edad = fct_Edad2
 
@@ -884,25 +893,31 @@ DemBas_datos_piramidePorc = function(datosPiramide,
 #'
 #' @export
 DemBas_piramidePorc = function(datosPiramide,
-                             Gtitulo = "Pirámide Población de la provincia de Sevilla",
-                             Gsubtitulo = "Año 2020",
-                             Gtitulo.X = "Porcentajes",
-                             GHombresEtiq="Hombres",
-                             GMujeresEtiq="Mujeres",
-                             Gedadfinal = 100,
-                             Gext_izq = -4.5,
-                             Gext_der = 4.5,
-                             Glimite = 0.5,
-                             Gsizeletra = 2.5,
-                             GSegmentos = TRUE) {
+                               Gtitulo = "Pirámide Población de la provincia de Sevilla",
+                               Gsubtitulo = "Año 2020",
+                               Gtitulo.X = "Porcentajes",
+                               GHombresEtiq="Hombres",
+                               GMujeresEtiq="Mujeres",
+                               Gedadfinal = 100,
+                               Gext_izq = -4.5,
+                               Gext_der = 4.5,
+                               Glimite = 0.5,
+                               Gsizeletra = 2.5,
+                               GSegmentos = TRUE) {
 
   #Glimite = 0.5
 
-  pop3 = DemBas_datos_piramidePorc(datosPiramide,
+  pop3 = func_datos_piramidePorc(datosPiramide,
                                  GEdad_final = Gedadfinal,
                                  etiq.hombre = GHombresEtiq)
 
-
+  rango = range(pop3$Porcentajes)
+  if (rango[1]< Gext_izq) {
+    message(paste0("Aviso: use un valor del argumento Gext_izq menor que: ", rango[1]))
+  }
+  if (rango[2]> Gext_der) {
+    message(paste0("Aviso: use un valor del argumento Gext_der mayor que: ", rango[2]))
+  }
   e1m = pop3 %>%
     filter(Sexo == GMujeresEtiq) %>%
     filter(Porcentajes > Glimite) %>%
@@ -929,8 +944,7 @@ DemBas_piramidePorc = function(datosPiramide,
     geom_bar(stat="identity",
              position="identity"
     ) +
-    #geom_hline(yintercept = 0, size = 1, colour="#ff0000") +
-    geom_hline(yintercept = 0, linewidth = 1, colour="#ff0000") +
+    geom_hline(yintercept = 0, size = 1, colour="#ff0000") +
     labs(title=Gtitulo,
          subtitle = Gsubtitulo,
          y = Gtitulo.X,
@@ -959,7 +973,7 @@ DemBas_piramidePorc = function(datosPiramide,
     colour = "black",#"white",
     fill = NA,
     label.size = NA,
-    family="Helvetica",
+    #family="Helvetica",
     fontface = ifelse(b1m,"bold.italic","plain"),
     size = Gsizeletra) +
     geom_label(aes(x = Edad,  ## Hombres
@@ -973,7 +987,7 @@ DemBas_piramidePorc = function(datosPiramide,
     colour = "black",#"white",
     fill = NA,
     label.size = NA,
-    family="Helvetica",
+    #family="Helvetica",
     fontface = ifelse(b1h,"bold.italic","plain"),
     size = Gsizeletra)
 
@@ -981,10 +995,10 @@ DemBas_piramidePorc = function(datosPiramide,
     g_pirpob = bars1 +
       geom_segment(aes(x = 3.5, y = Gext_izq, xend = 3.5, yend = Gext_der),
                    colour = "#00ff00",
-                   linewidth=1.5) +
+                   size=1.5) +
       geom_segment(aes(x = 13.5, y = Gext_izq, xend = 13.5, yend = Gext_der),
                    colour = "#00ff00",
-                   linewidth=1.5)
+                   size=1.5)
 
   } else {
     g_pirpob = bars1
