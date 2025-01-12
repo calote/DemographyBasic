@@ -7,6 +7,7 @@
 <url><loc>https://DemographyBasic.github.io/authors.html</loc></url>
 <url><loc>https://DemographyBasic.github.io/index.html</loc></url>
 <url><loc>https://DemographyBasic.github.io/reference/DemBas_agrupar_variable.html</loc></url>
+<url><loc>https://DemographyBasic.github.io/reference/DemBas_anade_GEdad5.html</loc></url>
 <url><loc>https://DemographyBasic.github.io/reference/DemBas_asigna_codigos_CCAA.html</loc></url>
 <url><loc>https://DemographyBasic.github.io/reference/DemBas_crea_colores_brewer.html</loc></url>
 <url><loc>https://DemographyBasic.github.io/reference/DemBas_datos_piramidePorc.html</loc></url>
@@ -23,9 +24,11 @@
 <url><loc>https://DemographyBasic.github.io/reference/DemBas_extrae_codigo_provincia.html</loc></url>
 <url><loc>https://DemographyBasic.github.io/reference/DemBas_extrae_notienen_codigos.html</loc></url>
 <url><loc>https://DemographyBasic.github.io/reference/DemBas_fmt_num.html</loc></url>
+<url><loc>https://DemographyBasic.github.io/reference/DemBas_generaciones.html</loc></url>
 <url><loc>https://DemographyBasic.github.io/reference/DemBas_mx.html</loc></url>
 <url><loc>https://DemographyBasic.github.io/reference/DemBas_mx_abreviada.html</loc></url>
 <url><loc>https://DemographyBasic.github.io/reference/DemBas_piramidePorc.html</loc></url>
+<url><loc>https://DemographyBasic.github.io/reference/DemBas_piramidePorc_Generaciones.html</loc></url>
 <url><loc>https://DemographyBasic.github.io/reference/DemBas_piramide_compuestasCateg_ggplot2.html</loc></url>
 <url><loc>https://DemographyBasic.github.io/reference/DemBas_piramide_ggplot2.html</loc></url>
 <url><loc>https://DemographyBasic.github.io/reference/DemBas_piramide_ggplot2_linea.html</loc></url>
@@ -36,6 +39,7 @@
 <url><loc>https://DemographyBasic.github.io/reference/DemBas_read_px.html</loc></url>
 <url><loc>https://DemographyBasic.github.io/reference/DemBas_tablavida_abreviada.html</loc></url>
 <url><loc>https://DemographyBasic.github.io/reference/DemBas_tablavida_completa.html</loc></url>
+<url><loc>https://DemographyBasic.github.io/reference/DemBas_v_generaciones.html</loc></url>
 <url><loc>https://DemographyBasic.github.io/reference/index.html</loc></url>
 </urlset>
 
