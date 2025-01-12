@@ -7,8 +7,6 @@
 DemBas_dem_TasaEspecifica_t(vNumEventos_x_t, vPobMedia_x_t)
 }
 \arguments{
-\item{vNumEventos_x_t}{}
-
 \item{vPobMedia_x_t}{}
 }
 \description{

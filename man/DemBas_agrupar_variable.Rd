@@ -14,16 +14,6 @@ DemBas_agrupar_variable(
 )
 }
 \arguments{
-\item{variable}{}
-
-\item{metodo}{}
-
-\item{final}{}
-
-\item{vbreaks}{}
-
-\item{vlabels}{}
-
 \item{labelfinal}{}
 }
 \description{

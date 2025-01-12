@@ -19,6 +19,7 @@ Depends:
     pxR,
     tidyverse,
     ggthemes,
+    ggh4x,
     glue,
     mapSpain,
     kableExtra,

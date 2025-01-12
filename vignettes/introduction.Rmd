@@ -145,6 +145,51 @@ head(dfej02a)
 ```
 
 
+## Example of use of the function DemBas_anade_GEdad5
+
+```{r}
+datos = DemBas_read_px(system.file("examples/9663.px", package = "DemographyBasic"))
+datosPob = datos |>
+  dplyr::filter(Periodo == "1 de enero de  2018",
+                Edad.simple != "Total",
+                Sexo != "Ambos sexos") |>
+  dplyr::select(Sexo, Edad.simple, Poblacion = value)
+
+datosPob2 = datosPob |>
+  dplyr::mutate(
+    Edad = as.numeric(gsub("[años|año]", "", Edad.simple)),
+    Poblacion = round(Poblacion, 0)
+  )
+
+datosPob2_conGruposEdad = DemBas_anade_GEdad5(datosPob2, Edad)
+head(datosPob2_conGruposEdad,15)
+
+
+datosPirAgru = DemBas_anade_GEdad5(datosPob2, Edad) |>
+  dplyr::select(Sexo, Edad, Poblacion, GEdad5) |>
+  dplyr::group_by(GEdad5, Sexo) |>
+  dplyr::summarise(Poblacion = sum(Poblacion), .groups = "keep")
+
+head(datosPirAgru)
+
+```
+
+
+
+## Example of pyramids with cohorts
+
+
+```{r out.width="100%",fig.width=12, fig.height=10}
+load(file = system.file("examples/pop3.RData", package = "DemographyBasic"))
+g_pir3gen = DemBas_piramidePorc_Generaciones(pop3)
+g_pir3gen
+# ggsave("piramide.png", g_pir3gen, width = 12, height = 10)
+# png("g_pir3gen.png", width = 1200)
+# print(g_pir3gen)
+# dev.off()
+```
+
+
 ## Example of pyramids with segments
 
 ```{r}

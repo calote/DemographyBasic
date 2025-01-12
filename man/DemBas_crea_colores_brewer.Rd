@@ -7,8 +7,6 @@
 DemBas_crea_colores_brewer(cuantos, que_paletacolor = 3)
 }
 \arguments{
-\item{cuantos}{}
-
 \item{que_paletacolor}{}
 }
 \description{

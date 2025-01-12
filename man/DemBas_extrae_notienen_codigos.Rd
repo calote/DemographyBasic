@@ -7,8 +7,6 @@
 DemBas_extrae_notienen_codigos(columna, columnacodigos)
 }
 \arguments{
-\item{columna}{}
-
 \item{columnacodigos}{}
 }
 \description{

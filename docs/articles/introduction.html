@@ -4423,9 +4423,81 @@ folder of the DemographyBasic package, you can do:</p>
 <span><span class="co">#&gt; 6 1 de enero de  2016 Ambos sexos       Total 46440099</span></span></code></pre></div>
 </div>
 <div class="section level3">
-<h3 id="example-of-pyramids-with-segments">Example of pyramids with segments<a class="anchor" aria-label="anchor" href="#example-of-pyramids-with-segments"></a>
+<h3 id="example-of-use-of-the-function-dembas_anade_gedad5">Example of use of the function DemBas_anade_GEdad5<a class="anchor" aria-label="anchor" href="#example-of-use-of-the-function-dembas_anade_gedad5"></a>
 </h3>
 <div class="sourceCode" id="cb9"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="va">datos</span> <span class="op">=</span> <span class="fu"><a href="../reference/DemBas_read_px.html">DemBas_read_px</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/system.file.html" class="external-link">system.file</a></span><span class="op">(</span><span class="st">"examples/9663.px"</span>, package <span class="op">=</span> <span class="st">"DemographyBasic"</span><span class="op">)</span><span class="op">)</span></span>
+<span><span class="va">datosPob</span> <span class="op">=</span> <span class="va">datos</span> <span class="op">|&gt;</span></span>
+<span>  <span class="fu">dplyr</span><span class="fu">::</span><span class="fu"><a href="https://dplyr.tidyverse.org/reference/filter.html" class="external-link">filter</a></span><span class="op">(</span><span class="va">Periodo</span> <span class="op">==</span> <span class="st">"1 de enero de  2018"</span>,</span>
+<span>                <span class="va">Edad.simple</span> <span class="op">!=</span> <span class="st">"Total"</span>,</span>
+<span>                <span class="va">Sexo</span> <span class="op">!=</span> <span class="st">"Ambos sexos"</span><span class="op">)</span> <span class="op">|&gt;</span></span>
+<span>  <span class="fu">dplyr</span><span class="fu">::</span><span class="fu"><a href="https://dplyr.tidyverse.org/reference/select.html" class="external-link">select</a></span><span class="op">(</span><span class="va">Sexo</span>, <span class="va">Edad.simple</span>, Poblacion <span class="op">=</span> <span class="va">value</span><span class="op">)</span></span>
+<span></span>
+<span><span class="va">datosPob2</span> <span class="op">=</span> <span class="va">datosPob</span> <span class="op">|&gt;</span></span>
+<span>  <span class="fu">dplyr</span><span class="fu">::</span><span class="fu"><a href="https://dplyr.tidyverse.org/reference/mutate.html" class="external-link">mutate</a></span><span class="op">(</span></span>
+<span>    Edad <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/numeric.html" class="external-link">as.numeric</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/grep.html" class="external-link">gsub</a></span><span class="op">(</span><span class="st">"[años|año]"</span>, <span class="st">""</span>, <span class="va">Edad.simple</span><span class="op">)</span><span class="op">)</span>,</span>
+<span>    Poblacion <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/Round.html" class="external-link">round</a></span><span class="op">(</span><span class="va">Poblacion</span>, <span class="fl">0</span><span class="op">)</span></span>
+<span>  <span class="op">)</span></span>
+<span><span class="co">#&gt; Warning: There was 1 warning in `dplyr::mutate()`.</span></span>
+<span><span class="co">#&gt; <span style="color: #00BBBB;">ℹ</span> In argument: `Edad = as.numeric(gsub("[años|año]", "", Edad.simple))`.</span></span>
+<span><span class="co">#&gt; Caused by warning:</span></span>
+<span><span class="co">#&gt; <span style="color: #BBBB00;">!</span> NAs introduced by coercion</span></span>
+<span></span>
+<span><span class="va">datosPob2_conGruposEdad</span> <span class="op">=</span> <span class="fu"><a href="../reference/DemBas_anade_GEdad5.html">DemBas_anade_GEdad5</a></span><span class="op">(</span><span class="va">datosPob2</span>, <span class="va">Edad</span><span class="op">)</span></span>
+<span><span class="fu"><a href="https://rdrr.io/r/utils/head.html" class="external-link">head</a></span><span class="op">(</span><span class="va">datosPob2_conGruposEdad</span>,<span class="fl">15</span><span class="op">)</span></span>
+<span><span class="co">#&gt;       Sexo Edad.simple Poblacion Edad GEdad5 GEdad5Num</span></span>
+<span><span class="co">#&gt; 1  Hombres      0 años    202087    0    0-4         0</span></span>
+<span><span class="co">#&gt; 2  Mujeres      0 años    190476    0    0-4         0</span></span>
+<span><span class="co">#&gt; 3  Hombres       1 año    213645    1    0-4         0</span></span>
+<span><span class="co">#&gt; 4  Mujeres       1 año    202147    1    0-4         0</span></span>
+<span><span class="co">#&gt; 5  Hombres      2 años    220675    2    0-4         0</span></span>
+<span><span class="co">#&gt; 6  Mujeres      2 años    207897    2    0-4         0</span></span>
+<span><span class="co">#&gt; 7  Hombres      3 años    225090    3    0-4         0</span></span>
+<span><span class="co">#&gt; 8  Mujeres      3 años    211158    3    0-4         0</span></span>
+<span><span class="co">#&gt; 9  Hombres      4 años    222904    4    0-4         0</span></span>
+<span><span class="co">#&gt; 10 Mujeres      4 años    210149    4    0-4         0</span></span>
+<span><span class="co">#&gt; 11 Hombres      5 años    236080    5    5-9         5</span></span>
+<span><span class="co">#&gt; 12 Mujeres      5 años    221885    5    5-9         5</span></span>
+<span><span class="co">#&gt; 13 Hombres      6 años    245458    6    5-9         5</span></span>
+<span><span class="co">#&gt; 14 Mujeres      6 años    230456    6    5-9         5</span></span>
+<span><span class="co">#&gt; 15 Hombres      7 años    247867    7    5-9         5</span></span>
+<span></span>
+<span></span>
+<span><span class="va">datosPirAgru</span> <span class="op">=</span> <span class="fu"><a href="../reference/DemBas_anade_GEdad5.html">DemBas_anade_GEdad5</a></span><span class="op">(</span><span class="va">datosPob2</span>, <span class="va">Edad</span><span class="op">)</span> <span class="op">|&gt;</span></span>
+<span>  <span class="fu">dplyr</span><span class="fu">::</span><span class="fu"><a href="https://dplyr.tidyverse.org/reference/select.html" class="external-link">select</a></span><span class="op">(</span><span class="va">Sexo</span>, <span class="va">Edad</span>, <span class="va">Poblacion</span>, <span class="va">GEdad5</span><span class="op">)</span> <span class="op">|&gt;</span></span>
+<span>  <span class="fu">dplyr</span><span class="fu">::</span><span class="fu"><a href="https://dplyr.tidyverse.org/reference/group_by.html" class="external-link">group_by</a></span><span class="op">(</span><span class="va">GEdad5</span>, <span class="va">Sexo</span><span class="op">)</span> <span class="op">|&gt;</span></span>
+<span>  <span class="fu">dplyr</span><span class="fu">::</span><span class="fu"><a href="https://dplyr.tidyverse.org/reference/summarise.html" class="external-link">summarise</a></span><span class="op">(</span>Poblacion <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/sum.html" class="external-link">sum</a></span><span class="op">(</span><span class="va">Poblacion</span><span class="op">)</span>, .groups <span class="op">=</span> <span class="st">"keep"</span><span class="op">)</span></span>
+<span></span>
+<span><span class="fu"><a href="https://rdrr.io/r/utils/head.html" class="external-link">head</a></span><span class="op">(</span><span class="va">datosPirAgru</span><span class="op">)</span></span>
+<span><span class="co">#&gt; <span style="color: #949494;"># A tibble: 6 × 3</span></span></span>
+<span><span class="co">#&gt; <span style="color: #949494;"># Groups:   GEdad5, Sexo [6]</span></span></span>
+<span><span class="co">#&gt;   GEdad5   Sexo    Poblacion</span></span>
+<span><span class="co">#&gt;   <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>    <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>       <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span></span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;">1</span> <span style="color: #949494;">"</span>  0-4<span style="color: #949494;">"</span>  Hombres   1<span style="text-decoration: underline;">084</span>401</span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;">2</span> <span style="color: #949494;">"</span>  0-4<span style="color: #949494;">"</span>  Mujeres   1<span style="text-decoration: underline;">021</span>827</span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;">3</span> <span style="color: #949494;">"</span>  5-9<span style="color: #949494;">"</span>  Hombres   1<span style="text-decoration: underline;">250</span>866</span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;">4</span> <span style="color: #949494;">"</span>  5-9<span style="color: #949494;">"</span>  Mujeres   1<span style="text-decoration: underline;">173</span>108</span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;">5</span> <span style="color: #949494;">"</span> 10-14<span style="color: #949494;">"</span> Hombres   1<span style="text-decoration: underline;">261</span>152</span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;">6</span> <span style="color: #949494;">"</span> 10-14<span style="color: #949494;">"</span> Mujeres   1<span style="text-decoration: underline;">187</span>212</span></span></code></pre></div>
+</div>
+<div class="section level3">
+<h3 id="example-of-pyramids-with-cohorts">Example of pyramids with cohorts<a class="anchor" aria-label="anchor" href="#example-of-pyramids-with-cohorts"></a>
+</h3>
+<div class="sourceCode" id="cb10"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/base/load.html" class="external-link">load</a></span><span class="op">(</span>file <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/system.file.html" class="external-link">system.file</a></span><span class="op">(</span><span class="st">"examples/pop3.RData"</span>, package <span class="op">=</span> <span class="st">"DemographyBasic"</span><span class="op">)</span><span class="op">)</span></span>
+<span><span class="va">g_pir3gen</span> <span class="op">=</span> <span class="fu"><a href="../reference/DemBas_piramidePorc_Generaciones.html">DemBas_piramidePorc_Generaciones</a></span><span class="op">(</span><span class="va">pop3</span><span class="op">)</span></span>
+<span><span class="va">g_pir3gen</span></span></code></pre></div>
+<p><img src="introduction_files/figure-html/unnamed-chunk-9-1.png" width="100%"></p>
+<div class="sourceCode" id="cb11"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="co"># ggsave("piramide.png", g_pir3gen, width = 12, height = 10)</span></span>
+<span><span class="co"># png("g_pir3gen.png", width = 1200)</span></span>
+<span><span class="co"># print(g_pir3gen)</span></span>
+<span><span class="co"># dev.off()</span></span></code></pre></div>
+</div>
+<div class="section level3">
+<h3 id="example-of-pyramids-with-segments">Example of pyramids with segments<a class="anchor" aria-label="anchor" href="#example-of-pyramids-with-segments"></a>
+</h3>
+<div class="sourceCode" id="cb12"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">tp1</span> <span class="op">=</span> <span class="va">dfej02a</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span> </span>
 <span>  <span class="fu">dplyr</span><span class="fu">::</span><span class="fu"><a href="https://dplyr.tidyverse.org/reference/filter.html" class="external-link">filter</a></span><span class="op">(</span><span class="va">Periodo</span><span class="op">==</span><span class="st">"1 de enero de  2017"</span>,<span class="va">Edad.simple</span><span class="op">==</span><span class="st">"Total"</span><span class="op">)</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span>  </span>
 <span>  <span class="co"># hay dos espacios entre "de" y "2017"</span></span>
@@ -4468,7 +4540,7 @@ folder of the DemographyBasic package, you can do:</p>
 <span><span class="co">#&gt; 4    1 año Mujeres  205462.2    1</span></span>
 <span><span class="co">#&gt; 5   2 años Hombres  223029.6    2</span></span>
 <span><span class="co">#&gt; 6   2 años Mujeres  209112.7    2</span></span></code></pre></div>
-<div class="sourceCode" id="cb10"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb13"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="../reference/DemBas_piramide_ggplot2.html">DemBas_piramide_ggplot2</a></span><span class="op">(</span><span class="va">dfPir2017</span>,</span>
 <span>                      <span class="co">#etiquetas = T,etiquetas.size = 2,</span></span>
 <span>                      etiq.hombre <span class="op">=</span> <span class="st">"Hombres"</span>,etiq.mujer <span class="op">=</span> <span class="st">"Mujeres"</span><span class="op">)</span> <span class="op">+</span></span>
@@ -4477,12 +4549,12 @@ folder of the DemographyBasic package, you can do:</p>
 <span>    <span class="co"># si la variable edad fuera numeric debería usarse scale_x_continuous</span></span>
 <span>    breaks <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/seq.html" class="external-link">seq</a></span><span class="op">(</span><span class="fl">0</span>,<span class="fl">105</span>,by<span class="op">=</span><span class="fl">5</span><span class="op">)</span>,</span>
 <span>    labels <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/paste.html" class="external-link">paste0</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/character.html" class="external-link">as.character</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/seq.html" class="external-link">seq</a></span><span class="op">(</span><span class="fl">0</span>,<span class="fl">105</span>,by<span class="op">=</span><span class="fl">5</span><span class="op">)</span><span class="op">)</span>, <span class="st">""</span><span class="op">)</span><span class="op">)</span>  </span></code></pre></div>
-<p><img src="introduction_files/figure-html/unnamed-chunk-9-1.png" width="700"></p>
+<p><img src="introduction_files/figure-html/unnamed-chunk-11-1.png" width="700"></p>
 </div>
 <div class="section level3">
 <h3 id="example-of-pyramids-with-segments-and-porcentages">Example of pyramids with segments and porcentages<a class="anchor" aria-label="anchor" href="#example-of-pyramids-with-segments-and-porcentages"></a>
 </h3>
-<div class="sourceCode" id="cb11"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb14"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="../reference/DemBas_piramide_ggplot2_linea.html">DemBas_piramide_ggplot2_linea</a></span><span class="op">(</span><span class="va">dfPir2017</span>,colorear <span class="op">=</span> <span class="st">"Sexo"</span>,</span>
 <span>                            etiq.hombre <span class="op">=</span> <span class="st">"Hombres"</span>,etiq.mujer <span class="op">=</span> <span class="st">"Mujeres"</span><span class="op">)</span> <span class="op">+</span> </span>
 <span>  <span class="fu">labs</span><span class="op">(</span>title <span class="op">=</span> <span class="st">"Perfil de la Pirámide de Población de España en 2017"</span><span class="op">)</span> <span class="op">+</span></span>
@@ -4491,12 +4563,12 @@ folder of the DemographyBasic package, you can do:</p>
 <span>    breaks <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/seq.html" class="external-link">seq</a></span><span class="op">(</span><span class="fl">0</span>,<span class="fl">105</span>,by<span class="op">=</span><span class="fl">5</span><span class="op">)</span>,</span>
 <span>    labels <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/paste.html" class="external-link">paste0</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/character.html" class="external-link">as.character</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/seq.html" class="external-link">seq</a></span><span class="op">(</span><span class="fl">0</span>,<span class="fl">105</span>,by<span class="op">=</span><span class="fl">5</span><span class="op">)</span><span class="op">)</span>, <span class="st">""</span><span class="op">)</span><span class="op">)</span> <span class="op">+</span></span>
 <span>  <span class="fu">guides</span><span class="op">(</span>colour<span class="op">=</span><span class="st">"none"</span><span class="op">)</span></span></code></pre></div>
-<p><img src="introduction_files/figure-html/unnamed-chunk-10-1.png" width="700"></p>
+<p><img src="introduction_files/figure-html/unnamed-chunk-12-1.png" width="700"></p>
 </div>
 <div class="section level3">
 <h3 id="example-of-pyramids-superimposed">Example of pyramids superimposed<a class="anchor" aria-label="anchor" href="#example-of-pyramids-superimposed"></a>
 </h3>
-<div class="sourceCode" id="cb12"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb15"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">dfPir2002</span> <span class="op">=</span> <span class="va">dfej02a</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span> </span>
 <span>  <span class="fu">dplyr</span><span class="fu">::</span><span class="fu"><a href="https://dplyr.tidyverse.org/reference/filter.html" class="external-link">filter</a></span><span class="op">(</span> <span class="va">Periodo</span><span class="op">==</span><span class="st">"1 de enero de  2002"</span>, </span>
 <span>                 <span class="op">!</span><span class="op">(</span><span class="va">Sexo</span><span class="op">==</span><span class="st">"Ambos sexos"</span><span class="op">)</span>,</span>
@@ -4517,7 +4589,7 @@ folder of the DemographyBasic package, you can do:</p>
 <span><span class="co">#&gt; 4    1 año Mujeres  193282.1    1 2002</span></span>
 <span><span class="co">#&gt; 5   2 años Hombres  197158.7    2 2002</span></span>
 <span><span class="co">#&gt; 6   2 años Mujeres  187579.5    2 2002</span></span></code></pre></div>
-<div class="sourceCode" id="cb13"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb16"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="../reference/DemBas_piramide_superpuestas_ggplot2.html">DemBas_piramide_superpuestas_ggplot2</a></span><span class="op">(</span><span class="va">dfPir2002y2017</span>,</span>
 <span>                                   etiq.hombre <span class="op">=</span> <span class="st">"Hombres"</span>,etiq.mujer <span class="op">=</span> <span class="st">"Mujeres"</span>,</span>
 <span>                                   transparente <span class="op">=</span> <span class="cn">T</span><span class="op">)</span> <span class="op">+</span> </span>
@@ -4525,7 +4597,7 @@ folder of the DemographyBasic package, you can do:</p>
 <span>  <span class="fu">scale_x_discrete</span><span class="op">(</span></span>
 <span>    breaks <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/seq.html" class="external-link">seq</a></span><span class="op">(</span><span class="fl">0</span>,<span class="fl">105</span>,by<span class="op">=</span><span class="fl">5</span><span class="op">)</span>,</span>
 <span>    labels <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/paste.html" class="external-link">paste0</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/character.html" class="external-link">as.character</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/seq.html" class="external-link">seq</a></span><span class="op">(</span><span class="fl">0</span>,<span class="fl">105</span>,by<span class="op">=</span><span class="fl">5</span><span class="op">)</span><span class="op">)</span>, <span class="st">""</span><span class="op">)</span><span class="op">)</span> </span></code></pre></div>
-<p><img src="introduction_files/figure-html/unnamed-chunk-12-1.png" width="700"></p>
+<p><img src="introduction_files/figure-html/unnamed-chunk-14-1.png" width="700"></p>
 <div style="page-break-after: always;"></div>
 </div>
 </div>
@@ -4559,7 +4631,7 @@ gráficos:</p>
 <li><p><code>datos2_mej.RData</code></p></li>
 <li><p><code>DatosINE_PLC.RData</code></p></li>
 </ul>
-<div class="sourceCode" id="cb14"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb17"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/base/load.html" class="external-link">load</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/system.file.html" class="external-link">system.file</a></span><span class="op">(</span><span class="st">"examples/datos2_mej.RData"</span>, package <span class="op">=</span> <span class="st">"DemographyBasic"</span><span class="op">)</span><span class="op">)</span></span>
 <span><span class="fu"><a href="https://rdrr.io/r/base/load.html" class="external-link">load</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/system.file.html" class="external-link">system.file</a></span><span class="op">(</span><span class="st">"examples/DatosINE_PLC.RData"</span>, package <span class="op">=</span> <span class="st">"DemographyBasic"</span><span class="op">)</span><span class="op">)</span></span></code></pre></div>
 </div>
@@ -4568,7 +4640,7 @@ gráficos:</p>
 </h2>
 <p>Utilizaremos el dataset: <code>datos2_mej</code> contenidos en
 <code>datos2_mej.RData</code>.</p>
-<div class="sourceCode" id="cb15"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb18"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="../reference/DemBas_presentadf.html">DemBas_presentadf</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/utils/head.html" class="external-link">head</a></span><span class="op">(</span><span class="va">datos2_mej</span><span class="op">)</span><span class="op">)</span></span></code></pre></div>
 <table class="table table table-striped table-hover table-condensed table-responsive" style="width: auto !important; margin-left: auto; margin-right: auto;">
 <thead><tr>
@@ -4701,7 +4773,7 @@ de columnas de la variable “Poblacion” de las comunidades autónomas
 (CCAA) para el censo del 2001</strong>.</p>
 <p>En primer lugar, preparamos los datos que se van a necesitar con
 ayuda del sistema tidyverse:</p>
-<div class="sourceCode" id="cb16"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb19"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">datos_CCAA</span> <span class="op">=</span> <span class="va">datos2_mej</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span> </span>
 <span>  <span class="fu">dplyr</span><span class="fu">::</span><span class="fu"><a href="https://dplyr.tidyverse.org/reference/group_by.html" class="external-link">group_by</a></span><span class="op">(</span><span class="va">CCAA</span><span class="op">)</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span> </span>
 <span>  <span class="fu">dplyr</span><span class="fu">::</span><span class="fu"><a href="https://dplyr.tidyverse.org/reference/summarise.html" class="external-link">summarise</a></span><span class="op">(</span>TOTALCCAA <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/sum.html" class="external-link">sum</a></span><span class="op">(</span><span class="va">TOTAL</span><span class="op">)</span>,</span>
@@ -4897,7 +4969,7 @@ indicaremos las distintas leyendas del gráfico.</p></li>
 </ol>
 <div style="page-break-after: always;"></div>
 <p>Podemos verlo en el siguiente código R:</p>
-<div class="sourceCode" id="cb17"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb20"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="co">#library(ggplot2)</span></span>
 <span><span class="fu">ggplot</span><span class="op">(</span><span class="va">datos_CCAA</span>,<span class="fu">aes</span><span class="op">(</span>x<span class="op">=</span><span class="va">CCAA</span>,y<span class="op">=</span><span class="va">TOTALCCAA</span><span class="op">)</span><span class="op">)</span> <span class="op">+</span> </span>
 <span>  <span class="fu">geom_col</span><span class="op">(</span>fill<span class="op">=</span><span class="st">"blue"</span><span class="op">)</span> <span class="op">+</span></span>
@@ -4907,14 +4979,14 @@ indicaremos las distintas leyendas del gráfico.</p></li>
 <span>       caption<span class="op">=</span><span class="st">"Fuente: Elaboración propia"</span><span class="op">)</span> <span class="op">+</span></span>
 <span>  <span class="fu">scale_y_continuous</span><span class="op">(</span>labels <span class="op">=</span> <span class="fu">scales</span><span class="fu">::</span><span class="va"><a href="https://scales.r-lib.org/reference/comma.html" class="external-link">comma</a></span><span class="op">)</span> <span class="op">+</span></span>
 <span>  <span class="fu">theme</span><span class="op">(</span>axis.text.x <span class="op">=</span> <span class="fu">element_text</span><span class="op">(</span>angle <span class="op">=</span> <span class="fl">90</span>, hjust <span class="op">=</span> <span class="fl">1</span><span class="op">)</span><span class="op">)</span>  </span></code></pre></div>
-<p><img src="introduction_files/figure-html/unnamed-chunk-16-1.png" width="700"></p>
+<p><img src="introduction_files/figure-html/unnamed-chunk-18-1.png" width="700"></p>
 <div style="page-break-after: always;"></div>
 <p><strong>Ejemplo</strong>. Si queremos hacer la misma representación
 pero intercambiando los ejes, añadiremos <code><a href="https://ggplot2.tidyverse.org/reference/coord_flip.html" class="external-link">coord_flip()</a></code>.</p>
 <p>En este gráfico además hemos modificado la forma de representar los
 números de las etiquetas del eje en el que aparecen las cifras de
 población.</p>
-<div class="sourceCode" id="cb18"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb21"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu">ggplot</span><span class="op">(</span><span class="va">datos_CCAA</span>,<span class="fu">aes</span><span class="op">(</span>x<span class="op">=</span><span class="va">CCAA</span>,y<span class="op">=</span><span class="va">TOTALCCAA</span><span class="op">)</span><span class="op">)</span> <span class="op">+</span> </span>
 <span>  <span class="fu">geom_col</span><span class="op">(</span>fill<span class="op">=</span><span class="st">"blue"</span><span class="op">)</span> <span class="op">+</span></span>
 <span>    <span class="fu">labs</span><span class="op">(</span>title<span class="op">=</span><span class="st">"Población Española en 2001"</span>,</span>
@@ -4924,7 +4996,7 @@ población.</p>
 <span>  <span class="fu">scale_y_continuous</span><span class="op">(</span>labels <span class="op">=</span> <span class="fu">scales</span><span class="fu">::</span><span class="va"><a href="https://scales.r-lib.org/reference/comma.html" class="external-link">comma</a></span><span class="op">)</span> <span class="op">+</span></span>
 <span>  <span class="fu">theme</span><span class="op">(</span>axis.text.y <span class="op">=</span> <span class="fu">element_text</span><span class="op">(</span>angle <span class="op">=</span> <span class="fl">0</span>, hjust <span class="op">=</span> <span class="fl">1</span><span class="op">)</span><span class="op">)</span> <span class="op">+</span>  </span>
 <span>  <span class="fu">coord_flip</span><span class="op">(</span><span class="op">)</span></span></code></pre></div>
-<p><img src="introduction_files/figure-html/unnamed-chunk-17-1.png" width="700"></p>
+<p><img src="introduction_files/figure-html/unnamed-chunk-19-1.png" width="700"></p>
 <div style="page-break-after: always;"></div>
 <div class="section level4">
 <h4 id="ordenar-barras-por-orden-descendente-de-valor">Ordenar barras por orden descendente de valor<a class="anchor" aria-label="anchor" href="#ordenar-barras-por-orden-descendente-de-valor"></a>
@@ -4936,7 +5008,7 @@ puede utilizar la función <code><a href="https://rdrr.io/r/stats/reorder.factor
 usará para las etiquetas, y la segunda columna será para indicar el
 orden en el que aparecerán (si se quiere presentar en orden contrario se
 debe colocar un signo “-” delante del segundo argumento).</p>
-<div class="sourceCode" id="cb19"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb22"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu">ggplot</span><span class="op">(</span><span class="va">datos_CCAA</span>,<span class="fu">aes</span><span class="op">(</span>x<span class="op">=</span><span class="fu"><a href="https://rdrr.io/r/stats/reorder.factor.html" class="external-link">reorder</a></span><span class="op">(</span><span class="va">CCAA</span>,<span class="va">TOTALCCAA</span><span class="op">)</span>,y<span class="op">=</span><span class="va">TOTALCCAA</span><span class="op">)</span><span class="op">)</span> <span class="op">+</span> </span>
 <span>  <span class="fu">geom_col</span><span class="op">(</span>fill<span class="op">=</span><span class="st">"blue"</span><span class="op">)</span> <span class="op">+</span></span>
 <span>    <span class="fu">labs</span><span class="op">(</span>title<span class="op">=</span><span class="st">"Población Española en 2001"</span>,</span>
@@ -4946,7 +5018,7 @@ debe colocar un signo “-” delante del segundo argumento).</p>
 <span>  <span class="fu">scale_y_continuous</span><span class="op">(</span>labels <span class="op">=</span> <span class="fu">scales</span><span class="fu">::</span><span class="va"><a href="https://scales.r-lib.org/reference/comma.html" class="external-link">comma</a></span><span class="op">)</span> <span class="op">+</span></span>
 <span>  <span class="fu">theme</span><span class="op">(</span>axis.text.y <span class="op">=</span> <span class="fu">element_text</span><span class="op">(</span>angle <span class="op">=</span> <span class="fl">0</span>, hjust <span class="op">=</span> <span class="fl">1</span><span class="op">)</span><span class="op">)</span> <span class="op">+</span>  </span>
 <span>  <span class="fu">coord_flip</span><span class="op">(</span><span class="op">)</span></span></code></pre></div>
-<p><img src="introduction_files/figure-html/unnamed-chunk-18-1.png" width="700"></p>
+<p><img src="introduction_files/figure-html/unnamed-chunk-20-1.png" width="700"></p>
 <p>Esta representación nos permite identificar rápidamente la ordenación
 de las comunidades autónomas según el número de habitantes.</p>
 <div style="page-break-after: always;"></div>
@@ -4965,7 +5037,7 @@ o tipo de gráfico, que en este caso es: <code><a href="https://ggplot2.tidyvers
 representaremos la evolución de la tasa bruta de natalidad de 2010 a
 2016</strong>.</p>
 <p>Manipulamos los datos que vamos a necesitar:</p>
-<div class="sourceCode" id="cb20"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb23"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="co"># library(dplyr)  # ya cargado con library(tidyverse)</span></span>
 <span><span class="va">Nac_And</span> <span class="op">=</span> <span class="va">Nacimientos_CCAA_EdadMadre_2010a2016</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span> </span>
 <span>  <span class="fu"><a href="https://rdrr.io/r/stats/filter.html" class="external-link">filter</a></span><span class="op">(</span><span class="va">Edades</span><span class="op">==</span><span class="st">"Todas las edades"</span>,<span class="va">CCAA</span><span class="op">==</span><span class="st">"Andalucía"</span><span class="op">)</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span> </span>
@@ -4976,7 +5048,7 @@ representaremos la evolución de la tasa bruta de natalidad de 2010 a
 <span>  <span class="fu"><a href="https://rdrr.io/r/base/numeric.html" class="external-link">as.numeric</a></span><span class="op">(</span><span class="op">)</span></span>
 <span><span class="va">TBN_2016a2010</span> <span class="op">=</span> <span class="fu"><a href="../reference/DemBas_dem_TasaBruta_t.html">DemBas_dem_TasaBruta_t</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/numeric.html" class="external-link">as.numeric</a></span><span class="op">(</span><span class="va">Nac_And</span><span class="op">[</span>,<span class="fl">1</span><span class="op">]</span><span class="op">)</span>,<span class="va">Pob_And_ASexos</span><span class="op">)</span></span></code></pre></div>
 <p>Nos quedamos con la información en el siguiente formato:</p>
-<div class="sourceCode" id="cb21"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb24"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">df.rep</span> <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/data.frame.html" class="external-link">data.frame</a></span><span class="op">(</span>Año <span class="op">=</span> <span class="fl">2016</span><span class="op">:</span><span class="fl">2010</span>,</span>
 <span>                    TBN <span class="op">=</span> <span class="va">TBN_2016a2010</span><span class="op">)</span></span>
 <span><span class="fu"><a href="https://rdrr.io/r/utils/head.html" class="external-link">head</a></span><span class="op">(</span><span class="va">df.rep</span><span class="op">)</span> <span class="op">|&gt;</span> </span>
@@ -5043,7 +5115,7 @@ TBN
 </table>
 <div style="page-break-after: always;"></div>
 <p>El código para el gráfico se recoge a continuación:</p>
-<div class="sourceCode" id="cb22"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb25"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="co">#library(ggplot2)   # ya cargado con library(tidyverse)</span></span>
 <span><span class="co">#library(ggthemes)</span></span>
 <span><span class="fu">ggplot</span><span class="op">(</span><span class="va">df.rep</span>, <span class="fu">aes</span><span class="op">(</span>x <span class="op">=</span> <span class="va">Año</span>, y<span class="op">=</span><span class="va">TBN</span><span class="op">)</span><span class="op">)</span> <span class="op">+</span> </span>
@@ -5058,7 +5130,7 @@ TBN
 <span>  <span class="fu">scale_x_continuous</span><span class="op">(</span>breaks <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/seq.html" class="external-link">seq</a></span><span class="op">(</span><span class="fl">2010</span>,<span class="fl">2016</span>,by<span class="op">=</span><span class="fl">1</span><span class="op">)</span><span class="op">)</span> <span class="op">+</span> </span>
 <span>  <span class="fu">theme</span><span class="op">(</span>axis.text.y <span class="op">=</span> <span class="fu">element_text</span><span class="op">(</span>angle <span class="op">=</span> <span class="fl">0</span>, hjust <span class="op">=</span> <span class="fl">1</span><span class="op">)</span><span class="op">)</span> <span class="op">+</span> </span>
 <span>  <span class="fu"><a href="https://rdrr.io/pkg/ggthemes/man/theme_solarized.html" class="external-link">theme_solarized</a></span><span class="op">(</span><span class="op">)</span></span></code></pre></div>
-<p><img src="introduction_files/figure-html/unnamed-chunk-21-1.png" width="700"></p>
+<p><img src="introduction_files/figure-html/unnamed-chunk-23-1.png" width="700"></p>
 <p>En este gráfico también hemos sumado la geometría
 <code><a href="https://ggplot2.tidyverse.org/reference/geom_point.html" class="external-link">geom_point()</a></code>, para añadir los puntos sobre el gráfico de
 líneas para resaltar sus valores.</p>
@@ -5073,7 +5145,7 @@ Andalucía en 2015, para edades simples, distinguiendo según el sexo.</p>
 <p>Los datos que se utilizarán por sexo son (para obtenerlos se han
 realizado previamente otras manipulaciones de los datos con el sistema
 tidyverse, ver <span class="citation">@sec-apendicecodigo</span>):</p>
-<div class="sourceCode" id="cb23"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb26"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">df.rep</span> <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/data.frame.html" class="external-link">data.frame</a></span><span class="op">(</span></span>
 <span>  Edades <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="va">tmortalidad2015_AndAmb</span><span class="op">$</span><span class="va">Edad</span>,</span>
 <span>             <span class="va">tmortalidad2015_AndHom</span><span class="op">$</span><span class="va">Edad</span>,</span>
@@ -5239,7 +5311,7 @@ Mujer
 “colour=Sexo”, para que se haga el diagrama de líneas con un color
 distinto para cada modalidad de la variable “Sexo”. El código para
 constuir el gráfico de líneas sería el siguiente:</p>
-<div class="sourceCode" id="cb24"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb27"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu">ggplot</span><span class="op">(</span><span class="va">df.rep</span>, <span class="fu">aes</span><span class="op">(</span>x <span class="op">=</span> <span class="va">Edades</span>, y<span class="op">=</span><span class="va">dx</span>, group <span class="op">=</span> <span class="va">Sexo</span>, colour <span class="op">=</span> <span class="va">Sexo</span><span class="op">)</span><span class="op">)</span>  <span class="op">+</span> </span>
 <span>  <span class="fu">geom_line</span><span class="op">(</span>alpha <span class="op">=</span> <span class="fl">1</span>,</span>
 <span>            linetype <span class="op">=</span> <span class="st">"solid"</span>,</span>
@@ -5254,7 +5326,7 @@ constuir el gráfico de líneas sería el siguiente:</p>
 <span>  <span class="fu">scale_x_discrete</span><span class="op">(</span>breaks <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">0</span>,<span class="fu"><a href="https://rdrr.io/r/base/seq.html" class="external-link">seq</a></span><span class="op">(</span><span class="fl">5</span>,<span class="fl">100</span>,by<span class="op">=</span><span class="fl">5</span><span class="op">)</span><span class="op">)</span><span class="op">)</span> <span class="op">+</span></span>
 <span>  <span class="fu">theme</span><span class="op">(</span>axis.text.y <span class="op">=</span> <span class="fu">element_text</span><span class="op">(</span>angle <span class="op">=</span> <span class="fl">0</span>, hjust <span class="op">=</span> <span class="fl">1</span><span class="op">)</span><span class="op">)</span> <span class="op">+</span></span>
 <span>  <span class="fu"><a href="https://rdrr.io/pkg/ggthemes/man/theme_solarized.html" class="external-link">theme_solarized</a></span><span class="op">(</span><span class="op">)</span> </span></code></pre></div>
-<p><img src="introduction_files/figure-html/unnamed-chunk-23-1.png" width="95%" style="display: block; margin: auto;"></p>
+<p><img src="introduction_files/figure-html/unnamed-chunk-25-1.png" width="95%" style="display: block; margin: auto;"></p>
 <p>Se ha añadido la función “<code><a href="https://rdrr.io/pkg/ggthemes/man/theme_solarized.html" class="external-link">theme_solarized()</a></code>” que permite
 cambiar el aspecto general del gráfico (el tema “solarized” fija un
 fondo amarillo y otras características). Existen otros muchos tipos de
@@ -5269,7 +5341,7 @@ ejemplo<a class="anchor" aria-label="anchor" href="#sec-apendicecodigo"></a>
 <p><strong>Nota:</strong> Aquí se ha utilizado un truco para mostrar
 código R escrito y ejecutado-utilizado previamente en el fichero Quarto,
 y mostrarlo en un punto posterior del fichero (como en un apéndice).</p>
-<div class="sourceCode" id="cb25"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb28"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span></span>
 <span><span class="co">## Extraemos los datos necesarios de defunciones y poblaciones medias </span></span>
 <span><span class="co">## para obtener las tasas específicas de mortalidad para Andalucía </span></span>
@@ -5418,7 +5490,7 @@ podrían añadirse nuevas capas o características, con todas las
 posibilidades que admite “ggplot2”.</p>
 <p>Este paquete se puede instalar como cualquier otro paquete R. Una vez
 instalado, podría usarse con tan solo cargarlo.</p>
-<div class="sourceCode" id="cb26"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb29"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://github.com/ottlngr/LexisPlotR" class="external-link">LexisPlotR</a></span><span class="op">)</span></span></code></pre></div>
 <p>Veamos algunos ejemplos de lo que se puede representar con este
 paquete extraídas de la página en Github de este paquete. El código
@@ -5430,56 +5502,56 @@ usado en los siguientes ejemplos son autoexplicativos.</p>
 <p>Con la función <code><a href="https://rdrr.io/pkg/LexisPlotR/man/lexis_grid.html" class="external-link">lexis_grid()</a></code> se representa un diagrama de
 Lexis desde el año 2000 a 2005, representando las edades desde 0 a
 5.</p>
-<div class="sourceCode" id="cb27"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb30"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="co">#lexis.grid(year.start = 2000, year.end = 2005, age.start = 0, age.end = 5)</span></span>
 <span><span class="fu"><a href="https://rdrr.io/pkg/LexisPlotR/man/lexis_grid.html" class="external-link">lexis_grid</a></span><span class="op">(</span>year_start <span class="op">=</span> <span class="fl">2000</span>, year_end <span class="op">=</span> <span class="fl">2005</span>, </span>
 <span>           age_start <span class="op">=</span> <span class="fl">0</span>, age_end <span class="op">=</span> <span class="fl">5</span><span class="op">)</span></span></code></pre></div>
-<p><img src="introduction_files/figure-html/unnamed-chunk-25-1.png" width="50%" style="display: block; margin: auto;"></p>
+<p><img src="introduction_files/figure-html/unnamed-chunk-27-1.png" width="50%" style="display: block; margin: auto;"></p>
 <div style="page-break-after: always;"></div>
 <div class="section level4">
 <h4 id="ejemplo-adicional">Ejemplo adicional<a class="anchor" aria-label="anchor" href="#ejemplo-adicional"></a>
 </h4>
-<div class="sourceCode" id="cb28"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb31"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/pkg/LexisPlotR/man/lexis_grid.html" class="external-link">lexis_grid</a></span><span class="op">(</span>year_start <span class="op">=</span> <span class="fl">1900</span>, year_end <span class="op">=</span> <span class="fl">1950</span>, age_start <span class="op">=</span> <span class="fl">0</span>, </span>
 <span>           age_end <span class="op">=</span> <span class="fl">50</span>, delta <span class="op">=</span> <span class="fl">5</span><span class="op">)</span></span></code></pre></div>
-<p><img src="introduction_files/figure-html/unnamed-chunk-26-1.png" width="50%" style="display: block; margin: auto;"></p>
+<p><img src="introduction_files/figure-html/unnamed-chunk-28-1.png" width="50%" style="display: block; margin: auto;"></p>
 <div style="page-break-after: always;"></div>
 </div>
 </div>
 <div class="section level3">
 <h3 id="ejemplo-lexis_age">Ejemplo: <code>lexis_age()</code><a class="anchor" aria-label="anchor" href="#ejemplo-lexis_age"></a>
 </h3>
-<div class="sourceCode" id="cb29"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb32"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">lexis</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/pkg/LexisPlotR/man/lexis_grid.html" class="external-link">lexis_grid</a></span><span class="op">(</span>year_start <span class="op">=</span> <span class="fl">1900</span>, year_end <span class="op">=</span> <span class="fl">1905</span>, </span>
 <span>                    age_start <span class="op">=</span> <span class="fl">0</span>, age_end <span class="op">=</span> <span class="fl">5</span><span class="op">)</span></span>
 <span><span class="fu"><a href="https://rdrr.io/pkg/LexisPlotR/man/lexis_age.html" class="external-link">lexis_age</a></span><span class="op">(</span>lg <span class="op">=</span> <span class="va">lexis</span>, age <span class="op">=</span> <span class="fl">2</span><span class="op">)</span></span></code></pre></div>
-<p><img src="introduction_files/figure-html/unnamed-chunk-27-1.png" width="50%" style="display: block; margin: auto;"></p>
+<p><img src="introduction_files/figure-html/unnamed-chunk-29-1.png" width="50%" style="display: block; margin: auto;"></p>
 <div style="page-break-after: always;"></div>
 </div>
 <div class="section level3">
 <h3 id="ejemplo-lexis_year">Ejemplo: <code>lexis_year()</code><a class="anchor" aria-label="anchor" href="#ejemplo-lexis_year"></a>
 </h3>
-<div class="sourceCode" id="cb30"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb33"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">lexis</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/pkg/LexisPlotR/man/lexis_grid.html" class="external-link">lexis_grid</a></span><span class="op">(</span>year_start <span class="op">=</span> <span class="fl">1900</span>, year_end <span class="op">=</span> <span class="fl">1905</span>, </span>
 <span>                    age_start <span class="op">=</span> <span class="fl">0</span>, age_end <span class="op">=</span> <span class="fl">5</span><span class="op">)</span></span>
 <span><span class="fu"><a href="https://rdrr.io/pkg/LexisPlotR/man/lexis_year.html" class="external-link">lexis_year</a></span><span class="op">(</span>lg <span class="op">=</span> <span class="va">lexis</span>, year <span class="op">=</span> <span class="fl">1903</span><span class="op">)</span></span></code></pre></div>
-<p><img src="introduction_files/figure-html/unnamed-chunk-28-1.png" width="50%" style="display: block; margin: auto;"></p>
+<p><img src="introduction_files/figure-html/unnamed-chunk-30-1.png" width="50%" style="display: block; margin: auto;"></p>
 <div style="page-break-after: always;"></div>
 </div>
 <div class="section level3">
 <h3 id="ejemplo-lexis_cohort">Ejemplo: <code>lexis_cohort()</code><a class="anchor" aria-label="anchor" href="#ejemplo-lexis_cohort"></a>
 </h3>
-<div class="sourceCode" id="cb31"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb34"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">lexis</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/pkg/LexisPlotR/man/lexis_grid.html" class="external-link">lexis_grid</a></span><span class="op">(</span>year_start <span class="op">=</span> <span class="fl">1900</span>, year_end <span class="op">=</span> <span class="fl">1905</span>, </span>
 <span>                    age_start <span class="op">=</span> <span class="fl">0</span>, age_end <span class="op">=</span> <span class="fl">5</span><span class="op">)</span></span>
 <span><span class="fu"><a href="https://rdrr.io/pkg/LexisPlotR/man/lexis_cohort.html" class="external-link">lexis_cohort</a></span><span class="op">(</span>lg <span class="op">=</span> <span class="va">lexis</span>, cohort <span class="op">=</span> <span class="fl">1898</span><span class="op">)</span></span></code></pre></div>
-<p><img src="introduction_files/figure-html/unnamed-chunk-29-1.png" width="50%" style="display: block; margin: auto;"></p>
+<p><img src="introduction_files/figure-html/unnamed-chunk-31-1.png" width="50%" style="display: block; margin: auto;"></p>
 <div style="page-break-after: always;"></div>
 </div>
 <div class="section level3">
 <h3 id="ejemplo-lexis_polygon">Ejemplo: <code>lexis_polygon()</code><a class="anchor" aria-label="anchor" href="#ejemplo-lexis_polygon"></a>
 </h3>
-<div class="sourceCode" id="cb32"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb35"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">lexis</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/pkg/LexisPlotR/man/lexis_grid.html" class="external-link">lexis_grid</a></span><span class="op">(</span>year_start <span class="op">=</span> <span class="fl">1900</span>, year_end <span class="op">=</span> <span class="fl">1905</span>, </span>
 <span>                    age_start <span class="op">=</span> <span class="fl">0</span>, age_end <span class="op">=</span> <span class="fl">5</span><span class="op">)</span></span>
 <span></span>
@@ -5491,34 +5563,34 @@ Lexis desde el año 2000 a 2005, representando las edades desde 0 a
 <span></span>
 <span><span class="fu"><a href="https://rdrr.io/pkg/LexisPlotR/man/lexis_polygon.html" class="external-link">lexis_polygon</a></span><span class="op">(</span>lg <span class="op">=</span> <span class="va">lexis</span>, x <span class="op">=</span> <span class="va">polygons</span><span class="op">$</span><span class="va">x</span>, y <span class="op">=</span> <span class="va">polygons</span><span class="op">$</span><span class="va">y</span>, </span>
 <span>              group <span class="op">=</span> <span class="va">polygons</span><span class="op">$</span><span class="va">group</span><span class="op">)</span></span></code></pre></div>
-<p><img src="introduction_files/figure-html/unnamed-chunk-30-1.png" width="50%" style="display: block; margin: auto;"></p>
+<p><img src="introduction_files/figure-html/unnamed-chunk-32-1.png" width="50%" style="display: block; margin: auto;"></p>
 <div style="page-break-after: always;"></div>
 </div>
 <div class="section level3">
 <h3 id="ejemplo-lexis_lifeline">Ejemplo: <code>lexis_lifeline()</code><a class="anchor" aria-label="anchor" href="#ejemplo-lexis_lifeline"></a>
 </h3>
-<div class="sourceCode" id="cb33"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb36"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">lg</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/pkg/LexisPlotR/man/lexis_grid.html" class="external-link">lexis_grid</a></span><span class="op">(</span>year_start <span class="op">=</span> <span class="fl">1900</span>, year_end <span class="op">=</span> <span class="fl">1905</span>, age_start <span class="op">=</span> <span class="fl">0</span>, </span>
 <span>                 age_end <span class="op">=</span> <span class="fl">5</span><span class="op">)</span></span>
 <span><span class="fu"><a href="https://rdrr.io/pkg/LexisPlotR/man/lexis_lifeline.html" class="external-link">lexis_lifeline</a></span><span class="op">(</span>lg <span class="op">=</span> <span class="va">lg</span>, birth <span class="op">=</span> <span class="st">"1901-09-23"</span>, lwd <span class="op">=</span> <span class="fl">1.5</span><span class="op">)</span></span></code></pre></div>
-<p><img src="introduction_files/figure-html/unnamed-chunk-31-1.png" width="50%" style="display: block; margin: auto;"></p>
+<p><img src="introduction_files/figure-html/unnamed-chunk-33-1.png" width="50%" style="display: block; margin: auto;"></p>
 <div style="page-break-after: always;"></div>
 <div class="section level4">
 <h4 id="ejemplo-adicional-1">Ejemplo adicional 1<a class="anchor" aria-label="anchor" href="#ejemplo-adicional-1"></a>
 </h4>
-<div class="sourceCode" id="cb34"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb37"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/pkg/LexisPlotR/man/lexis_lifeline.html" class="external-link">lexis_lifeline</a></span><span class="op">(</span>lg <span class="op">=</span> <span class="va">lg</span>, birth <span class="op">=</span> <span class="st">"1901-09-23"</span>, entry <span class="op">=</span> <span class="st">"1902-04-01"</span>, </span>
 <span>               lwd <span class="op">=</span> <span class="fl">1.5</span><span class="op">)</span></span></code></pre></div>
-<p><img src="introduction_files/figure-html/unnamed-chunk-32-1.png" width="50%" style="display: block; margin: auto;"></p>
+<p><img src="introduction_files/figure-html/unnamed-chunk-34-1.png" width="50%" style="display: block; margin: auto;"></p>
 <div style="page-break-after: always;"></div>
 </div>
 <div class="section level4">
 <h4 id="ejemplo-adicional-2">Ejemplo adicional 2<a class="anchor" aria-label="anchor" href="#ejemplo-adicional-2"></a>
 </h4>
-<div class="sourceCode" id="cb35"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb38"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/pkg/LexisPlotR/man/lexis_lifeline.html" class="external-link">lexis_lifeline</a></span><span class="op">(</span>lg <span class="op">=</span> <span class="va">lg</span>, birth <span class="op">=</span> <span class="st">"1901-09-23"</span>, entry <span class="op">=</span> <span class="st">"1902-04-01"</span>, </span>
 <span>               exit <span class="op">=</span> <span class="st">"1904-10-31"</span>, lwd <span class="op">=</span> <span class="fl">1.5</span><span class="op">)</span></span></code></pre></div>
-<p><img src="introduction_files/figure-html/unnamed-chunk-33-1.png" width="50%" style="display: block; margin: auto;"></p>
+<p><img src="introduction_files/figure-html/unnamed-chunk-35-1.png" width="50%" style="display: block; margin: auto;"></p>
 <div style="page-break-after: always;"></div>
 </div>
 </div>
@@ -5527,7 +5599,7 @@ Lexis desde el año 2000 a 2005, representando las edades desde 0 a
 </h3>
 <p>Se puede utilizar con el operador de “tubería” del paquete “magrittr”
 (incluido en tidyverse) y “sumar” elementos del paquete ggplot2.</p>
-<div class="sourceCode" id="cb36"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb39"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://magrittr.tidyverse.org" class="external-link">magrittr</a></span><span class="op">)</span></span>
 <span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://ggplot2.tidyverse.org" class="external-link">ggplot2</a></span><span class="op">)</span></span>
 <span></span>
@@ -5540,7 +5612,7 @@ Lexis desde el año 2000 a 2005, representando las edades desde 0 a
 <span></span>
 <span><span class="va">p</span> <span class="op">&lt;-</span> <span class="va">p</span> <span class="op">+</span> <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/labs.html" class="external-link">labs</a></span><span class="op">(</span>x <span class="op">=</span> <span class="st">"Año"</span>, y <span class="op">=</span> <span class="st">"Edad"</span>, <span class="st">"title"</span> <span class="op">=</span> <span class="st">"LexisPlotR"</span><span class="op">)</span></span>
 <span><span class="va">p</span></span></code></pre></div>
-<p><img src="introduction_files/figure-html/unnamed-chunk-34-1.png" width="50%" style="display: block; margin: auto;"></p>
+<p><img src="introduction_files/figure-html/unnamed-chunk-36-1.png" width="50%" style="display: block; margin: auto;"></p>
 </div>
 <div class="section level3">
 <h3 id="referencias">Referencias<a class="anchor" aria-label="anchor" href="#referencias"></a>
@@ -5562,7 +5634,7 @@ paquete:</p>
 </ul>
 <p>Se recomienda utilizar la siguiente instrucción R para instalar el
 paquete R: “mapSpain”.</p>
-<div class="sourceCode" id="cb37"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb40"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/utils/install.packages.html" class="external-link">install.packages</a></span><span class="op">(</span><span class="st">"mapSpain"</span>, dependencies <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span></span></code></pre></div>
 <p>El primer ejemplo que se mostrará se ha obtenido del modelo de
 partida obtenido en la documentación de “mapSpain”: <a href="https://ropenspain.github.io/mapSpain/articles/x02_mapasesp.html" class="external-link uri">https://ropenspain.github.io/mapSpain/articles/x02_mapasesp.html</a>.</p>
@@ -5570,7 +5642,7 @@ partida obtenido en la documentación de “mapSpain”: <a href="https://ropens
 <code><a href="https://ropenspain.github.io/mapSpain/reference/esp_get_prov.html" class="external-link">esp_get_prov_siane()</a></code> para obtener información para la
 representación de mapas de tipo provincial de España para unas
 determinadas provincias.</p>
-<div class="sourceCode" id="cb38"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb41"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://ropenspain.github.io/mapSpain/" class="external-link">mapSpain</a></span><span class="op">)</span></span>
 <span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://ggplot2.tidyverse.org" class="external-link">ggplot2</a></span><span class="op">)</span></span>
 <span><span class="va">provs</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://ropenspain.github.io/mapSpain/reference/esp_get_prov.html" class="external-link">esp_get_prov</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span></span>
@@ -5611,7 +5683,7 @@ elemento <code>geometry</code> del objeto R anterior:
 permitirá crear por ejemplo un cartograma provincial con la metodología
 del paquete “ggplot2”. Se colorea utilizando una función que genera
 colores: <code><a href="https://rdrr.io/r/grDevices/palettes.html" class="external-link">hcl.colors()</a></code>.</p>
-<div class="sourceCode" id="cb39"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb42"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="https://ggplot2.tidyverse.org/reference/ggplot.html" class="external-link">ggplot</a></span><span class="op">(</span><span class="va">provs</span><span class="op">)</span> <span class="op">+</span></span>
 <span>  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/ggsf.html" class="external-link">geom_sf</a></span><span class="op">(</span><span class="fu"><a href="https://ggplot2.tidyverse.org/reference/aes.html" class="external-link">aes</a></span><span class="op">(</span>fill <span class="op">=</span> <span class="va">prov.shortname.es</span><span class="op">)</span>,</span>
 <span>    alpha <span class="op">=</span> <span class="fl">0.9</span></span>
@@ -5619,7 +5691,7 @@ colores: <code><a href="https://rdrr.io/r/grDevices/palettes.html" class="extern
 <span>  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/scale_colour_discrete.html" class="external-link">scale_fill_discrete</a></span><span class="op">(</span>type <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/grDevices/palettes.html" class="external-link">hcl.colors</a></span><span class="op">(</span><span class="fl">12</span>, <span class="st">"Cividis"</span><span class="op">)</span><span class="op">)</span> <span class="op">+</span></span>
 <span>  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/ggtheme.html" class="external-link">theme_minimal</a></span><span class="op">(</span><span class="op">)</span> <span class="op">+</span></span>
 <span>  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/labs.html" class="external-link">labs</a></span><span class="op">(</span>fill <span class="op">=</span> <span class="st">"Provincias"</span><span class="op">)</span></span></code></pre></div>
-<p><img src="introduction_files/figure-html/unnamed-chunk-37-1.png" width="700"></p>
+<p><img src="introduction_files/figure-html/unnamed-chunk-39-1.png" width="700"></p>
 <div style="page-break-after: always;"></div>
 </div>
 <div class="section level2">
@@ -5628,7 +5700,7 @@ autónomas<a class="anchor" aria-label="anchor" href="#ejemplo-1-cartograma-de-p
 </h2>
 <p>Se va a representar la información del “Saldo Migratorio Interno de
 Andalucía”</p>
-<div class="sourceCode" id="cb40"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb43"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="co">#load("mapaejemplo01.RData")</span></span>
 <span><span class="fu"><a href="https://rdrr.io/r/base/load.html" class="external-link">load</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/system.file.html" class="external-link">system.file</a></span><span class="op">(</span><span class="st">"examples/mapaejemplo01.RData"</span>, package <span class="op">=</span> <span class="st">"DemographyBasic"</span><span class="op">)</span><span class="op">)</span></span>
 <span><span class="va">df_a_mapa</span> <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/data.frame.html" class="external-link">data.frame</a></span><span class="op">(</span></span>
@@ -5650,7 +5722,7 @@ Andalucía”</p>
 <!-- #       Titulo = "Saldo Migratorio Interno (Andalucía 2010 a 2017)") -->
 <p>En primer lugar obtenemos los datos necesarios con ayuda de
 tidyverse:</p>
-<div class="sourceCode" id="cb41"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb44"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://ropenspain.github.io/mapSpain/" class="external-link">mapSpain</a></span><span class="op">)</span></span>
 <span><span class="co">#library(ggplot2)</span></span>
 <span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://tidyverse.tidyverse.org" class="external-link">tidyverse</a></span><span class="op">)</span></span>
@@ -5669,7 +5741,7 @@ tidyverse:</p>
 <span><span class="co">#&gt; [25] "geometry"</span></span></code></pre></div>
 <div style="page-break-after: always;"></div>
 <p>El cartograma se obtendría con el siguiente código:</p>
-<div class="sourceCode" id="cb42"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb45"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="https://ggplot2.tidyverse.org/reference/ggplot.html" class="external-link">ggplot</a></span><span class="op">(</span><span class="va">provs</span><span class="op">)</span> <span class="op">+</span></span>
 <span>  <span class="co">#geom_sf(aes(fill = prov.shortname.es),</span></span>
 <span>  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/ggsf.html" class="external-link">geom_sf</a></span><span class="op">(</span><span class="fu"><a href="https://ggplot2.tidyverse.org/reference/aes.html" class="external-link">aes</a></span><span class="op">(</span>fill <span class="op">=</span> <span class="va">Valor</span><span class="op">)</span>,</span>
@@ -5682,8 +5754,8 @@ tidyverse:</p>
 <span>  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/ggtheme.html" class="external-link">theme_void</a></span><span class="op">(</span><span class="op">)</span> <span class="op">+</span></span>
 <span>  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/labs.html" class="external-link">labs</a></span><span class="op">(</span>fill <span class="op">=</span> <span class="st">"Provincias"</span>,</span>
 <span>       title <span class="op">=</span> <span class="st">"Saldo Migratorio Interno (Andalucía 2010 a 2017)"</span><span class="op">)</span></span></code></pre></div>
-<p><img src="introduction_files/figure-html/unnamed-chunk-40-1.png" width="700"></p>
-<div class="sourceCode" id="cb43"><pre class="downlit sourceCode r">
+<p><img src="introduction_files/figure-html/unnamed-chunk-42-1.png" width="700"></p>
+<div class="sourceCode" id="cb46"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span>  <span class="co">#theme_void() +</span></span>
 <span>  <span class="co">#theme(legend.position = c(0.1, 0.6))</span></span></code></pre></div>
 <ol style="list-style-type: decimal">
@@ -5710,7 +5782,7 @@ la segunda tabla.</p>
 <h2 id="ejemplo-2-cartograma-con-todas-las-provincias-de-españa">Ejemplo 2: cartograma con todas las provincias de España<a class="anchor" aria-label="anchor" href="#ejemplo-2-cartograma-con-todas-las-provincias-de-espa%C3%B1a"></a>
 </h2>
 <p>Obtenemos los datos necesarios:</p>
-<div class="sourceCode" id="cb44"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb47"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">dfej02b</span> <span class="op">=</span> <span class="fu"><a href="../reference/DemBas_read_px.html">DemBas_read_px</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/system.file.html" class="external-link">system.file</a></span><span class="op">(</span><span class="st">"examples/1489.px"</span>, package <span class="op">=</span> <span class="st">"DemographyBasic"</span><span class="op">)</span><span class="op">)</span></span>
 <span></span>
 <span><span class="fu"><a href="https://rdrr.io/r/utils/head.html" class="external-link">head</a></span><span class="op">(</span><span class="va">dfej02b</span><span class="op">)</span></span>
@@ -5739,7 +5811,7 @@ la segunda tabla.</p>
 <span><span class="co">#&gt; 05 Ávila                05 191.15470</span></span></code></pre></div>
 <p>Volvemos a combinar los datos con la información de los mapas que
 vamos a representar:</p>
-<div class="sourceCode" id="cb45"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb48"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">provs</span> <span class="op">=</span> <span class="fu"><a href="https://ropenspain.github.io/mapSpain/reference/esp_get_prov.html" class="external-link">esp_get_prov</a></span><span class="op">(</span><span class="va">df_a_mapa2</span><span class="op">$</span><span class="va">Codigo</span><span class="op">)</span> <span class="op">|&gt;</span> <span class="co"># nombres provincias o codes</span></span>
 <span>  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/mutate-joins.html" class="external-link">left_join</a></span><span class="op">(</span><span class="va">df_a_mapa2</span>, by <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"cpro"</span> <span class="op">=</span> <span class="st">"Codigo"</span><span class="op">)</span><span class="op">)</span></span>
 <span><span class="va">tmp</span> <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/as.data.frame.html" class="external-link">as.data.frame</a></span><span class="op">(</span><span class="va">provs</span><span class="op">[</span>,<span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"prov.shortname.es"</span>,<span class="st">"cpro"</span>,<span class="st">"Valor"</span><span class="op">)</span><span class="op">]</span><span class="op">)</span></span>
@@ -5758,7 +5830,7 @@ vamos a representar:</p>
 <div style="page-break-after: always;"></div>
 <p>El cartograma de todas las provincias de España se obtiene con el
 siguiente código:</p>
-<div class="sourceCode" id="cb46"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb49"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="https://ggplot2.tidyverse.org/reference/ggplot.html" class="external-link">ggplot</a></span><span class="op">(</span><span class="va">provs</span><span class="op">)</span> <span class="op">+</span></span>
 <span>  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/ggsf.html" class="external-link">geom_sf</a></span><span class="op">(</span><span class="fu"><a href="https://ggplot2.tidyverse.org/reference/aes.html" class="external-link">aes</a></span><span class="op">(</span>fill <span class="op">=</span> <span class="va">Valor</span><span class="op">)</span>,</span>
 <span>    alpha <span class="op">=</span> <span class="fl">0.9</span></span>
@@ -5768,13 +5840,13 @@ siguiente código:</p>
 <span>  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/ggtheme.html" class="external-link">theme_void</a></span><span class="op">(</span><span class="op">)</span> <span class="op">+</span></span>
 <span>  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/labs.html" class="external-link">labs</a></span><span class="op">(</span>fill <span class="op">=</span> <span class="st">"Provincias"</span>,</span>
 <span>       title <span class="op">=</span> <span class="st">"Índice de Envejecimiento provincial (España en 2017)"</span><span class="op">)</span></span></code></pre></div>
-<p><img src="introduction_files/figure-html/unnamed-chunk-43-1.png" width="700"></p>
+<p><img src="introduction_files/figure-html/unnamed-chunk-45-1.png" width="700"></p>
 </div>
 <div class="section level2">
 <h2 id="ejemplo-3-comunidades-autónomas-en-españa">Ejemplo 3: comunidades autónomas en España<a class="anchor" aria-label="anchor" href="#ejemplo-3-comunidades-aut%C3%B3nomas-en-espa%C3%B1a"></a>
 </h2>
 <p>Importamos y preparamos los datos que vamos a necesitar.</p>
-<div class="sourceCode" id="cb47"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb50"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">dfej02c</span> <span class="op">=</span> <span class="fu"><a href="../reference/DemBas_read_px.html">DemBas_read_px</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/system.file.html" class="external-link">system.file</a></span><span class="op">(</span><span class="st">"examples/1452.px"</span>, package <span class="op">=</span> <span class="st">"DemographyBasic"</span><span class="op">)</span><span class="op">)</span></span>
 <span><span class="fu"><a href="https://rdrr.io/r/utils/head.html" class="external-link">head</a></span><span class="op">(</span><span class="va">dfej02c</span><span class="op">)</span></span>
 <span><span class="co">#&gt;   Periodo Comunidades.y.Ciudades.Autónomas    value</span></span>
@@ -5785,7 +5857,7 @@ siguiente código:</p>
 <span><span class="co">#&gt; 5    2014                   Total Nacional 112.2386</span></span>
 <span><span class="co">#&gt; 6    2013                   Total Nacional 109.5282</span></span></code></pre></div>
 <p>Se usa el sistema tidyverse:</p>
-<div class="sourceCode" id="cb48"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb51"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">tp5</span> <span class="op">=</span> <span class="va">dfej02c</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span> </span>
 <span>  <span class="fu">dplyr</span><span class="fu">::</span><span class="fu"><a href="https://dplyr.tidyverse.org/reference/filter.html" class="external-link">filter</a></span><span class="op">(</span><span class="va">Periodo</span><span class="op">==</span><span class="st">"2017"</span>, </span>
 <span>                <span class="va">Comunidades.y.Ciudades.Autónomas</span><span class="op">!=</span><span class="st">"Total Nacional"</span><span class="op">)</span></span>
@@ -5807,7 +5879,7 @@ siguiente código:</p>
 <p>Para construir un mapa sobre comunidades autónomas se ha seguido el
 ejemplo de la <a href="https://ropenspain.github.io/mapSpain/articles/x02_mapasesp.html" class="external-link">documentación
 de mapaSapin</a>:</p>
-<div class="sourceCode" id="cb49"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb52"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">ccaa</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://ropenspain.github.io/mapSpain/reference/esp_get_ccaa.html" class="external-link">esp_get_ccaa</a></span><span class="op">(</span>ccaa <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span></span>
 <span>  <span class="st">"Catalunya"</span>,</span>
 <span>  <span class="st">"Comunidad Valenciana"</span>,</span>
@@ -5824,11 +5896,11 @@ de mapaSapin</a>:</p>
 <span>  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/labs.html" class="external-link">labs</a></span><span class="op">(</span>fill <span class="op">=</span> <span class="st">"Comunitats autònomes"</span><span class="op">)</span> <span class="op">+</span></span>
 <span>  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/ggtheme.html" class="external-link">theme_void</a></span><span class="op">(</span><span class="op">)</span> <span class="op">+</span></span>
 <span>  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/scale_colour_discrete.html" class="external-link">scale_fill_discrete</a></span><span class="op">(</span>type <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/grDevices/palettes.html" class="external-link">hcl.colors</a></span><span class="op">(</span><span class="fl">4</span>, <span class="st">"Plasma"</span><span class="op">)</span><span class="op">)</span></span></code></pre></div>
-<p><img src="introduction_files/figure-html/unnamed-chunk-46-1.png" width="700"></p>
+<p><img src="introduction_files/figure-html/unnamed-chunk-48-1.png" width="700"></p>
 <div style="page-break-after: always;"></div>
 <p>Ahora se representará el índice de envejecimiento para cada comunidad
 autónoma en un cartograma:</p>
-<div class="sourceCode" id="cb50"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb53"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">ccaa</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://ropenspain.github.io/mapSpain/reference/esp_get_ccaa.html" class="external-link">esp_get_ccaa</a></span><span class="op">(</span>ccaa <span class="op">=</span> <span class="va">df_a_mapa3</span><span class="op">$</span><span class="va">Codigo</span><span class="op">)</span> <span class="op">|&gt;</span> </span>
 <span>  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/mutate-joins.html" class="external-link">left_join</a></span><span class="op">(</span><span class="va">df_a_mapa3</span>, by <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"codauto"</span> <span class="op">=</span> <span class="st">"Codigo"</span><span class="op">)</span><span class="op">)</span></span>
 <span><span class="va">tmp</span> <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/as.data.frame.html" class="external-link">as.data.frame</a></span><span class="op">(</span><span class="va">ccaa</span><span class="op">[</span>,<span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"ccaa.shortname.es"</span>,<span class="st">"codauto"</span>,<span class="st">"Valor"</span><span class="op">)</span><span class="op">]</span><span class="op">)</span></span>
@@ -5851,7 +5923,7 @@ autónoma en un cartograma:</p>
 <span><span class="co">#&gt; 15              Navarra      15 116.48976</span></span></code></pre></div>
 <div style="page-break-after: always;"></div>
 <p>El cartograma se construye con el siguiente código:</p>
-<div class="sourceCode" id="cb51"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb54"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="https://ggplot2.tidyverse.org/reference/ggplot.html" class="external-link">ggplot</a></span><span class="op">(</span><span class="va">ccaa</span><span class="op">)</span> <span class="op">+</span></span>
 <span>  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/ggsf.html" class="external-link">geom_sf</a></span><span class="op">(</span><span class="fu"><a href="https://ggplot2.tidyverse.org/reference/aes.html" class="external-link">aes</a></span><span class="op">(</span>fill <span class="op">=</span> <span class="va">Valor</span><span class="op">)</span>,alpha <span class="op">=</span> <span class="fl">0.9</span>,color <span class="op">=</span> <span class="cn">NA</span><span class="op">)</span> <span class="op">+</span></span>
 <span>  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/labs.html" class="external-link">labs</a></span><span class="op">(</span>fill <span class="op">=</span> <span class="st">"Índice envejecimiento"</span><span class="op">)</span> <span class="op">+</span></span>
@@ -5866,7 +5938,7 @@ autónoma en un cartograma:</p>
 <span>    labels <span class="op">=</span> <span class="fu">scales</span><span class="fu">::</span><span class="fu"><a href="https://scales.r-lib.org/reference/label_number.html" class="external-link">label_comma</a></span><span class="op">(</span><span class="op">)</span>,</span>
 <span>    guide <span class="op">=</span> <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/guide_legend.html" class="external-link">guide_legend</a></span><span class="op">(</span><span class="op">)</span></span>
 <span>  <span class="op">)</span></span></code></pre></div>
-<p><img src="introduction_files/figure-html/unnamed-chunk-48-1.png" width="700"></p>
+<p><img src="introduction_files/figure-html/unnamed-chunk-50-1.png" width="700"></p>
 <ol style="list-style-type: decimal">
 <li>
 <code><a href="https://ggplot2.tidyverse.org/reference/scale_gradient.html" class="external-link">scale_fill_gradientn()</a></code>. Ha permitido hacer una
@@ -5875,7 +5947,7 @@ conseguir cambiar la dirección de los colores (valores pequeños son más
 claros y valores mayores son más oscuros) se ha usado la función
 <code><a href="https://rdrr.io/r/base/rev.html" class="external-link">rev()</a></code> para invertir la presentación de los colores.</li>
 </ol>
-<div class="sourceCode" id="cb52"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb55"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">colores</span> <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"#FFFE9E"</span>, <span class="st">"#FEF997"</span>, <span class="st">"#FDF491"</span>, <span class="st">"#FCF08A"</span>, <span class="st">"#FBEC84"</span>, </span>
 <span>            <span class="st">"#FBE77E"</span>, <span class="st">"#FAE378"</span>, <span class="st">"#FADF72"</span>, <span class="st">"#F9DB6C"</span>, <span class="st">"#F9D766"</span>, <span class="st">"#F9D360"</span><span class="op">)</span></span>
 <span> <span class="co"># "#F9CE5A" "#F8CA54" "#F8C64F" "#F8C249" "#F8BE44" "#F8BA3F" "#F8B63A" </span></span>
@@ -5902,7 +5974,7 @@ claros y valores mayores son más oscuros) se ha usado la función
 </h2>
 <p>Cartograma de la población de los municipios de Segovia en 2019 según
 el INE:</p>
-<div class="sourceCode" id="cb53"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb56"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">munic</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://ropenspain.github.io/mapSpain/reference/esp_get_munic.html" class="external-link">esp_get_munic</a></span><span class="op">(</span>region <span class="op">=</span> <span class="st">"Segovia"</span><span class="op">)</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span>  </span>
 <span>  <span class="co"># Datos de ejemplo: Población INE</span></span>
 <span>  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/mutate-joins.html" class="external-link">left_join</a></span><span class="op">(</span><span class="fu">mapSpain</span><span class="fu">::</span><span class="va"><a href="https://ropenspain.github.io/mapSpain/reference/pobmun19.html" class="external-link">pobmun19</a></span>, by <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"cpro"</span>, <span class="st">"cmun"</span><span class="op">)</span><span class="op">)</span></span>
@@ -5921,7 +5993,7 @@ el INE:</p>
 <span><span class="co">#&gt; 10      Aldeanueva del Codonal   40   117</span></span></code></pre></div>
 <div style="page-break-after: always;"></div>
 <p>El cartograma se construye con el siguiente código:</p>
-<div class="sourceCode" id="cb54"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb57"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="https://ggplot2.tidyverse.org/reference/ggplot.html" class="external-link">ggplot</a></span><span class="op">(</span><span class="va">munic</span><span class="op">)</span> <span class="op">+</span></span>
 <span>  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/ggsf.html" class="external-link">geom_sf</a></span><span class="op">(</span><span class="fu"><a href="https://ggplot2.tidyverse.org/reference/aes.html" class="external-link">aes</a></span><span class="op">(</span>fill <span class="op">=</span> <span class="va">pob19</span><span class="op">)</span>, alpha <span class="op">=</span> <span class="fl">0.9</span>, color <span class="op">=</span> <span class="cn">NA</span><span class="op">)</span> <span class="op">+</span></span>
 <span>  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/scale_gradient.html" class="external-link">scale_fill_gradientn</a></span><span class="op">(</span></span>
@@ -5943,7 +6015,7 @@ el INE:</p>
 <span>    plot.title <span class="op">=</span> <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/element.html" class="external-link">element_text</a></span><span class="op">(</span>hjust <span class="op">=</span> <span class="fl">.5</span><span class="op">)</span>,</span>
 <span>    plot.subtitle <span class="op">=</span> <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/element.html" class="external-link">element_text</a></span><span class="op">(</span>hjust <span class="op">=</span> <span class="fl">.5</span><span class="op">)</span></span>
 <span>  <span class="op">)</span></span></code></pre></div>
-<p><img src="introduction_files/figure-html/unnamed-chunk-51-1.png" width="700"></p>
+<p><img src="introduction_files/figure-html/unnamed-chunk-53-1.png" width="700"></p>
 </div>
 <div class="section level2">
 <h2 id="enlaces-a-las-fuentes-demográficas-utilizadas">Enlaces a las fuentes demográficas utilizadas<a class="anchor" aria-label="anchor" href="#enlaces-a-las-fuentes-demogr%C3%A1ficas-utilizadas"></a>

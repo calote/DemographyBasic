@@ -7,8 +7,6 @@
 DemBas_dem_EdadMedia_t(vTasasEspecificas_x_t, Edad.marcas)
 }
 \arguments{
-\item{vTasasEspecificas_x_t}{}
-
 \item{Edad.marcas}{}
 }
 \description{

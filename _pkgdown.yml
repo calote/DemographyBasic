@@ -1,3 +1,5 @@
+# Ver:
+# - https://github.com/r-lib/usethis/blob/main/_pkgdown.yml
 template:
   bootstrap: 5
   theme: tango
@@ -17,7 +19,7 @@ navbar:
 url: https://DemographyBasic.github.io
 vignettes:
   - title: "Introduction to DemographyBasic"
-    url: "doc/introduction.pdf"  
+    url: "doc/introduction.pdf"
 # navbar:
 #   structure:
 #     - Home: index.html

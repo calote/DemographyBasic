@@ -7,8 +7,6 @@
 DemBas_extrae_codigo_ccaa(vCCAA, ConvierteCodSIANE = TRUE)
 }
 \arguments{
-\item{vCCAA}{}
-
 \item{ConvierteCodSIANE}{}
 }
 \description{

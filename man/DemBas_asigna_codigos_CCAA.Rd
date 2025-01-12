@@ -7,12 +7,6 @@
 DemBas_asigna_codigos_CCAA(columna, columna_codigos, etiqueta, nuevocodigo)
 }
 \arguments{
-\item{columna}{}
-
-\item{columna_codigos}{}
-
-\item{etiqueta}{}
-
 \item{nuevocodigo}{}
 }
 \description{

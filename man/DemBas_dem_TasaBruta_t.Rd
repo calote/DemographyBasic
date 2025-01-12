@@ -7,8 +7,6 @@
 DemBas_dem_TasaBruta_t(NumEventos_t, PobMedia_t)
 }
 \arguments{
-\item{NumEventos_t}{}
-
 \item{PobMedia_t}{}
 }
 \description{

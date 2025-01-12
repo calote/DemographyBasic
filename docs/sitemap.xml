@@ -25,6 +25,9 @@
     <loc>https://DemographyBasic.github.io/reference/DemBas_agrupar_variable.html</loc>
   </url>
   <url>
+    <loc>https://DemographyBasic.github.io/reference/DemBas_anade_GEdad5.html</loc>
+  </url>
+  <url>
     <loc>https://DemographyBasic.github.io/reference/DemBas_asigna_codigos_CCAA.html</loc>
   </url>
   <url>
@@ -73,6 +76,9 @@
     <loc>https://DemographyBasic.github.io/reference/DemBas_fmt_num.html</loc>
   </url>
   <url>
+    <loc>https://DemographyBasic.github.io/reference/DemBas_generaciones.html</loc>
+  </url>
+  <url>
     <loc>https://DemographyBasic.github.io/reference/DemBas_mx.html</loc>
   </url>
   <url>
@@ -80,6 +86,9 @@
   </url>
   <url>
     <loc>https://DemographyBasic.github.io/reference/DemBas_piramidePorc.html</loc>
+  </url>
+  <url>
+    <loc>https://DemographyBasic.github.io/reference/DemBas_piramidePorc_Generaciones.html</loc>
   </url>
   <url>
     <loc>https://DemographyBasic.github.io/reference/DemBas_piramide_compuestasCateg_ggplot2.html</loc>
@@ -119,6 +128,9 @@
   </url>
   <url>
     <loc>https://DemographyBasic.github.io/reference/DemBas_tablavida_completa.html</loc>
+  </url>
+  <url>
+    <loc>https://DemographyBasic.github.io/reference/DemBas_v_generaciones.html</loc>
   </url>
   <url>
     <loc>https://DemographyBasic.github.io/reference/index.html</loc>

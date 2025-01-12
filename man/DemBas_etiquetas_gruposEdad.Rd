@@ -7,10 +7,6 @@
 DemBas_etiquetas_gruposEdad(metodo = 1, final = 85, labelfinal = NULL)
 }
 \arguments{
-\item{metodo}{}
-
-\item{final}{}
-
 \item{labelfinal}{}
 }
 \description{
