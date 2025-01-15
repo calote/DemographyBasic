@@ -1,7 +1,7 @@
 Package: DemographyBasic
 Type: Package
 Title: Calculate Basic Procedures Of Demography
-Version: 0.1.0
+Version: 0.1.1
 Authors@R: c(
     person(
       "Pedro", "Luque-Calvo",

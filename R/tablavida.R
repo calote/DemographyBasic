@@ -261,7 +261,7 @@ DemBas_tablavida_abreviada2 = function(mx) {
 #'        41879,57377,68007,63007,44198,14609,2480)
 #' N0 = 441881 # Nacimientos en España en 2003: 441881
 #' D0 = 1733 # Defunciones de menores de un año durante 2003: 1733
-#' mx = DemBas_mx(Px,Dx,N0,D0)
+#' mx = DemBas_mx_abreviada(Px,Dx,N0,D0)
 #' mx
 DemBas_mx_abreviada = function(Px,Dx,N0,D0) {
 
