@@ -25,6 +25,10 @@
 <url><loc>https://DemographyBasic.github.io/reference/DemBas_extrae_notienen_codigos.html</loc></url>
 <url><loc>https://DemographyBasic.github.io/reference/DemBas_fmt_num.html</loc></url>
 <url><loc>https://DemographyBasic.github.io/reference/DemBas_generaciones.html</loc></url>
+<url><loc>https://DemographyBasic.github.io/reference/DemBas_import_px_IECA.html</loc></url>
+<url><loc>https://DemographyBasic.github.io/reference/DemBas_import_px_INE.html</loc></url>
+<url><loc>https://DemographyBasic.github.io/reference/DemBas_leer_metadatos_px_IECA.html</loc></url>
+<url><loc>https://DemographyBasic.github.io/reference/DemBas_leer_metadatos_px_INE.html</loc></url>
 <url><loc>https://DemographyBasic.github.io/reference/DemBas_mx.html</loc></url>
 <url><loc>https://DemographyBasic.github.io/reference/DemBas_mx_abreviada.html</loc></url>
 <url><loc>https://DemographyBasic.github.io/reference/DemBas_piramidePorc.html</loc></url>
@@ -37,8 +41,11 @@
 <url><loc>https://DemographyBasic.github.io/reference/DemBas_presentadf.html</loc></url>
 <url><loc>https://DemographyBasic.github.io/reference/DemBas_presentadf_modelo01.html</loc></url>
 <url><loc>https://DemographyBasic.github.io/reference/DemBas_read_px.html</loc></url>
+<url><loc>https://DemographyBasic.github.io/reference/DemBas_read_px_encodingIECA.html</loc></url>
 <url><loc>https://DemographyBasic.github.io/reference/DemBas_tablavida_abreviada.html</loc></url>
 <url><loc>https://DemographyBasic.github.io/reference/DemBas_tablavida_completa.html</loc></url>
+<url><loc>https://DemographyBasic.github.io/reference/DemBas_url_px_IECA.html</loc></url>
+<url><loc>https://DemographyBasic.github.io/reference/DemBas_url_px_INE.html</loc></url>
 <url><loc>https://DemographyBasic.github.io/reference/DemBas_v_generaciones.html</loc></url>
 <url><loc>https://DemographyBasic.github.io/reference/index.html</loc></url>
 </urlset>
