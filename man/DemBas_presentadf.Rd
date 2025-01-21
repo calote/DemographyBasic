@@ -14,16 +14,6 @@ DemBas_presentadf(
 )
 }
 \arguments{
-\item{datos1}{}
-
-\item{scaption}{}
-
-\item{apaisadalatex}{}
-
-\item{variaspaginas}{}
-
-\item{fuentesize}{}
-
 \item{CompletaAncho}{}
 }
 \value{

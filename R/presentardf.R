@@ -11,9 +11,9 @@ library(kableExtra)
 #' @title DemBas_fmt_num
 #' @description Formatea un número para presentación
 #'
-#' @param x 
-#' @param ndigitos 
-#' @param quitacerosderecha 
+#' @param x
+#' @param ndigitos
+#' @param quitacerosderecha
 #'
 #' @returns devuelve un character con el número formateado
 #' @examples
@@ -32,12 +32,46 @@ DemBas_fmt_num = function(x,ndigitos=5,quitacerosderecha=TRUE) {
 
 # sprintf(20.1, fmt='%.2f')
 # sprintf('%.2f', 20.1)
-# 
+#
 # sprintf("%.0f%%", 66.666)
 # sprintf("$%.2f", 99.999)
 
 
 
+#' @title DemBas_redondear
+#' @description Redondea un vector numérico
+#' @param x vector numérico
+#' @param digitos número de decimales
+#' @return vector numérico redondeado
+#' @examples
+#' v1 = DemBas_redondear(rnorm(20), 2)
+#' v1
+#' @export
+DemBas_redondear = function(x, digitos = 0) {
+  round(x + sign(x) * 1e-10, digitos)
+}
+
+
+
+#' @title DemBas_redondear_df
+#' @description Redondea las columnas numéricas de un data.frame
+#' @param df data.frame a redondear
+#' @param digitos número de decimales
+#' @return data.frame con las columnas numéricas redondeadas
+#' @examples
+#' df = data.frame(nombres = sample(letters,20), x = rnorm(20), y = rnorm(20))
+#' df2 = DemBas_redondear_df(df, 2)
+#' @export
+DemBas_redondear_df = function(df, digitos = 0) {
+  df2 = lapply(df, function(x) {
+    if (is.numeric(x)) {
+      round(x + sign(x) * 1e-10, digitos)
+    } else {
+      x
+    }
+  })
+  return(as.data.frame(df2))
+}
 
 
 
@@ -50,12 +84,12 @@ library(kableExtra)
 #' @title DemBas_presentadf
 #' @description Presenta un data.frame en formato LaTeX o HTML con kableExtra
 #'
-#' @param datos1 
-#' @param scaption 
-#' @param apaisadalatex 
-#' @param variaspaginas 
-#' @param fuentesize 
-#' @param CompletaAncho 
+#' @param datos1
+#' @param scaption
+#' @param apaisadalatex
+#' @param variaspaginas
+#' @param fuentesize
+#' @param CompletaAncho
 #'
 #' @returns devuelve una tabla para ser presentada en formato LaTeX o HTML
 #' @examples
@@ -65,41 +99,41 @@ DemBas_presentadf = function(datos1,scaption = NULL,
                               apaisadalatex=FALSE,
                               variaspaginas=TRUE,
                               fuentesize=NULL, # 8, 2, 12, ...
-                              CompletaAncho = FALSE) {  
+                              CompletaAncho = FALSE) {
   if (apaisadalatex) {
     if (variaspaginas) {
       if (!is.null(fuentesize)) {
-        kable(datos1,longtable=TRUE,booktabs=TRUE, caption = scaption) |> 
+        kable(datos1,longtable=TRUE,booktabs=TRUE, caption = scaption) |>
           kable_styling(
             bootstrap_options = c("striped", "hover",
                                   "condensed","responsive"),
             latex_options = c("striped","repeat_header","HOLD_position"),
             font_size = fuentesize,
-            repeat_header_text="(continúa)") |> 
+            repeat_header_text="(continúa)") |>
           landscape()
-        
-      } else {  
-        kable(datos1,longtable=TRUE,booktabs=TRUE, caption = scaption) |> 
+
+      } else {
+        kable(datos1,longtable=TRUE,booktabs=TRUE, caption = scaption) |>
           kable_styling(
             bootstrap_options = c("striped", "hover",
                                   "condensed","responsive"),
             latex_options = c("striped","repeat_header","HOLD_position"),
             repeat_header_text="(continúa)",
-            full_width = CompletaAncho) |> 
+            full_width = CompletaAncho) |>
           landscape()
-      }  
+      }
     } else {
-      kable(datos1,booktabs=TRUE, caption = scaption) |> 
+      kable(datos1,booktabs=TRUE, caption = scaption) |>
         kable_styling(
           bootstrap_options = c("striped", "hover",
                                 "condensed","responsive"),
           latex_options = c("striped", "scale_down","HOLD_position"),
-          full_width = CompletaAncho) |> 
+          full_width = CompletaAncho) |>
         landscape()
     }
   } else {
     if (!is.null(fuentesize)) {
-      kable(datos1,longtable=TRUE,booktabs=TRUE, caption = scaption) |> 
+      kable(datos1,longtable=TRUE,booktabs=TRUE, caption = scaption) |>
         kable_styling(
           bootstrap_options = c("striped", "hover",
                                 "condensed","responsive"),
@@ -107,9 +141,9 @@ DemBas_presentadf = function(datos1,scaption = NULL,
           font_size = fuentesize,
           repeat_header_text="(continúa)")
     } else {
-      
-      kable(datos1,longtable=TRUE,booktabs=TRUE, caption = scaption)  |>  
-        kable_styling(            
+
+      kable(datos1,longtable=TRUE,booktabs=TRUE, caption = scaption)  |>
+        kable_styling(
           bootstrap_options = c("striped", "hover",
                                 "condensed","responsive"),
           latex_options = c("striped","repeat_header","HOLD_position"),
@@ -117,8 +151,8 @@ DemBas_presentadf = function(datos1,scaption = NULL,
           full_width = CompletaAncho)
     }
   }
-  
-  
+
+
 }
 
 
@@ -130,12 +164,12 @@ DemBas_presentadf = function(datos1,scaption = NULL,
 #' @title DemBas_presentadf_modelo01
 #' @description Presenta un data.frame en formato LaTeX o HTML con kableExtra
 #'
-#' @param df_tabla 
-#' @param tablavariaspaginas 
-#' @param tfuente 
-#' @param leyendatabla 
-#' @param vCabecera 
-#' @param valigncol 
+#' @param df_tabla
+#' @param tablavariaspaginas
+#' @param tfuente
+#' @param leyendatabla
+#' @param vCabecera
+#' @param valigncol
 #'
 #' @returns
 #' @examples
@@ -146,7 +180,7 @@ DemBas_presentadf_modelo01 = function(df_tabla,
                                       tfuente = 8,
                                       leyendatabla = NULL,
                                       vCabecera=NULL,valigncol=NULL) {
-  
+
   tb01 = df_tabla
   options(knitr.kable.NA = '--',scipen=10)
   # colnames(tb01) = c("Edades","$P_x^{Esp}$","$D_x^{Esp}$","$m_x^{Esp}$",
@@ -155,49 +189,49 @@ DemBas_presentadf_modelo01 = function(df_tabla,
   if (!is.null(vCabecera)) {
     colnames(tb01) = vCabecera
   }
-  
-  # cols = c(2:length(tb01))    
+
+  # cols = c(2:length(tb01))
   # #df[,cols] = apply(df[,cols], 2, function(x) as.numeric(as.character(x)));
   # tb01[,cols] = apply(tb01[,cols], 2, function(x) as.character(x));
   if (!is.null(valigncol)) {
     if (!is.null(leyendatabla)) {
-      ktb01 = tb01 %>% 
+      ktb01 = tb01 %>%
         kable(escape=F,align=valigncol,
               booktabs=T,
               longtable = tablavariaspaginas,
-              caption=leyendatabla) 
-      
+              caption=leyendatabla)
+
     } else {
-      ktb01 = tb01 %>% 
+      ktb01 = tb01 %>%
         kable(escape=F,align=valigncol,
               booktabs=T,
-              longtable = tablavariaspaginas) 
+              longtable = tablavariaspaginas)
     }
   } else {
     if (!is.null(leyendatabla)) {
-      ktb01 = tb01 %>% 
+      ktb01 = tb01 %>%
         kable(escape=F,
               booktabs=T,
               longtable = tablavariaspaginas,
-              caption=leyendatabla) 
+              caption=leyendatabla)
     } else {
-      ktb01 = tb01 %>% 
+      ktb01 = tb01 %>%
         kable(escape=F,
               booktabs=T,
-              longtable = tablavariaspaginas) 
-      
+              longtable = tablavariaspaginas)
+
     }
   }
-  ktb01 %>% 
+  ktb01 %>%
     kable_styling(latex_options = c("striped","HOLD_position","repeat_header"),
                   repeat_header_text = "\\textit{(continuación)}",
                   bootstrap_options = c("striped", "hover","condensed","responsive"),
                   position = "center",full_width = F,
-                  font_size = tfuente) %>% 
+                  font_size = tfuente) %>%
     row_spec(0, align = "c")
   # %>%  row_spec(nrow(tb01),bold=T)
-  
-  
-  
+
+
+
 }
 

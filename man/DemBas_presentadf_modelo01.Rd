@@ -14,16 +14,6 @@ DemBas_presentadf_modelo01(
 )
 }
 \arguments{
-\item{df_tabla}{}
-
-\item{tablavariaspaginas}{}
-
-\item{tfuente}{}
-
-\item{leyendatabla}{}
-
-\item{vCabecera}{}
-
 \item{valigncol}{}
 }
 \description{

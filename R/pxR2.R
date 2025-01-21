@@ -446,6 +446,26 @@ DemBas_leer_metadatos_px_IECA = function(ficheropx) {
 
 
 
+#' @title DemBas_num_decimales_px_IECA
+#' @description Redondea un vector numérico para corregir el número de decimales que viene de un fichero px del IECA
+#' @param v1 vector numérico a redondear
+#' @param num_decimales número de decimales especificados en el fichero px de metadatos del IECA
+#' @return
+#' @examples
+#' df_19824 = DemBas_import_px_IECA("19824", "ieca_19824.px")
+#' df_19824_meta = DemBas_leer_metadatos_px_IECA("ieca_19824.px")
+#' df_19824_meta[df_19824_meta$Claves %in% c("DECIMALS", "SHOWDECIMALS"),]
+#' df_19824$value = DemBas_num_decimales_px_IECA(df_19824$value)
+#' head(df_19824,15)
+#' @export
+DemBas_num_decimales_px_IECA = function(v1, num_decimales = 2) {
+  v2a = v1/10^(round(log10(v1),0)-num_decimales)
+  v2b = v1/10^(round(log10(v1),0)-(num_decimales-1))
+  v1b = ifelse(v1>100, ifelse(v2a>100, v2b, v2a), v1)
+  #sprintf("%f",v1b)
+  return(v1b)
+}
+
 
 
 

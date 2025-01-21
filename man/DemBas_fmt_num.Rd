@@ -7,10 +7,6 @@
 DemBas_fmt_num(x, ndigitos = 5, quitacerosderecha = TRUE)
 }
 \arguments{
-\item{x}{}
-
-\item{ndigitos}{}
-
 \item{quitacerosderecha}{}
 }
 \value{
