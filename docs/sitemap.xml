@@ -79,6 +79,18 @@
     <loc>https://DemographyBasic.github.io/reference/DemBas_generaciones.html</loc>
   </url>
   <url>
+    <loc>https://DemographyBasic.github.io/reference/DemBas_import_px_IECA.html</loc>
+  </url>
+  <url>
+    <loc>https://DemographyBasic.github.io/reference/DemBas_import_px_INE.html</loc>
+  </url>
+  <url>
+    <loc>https://DemographyBasic.github.io/reference/DemBas_leer_metadatos_px_IECA.html</loc>
+  </url>
+  <url>
+    <loc>https://DemographyBasic.github.io/reference/DemBas_leer_metadatos_px_INE.html</loc>
+  </url>
+  <url>
     <loc>https://DemographyBasic.github.io/reference/DemBas_mx.html</loc>
   </url>
   <url>
@@ -118,6 +130,9 @@
     <loc>https://DemographyBasic.github.io/reference/DemBas_read_px2.html</loc>
   </url>
   <url>
+    <loc>https://DemographyBasic.github.io/reference/DemBas_read_px_encodingIECA.html</loc>
+  </url>
+  <url>
     <loc>https://DemographyBasic.github.io/reference/DemBas_tablavida2.html</loc>
   </url>
   <url>
@@ -128,6 +143,12 @@
   </url>
   <url>
     <loc>https://DemographyBasic.github.io/reference/DemBas_tablavida_completa.html</loc>
+  </url>
+  <url>
+    <loc>https://DemographyBasic.github.io/reference/DemBas_url_px_IECA.html</loc>
+  </url>
+  <url>
+    <loc>https://DemographyBasic.github.io/reference/DemBas_url_px_INE.html</loc>
   </url>
   <url>
     <loc>https://DemographyBasic.github.io/reference/DemBas_v_generaciones.html</loc>

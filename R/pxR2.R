@@ -256,3 +256,196 @@ DemBas_read_px <- function(filename, encoding = NULL,
 
   return(dt1)
 }
+
+
+
+
+#' @title DemBas_read_px_encodingIECA
+#' @description read a file px (IECA) and return a data.frame
+#'
+#' @param ficheropx character with the name of the file px
+#'
+#' @return data.frame with the data
+#' @examples
+#' d103965windows4 = DemBas_read_px_encodingIECA("ieca_export_103965.px")
+#' @export
+DemBas_read_px_encodingIECA = function(ficheropx) {
+  datos <- readLines(ficheropx)
+  datos_convertidos <- iconv(datos, from = "UTF-8", to = "Windows-1252")
+  fichero_tmp = tempfile()
+  writeLines(datos_convertidos, fichero_tmp)
+  datos_bien = DemBas_read_px(fichero_tmp)
+  return(datos_bien)
+
+}
+
+
+
+
+#' @title DemBas_url_px_IECA
+#' @description Descarga un fichero px de la web del IECA a partir de su identificador
+#'
+#' @param id character with the id of the px file in the IECA web
+#' @param ficheropx character with the name of the file px to save
+#'
+#' @return character with the url of the file px
+#' @examples
+#' url1 = DemBas_url_px_IECA("103965", "ieca_export_103965_ff.px")
+#' df103965_ff = DemBas_read_px_encodingIECA("ieca_export_103965_ff.px")
+#' @export
+DemBas_url_px_IECA = function(id, ficheropx) {
+  url = paste0("https://www.juntadeandalucia.es/institutodeestadisticaycartografia/badea/stpivot/stpivot/Print?cube=ac06fd14-e977-4799-ab4f-aa2c53ccf15c&type=2&foto=si&ejecutaDesde=&codConsulta=",id,"&consTipoVisua=JP")
+
+  fichero = download.file(url,
+                          destfile = ficheropx,
+                          quiet = TRUE,
+                          mode = "wb")
+  return(url)
+}
+
+
+#' @title DemBas_import_px_IECA
+#' @description Importa un fichero px de la web del IECA a partir de su identificador
+#'
+#' @param id character with the id of the px file in the IECA web
+#' @param ficheropx character with the name of the file px to save.
+#' If is NULL, a temporal file is created
+#' @return data.frame with the data
+#' @examples
+#' df103965 = DemBas_import_px_IECA("103965")
+#'
+#' df103965 = DemBas_import_px_IECA("103965", "ieca_export_103965_ff4.px")
+#'
+#' @export
+DemBas_import_px_IECA = function(id, ficheropx = NULL) {
+  if (is.null(ficheropx)) {
+    ficheropx2 = tempfile()
+  } else {
+    ficheropx2 = ficheropx
+  }
+  url = DemBas_url_px_IECA(id, ficheropx2)
+  datos = DemBas_read_px_encodingIECA(ficheropx2)
+  return(datos)
+}
+
+
+#' @title DemBas_url_px_INE
+#' @description Descarga un fichero px de la web del INE a partir de su identificador
+#' @param id character with the id of the px file in the INE web
+#' @param ficheropx character with the name of the file px to save
+#' @return character with the url of the file px
+#' @examples
+#' url1 = DemBas_url_px_INE("2855", "2855_ine.px")
+#' @export
+DemBas_url_px_INE = function(id, ficheropx) {
+  url = paste0("https://www.ine.es/jaxiT3/files/t/es/px/",id,".px?nocab=1")
+  download.file(url,
+                destfile = ficheropx,
+                quiet = TRUE,
+                mode = "wb")
+  return(url)
+}
+
+
+
+#' @title DemBas_import_px_INE
+#' @description Importa un fichero px de la web del INE a partir de su identificador
+#' @param id character with the id of the px file in the INE web
+#' @param ficheropx character with the name of the file px to save.
+#' If is NULL, a temporal file is created
+#' @return data.frame with the data
+#' @examples
+#' df2855_ine = DemBas_import_px_INE("2855")
+#'
+#' df2855_ine2 = DemBas_import_px_INE("2855", "2855_ine.px")
+#' @export
+DemBas_import_px_INE = function(id, ficheropx = NULL) {
+  if (is.null(ficheropx)) {
+    ficheropx2 = tempfile()
+  } else {
+    ficheropx2 = ficheropx
+  }
+  url = DemBas_url_px_INE(id, ficheropx2)
+  datos = DemBas_read_px(ficheropx2)
+  return(datos)
+}
+
+
+
+#' @title DemBas_leer_metadatos_px_INE
+#' @description Leer metadatos de un fichero px del INE
+#' @param ficheropx character with the name of the file px
+#' @return data.frame with the metadata, column 1 is the name of the variable and column 2 is the content
+#' @examples
+#' df2855 = DemBas_import_px_INE("2855", "2855_ine.px")
+#' df2855_meta = DemBas_leer_metadatos_px_INE("ieca_export_103965_ff4.px")
+#' @export
+DemBas_leer_metadatos_px_INE = function(ficheropx) {
+  #ficheropx = "2855_ine.px"
+  meta_px = readLines(ficheropx, n = 100)
+  n_max = suppressWarnings(grep("VALUES(", meta_px, fixed = TRUE))
+  if (isTRUE(n_max>0)) {
+    meta_px = meta_px[1:(n_max-1)]
+  }
+  meta_px_bien <- iconv(meta_px, from = "Windows-1252", to = "UTF-8")
+  meta_px_bien2 = strsplit(meta_px_bien, "=")
+  v1 = sapply(meta_px_bien2, function(x) length(x) )
+  col01 = sapply(meta_px_bien2, function(x) if (length(x)>1) x[1] )
+  ucol01 = unlist(col01)
+  col02 = sapply(meta_px_bien2, function(x) if (length(x)>1) x[2] else paste0("XYZ-",x[1]) )
+  col02m = gsub('"', "", col02, fixed = TRUE)
+  siestan = grep("XYZ-",col02m)
+  col02m_notas = gsub('XYZ-',"", col02m[siestan], fixed = TRUE)
+  col02m_notas_final = paste0(c(col02m[min(siestan)-1],col02m_notas), collapse = "")
+  col02m = col02m[-siestan]
+  col02m[min(siestan)-1] = col02m_notas_final
+  col02m = gsub(';',"",col02m, fixed = TRUE)
+  meta_df = data.frame("Claves" = ucol01,
+                       "Valores" = col02m)
+
+  return(meta_df)
+}
+
+
+
+
+#' @title DemBas_leer_metadatos_px_IECA
+#' @description Leer metadatos de un fichero px del IECA
+#' @param ficheropx character with the name of the file px
+#' @return data.frame with the metadata, column 1 is the name of the variable and column 2 is the content
+#' @examples
+#' df103965 = DemBas_import_px_IECA("103965", "ieca_export_103965_ff4.px")
+#' df103965_meta = DemBas_leer_metadatos_px_IECA("ieca_export_103965_ff4.px")
+#' @export
+DemBas_leer_metadatos_px_IECA = function(ficheropx) {
+  meta_px = readLines(ficheropx, n = 100)
+  #meta_px
+  n_max = suppressWarnings(grep("DATA=", meta_px, fixed = TRUE))
+  if (isTRUE(n_max>0)) {
+    meta_px = meta_px[1:(n_max-1)]
+  }
+  meta_px_bien = meta_px
+  meta_px_bien2 = strsplit(meta_px_bien, "=")
+  v1 = sapply(meta_px_bien2, function(x) length(x) )
+  col01 = sapply(meta_px_bien2, function(x) if (length(x)>1) x[1] )
+  ucol01 = unlist(col01)
+  col02 = sapply(meta_px_bien2, function(x) if (length(x)>1) x[2] else paste0("XYZ-",x[1]) )
+  col02m = gsub('"', "", col02, fixed = TRUE)
+  siestan = grep("XYZ-",col02m)
+  col02m_notas = gsub('XYZ-',"", col02m[siestan], fixed = TRUE)
+  col02m_notas_final = paste0(c(col02m[min(siestan)-1],col02m_notas), collapse = "")
+  col02m = col02m[-siestan]
+  col02m[min(siestan)-1] = col02m_notas_final
+  col02m = gsub(';',"",col02m, fixed = TRUE)
+  meta_df = data.frame("Claves" = ucol01,
+                       "Valores" = col02m)
+
+  return(meta_df)
+}
+
+
+
+
+
+
+
