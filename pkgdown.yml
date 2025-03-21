@@ -3,7 +3,7 @@ pkgdown: 2.1.1
 pkgdown_sha: ~
 articles:
   introduction: introduction.html
-last_built: 2025-01-21T12:05Z
+last_built: 2025-03-21T13:30Z
 urls:
   reference: https://DemographyBasic.github.io/reference
   article: https://DemographyBasic.github.io/articles
