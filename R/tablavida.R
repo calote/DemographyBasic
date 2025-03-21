@@ -336,6 +336,9 @@ f_tb_Sx = function(Lx,lx) {
 #' @title Calcula la tabla de vida para edades simples o completa
 #' @description Calcula la tabla de vida a partir de las tasas de mortalidad para edades simples: 0,1,2,...
 #' @param mx vector de tasas de mortalidad para edades simples: 0,1,2,...
+#' @param l0 población inicial o radix de la tabla
+#' @param redondeo si TRUE redondea los valores
+#' @param muestraSx si TRUE muestra la columna Sx (no incluye SN)
 #'
 #' @returns devuelve un data.frame con la tabla de vida
 #' @Import tibble tibble
@@ -366,7 +369,7 @@ f_tb_Sx = function(Lx,lx) {
 #' tb01
 #'
 #' @export
-DemBas_tablavida_completa = function(Mx,l0=100000,redondeo=TRUE) {
+DemBas_tablavida_completa = function(Mx,l0=100000,redondeo=TRUE,muestraSx = TRUE) {
   noredondeo=!redondeo
   edades = as.character((1:length(Mx))-1)
   edades[length(edades)] = paste0(edades[length(edades)],"+")
@@ -401,10 +404,85 @@ DemBas_tablavida_completa = function(Mx,l0=100000,redondeo=TRUE) {
                 ex = ex,
                 Sx = Sx)
   }
+  if (!muestraSx) {
+    tb = tb[,-10]
+  }
   tb
 }
 
 
+
+#' @title Calcula la tabla de vida para edades simples o completa pero simulando cálculos con una calculadora
+#' @description Calcula la tabla de vida a partir de las tasas de mortalidad para edades simples: 0,1,2,... y simula los cálculos con una calculadora
+#' @param mx vector de tasas de mortalidad para edades simples: 0,1,2,...
+#' @param l0 población inicial o radix de la tabla
+#' @param muestraSx si TRUE muestra la columna Sx (no incluye SN)
+#'
+#' @returns devuelve un data.frame con la tabla de vida
+#' @Import tibble tibble
+#' @examples
+#' Mx1000 = c(9.12160, 0.84807,0.49502,0.33352,0.27296,
+#' 0.23258,0.20229,0.19221,0.19225,0.18219,
+#' 0.18219,0.18223,0.19239,0.21268,0.25325,
+#' 0.31411,0.38518,0.44618,0.47682,0.48721,
+#' 0.48744,0.48768,0.48792,0.48816,0.48840,
+#' 0.48864,0.49907,0.49932,0.49957,0.51002,
+#' 0.52049,0.55140,0.58236,0.62360,0.67515,
+#' 0.72681,0.79907,0.89203,0.99549,1.09927,
+#' 1.22398,1.35944,1.50578,1.68380,1.87305,
+#' 2.07374,2.28609,2.52075,2.76762,3.04801,
+#' 3.34149,3.64844,3.99052,4.35799,4.76231,
+#' 5.19386,5.68611,6.20842,6.79514,7.42672,
+#' 8.12774,8.89053,9.74129,10.68500,11.73947,
+#' 12.91226,14.22468,15.71228,17.35403,19.16595,
+#' 21.20612,23.43628,25.96366,28.83038,32.10259,
+#' 35.83456,40.09691,44.96477,50.47392,56.71130,
+#' 63.73696,71.61161,80.38833,90.15169,100.87032,
+#' 112.56462,125.25733,138.92967,153.57492,169.22923,
+#' 185.87183,203.41806,222.05303,241.69867,262.24030,
+#' 283.83279,306.41026,329.80973,354.16667,379.65616,
+#' 406.15058,434.57189,462.12121,491.86992,832.50000)
+#' mx = Mx1000/1000
+#' tb01 = DemBas_tablavida_completa_calculadora(mx)
+#' tb01
+#'
+#' @export
+DemBas_tablavida_completa_calculadora = function(Mx,l0=100000,muestraSx = TRUE) {
+  edades = as.character((1:length(Mx))-1)
+  edades[length(edades)] = paste0(edades[length(edades)],"+")
+  Mx = DemBas_redondear(Mx,5)
+  qx = f_tb_qx(Mx)
+  qx = DemBas_redondear(qx,5)
+  px = f_tb_px(qx)
+  px = DemBas_redondear(px,5)
+  lx = f_tb_lx(px,l0)
+  lx = DemBas_redondear(lx,0)
+  dx = f_tb_dx(lx,qx)
+  dx = DemBas_redondear(dx,0)
+  Lx = f_tb_Lx(lx,dx,Mx)
+  Lx = DemBas_redondear(Lx,0)
+  Tx = f_tb_Tx(Lx)
+  Tx = DemBas_redondear(Tx,0)
+  ex = f_tb_ex(Tx,lx)
+  ex = DemBas_redondear(ex,2)
+  Sx = f_tb_Sx(Lx,lx)
+  Sx = DemBas_redondear(Sx,5)
+  tb = tibble(Edad = edades,
+              Mx1000 = Mx*1000,
+              qx = qx,
+              px = px,
+              lx = lx,
+              dx = dx,
+              Lx = Lx,
+              Tx = Tx,
+              ex = ex,
+              Sx = Sx)
+  tb
+  if (!muestraSx) {
+    tb = tb[,-10]
+  }
+
+}
 
 
 # tabla de vida abreviada (Rowland) -----------------------------------------------------------
@@ -470,6 +548,9 @@ f_tba_Sx = function(Lx,lx) {
 #' @title Calcula la tabla de vida para edades agrupadas
 #' @description Calcula la tabla de vida abreviada a partir de las tasas de mortalidad para edades agrupadas: 0,1,2,...
 #' @param mx vector de tasas de mortalidad para edades simples: 0,1,2,...
+#' @param l0 población inicial o radix de la tabla
+#' @param redondeo si TRUE redondea los valores
+#' @param muestraSx si TRUE muestra la columna Sx
 #'
 #' @returns devuelve un data.frame con la tabla de vida
 #' @export
@@ -481,7 +562,7 @@ f_tba_Sx = function(Lx,lx) {
 #'      0.00115, 0.00174, 0.00258, 0.00376, 0.00569, 0.00818, 0.01346,
 #'      0.02206, 0.03844, 0.06981, 0.12872, 0.21674, 0.31705, 0.48258)
 #' tv = DemBas_tablavida_abreviada(mx)
-DemBas_tablavida_abreviada = function(nMx,l0=100000,redondeo=TRUE) {
+DemBas_tablavida_abreviada = function(nMx,l0=100000,redondeo=TRUE,muestraSx = TRUE) {
   noredondeo=!redondeo
   vn = rep(5,length(nMx))
   vn[1] = 1
@@ -523,6 +604,69 @@ DemBas_tablavida_abreviada = function(nMx,l0=100000,redondeo=TRUE) {
                  ex = ex,
                  Sx = Sx)
   }
+  if (!muestraSx) {
+    tba = tba[,-11]
+  }
   tba
 }
 
+
+#' @title Calcula la tabla de vida para edades agrupadas pero simulando cálculos con una calculadora
+#' @description Calcula la tabla de vida abreviada a partir de las tasas de mortalidad para edades agrupadas: 0,1,2,... y simula los cálculos con una calculadora
+#' @param mx vector de tasas de mortalidad para edades simples: 0,1,2,...
+#' @param l0 población inicial o radix de la tabla
+#' @param muestraSx si TRUE muestra la columna Sx
+#'
+#' @returns devuelve un data.frame con la tabla de vida
+#' @export
+#' @examples
+#' (mx0 = 1733/441881) # TMI = D^t_0/N^t
+#' # Defunciones de menores de un año durante 2003: 1733
+#' # Nacimientos en España en 2003: 441881
+#' mx = c(mx0,0.00027, 0.00013, 0.00016, 0.00043, 0.00057, 0.00059, 0.00081,
+#'      0.00115, 0.00174, 0.00258, 0.00376, 0.00569, 0.00818, 0.01346,
+#'      0.02206, 0.03844, 0.06981, 0.12872, 0.21674, 0.31705, 0.48258)
+#' tv = DemBas_tablavida_abreviada_calculadora(mx)
+DemBas_tablavida_abreviada_calculadora = function(nMx,l0=100000,muestraSx = TRUE) {
+  vn = rep(5,length(nMx))
+  vn[1] = 1
+  vn[2] = 4
+  edades = c(0,cumsum(vn)[1:(length(vn)-1)])
+  vn[length(nMx)] = 1000  # no se usará
+  edades = as.character(edades)
+  edades[length(edades)] = paste0(edades[length(edades)],"+")
+  nMx = DemBas_redondear(nMx,5)
+  nqx = f_tba_nqx(nMx,vn)
+  nqx = DemBas_redondear(nqx,5)
+  npx = f_tba_npx(nqx)
+  npx = DemBas_redondear(npx,5)
+  lx = f_tba_lx(npx,l0)
+  lx = DemBas_redondear(lx,0)
+  ndx = f_tba_ndx(lx,nqx)
+  ndx = DemBas_redondear(ndx,0)
+  nLx = f_tba_nLx(lx,nMx,vn)
+  nLx = DemBas_redondear(nLx,0)
+  Tx = f_tba_Tx(nLx)
+  Tx = DemBas_redondear(Tx,0)
+  ex = f_tba_ex(Tx,lx)
+  ex = DemBas_redondear(ex,2)
+  Sx = f_tba_Sx(nLx,lx)
+  Sx = DemBas_redondear(Sx,5)
+  tba = tibble(Edad = edades,
+               n = vn,
+               nMx1000 = nMx*1000,
+               nqx = nqx,
+               npx = npx,
+               lx = lx,
+               ndx = ndx,
+               nLx = nLx,
+               Tx = Tx,
+               ex = ex,
+               Sx = Sx)
+  if (!muestraSx) {
+    tba = tba[,-11]
+  }
+  tba
+
+  tba
+}
