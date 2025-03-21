@@ -477,10 +477,10 @@ DemBas_tablavida_completa_calculadora = function(Mx,l0=100000,muestraSx = TRUE) 
               Tx = Tx,
               ex = ex,
               Sx = Sx)
-  tb
   if (!muestraSx) {
     tb = tb[,-10]
   }
+  tb
 
 }
 
@@ -666,7 +666,5 @@ DemBas_tablavida_abreviada_calculadora = function(nMx,l0=100000,muestraSx = TRUE
   if (!muestraSx) {
     tba = tba[,-11]
   }
-  tba
-
   tba
 }
