@@ -1,1 +1,10 @@
 exportPattern("^[[:alpha:]]+")
+import(pxR)
+import(tidyverse)
+import(ggthemes)
+import(ggh4x)
+import(glue)
+import(mapSpain)
+import(kableExtra)
+import(LexisPlotR)
+
