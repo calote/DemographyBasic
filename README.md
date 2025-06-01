@@ -57,6 +57,12 @@ tv = DemBas_tablavida_abreviada(mx)
 tv
 ```
 
+Or equivalently with the command:
+
+```r
+suppressWarnings(suppressMessages(library(DemographyBasic)))
+```
+
 Please note that when loading the "DemographyBasic" package, the following libraries 
 are automatically loaded in the order shown below, thus avoiding conflicts between 
 commonly used functions with the "tidyverse" system:
