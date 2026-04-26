@@ -8,10 +8,11 @@
     requireNamespace("mapSpain", quietly = TRUE)
     requireNamespace("kableExtra", quietly = TRUE)
     requireNamespace("LexisPlotR", quietly = TRUE)
+    requireNamespace("legendry", quietly = TRUE)
   })
 }
 
 .onAttach <- function(libname, pkgname) {
   # Mensaje opcional muy discreto
-  packageStartupMessage("✓ DemographyBasic listo (pxR,tidyverse,ggthemes,ggh4x,glue,mapSpain,kableExtra,LexisPlotR también)")
+  packageStartupMessage("✓ DemographyBasic listo (pxR,tidyverse,ggthemes,ggh4x,glue,mapSpain,kableExtra,LexisPlotR,legendry también)")
 }

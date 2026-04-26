@@ -1039,7 +1039,7 @@ DemBas_v_generaciones = function(x, Ano_ref = 2020) {
 }
 
 
-#' @title DemBas_piramidePorc_Generaciones
+#' @title DemBas_piramidePorc_Generaciones_ant
 #' @description
 #'
 #' @param pop3 data.frame o tibble with columns: Edad, Sexo, Porcentajes
@@ -1065,13 +1065,13 @@ DemBas_v_generaciones = function(x, Ano_ref = 2020) {
 #'
 #' @examples
 #' load(file = system.file("examples/pop3.RData", package = "DemographyBasic"))
-#' g_pir3gen = DemBas_piramidePorc_Generaciones(pop3)
+#' g_pir3gen = DemBas_piramidePorc_Generaciones_ant(pop3)
 #' g_pir3gen
 #' ggsave("piramide.png", g_pir3gen, width = 12, height = 10)
 #' png("piramide2.png", width = 1200)
 #' print(g_pir3gen)
 #' dev.off()
-DemBas_piramidePorc_Generaciones = function(pop3, Ano_ref = 2020,
+DemBas_piramidePorc_Generaciones_ant = function(pop3, Ano_ref = 2020,
                      Gtitulo = "Pirámide Población de la provincia de Sevilla",
                      Gsubtitulo = "Año 2020",
                      Gtitulo.X = "Porcentajes",
@@ -1222,7 +1222,228 @@ DemBas_piramidePorc_Generaciones = function(pop3, Ano_ref = 2020,
 }
 
 # load(file = "pop3.RData")
-# g_pir3gen = DemBas_piramidePorc_Generaciones(pop3,GpresentaResumen=F)
+# g_pir3gen = DemBas_piramidePorc_Generaciones_ant(pop3,GpresentaResumen=F)
 
 
+# Función mejorada sin avisos de deprecación
+# Cambios realizados:
+# 1. size = 1 en geom_hline() cambiado a linewidth = 1
+# 2. guide_axis_manual() (ggh4x, deprecated) sustituido por legendry::guide_axis_base()
+#    con key_manual() para mostrar correctamente las generaciones en el eje derecho
+# 3. label.size = NA en geom_label() cambiado a linewidth = NA
+# Nota: legendry es necesario para mapear etiquetas discretas de edad al eje Y secundario
+#       (derecha del gráfico) tras coord_flip(). No hay equivalente en ggplot2 base ni ggh4x.
+
+#' @title DemBas_piramidePorc_Generaciones
+#' @description
+#'
+#' @param pop3 data.frame o tibble with columns: Edad, Sexo, Porcentajes
+#' @param Ano_ref
+#' @param Gtitulo
+#' @param Gsubtitulo
+#' @param Gtitulo.X
+#' @param GHombresEtiq
+#' @param GMujeresEtiq
+#' @param Gedadfinal
+#' @param Gext_izq
+#' @param Gext_der
+#' @param Glimite
+#' @param Gsizeletra
+#' @param GpresentaResumen
+#' @param GSegmentos
+#' @param GHombresColor
+#' @param GMujeresColor
+#' @param GSegmentosColor
+#' @param Gguardar
+#' @param Garchivo
+#' @param Gwidth
+#' @param Gheight
+#'
+#'
+#' @return
+#' @export
+#'
+#' @examples
+#' load(file = system.file("examples/pop3.RData", package = "DemographyBasic"))
+#' g_pir3gen = DemBas_piramidePorc_Generaciones(pop3)
+#' g_pir3gen
+#' ggsave("piramide.png", g_pir3gen, width = 12, height = 10)
+#' png("piramide2.png", width = 1200)
+#' print(g_pir3gen)
+#' dev.off()
+DemBas_piramidePorc_Generaciones <- function(
+    pop3,
+    Ano_ref = 2020,
+    Gtitulo = "Pirámide Población de la provincia de Sevilla",
+    Gsubtitulo = "Año 2020",
+    Gtitulo.X = "Porcentajes",
+    GHombresEtiq = "Hombres",
+    GMujeresEtiq = "Mujeres",
+    Gedadfinal = 100,
+    Gext_izq = -4.5,
+    Gext_der = 4.5,
+    Glimite = 0.5,
+    Gsizeletra = 2.5,
+    GpresentaResumen = TRUE,
+    GSegmentos = TRUE,
+    GHombresColor = "#5BB4E5",
+    GMujeresColor = "#DE61D8",
+    GSegmentosColor = "#00ff00",
+    Gguardar = FALSE,
+    Garchivo = "piramide.png",
+    Gwidth = 12,
+    Gheight = 10) {
+
+  e1m <- pop3 %>%
+    dplyr::filter(Sexo == GMujeresEtiq) %>%
+    dplyr::filter(Porcentajes > Glimite) %>%
+    dplyr::pull(Edad)
+
+  e1h <- pop3 %>%
+    dplyr::filter(Sexo == GHombresEtiq) %>%
+    dplyr::filter(Porcentajes < (-Glimite)) %>%
+    dplyr::pull(Edad)
+
+  edad_si2 <- base::intersect(e1m, e1h)
+  b1m <- rep(F, length(nrow(pop3)))
+  b1h <- rep(F, length(nrow(pop3)))
+
+  dif1 <- pop3$Porcentajes[pop3$Sexo == GMujeresEtiq] -
+    (-pop3$Porcentajes[pop3$Sexo == GHombresEtiq])
+
+  b1m[pop3$Sexo == GMujeresEtiq] <- dif1 >= 0
+  b1h[pop3$Sexo == GHombresEtiq] <- dif1 < 0
+
+  b1m[is.na(b1m)] <- F
+  b1h[is.na(b1h)] <- F
+
+  Est_PorSexo <- pop3 %>%
+    dplyr::group_by(Sexo) %>%
+    dplyr::summarise(PorcentajesSexo = abs(sum(Porcentajes))) %>%
+    dplyr::pull(PorcentajesSexo)
+
+  pop3 <- pop3 %>%
+    dplyr::mutate(GGEdad = dplyr::case_when(
+      Edad %in% levels(pop3$Edad)[1:3] ~ "Jóvenes",
+      Edad %in% levels(pop3$Edad)[4:13] ~ "Adultos",
+      TRUE ~ "Mayores"
+    ))
+
+  temp1 <- pop3 %>%
+    dplyr::group_by(GGEdad) %>%
+    dplyr::summarise(PorcentajesGGEdad = sum(abs(Porcentajes)), .groups = "keep")
+
+  Est_PorGGEdad <- temp1 %>% dplyr::pull(PorcentajesGGEdad)
+  names(Est_PorGGEdad) <- temp1 %>% dplyr::pull(GGEdad)
+
+  Est_PorGGEdadSexo <- pop3 %>%
+    dplyr::group_by(GGEdad, Sexo) %>%
+    dplyr::summarise(PorcentajesGGEdad = sum(abs(Porcentajes)), .groups = "keep")
+
+  if (GpresentaResumen) {
+    ResumenEstadistico <- paste0(
+      "Porcentajes: Hombres=", Est_PorSexo[1], "%, Mujeres=", Est_PorSexo[2], "%,",
+      " Jóvenes=", Est_PorGGEdad["Jóvenes"], "%, Adultos=", Est_PorGGEdad["Adultos"],
+      "%, Mayores=", Est_PorGGEdad["Mayores"], "%.",
+      "\nHombres-Jóvenes=", round(Est_PorGGEdadSexo[3,3], 2), "%, Mujeres-Jóvenes=", round(Est_PorGGEdadSexo[4,3], 2),
+      "%, Hombres-Adultos=", round(Est_PorGGEdadSexo[1,3], 2), "%, Mujeres-Adultas=", round(Est_PorGGEdadSexo[2,3], 2), "%.",
+      "\nHombres-Mayores=", round(Est_PorGGEdadSexo[5,3], 2), "%, Mujeres-Mayores=", round(Est_PorGGEdadSexo[6,3], 2),
+      "%. Índice de Envejecimiento=",
+      round((Est_PorGGEdad["Mayores"] / Est_PorGGEdad["Jóvenes"]) * 100, 2), "%"
+    )
+  } else {
+    ResumenEstadistico <- ""
+  }
+  gen_breaks <- levels(pop3$Edad)
+  gen_labels <- DemographyBasic::DemBas_v_generaciones(gen_breaks, Ano_ref = Ano_ref)
+  gen_labels <- sub("^(\\d+)-$", "-\\1", gen_labels)
+
+  bars <- ggplot2::ggplot(pop3, ggplot2::aes(x = Edad, y = Porcentajes,
+                                             fill = forcats::fct_drop(Sexo))) +
+    ggplot2::geom_bar(stat = "identity", position = "identity") +
+    ggplot2::geom_hline(yintercept = 0, linewidth = 1, colour = "#ff0000") +
+    ggplot2::labs(
+      title = Gtitulo,
+      subtitle = Gsubtitulo,
+      caption = ResumenEstadistico,
+      y = "Porcentajes de población",
+      x = "Grupos de Edad cumplida",
+      fill = "Sexo"
+    ) +
+    ggplot2::guides(
+      y.sec = legendry::guide_axis_base(
+        key = legendry::key_manual(gen_breaks, label = gen_labels),
+        title = "Generaciones Grupos de Edad"
+      )
+    )
+
+  g_pirpob <- bars +
+    ggplot2::scale_y_continuous(
+      limits = c(Gext_izq, Gext_der),
+      breaks = seq(Gext_izq, Gext_der, by = 0.5),
+      labels = paste0(abs(seq(Gext_izq, Gext_der, by = 0.5)), "%")
+    ) +
+    ggplot2::scale_fill_manual(values = c(GHombresColor, GMujeresColor)) +
+    ggplot2::coord_flip() +
+    ggplot2::theme(
+      panel.grid.major.x = ggplot2::element_line(color = "#cb99cb"),
+      panel.grid.major.y = ggplot2::element_line(color = "#cb99cb")
+    ) +
+    ggplot2::geom_label(
+      ggplot2::aes(
+        x = Edad,
+        y = ifelse(Porcentajes > (Glimite), 0.2, Porcentajes),
+        label = ifelse(
+          Sexo == GMujeresEtiq,
+          paste0(sprintf("%.2f", round(abs(Porcentajes), 2)), "%"),
+          ""
+        )
+      ),
+      hjust = 0, vjust = 0.5, colour = "black", fill = NA, linewidth = NA,
+      family = "Helvetica",
+      fontface = ifelse(b1m, "bold.italic", "plain"),
+      size = 4.5
+    ) +
+    ggplot2::geom_label(
+      ggplot2::aes(
+        x = Edad,
+        y = ifelse(Porcentajes < (-Glimite), -0.2, Porcentajes),
+        label = ifelse(
+          Sexo == GHombresEtiq,
+          paste0(sprintf("%.2f", round(abs(Porcentajes), 2)), "%"),
+          ""
+        )
+      ),
+      hjust = 1, vjust = 0.5, colour = "black", fill = NA, linewidth = NA,
+      family = "Helvetica",
+      fontface = ifelse(b1h, "bold.italic", "plain"),
+      size = 4.5
+    ) +
+    ggplot2::geom_segment(
+      ggplot2::aes(x = 3.5, y = -4.5, xend = 3.5, yend = 4.5),
+      colour = GSegmentosColor, linewidth = 1.5
+    ) +
+    ggplot2::geom_segment(
+      ggplot2::aes(x = 13.5, y = -4.5, xend = 13.5, yend = 4.5),
+      colour = GSegmentosColor, linewidth = 1.5
+    )
+
+  if (Gguardar) {
+    ggplot2::ggsave(Garchivo, g_pirpob, width = Gwidth, height = Gheight)
+  }
+
+  g_pirpob
+}
+
+#pak::pak("RConsortium/S7")
+#pak::pak("r-lib/gtable")
+#pak::pak("r-lib/scales")
+#pak::pak("tidyverse/ggplot2")  # para ggplot2 >= 4.0.0 para legendry
+#pak::pak("teunbrand/legendry")
+#load(file = "pop3.RData")
+#load(file = system.file("examples/pop3.RData", package = "DemographyBasic"))
+#g_pir3gen = DemBas_piramidePorc_Generaciones2(pop3,GpresentaResumen=F)
+#g_pir3gen = DemBas_piramidePorc_Generaciones2(pop3,GpresentaResumen=T)
+#g_pir3gen = DemBas_piramidePorc_Generaciones(pop3,GpresentaResumen=F)
+#g_pir3gen = DemBas_piramidePorc_Generaciones(pop3,GpresentaResumen=T)
 

@@ -1,7 +1,7 @@
 Package: DemographyBasic
 Type: Package
 Title: Calculate Basic Procedures Of Demography
-Version: 0.1.4
+Version: 0.1.5
 Authors@R: c(
     person(
       "Pedro", "Luque-Calvo",
@@ -23,7 +23,8 @@ Depends:
     glue,
     mapSpain,
     kableExtra,
-    LexisPlotR
+    LexisPlotR,
+    legendry
 URL: https://github.com/calote/DemographyBasic
 BugReports: https://github.com/calote/DemographyBasic/issues
 Suggests: 
