@@ -1132,7 +1132,7 @@ Cartograma de la población de los municipios de Segovia en 2019 según el INE:
 load(system.file("examples/pobmum19.RData", package = "DemographyBasic"))
 munic <- esp_get_munic(region = "Segovia") %>%  
   # Datos de ejemplo: Población INE
-  left_join(pobmun19, by = c("cpro", "cmun"))
+  left_join(pobmum19, by = c("cpro", "cmun"))
 tmp = as.data.frame(munic[,c("name.x","cpro","pob19")])
 head(tmp[,1:3],10)
 ```
