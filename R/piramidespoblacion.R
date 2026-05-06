@@ -859,6 +859,10 @@ DemBas_datos_piramidePorc = function(datosPiramide,
 #' @param Glimite
 #' @param Gsizeletra
 #' @param GSegmentos
+#' @param Gguardar
+#' @param Garchivo
+#' @param Gwidth
+#' @param Gheight
 #'
 #' @returns ggplot2 graphics de la pirámide de Población con porcentajes
 #' @examples
@@ -893,7 +897,12 @@ DemBas_piramidePorc = function(datosPiramide,
                                Gext_der = 4.5,
                                Glimite = 0.5,
                                Gsizeletra = 2.5,
-                               GSegmentos = TRUE) {
+                               GSegmentos = TRUE,
+                               Gguardar = FALSE,
+                               Garchivo = "piramide.png",
+                               Gwidth = 12,
+                               Gheight = 10
+                               ) {
 
   #Glimite = 0.5
 
@@ -962,7 +971,7 @@ DemBas_piramidePorc = function(datosPiramide,
     vjust = 0.5,
     colour = "black",#"white",
     fill = NA,
-    label.size = NA,
+    linewidth = NA, # label.size = NA,
     #family="Helvetica",
     fontface = ifelse(b1m,"bold.italic","plain"),
     size = Gsizeletra) +
@@ -976,7 +985,7 @@ DemBas_piramidePorc = function(datosPiramide,
     vjust = 0.5,
     colour = "black",#"white",
     fill = NA,
-    label.size = NA,
+    linewidth = NA, # label.size = NA,
     #family="Helvetica",
     fontface = ifelse(b1h,"bold.italic","plain"),
     size = Gsizeletra)
@@ -992,6 +1001,11 @@ DemBas_piramidePorc = function(datosPiramide,
 
   } else {
     g_pirpob = bars1
+  }
+
+
+  if (Gguardar) {
+    ggplot2::ggsave(Garchivo, g_pirpob, width = Gwidth, height = Gheight)
   }
 
   g_pirpob
@@ -1193,7 +1207,7 @@ DemBas_piramidePorc_Generaciones_ant = function(pop3, Ano_ref = 2020,
     vjust = 0.5,
     colour = "black",#"white",
     fill = NA,
-    label.size = NA,
+    linewidth = NA, # label.size = NA,
     family="Helvetica",
     fontface = ifelse(b1m,"bold.italic","plain"),
     size = 4.5) +
@@ -1206,7 +1220,7 @@ DemBas_piramidePorc_Generaciones_ant = function(pop3, Ano_ref = 2020,
     vjust = 0.5,
     colour = "black",#"white",
     fill = NA,
-    label.size = NA,
+    linewidth = NA, # label.size = NA,
     family="Helvetica",
     fontface = ifelse(b1h,"bold.italic","plain"),
     size = 4.5) +
@@ -1264,13 +1278,26 @@ DemBas_piramidePorc_Generaciones_ant = function(pop3, Ano_ref = 2020,
 #' @export
 #'
 #' @examples
-#' load(file = system.file("examples/pop3.RData", package = "DemographyBasic"))
-#' g_pir3gen = DemBas_piramidePorc_Generaciones(pop3)
-#' g_pir3gen
-#' ggsave("piramide.png", g_pir3gen, width = 12, height = 10)
-#' png("piramide2.png", width = 1200)
-#' print(g_pir3gen)
-#' dev.off()
+#' load(file = system.file("examples/04003px.RData", package = "DemographyBasic"))
+#' datosPiramide =  datos |>
+#'   dplyr::filter(Ano == 2020 &
+#'                   Sexo %in% c("Mujeres", "Hombres") &
+#'                   Edad != "TOTAL" &
+#'                   CCAA.Prov == "Sevilla" &
+#'                   Espanoles.Extranjeros == "Españoles") |>
+#'   dplyr::rename(Poblacion = value) |>
+#'   dplyr::select(Edad, Sexo, Poblacion)
+#'
+#' g_pir1 = DemBas_piramidePorc_Generaciones(datosPiramide,
+#'                                           Gtitulo = "Pirámide Población de la provincia de Sevilla",
+#'                                           Gsubtitulo = "Año 2020  (españoles)")
+#' g_pir1
+#' g_pir2 = DemBas_piramidePorc_Generaciones(datosPiramide,
+#'                                           Gtitulo = "Pirámide Población de la provincia de Sevilla",
+#'                                           Gsubtitulo = "Año 2020  (españoles)",
+#'                                           GSegmentos = FALSE, GpresentaResumen = FALSE)
+#' g_pir2
+
 DemBas_piramidePorc_Generaciones <- function(
     pop3,
     Ano_ref = 2020,
@@ -1293,6 +1320,19 @@ DemBas_piramidePorc_Generaciones <- function(
     Garchivo = "piramide.png",
     Gwidth = 12,
     Gheight = 10) {
+
+
+  pop3 = DemBas_datos_piramidePorc(pop3,
+                                   GEdad_final = Gedadfinal,
+                                   etiq.hombre = GHombresEtiq)
+
+  rango = range(pop3$Porcentajes)
+  if (rango[1]< Gext_izq) {
+    message(paste0("Aviso: use un valor del argumento Gext_izq menor que: ", rango[1]))
+  }
+  if (rango[2]> Gext_der) {
+    message(paste0("Aviso: use un valor del argumento Gext_der mayor que: ", rango[2]))
+  }
 
   e1m <- pop3 %>%
     dplyr::filter(Sexo == GMujeresEtiq) %>%
@@ -1418,15 +1458,20 @@ DemBas_piramidePorc_Generaciones <- function(
       family = "Helvetica",
       fontface = ifelse(b1h, "bold.italic", "plain"),
       size = 4.5
-    ) +
-    ggplot2::geom_segment(
-      ggplot2::aes(x = 3.5, y = -4.5, xend = 3.5, yend = 4.5),
-      colour = GSegmentosColor, linewidth = 1.5
-    ) +
-    ggplot2::geom_segment(
-      ggplot2::aes(x = 13.5, y = -4.5, xend = 13.5, yend = 4.5),
-      colour = GSegmentosColor, linewidth = 1.5
     )
+
+
+  if (GSegmentos) {
+    g_pirpob = g_pirpob +
+      geom_segment(aes(x = 3.5, y = Gext_izq, xend = 3.5, yend = Gext_der),
+                   colour = GSegmentosColor,
+                   size=1.5) +
+      geom_segment(aes(x = 13.5, y = Gext_izq, xend = 13.5, yend = Gext_der),
+                   colour = GSegmentosColor,
+                   size=1.5)
+
+  }
+
 
   if (Gguardar) {
     ggplot2::ggsave(Garchivo, g_pirpob, width = Gwidth, height = Gheight)

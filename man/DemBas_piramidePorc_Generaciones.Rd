@@ -37,11 +37,23 @@ DemBas_piramidePorc_Generaciones(
 DemBas_piramidePorc_Generaciones
 }
 \examples{
-load(file = system.file("examples/pop3.RData", package = "DemographyBasic"))
-g_pir3gen = DemBas_piramidePorc_Generaciones(pop3)
-g_pir3gen
-ggsave("piramide.png", g_pir3gen, width = 12, height = 10)
-png("piramide2.png", width = 1200)
-print(g_pir3gen)
-dev.off()
+load(file = system.file("examples/04003px.RData", package = "DemographyBasic"))
+datosPiramide =  datos |>
+  dplyr::filter(Ano == 2020 &
+                  Sexo \%in\% c("Mujeres", "Hombres") &
+                  Edad != "TOTAL" &
+                  CCAA.Prov == "Sevilla" &
+                  Espanoles.Extranjeros == "Españoles") |>
+  dplyr::rename(Poblacion = value) |>
+  dplyr::select(Edad, Sexo, Poblacion)
+
+g_pir1 = DemBas_piramidePorc_Generaciones(datosPiramide,
+                                          Gtitulo = "Pirámide Población de la provincia de Sevilla",
+                                          Gsubtitulo = "Año 2020  (españoles)")
+g_pir1
+g_pir2 = DemBas_piramidePorc_Generaciones(datosPiramide,
+                                          Gtitulo = "Pirámide Población de la provincia de Sevilla",
+                                          Gsubtitulo = "Año 2020  (españoles)",
+                                          GSegmentos = FALSE, GpresentaResumen = FALSE)
+g_pir2
 }

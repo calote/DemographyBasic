@@ -10,7 +10,7 @@
     
     <a class="navbar-brand me-2" href="../index.html">DemographyBasic</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.1.5</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.1.6</small>
 
     
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -92,16 +92,27 @@
 
     <div class="section level2">
     <h2 id="ref-examples">Examples<a class="anchor" aria-label="anchor" href="#ref-examples"></a></h2>
-    <div class="sourceCode"><pre class="sourceCode r"><code><span class="r-in"><span><span class="fu"><a href="https://rdrr.io/r/base/load.html" class="external-link">load</a></span><span class="op">(</span>file <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/system.file.html" class="external-link">system.file</a></span><span class="op">(</span><span class="st">"examples/pop3.RData"</span>, package <span class="op">=</span> <span class="st">"DemographyBasic"</span><span class="op">)</span><span class="op">)</span></span></span>
-<span class="r-in"><span><span class="va">g_pir3gen</span> <span class="op">=</span> <span class="fu">DemBas_piramidePorc_Generaciones</span><span class="op">(</span><span class="va">pop3</span><span class="op">)</span></span></span>
-<span class="r-in"><span><span class="va">g_pir3gen</span></span></span>
+    <div class="sourceCode"><pre class="sourceCode r"><code><span class="r-in"><span><span class="fu"><a href="https://rdrr.io/r/base/load.html" class="external-link">load</a></span><span class="op">(</span>file <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/system.file.html" class="external-link">system.file</a></span><span class="op">(</span><span class="st">"examples/04003px.RData"</span>, package <span class="op">=</span> <span class="st">"DemographyBasic"</span><span class="op">)</span><span class="op">)</span></span></span>
+<span class="r-in"><span><span class="va">datosPiramide</span> <span class="op">=</span>  <span class="va">datos</span> <span class="op">|&gt;</span></span></span>
+<span class="r-in"><span>  <span class="fu">dplyr</span><span class="fu">::</span><span class="fu"><a href="https://dplyr.tidyverse.org/reference/filter.html" class="external-link">filter</a></span><span class="op">(</span><span class="va">Ano</span> <span class="op">==</span> <span class="fl">2020</span> <span class="op">&amp;</span></span></span>
+<span class="r-in"><span>                  <span class="va">Sexo</span> <span class="op"><a href="https://rdrr.io/r/base/match.html" class="external-link">%in%</a></span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"Mujeres"</span>, <span class="st">"Hombres"</span><span class="op">)</span> <span class="op">&amp;</span></span></span>
+<span class="r-in"><span>                  <span class="va">Edad</span> <span class="op">!=</span> <span class="st">"TOTAL"</span> <span class="op">&amp;</span></span></span>
+<span class="r-in"><span>                  <span class="va">CCAA.Prov</span> <span class="op">==</span> <span class="st">"Sevilla"</span> <span class="op">&amp;</span></span></span>
+<span class="r-in"><span>                  <span class="va">Espanoles.Extranjeros</span> <span class="op">==</span> <span class="st">"Españoles"</span><span class="op">)</span> <span class="op">|&gt;</span></span></span>
+<span class="r-in"><span>  <span class="fu">dplyr</span><span class="fu">::</span><span class="fu"><a href="https://dplyr.tidyverse.org/reference/rename.html" class="external-link">rename</a></span><span class="op">(</span>Poblacion <span class="op">=</span> <span class="va">value</span><span class="op">)</span> <span class="op">|&gt;</span></span></span>
+<span class="r-in"><span>  <span class="fu">dplyr</span><span class="fu">::</span><span class="fu"><a href="https://dplyr.tidyverse.org/reference/select.html" class="external-link">select</a></span><span class="op">(</span><span class="va">Edad</span>, <span class="va">Sexo</span>, <span class="va">Poblacion</span><span class="op">)</span></span></span>
+<span class="r-in"><span></span></span>
+<span class="r-in"><span><span class="va">g_pir1</span> <span class="op">=</span> <span class="fu">DemBas_piramidePorc_Generaciones</span><span class="op">(</span><span class="va">datosPiramide</span>,</span></span>
+<span class="r-in"><span>                                          Gtitulo <span class="op">=</span> <span class="st">"Pirámide Población de la provincia de Sevilla"</span>,</span></span>
+<span class="r-in"><span>                                          Gsubtitulo <span class="op">=</span> <span class="st">"Año 2020  (españoles)"</span><span class="op">)</span></span></span>
+<span class="r-in"><span><span class="va">g_pir1</span></span></span>
 <span class="r-plt img"><img src="DemBas_piramidePorc_Generaciones-1.png" alt="" width="700" height="433"></span>
-<span class="r-in"><span><span class="fu">ggsave</span><span class="op">(</span><span class="st">"piramide.png"</span>, <span class="va">g_pir3gen</span>, width <span class="op">=</span> <span class="fl">12</span>, height <span class="op">=</span> <span class="fl">10</span><span class="op">)</span></span></span>
-<span class="r-in"><span><span class="fu"><a href="https://rdrr.io/r/grDevices/png.html" class="external-link">png</a></span><span class="op">(</span><span class="st">"piramide2.png"</span>, width <span class="op">=</span> <span class="fl">1200</span><span class="op">)</span></span></span>
-<span class="r-in"><span><span class="fu"><a href="https://rdrr.io/r/base/print.html" class="external-link">print</a></span><span class="op">(</span><span class="va">g_pir3gen</span><span class="op">)</span></span></span>
-<span class="r-in"><span><span class="fu"><a href="https://rdrr.io/r/grDevices/dev.html" class="external-link">dev.off</a></span><span class="op">(</span><span class="op">)</span></span></span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> agg_png </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>       2 </span>
+<span class="r-in"><span><span class="va">g_pir2</span> <span class="op">=</span> <span class="fu">DemBas_piramidePorc_Generaciones</span><span class="op">(</span><span class="va">datosPiramide</span>,</span></span>
+<span class="r-in"><span>                                          Gtitulo <span class="op">=</span> <span class="st">"Pirámide Población de la provincia de Sevilla"</span>,</span></span>
+<span class="r-in"><span>                                          Gsubtitulo <span class="op">=</span> <span class="st">"Año 2020  (españoles)"</span>,</span></span>
+<span class="r-in"><span>                                          GSegmentos <span class="op">=</span> <span class="cn">FALSE</span>, GpresentaResumen <span class="op">=</span> <span class="cn">FALSE</span><span class="op">)</span></span></span>
+<span class="r-in"><span><span class="va">g_pir2</span></span></span>
+<span class="r-plt img"><img src="DemBas_piramidePorc_Generaciones-2.png" alt="" width="700" height="433"></span>
 </code></pre></div>
     </div>
   </main><aside class="col-md-3"><nav id="toc"><h2>On this page</h2>

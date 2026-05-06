@@ -16,11 +16,15 @@ DemBas_piramidePorc(
   Gext_der = 4.5,
   Glimite = 0.5,
   Gsizeletra = 2.5,
-  GSegmentos = TRUE
+  GSegmentos = TRUE,
+  Gguardar = FALSE,
+  Garchivo = "piramide.png",
+  Gwidth = 12,
+  Gheight = 10
 )
 }
 \arguments{
-\item{GSegmentos}{}
+\item{Gheight}{}
 }
 \value{
 ggplot2 graphics de la pirámide de Población con porcentajes
