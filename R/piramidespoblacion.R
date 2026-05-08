@@ -978,7 +978,7 @@ DemBas_datos_piramidePorc <- function(datosPiramide,
 #'     \item{Poblacion}{Variable numérica con datos de población (absolutos)}
 #'   }
 #' @param Gtitulo Cadena de texto con el título del gráfico.
-#'   Por defecto "Pirámide Población de la provincia de Sevilla".
+#'   Por defecto "Pirámide Población".
 #' @param Gsubtitulo Cadena de texto con el subtítulo del gráfico.
 #'   Por defecto "Año 2020".
 #' @param Gtitulo.X Cadena de texto con la etiqueta del eje X.
@@ -1032,7 +1032,7 @@ DemBas_datos_piramidePorc <- function(datosPiramide,
 #'
 #' @export
 DemBas_piramidePorc <- function(datosPiramide,
-                               Gtitulo = "Pirámide Población de la provincia de Sevilla",
+                               Gtitulo = "Pirámide Población",
                                Gsubtitulo = "Año 2020",
                                Gtitulo.X = "Porcentajes",
                                GHombresEtiq="Hombres",
@@ -1244,7 +1244,7 @@ DemBas_v_generaciones <- function(x, Ano_ref = 2020) {
 #' @param Ano_ref Valor numérico con el año de referencia para calcular
 #'   las generaciones. Por defecto 2020.
 #' @param Gtitulo Cadena de texto con el título del gráfico.
-#'   Por defecto "Pirámide Población de la provincia de Sevilla".
+#'   Por defecto "Pirámide Población".
 #' @param Gsubtitulo Cadena de texto con el subtítulo del gráfico.
 #'   Por defecto "Año 2020".
 #' @param Gtitulo.X Cadena de texto con la etiqueta del eje X.
@@ -1320,7 +1320,7 @@ DemBas_v_generaciones <- function(x, Ano_ref = 2020) {
 DemBas_piramidePorc_Generaciones_ant <- function(
     pop3,
     Ano_ref = 2020,
-    Gtitulo = "Pirámide Población de la provincia de Sevilla",
+    Gtitulo = "Pirámide Población",
     Gsubtitulo = "Año 2020",
     Gtitulo.X = "Porcentajes",
     GHombresEtiq = "Hombres",
@@ -1508,7 +1508,7 @@ DemBas_piramidePorc_Generaciones_ant <- function(
 #' @param Ano_ref Valor numérico con el año de referencia para calcular
 #'   las generaciones. Por defecto 2020.
 #' @param Gtitulo Cadena de texto con el título del gráfico.
-#'   Por defecto "Pirámide Población de la provincia de Sevilla".
+#'   Por defecto "Pirámide Población".
 #' @param Gsubtitulo Cadena de texto con el subtítulo del gráfico.
 #'   Por defecto "Año 2020".
 #' @param Gtitulo.X Cadena de texto con la etiqueta del eje X.
@@ -1748,10 +1748,10 @@ DemBas_piramidePorc_Generaciones <- function(
     g_pirpob = g_pirpob +
       geom_segment(aes(x = 3.5, y = Gext_izq, xend = 3.5, yend = Gext_der),
                    colour = GSegmentosColor,
-                   size=1.5) +
+                   linewidth=1.5) +
       geom_segment(aes(x = 13.5, y = Gext_izq, xend = 13.5, yend = Gext_der),
                    colour = GSegmentosColor,
-                   size=1.5)
+                   linewidth=1.5)
 
   }
 
