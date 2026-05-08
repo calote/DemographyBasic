@@ -28,7 +28,7 @@ DemBas_piramidePorc(
 \describe{
   \item{Edad}{Variable categórica o numérica con las edades}
   \item{Sexo}{Variable categórica ("Hombres" o "Mujeres")}
-  \item{Poblacion}{Variable numérica (absolutos)}
+  \item{Poblacion}{Variable numérica con datos de población (absolutos)}
 }}
 
 \item{Gtitulo}{Cadena de texto con el título del gráfico.
