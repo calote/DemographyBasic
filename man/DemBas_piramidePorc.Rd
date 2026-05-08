@@ -6,7 +6,7 @@
 \usage{
 DemBas_piramidePorc(
   datosPiramide,
-  Gtitulo = "Pirámide Población de la provincia de Sevilla",
+  Gtitulo = "Pirámide Población",
   Gsubtitulo = "Año 2020",
   Gtitulo.X = "Porcentajes",
   GHombresEtiq = "Hombres",
@@ -32,7 +32,7 @@ DemBas_piramidePorc(
 }}
 
 \item{Gtitulo}{Cadena de texto con el título del gráfico.
-Por defecto "Pirámide Población de la provincia de Sevilla".}
+Por defecto "Pirámide Población".}
 
 \item{Gsubtitulo}{Cadena de texto con el subtítulo del gráfico.
 Por defecto "Año 2020".}

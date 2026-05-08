@@ -7,7 +7,7 @@
 DemBas_piramidePorc_Generaciones_ant(
   pop3,
   Ano_ref = 2020,
-  Gtitulo = "Pirámide Población de la provincia de Sevilla",
+  Gtitulo = "Pirámide Población",
   Gsubtitulo = "Año 2020",
   Gtitulo.X = "Porcentajes",
   GHombresEtiq = "Hombres",
@@ -43,7 +43,7 @@ Esta función requiere que los datos ya estén procesados por
 las generaciones. Por defecto 2020.}
 
 \item{Gtitulo}{Cadena de texto con el título del gráfico.
-Por defecto "Pirámide Población de la provincia de Sevilla".}
+Por defecto "Pirámide Población".}
 
 \item{Gsubtitulo}{Cadena de texto con el subtítulo del gráfico.
 Por defecto "Año 2020".}
