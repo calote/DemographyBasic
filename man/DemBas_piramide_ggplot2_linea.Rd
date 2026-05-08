@@ -2,7 +2,7 @@
 % Please edit documentation in R/piramidespoblacion.R
 \name{DemBas_piramide_ggplot2_linea}
 \alias{DemBas_piramide_ggplot2_linea}
-\title{DemBas_piramide_ggplot2_linea}
+\title{Crea el perfil de la pirámide poblacional como líneas}
 \usage{
 DemBas_piramide_ggplot2_linea(
   datosPiramide,
@@ -17,19 +17,55 @@ DemBas_piramide_ggplot2_linea(
 )
 }
 \arguments{
-\item{colores}{}
+\item{datosPiramide}{data.frame o tibble con columnas:
+\describe{
+  \item{Edad}{Variable categórica con edades}
+  \item{Sexo}{Variable categórica ("Hombre" o "Mujer")}
+  \item{Poblacion}{Variable numérica (absolutos)}
+}}
+
+\item{porcentajes}{Valor lógico. Si TRUE, muestra la población en
+porcentajes. Por defecto TRUE.}
+
+\item{etiquetas}{Valor lógico. Si TRUE, muestra etiquetas con los
+valores. Por defecto FALSE.}
+
+\item{etiquetas.size}{Valor numérico para el tamaño del texto de
+las etiquetas. Por defecto 4.}
+
+\item{UsaCaso}{Valor lógico. Si TRUE, calcula porcentajes por cada
+categoría de la variable "Caso". Por defecto FALSE.}
+
+\item{etiq.hombre}{Cadena de texto con la etiqueta para hombres.
+Por defecto "Hombre".}
+
+\item{etiq.mujer}{Cadena de texto con la etiqueta para mujeres.
+Por defecto "Mujer".}
+
+\item{colorear}{Cadena de texto que indica la variable para el color
+de las líneas: "Sexo", "Edad" o "Poblacion". Por defecto "Sexo".}
+
+\item{colores}{Vector opcional de colores para las líneas.}
+}
+\value{
+Objeto ggplot2 con el perfil de la pirámide.
 }
 \description{
-DemBas_piramide_ggplot2_linea
+Genera una visualización de la estructura demográfica usando líneas
+en lugar de barras, mostrando el perfil de la pirámide poblacional.
+Útil para comparar la forma de la distribución sin las barras sólidas.
 }
 \examples{
-# Ejecutar ejemplo de función DemBas_piramide_ggplot2()
-DemBas_piramide_ggplot2_linea(dfPir2017,colorear = "Sexo",
-                            etiq.hombre = "Hombres",etiq.mujer = "Mujeres") +
+\dontrun{
+# Requiere datos de ejemplo del paquete
+DemBas_piramide_ggplot2_linea(dfPir2017,
+                              colorear = "Sexo",
+                              etiq.hombre = "Hombres",
+                              etiq.mujer = "Mujeres") +
   labs(title = "Perfil de la Pirámide de Población de España en 2017") +
-  scale_x_discrete(
-    # si la variable edad fuera numeric debería usarse scale_x_continuous
-    breaks = seq(0,105,by=5),
-    labels = paste0(as.character(seq(0,105,by=5)), "")) +
-  guides(colour="none")
+  scale_x_discrete(breaks = seq(0, 105, by = 5),
+                  labels = paste0(as.character(seq(0, 105, by = 5)), "")) +
+  guides(colour = "none")
+}
+
 }

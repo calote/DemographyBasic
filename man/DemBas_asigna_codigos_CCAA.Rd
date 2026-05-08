@@ -2,13 +2,35 @@
 % Please edit documentation in R/demografia.R
 \name{DemBas_asigna_codigos_CCAA}
 \alias{DemBas_asigna_codigos_CCAA}
-\title{DemBas_asigna_codigos_CCAA}
+\title{Asigna un código personalizado a un valor específico de una columna}
 \usage{
 DemBas_asigna_codigos_CCAA(columna, columna_codigos, etiqueta, nuevocodigo)
 }
 \arguments{
-\item{nuevocodigo}{}
+\item{columna}{Vector de tipo character con los nombres originales.}
+
+\item{columna_codigos}{Vector de tipo character o numeric con los
+códigos correspondientes.}
+
+\item{etiqueta}{Valor de tipo character que identifica el elemento
+de columna cuyo código se desea modificar.}
+
+\item{nuevocodigo}{Valor que se asignará como código al elemento
+identificado por etiqueta.}
+}
+\value{
+Vector con los códigos originales, donde el elemento
+  correspondiente a etiqueta ha sido reemplazado por nuevocodigo.
 }
 \description{
-DemBas_asigna_codigos_CCAA
+Reemplaza el código de un elemento específico en la columna de
+códigos por un nuevo código proporcionado. Útil para estandarizar
+códigos o corregir inconsistencias en los datos.
+}
+\examples{
+nombres <- c("España", "Francia", "Alemania")
+codigos <- c("724", "250", "276")
+codigos_mod <- DemBas_asigna_codigos_CCAA(nombres, codigos, "España", "ES")
+codigos_mod
+
 }

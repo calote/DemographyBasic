@@ -2,22 +2,31 @@
 % Please edit documentation in R/presentardf.R
 \name{DemBas_redondear_df}
 \alias{DemBas_redondear_df}
-\title{DemBas_redondear_df}
+\title{Redondea las columnas numéricas de un data.frame}
 \usage{
 DemBas_redondear_df(df, digitos = 0)
 }
 \arguments{
-\item{df}{data.frame a redondear}
+\item{df}{data.frame con columnas numéricas y no numéricas.}
 
-\item{digitos}{número de decimales}
+\item{digitos}{Valor entero con el número de decimales a mantener
+en las columnas numéricas. Por defecto 0.}
 }
 \value{
-data.frame con las columnas numéricas redondeadas
+data.frame con las columnas numéricas redondeadas y las
+  columnas no numéricas sin cambios.
 }
 \description{
-Redondea las columnas numéricas de un data.frame
+Aplica redondeo a todas las columnas de tipo numérico en un
+data.frame, manteniendo las columnas no numéricas sin cambios.
+Utiliza la misma corrección de punto flotante que
+\code{\link{DemBas_redondear}}.
 }
 \examples{
-df = data.frame(nombres = sample(letters,20), x = rnorm(20), y = rnorm(20))
-df2 = DemBas_redondear_df(df, 2)
+df <- data.frame(nombres = sample(letters, 20),
+                 x = rnorm(20),
+                 y = rnorm(20))
+df2 <- DemBas_redondear_df(df, 2)
+df2
+
 }

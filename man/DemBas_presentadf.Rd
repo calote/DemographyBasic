@@ -2,7 +2,7 @@
 % Please edit documentation in R/presentardf.R
 \name{DemBas_presentadf}
 \alias{DemBas_presentadf}
-\title{DemBas_presentadf}
+\title{Presenta un data.frame como tabla formateada (LaTeX o HTML)}
 \usage{
 DemBas_presentadf(
   datos1,
@@ -14,14 +14,44 @@ DemBas_presentadf(
 )
 }
 \arguments{
-\item{CompletaAncho}{}
+\item{datos1}{data.frame o tibble con los datos a presentar.}
+
+\item{scaption}{Cadena de texto opcional con el título (caption)
+de la tabla. Si es NULL, no se añade título. Por defecto NULL.}
+
+\item{apaisadalatex}{Valor lógico. Si TRUE, la tabla se muestra
+en formato apaisado (horizontal) usando landscape. Por defecto FALSE.}
+
+\item{variaspaginas}{Valor lógico. Si TRUE, la tabla se divide en
+múltiples páginas si es necesario (usando longtable). Por defecto TRUE.}
+
+\item{fuentesize}{Valor numérico opcional con el tamaño de fuente
+para la tabla (ej. 8, 10, 12). Si es NULL, se usa el tamaño por
+defecto. Por defecto NULL.}
+
+\item{CompletaAncho}{Valor lógico. Si TRUE, la tabla ocupa el ancho
+completo de la página. Por defecto FALSE.}
 }
 \value{
-devuelve una tabla para ser presentada en formato LaTeX o HTML
+Objeto kableExtra de tipo R markdown/chunk que puede ser
+  visualizado en documentos R Markdown, LaTeX o HTML según el formato
+  de salida del documento.
 }
 \description{
-Presenta un data.frame en formato LaTeX o HTML con kableExtra
+Genera una tabla formateada para presentación en documentos LaTeX
+o HTML usando los paquetes knitr y kableExtra. La tabla se puede
+diseñar en formato apaisado (landscape) y se divide automáticamente
+en varias páginas si es necesario.
 }
 \examples{
+\dontrun{
+# Ejemplo básico
 DemBas_presentadf(mtcars)
+
+# Con título y formato apaisado
+DemBas_presentadf(mtcars,
+                 scaption = "Datos del dataset mtcars",
+                 apaisadalatex = TRUE)
+}
+
 }

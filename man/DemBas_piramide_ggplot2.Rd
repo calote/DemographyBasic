@@ -2,7 +2,7 @@
 % Please edit documentation in R/piramidespoblacion.R
 \name{DemBas_piramide_ggplot2}
 \alias{DemBas_piramide_ggplot2}
-\title{DemBas_piramide_ggplot2}
+\title{Estructura de datos esperada para funciones de pirámides}
 \usage{
 DemBas_piramide_ggplot2(
   datosPiramide,
@@ -19,61 +19,89 @@ DemBas_piramide_ggplot2(
 )
 }
 \arguments{
-\item{datosPiramide}{data.frame o tibble, deben tener tres o cuatro columnas:
-Edad (chr o fct) (simples o grupos edad),
-Sexo (chr o fct) ("Hombre" o "Mujer"),
-Poblacion (num) (absolutos)
-Caso (chr o fct) (variable categórica para pirámides compuestasCateg)}
+\item{datosPiramide}{data.frame o tibble con columnas:
+\describe{
+  \item{Edad}{Variable categórica con edades (simples o grupos)}
+  \item{Sexo}{Variable categórica ("Hombre" o "Mujer")}
+  \item{Poblacion}{Variable numérica (absolutos)}
+  \item{Caso}{(Opcional) Variable categórica para pirámides compuestas}
+}}
+
+\item{porcentajes}{Valor lógico. Si TRUE, muestra la población en
+porcentajes respecto al total. Por defecto TRUE.}
+
+\item{etiquetas}{Valor lógico. Si TRUE, muestra etiquetas con los
+valores en las barras. Por defecto FALSE.}
+
+\item{etiquetas.size}{Valor numérico que controla el tamaño del texto
+de las etiquetas. Por defecto 4.}
+
+\item{UsaCaso}{Valor lógico. Si TRUE, calcula porcentajes por cada
+categoría de la variable "Caso". Por defecto FALSE.}
+
+\item{etiq.hombre}{Cadena de texto con la etiqueta para hombres.
+Por defecto "Hombre".}
+
+\item{etiq.mujer}{Cadena de texto con la etiqueta para mujeres.
+Por defecto "Mujer".}
+
+\item{colorear}{Cadena de texto que indica la variable para el color
+de las barras: "Sexo", "Edad" o "Poblacion". Por defecto "Sexo".}
+
+\item{colores}{Vector opcional de colores para las barras.}
+
+\item{porc.X.ini}{Valor numérico para el límite inferior inicial del
+eje Y cuando se usan porcentajes. Por defecto 0.}
+
+\item{porc.X.by}{Valor numérico para el intervalo de los ticks del
+eje Y cuando se usan porcentajes. Por defecto 0.2.}
 }
 \value{
-ggplot2 graphics
+Objeto ggplot2 con la pirámide poblacional.
 }
 \description{
-Función para crear pirámides poblacionales con ggplot2
+El data.frame o tibble de entrada debe contener las siguientes columnas:
+\describe{
+  \item{Edad}{Variable categórica (character o factor) con las edades
+    (simples o grupos de edad)}
+  \item{Sexo}{Variable categórica (character o factor) con los valores
+    "Hombre" y "Mujer" (o etiquetas equivalentes)}
+  \item{Poblacion}{Variable numérica con los valores de población (absolutos)}
+  \item{Caso}{(Opcional) Variable categórica para pirámides compuestas
+    por categorías}
+}
+Crea pirámides poblacionales usando ggplot2
+}
+\details{
+Genera una pirámide de población con barras enfrentadas para hombres y mujeres.
+Admite opciones de personalización para colores, etiquetas, porcentajes y
+esquema de color por edad, sexo o población.
 }
 \examples{
-dfej02a <- DemBas_read_px(system.file("examples/9663.px", package = "DemographyBasic"))
+\dontrun{
+dfej02a <- DemBas_read_px(system.file("examples/9663.px",
+                                      package = "DemographyBasic"))
 head(dfej02a)
-tp1 = dfej02a \%>\%
-  dplyr::filter(Periodo=="1 de enero de  2017",Edad.simple=="Total") \%>\%
-  # hay dos espacios entre "de" y "2017"
-  dplyr::select("Sexo","value")
+tp1 <- dfej02a |>
+  dplyr::filter(Periodo == "1 de enero de  2017",
+                Edad.simple == "Total") |>
+  dplyr::select("Sexo", "value")
 
-PV = round(tp1$value[tp1$Sexo=="Hombres"]/tp1$value[tp1$Sexo=="Ambos sexos"],
-           4)*100
-#### España a 1 de enero de 2017.
+dfPir2017 <- dfej02a |>
+  dplyr::filter(Periodo == "1 de enero de  2017",
+                !Sexo == "Ambos sexos",
+                !Edad.simple \%in\% c("100 y más años", "Total")) |>
+  dplyr::select(Edadchar = Edad.simple, Sexo, Poblacion = value)
+dfPir2017$Edad <- DemBas_extrae_codigo_provincia(dfPir2017$Edadchar)
+dfPir2017$Edad <- factor(dfPir2017$Edad, levels = unique(dfPir2017$Edad))
+dfPir2017$Poblacion[is.na(dfPir2017$Poblacion)] <- 0
 
-x1 = as.character(DemBas_extrae_codigo_provincia(dfej02a$Edad.simple))
-x1n = as.numeric(x1)
-
-x1ngr = DemBas_agrupar_variable(x1n,metodo=2,final=100)
-
-dfej02a$EdadGrupos = x1ngr
-
-tp3 = dfej02a \%>\%
-  dplyr::filter( Periodo=="1 de enero de  2017",
-                 !(Edad.simple \%in\% c("100 y más años","Total"))) \%>\%
-  dplyr::group_by(Sexo,EdadGrupos) \%>\%
-  dplyr::summarise(Poblacion = round(sum(value,na.rm=T),0), .groups = "keep")
-
-
-dfPir2017 = dfej02a \%>\%
-  dplyr::filter( Periodo=="1 de enero de  2017",
-                 !(Sexo=="Ambos sexos"),
-                 !(Edad.simple \%in\% c("100 y más años","Total"))) \%>\%
-  dplyr::select(Edadchar=Edad.simple,
-                Sexo,
-                Poblacion = value)
-dfPir2017$Edad = DemBas_extrae_codigo_provincia(dfPir2017$Edadchar)
-dfPir2017$Edad = factor(dfPir2017$Edad,levels =unique(dfPir2017$Edad))
-dfPir2017$Poblacion[is.na(dfPir2017$Poblacion)] = 0
-head(dfPir2017)
 DemBas_piramide_ggplot2(dfPir2017,
-                      #etiquetas = T,etiquetas.size = 2,
-                      etiq.hombre = "Hombres",etiq.mujer = "Mujeres") +
+                        etiq.hombre = "Hombres",
+                        etiq.mujer = "Mujeres") +
   labs(title = "Pirámide de Población de España en 2017") +
-  scale_x_discrete(
-    # si la variable edad fuera numeric debería usarse scale_x_continuous
-    breaks = seq(0,105,by=5),
-    labels = paste0(as.character(seq(0,105,by=5)), ""))
+  scale_x_discrete(breaks = seq(0, 105, by = 5),
+                  labels = paste0(as.character(seq(0, 105, by = 5)), ""))
+}
+
 }

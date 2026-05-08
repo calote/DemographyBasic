@@ -2,22 +2,33 @@
 % Please edit documentation in R/pxR2.R
 \name{DemBas_url_px_IECA}
 \alias{DemBas_url_px_IECA}
-\title{DemBas_url_px_IECA}
+\title{Construye la URL para descargar archivos PC-Axis del IECA}
 \usage{
 DemBas_url_px_IECA(id, ficheropx)
 }
 \arguments{
-\item{id}{character with the id of the px file in the IECA web}
+\item{id}{Cadena de texto con el identificador del archivo PC-Axis
+en el portal del IECA.}
 
-\item{ficheropx}{character with the name of the file px to save}
+\item{ficheropx}{Cadena de texto con el nombre del archivo donde se
+guardará la descarga. Si el archivo ya existe, será sobrescrito.}
 }
 \value{
-character with the url of the file px
+Cadena de texto con la URL del archivo PC-Axis.
 }
 \description{
-Descarga un fichero px de la web del IECA a partir de su identificador
+Genera la URL necesaria para descargar un archivo PC-Axis desde el
+portal de datos del Instituto de Estadística y Cartografía de
+Andalucía (IECA) a partir de su identificador.
 }
 \examples{
-url1 = DemBas_url_px_IECA("103965", "ieca_export_103965_ff.px")
-df103965_ff = DemBas_read_px_encodingIECA("ieca_export_103965_ff.px")
+\dontrun{
+url <- DemBas_url_px_IECA("103965", "ieca_export_103965.px")
+datos <- DemBas_read_px_encodingIECA("ieca_export_103965.px")
+}
+
+}
+\seealso{
+\code{\link{DemBas_import_px_IECA}} para descargar e importar
+  en un solo paso.
 }

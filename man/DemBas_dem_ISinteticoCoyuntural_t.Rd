@@ -2,13 +2,29 @@
 % Please edit documentation in R/demografia.R
 \name{DemBas_dem_ISinteticoCoyuntural_t}
 \alias{DemBas_dem_ISinteticoCoyuntural_t}
-\title{DemBas_dem_TasaEspecificaEdad_t}
+\title{Calcula el Indicador Sintético de Fecundidad (ISF) coyuntural}
 \usage{
 DemBas_dem_ISinteticoCoyuntural_t(vTasasEspecificas_x_t)
 }
 \arguments{
-\item{vTasasEspecificas_x_t}{}
+\item{vTasasEspecificas_x_t}{Vector numérico con las tasas específicas
+de fecundidad por grupo de edad. Debe estar expresado en tasas por 1
+(no por 1000).}
+}
+\value{
+Valor numérico con el número medio de hijos por mujer.
 }
 \description{
-DemBas_dem_TasaEspecificaEdad_t
+Calcula el ISF también conocido como Tasa de Fecundidad Total o
+número medio de hijos por mujer. Es la suma de las tasas específicas
+de fecundidad por edad (mide la fecundidad hipotética de una cohorte
+si experimentara las tasas observadas en el período).
+}
+\examples{
+# ISF a partir de tasas específicas de fecundidad
+tasas_fecundidad <- c(0.001, 0.005, 0.015, 0.025, 0.035, 0.040,
+                      0.030, 0.015, 0.005, 0.001)
+isf <- DemBas_dem_ISinteticoCoyuntural_t(tasas_fecundidad)
+isf
+
 }

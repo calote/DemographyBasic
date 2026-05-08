@@ -2,10 +2,31 @@
 % Please edit documentation in R/piramidespoblacion.R
 \name{DemBas_v_generaciones}
 \alias{DemBas_v_generaciones}
-\title{DemBas_v_generaciones}
+\title{Calcula las generaciones para un vector de grupos de edad}
 \usage{
 DemBas_v_generaciones(x, Ano_ref = 2020)
 }
+\arguments{
+\item{x}{Vector de cadenas de texto o factores con los grupos de
+edad (ej. c("0-4", "5-9", "10-14", "100+")).}
+
+\item{Ano_ref}{Valor numérico con el año de referencia para calcular
+las generaciones. Por defecto 2020.}
+}
+\value{
+Vector de cadenas de texto con los rangos de años de
+  nacimiento para cada grupo de edad.
+}
 \description{
-DemBas_v_generaciones
+Versión vectorizada de \code{\link{DemBas_generaciones}} que aplica
+el cálculo a todos los elementos de un vector. Útil para añadir
+etiquetas de generaciones a los ejes de pirámides poblacionales.
+}
+\examples{
+DemBas_v_generaciones(c("0-4", "5-9", "10-14", "100+"), 2020)
+
+}
+\seealso{
+\code{\link{DemBas_generaciones}} para la función que
+  procesa un solo valor.
 }

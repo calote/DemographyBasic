@@ -2,7 +2,7 @@
 % Please edit documentation in R/piramidespoblacion.R
 \name{DemBas_piramidePorc}
 \alias{DemBas_piramidePorc}
-\title{DemBas_piramidePorc}
+\title{Crea pirámide poblacional con porcentajes y etiquetas}
 \usage{
 DemBas_piramidePorc(
   datosPiramide,
@@ -24,32 +24,85 @@ DemBas_piramidePorc(
 )
 }
 \arguments{
-\item{Gheight}{}
+\item{datosPiramide}{data.frame o tibble con columnas:
+\describe{
+  \item{Edad}{Variable categórica o numérica con las edades}
+  \item{Sexo}{Variable categórica ("Hombres" o "Mujeres")}
+  \item{Poblacion}{Variable numérica (absolutos)}
+}}
+
+\item{Gtitulo}{Cadena de texto con el título del gráfico.
+Por defecto "Pirámide Población de la provincia de Sevilla".}
+
+\item{Gsubtitulo}{Cadena de texto con el subtítulo del gráfico.
+Por defecto "Año 2020".}
+
+\item{Gtitulo.X}{Cadena de texto con la etiqueta del eje X.
+Por defecto "Porcentajes".}
+
+\item{GHombresEtiq}{Cadena de texto con la etiqueta para hombres.
+Por defecto "Hombres".}
+
+\item{GMujeresEtiq}{Cadena de texto con la etiqueta para mujeres.
+Por defecto "Mujeres".}
+
+\item{Gedadfinal}{Valor numérico con la edad máxima final para
+agrupar. Por defecto 100.}
+
+\item{Gext_izq}{Valor numérico con el límite izquierdo de la escala
+del eje Y (debe ser negativo). Por defecto -4.5.}
+
+\item{Gext_der}{Valor numérico con el límite derecho de la escala
+del eje Y (debe ser positivo). Por defecto 4.5.}
+
+\item{Glimite}{Valor numérico con el umbral mínimo para mostrar
+etiquetas. Por defecto 0.5.}
+
+\item{Gsizeletra}{Valor numérico para el tamaño de la letra de
+las etiquetas. Por defecto 2.5.}
+
+\item{GSegmentos}{Valor lógico. Si TRUE, añade segmentos verticales
+para separar grupos de edad. Por defecto TRUE.}
+
+\item{Gguardar}{Valor lógico. Si TRUE, guarda el gráfico en un archivo.
+Por defecto FALSE.}
+
+\item{Garchivo}{Cadena de texto con el nombre del archivo para guardar.
+Por defecto "piramide.png".}
+
+\item{Gwidth}{Valor numérico con el ancho de la imagen en pulgadas.
+Por defecto 12.}
+
+\item{Gheight}{Valor numérico con el alto de la imagen en pulgadas.
+Por defecto 10.}
 }
 \value{
-ggplot2 graphics de la pirámide de Población con porcentajes
+Objeto ggplot2 con la pirámide poblacional.
 }
 \description{
-DemBas_piramidePorc
+Genera una pirámide de población donde las barras representan
+porcentajes de la población total. Incluye etiquetas con los
+valores numéricos en cada barra y opciones para añadir segmentos
+que separen grupos de edad (jóvenes, adultos, mayores).
 }
 \examples{
-load(file = system.file("examples/04003px.RData", package = "DemographyBasic"))
+\dontrun{
+load(file = system.file("examples/04003px.RData",
+                        package = "DemographyBasic"))
 
-ano_selec = 2020
-Espanoles_Extranjeros = "Españoles"
-CCAA_Prov = "Sevilla"
-
-datosPiramide =  datos |>
-  dplyr::filter(Ano == ano_selec &
-                  Sexo \%in\% c("Mujeres", "Hombres") &
-                  Edad != "TOTAL" &
-                  CCAA.Prov == CCAA_Prov &
-                  Espanoles.Extranjeros == Espanoles_Extranjeros) |>
+datosPiramide <- datos |>
+  dplyr::filter(Ano == 2020,
+                Sexo \%in\% c("Mujeres", "Hombres"),
+                Edad != "TOTAL",
+                CCAA.Prov == "Sevilla",
+                Espanoles.Extranjeros == "Españoles") |>
   dplyr::rename(Poblacion = value) |>
   dplyr::select(Edad, Sexo, Poblacion)
-(g_pir1 = DemBas_piramidePorc(datosPiramide,
-                            Gtitulo = "Pirámide Población de la provincia de Sevilla",
-                            Gsubtitulo = "Año 2020  (españoles)",
-                            GSegmentos = FALSE))
+
+DemBas_piramidePorc(datosPiramide,
+                   Gtitulo = "Pirámide Población de Sevilla",
+                   Gsubtitulo = "Año 2020 (españoles)",
+                   GSegmentos = FALSE)
+}
 
 }

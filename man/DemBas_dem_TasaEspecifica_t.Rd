@@ -2,13 +2,32 @@
 % Please edit documentation in R/demografia.R
 \name{DemBas_dem_TasaEspecifica_t}
 \alias{DemBas_dem_TasaEspecifica_t}
-\title{DemBas_dem_TasaEspecifica_t}
+\title{Calcula tasas específicas de mortalidad (por edad)}
 \usage{
 DemBas_dem_TasaEspecifica_t(vNumEventos_x_t, vPobMedia_x_t)
 }
 \arguments{
-\item{vPobMedia_x_t}{}
+\item{vNumEventos_x_t}{Vector numérico con el número de eventos
+(ej. defunciones) por grupo de edad x en el período t.}
+
+\item{vPobMedia_x_t}{Vector numérico con la población media por
+grupo de edad x en el período t. Debe tener la misma longitud
+que vNumEventos_x_t.}
+}
+\value{
+Vector numérico con las tasas específicas por 1000 habitantes
+  para cada grupo de edad.
 }
 \description{
-DemBas_dem_TasaEspecifica_t
+Calcula tasas específicas para cada grupo de edad, expresadas
+por cada 1000 habitantes. Las tasas específicas permiten comparar
+estructuras demográficas controlando por la distribución por edades.
+}
+\examples{
+# Tasas específicas de mortalidad por edades
+eventos <- c(1200, 800, 600, 400, 300, 200, 150, 100, 80, 70)
+poblacion <- c(50000, 60000, 70000, 80000, 90000, 95000, 100000, 85000, 70000, 60000)
+tasas <- DemBas_dem_TasaEspecifica_t(eventos, poblacion)
+tasas
+
 }

@@ -2,7 +2,7 @@
 % Please edit documentation in R/piramidespoblacion.R
 \name{DemBas_piramidePorc_Generaciones}
 \alias{DemBas_piramidePorc_Generaciones}
-\title{DemBas_piramidePorc_Generaciones}
+\title{Crea pirámide poblacional con porcentajes, etiquetas y generaciones}
 \usage{
 DemBas_piramidePorc_Generaciones(
   pop3,
@@ -29,31 +29,116 @@ DemBas_piramidePorc_Generaciones(
 )
 }
 \arguments{
-\item{pop3}{data.frame o tibble with columns: Edad, Sexo, Porcentajes}
+\item{pop3}{data.frame o tibble con columnas:
+\describe{
+  \item{Edad}{Variable categórica con grupos de edad (factor)}
+  \item{Sexo}{Variable categórica ("Hombres" o "Mujeres")}
+  \item{Porcentajes}{Variable numérica con los porcentajes de
+    población}
+}
+Esta función requiere que los datos ya estén procesados por
+\code{\link{DemBas_datos_piramidePorc}}.}
 
-\item{Gheight}{}
+\item{Ano_ref}{Valor numérico con el año de referencia para calcular
+las generaciones. Por defecto 2020.}
+
+\item{Gtitulo}{Cadena de texto con el título del gráfico.
+Por defecto "Pirámide Población de la provincia de Sevilla".}
+
+\item{Gsubtitulo}{Cadena de texto con el subtítulo del gráfico.
+Por defecto "Año 2020".}
+
+\item{Gtitulo.X}{Cadena de texto con la etiqueta del eje X.
+Por defecto "Porcentajes".}
+
+\item{GHombresEtiq}{Cadena de texto con la etiqueta para hombres.
+Por defecto "Hombres".}
+
+\item{GMujeresEtiq}{Cadena de texto con la etiqueta para mujeres.
+Por defecto "Mujeres".}
+
+\item{Gedadfinal}{Valor numérico con la edad máxima final para
+agrupar. Por defecto 100.}
+
+\item{Gext_izq}{Valor numérico con el límite izquierdo de la escala
+del eje Y. Por defecto -4.5.}
+
+\item{Gext_der}{Valor numérico con el límite derecho de la escala
+del eje Y. Por defecto 4.5.}
+
+\item{Glimite}{Valor numérico con el umbral mínimo para mostrar
+etiquetas. Por defecto 0.5.}
+
+\item{Gsizeletra}{Valor numérico para el tamaño de la letra de
+las etiquetas. Por defecto 2.5.}
+
+\item{GpresentaResumen}{Valor lógico. Si TRUE, muestra un resumen
+estadístico en el pie del gráfico con información sobre porcentajes
+por sexo, grupos de edad e índice de envejecimiento. Por defecto TRUE.}
+
+\item{GSegmentos}{Valor lógico. Si TRUE, añade segmentos verticales
+para separar grupos de edad. Por defecto TRUE.}
+
+\item{GHombresColor}{Cadena de texto con el color para hombres.
+Por defecto "#5BB4E5" (azul).}
+
+\item{GMujeresColor}{Cadena de texto con el color para mujeres.
+Por defecto "#DE61D8" (rosa).}
+
+\item{GSegmentosColor}{Cadena de texto con el color de los segmentos.
+Por defecto "#00ff00" (verde).}
+
+\item{Gguardar}{Valor lógico. Si TRUE, guarda el gráfico en un archivo.
+Por defecto FALSE.}
+
+\item{Garchivo}{Cadena de texto con el nombre del archivo para guardar.
+Por defecto "piramide.png".}
+
+\item{Gwidth}{Valor numérico con el ancho de la imagen en pulgadas.
+Por defecto 12.}
+
+\item{Gheight}{Valor numérico con el alto de la imagen en pulgadas.
+Por defecto 10.}
+}
+\value{
+Objeto ggplot2 con la pirámide poblacional avanzada.
 }
 \description{
-DemBas_piramidePorc_Generaciones
+Genera una pirámide de población avanzada que incluye: porcentajes
+de población por grupo de edad, etiquetas con valores numéricos,
+líneas divisorias para separar jóvenes/adultos/mayores, y un eje
+secundario con las generaciones (años de nacimiento) correspondientes.
+También puede presentar un resumen estadístico con índices demográficos.
 }
 \examples{
-load(file = system.file("examples/04003px.RData", package = "DemographyBasic"))
-datosPiramide =  datos |>
-  dplyr::filter(Ano == 2020 &
-                  Sexo \%in\% c("Mujeres", "Hombres") &
-                  Edad != "TOTAL" &
-                  CCAA.Prov == "Sevilla" &
-                  Espanoles.Extranjeros == "Españoles") |>
+\dontrun{
+load(file = system.file("examples/04003px.RData",
+                        package = "DemographyBasic"))
+
+datosPiramide <- datos |>
+  dplyr::filter(Ano == 2020,
+                Sexo \%in\% c("Mujeres", "Hombres"),
+                Edad != "TOTAL",
+                CCAA.Prov == "Sevilla",
+                Espanoles.Extranjeros == "Españoles") |>
   dplyr::rename(Poblacion = value) |>
   dplyr::select(Edad, Sexo, Poblacion)
 
-g_pir1 = DemBas_piramidePorc_Generaciones(datosPiramide,
-                                          Gtitulo = "Pirámide Población de la provincia de Sevilla",
-                                          Gsubtitulo = "Año 2020  (españoles)")
+g_pir1 <- DemBas_piramidePorc_Generaciones(datosPiramide,
+                                          Gtitulo = "Pirámide Población de Sevilla",
+                                          Gsubtitulo = "Año 2020 (españoles)")
 g_pir1
-g_pir2 = DemBas_piramidePorc_Generaciones(datosPiramide,
-                                          Gtitulo = "Pirámide Población de la provincia de Sevilla",
-                                          Gsubtitulo = "Año 2020  (españoles)",
-                                          GSegmentos = FALSE, GpresentaResumen = FALSE)
+
+g_pir2 <- DemBas_piramidePorc_Generaciones(datosPiramide,
+                                          Gtitulo = "Pirámide Población de Sevilla",
+                                          Gsubtitulo = "Año 2020 (españoles)",
+                                          GSegmentos = FALSE,
+                                          GpresentaResumen = FALSE)
 g_pir2
+}
+
+}
+\references{
+Para información sobre índices demográficos y estructura de la
+  población, consulte manuales de demografía técnica.
 }

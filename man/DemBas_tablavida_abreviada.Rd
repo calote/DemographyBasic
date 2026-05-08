@@ -2,31 +2,56 @@
 % Please edit documentation in R/tablavida.R
 \name{DemBas_tablavida_abreviada}
 \alias{DemBas_tablavida_abreviada}
-\title{Calcula la tabla de vida para edades agrupadas}
+\title{Calcula la tabla de vida abreviada (Rowland)}
 \usage{
 DemBas_tablavida_abreviada(nMx, l0 = 1e+05, redondeo = TRUE, muestraSx = TRUE)
 }
 \arguments{
-\item{l0}{población inicial o radix de la tabla}
+\item{nMx}{Vector numérico con las tasas centralizadas de mortalidad para
+cada grupo de edad quinquenal. Los grupos deben corresponderse con:
+0, 1-4, 5-9, 10-14, ..., 95-99, 100+.}
 
-\item{redondeo}{si TRUE redondea los valores}
+\item{l0}{Valor numérico con la población inicial (radix). Por defecto 100000.}
 
-\item{muestraSx}{si TRUE muestra la columna Sx}
+\item{redondeo}{Valor lógico. Si TRUE, redondea los resultados según
+convenciones demográficas estándar.}
 
-\item{mx}{vector de tasas de mortalidad para edades simples: 0,1,2,...}
+\item{muestraSx}{Valor lógico. Si TRUE, incluye la columna Sx en el resultado.}
 }
 \value{
-devuelve un data.frame con la tabla de vida
+tibble con la tabla de vida abreviada que contiene las columnas:
+  \describe{
+    \item{Edad}{Edad inicial de cada grupo (0, 1, 5, 10, ..., 100+)}
+    \item{n}{Longitud del intervalo de edad}
+    \item{nMx1000}{Tasa centralizada de mortalidad por 1000}
+    \item{nqx}{Probabilidad de muerte en el intervalo n}
+    \item{npx}{Probabilidad de sobrevivir en el intervalo n}
+    \item{lx}{Supervivientes al inicio del intervalo}
+    \item{ndx}{Defunciones en el intervalo}
+    \item{nLx}{Personas-año vividas en el intervalo}
+    \item{Tx}{Personas-año restantes desde el inicio del intervalo}
+    \item{ex}{Esperanza de vida a la edad x}
+    \item{Sx}{Fracción de supervivencia del intervalo}
+  }
 }
 \description{
-Calcula la tabla de vida abreviada a partir de las tasas de mortalidad para edades agrupadas: 0,1,2,...
+Construye una tabla de vida abreviada a partir de las tasas de mortalidad
+para grupos de edad quinquenales. El método aplica coeficientes de
+separación de Greville para el cálculo de las personas-año vividas (nLx).
 }
 \examples{
-(mx0 = 1733/441881) # TMI = D^t_0/N^t
-# Defunciones de menores de un año durante 2003: 1733
-# Nacimientos en España en 2003: 441881
-mx = c(mx0,0.00027, 0.00013, 0.00016, 0.00043, 0.00057, 0.00059, 0.00081,
-     0.00115, 0.00174, 0.00258, 0.00376, 0.00569, 0.00818, 0.01346,
-     0.02206, 0.03844, 0.06981, 0.12872, 0.21674, 0.31705, 0.48258)
-tv = DemBas_tablavida_abreviada(mx)
+mx0 <- 1733 / 441881
+mx <- c(mx0, 0.00027, 0.00013, 0.00016, 0.00043, 0.00057, 0.00059,
+        0.00081, 0.00115, 0.00174, 0.00258, 0.00376, 0.00569, 0.00818,
+        0.01346, 0.02206, 0.03844, 0.06981, 0.12872, 0.21674, 0.31705,
+        0.48258)
+tv <- DemBas_tablavida_abreviada(mx)
+tv
+
+}
+\references{
+Rowland, D. T. (2003). Demographic Techniques. Sydney: Pergamon Press.
+
+  Greville, T. N. E. (1948). Mortality tables analyzed by cause of death.
+  The American Statistician, 2(4), 23-27.
 }

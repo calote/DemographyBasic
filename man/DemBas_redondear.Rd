@@ -2,22 +2,32 @@
 % Please edit documentation in R/presentardf.R
 \name{DemBas_redondear}
 \alias{DemBas_redondear}
-\title{DemBas_redondear}
+\title{Redondea un vector numérico con corrección de error de punto flotante}
 \usage{
 DemBas_redondear(x, digitos = 0)
 }
 \arguments{
-\item{x}{vector numérico}
+\item{x}{Vector numérico con los valores a redondear.}
 
-\item{digitos}{número de decimales}
+\item{digitos}{Valor entero con el número de decimales a mantener.
+Si es 0, redondea al entero más cercano. Por defecto 0.}
 }
 \value{
-vector numérico redondeado
+Vector numérico con los valores redondeados.
 }
 \description{
-Redondea un vector numérico
+Redondea los valores de un vector numérico al número especificado de
+decimales. Añade una pequeña corrección para evitar problemas de
+representación de punto flotante que pueden causar redondeos
+incorrectos (ej. 2.5 redondeado a 2 en lugar de 3).
+}
+\details{
+El ajuste \code{sign(x) * 1e-10} compensa el error de representación
+en números de punto flotante que puede hacer que valores como
+2.9999999 no se redondeen correctamente.
 }
 \examples{
-v1 = DemBas_redondear(rnorm(20), 2)
+v1 <- DemBas_redondear(rnorm(20), 2)
 v1
+
 }

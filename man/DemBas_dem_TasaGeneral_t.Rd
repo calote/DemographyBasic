@@ -2,13 +2,28 @@
 % Please edit documentation in R/demografia.R
 \name{DemBas_dem_TasaGeneral_t}
 \alias{DemBas_dem_TasaGeneral_t}
-\title{DemBas_dem_TasaEspecifica_t}
+\title{Calcula la tasa general de un evento demográfico}
 \usage{
 DemBas_dem_TasaGeneral_t(NumEventos_t, PobMedia_Referida_t)
 }
 \arguments{
-\item{PobMedia_Referida_t}{}
+\item{NumEventos_t}{Valor numérico o vector con el número de eventos
+demográficos en el período t.}
+
+\item{PobMedia_Referida_t}{Valor numérico o vector con la población
+media de referencia para el cálculo (ej. mujeres de 15 a 49 años).}
+}
+\value{
+Vector numérico con las tasas generales por 1000 habitantes.
 }
 \description{
-DemBas_dem_TasaEspecifica_t
+Calcula la tasa general de mortalidad u otro evento demográfico
+por cada 1000 habitantes de la población de referencia. A diferencia
+de la tasa bruta, la tasa general se calcula sobre una población
+específica (ej. población en edad fértil para tasas de natalidad).
+}
+\examples{
+# Tasa general de natalidad
+DemBas_dem_TasaGeneral_t(NumEventos_t = 350000, PobMedia_Referida_t = 13000000)
+
 }

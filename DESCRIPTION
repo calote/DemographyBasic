@@ -1,7 +1,7 @@
 Package: DemographyBasic
 Type: Package
 Title: Calculate Basic Procedures Of Demography
-Version: 0.1.6
+Version: 0.1.7
 Authors@R: c(
     person(
       "Pedro", "Luque-Calvo",
@@ -9,12 +9,10 @@ Authors@R: c(
       role = c("aut", "cre")
     )
   )
-Description: Functions Have Been Implemented To Calculate: Life Tables (Complete And Abbreviated), 
+Description: Functions Have Been Implemented To Calculate: Life Tables (Complete And Abbreviated),
     Overall Rates, Specific Rates, Lexis Diagrams, Population Pyramids, And Demographic Maps.
 License: MIT + file LICENSE
 Encoding: UTF-8
-LazyData: true
-RoxygenNote: 7.3.2
 Depends:
     pxR,
     tidyverse,
@@ -27,7 +25,8 @@ Depends:
     legendry
 URL: https://github.com/calote/DemographyBasic
 BugReports: https://github.com/calote/DemographyBasic/issues
-Suggests: 
+Suggests:
     knitr,
     rmarkdown
 VignetteBuilder: knitr
+RoxygenNote: 8.0.0.9000

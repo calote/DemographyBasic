@@ -2,7 +2,7 @@
 % Please edit documentation in R/piramidespoblacion.R
 \name{DemBas_piramides_enfrentadas_ggplot2}
 \alias{DemBas_piramides_enfrentadas_ggplot2}
-\title{DemBas_piramides_enfrentadas_ggplot2}
+\title{Crea múltiples pirámides poblacionales enfrentadas en una cuadrícula}
 \usage{
 DemBas_piramides_enfrentadas_ggplot2(
   datosPiramide,
@@ -19,8 +19,51 @@ DemBas_piramides_enfrentadas_ggplot2(
 )
 }
 \arguments{
-\item{ncols}{}
+\item{datosPiramide}{data.frame o tibble con columnas:
+\describe{
+  \item{Edad}{Variable categórica con edades}
+  \item{Sexo}{Variable categórica ("Hombre" o "Mujer")}
+  \item{Poblacion}{Variable numérica (absolutos)}
+  \item{Caso}{Variable categórica que define los grupos a comparar}
+}}
+
+\item{porcentajes}{Valor lógico. Si TRUE, muestra la población en
+porcentajes. Por defecto TRUE.}
+
+\item{etiquetas}{Valor lógico. Si TRUE, muestra etiquetas con los valores.
+Por defecto FALSE.}
+
+\item{etiquetas.size}{Valor numérico para el tamaño del texto de
+las etiquetas. Por defecto 4.}
+
+\item{UsaCaso}{Valor lógico. Si TRUE, calcula porcentajes por cada
+categoría de la variable "Caso". Por defecto TRUE.}
+
+\item{etiq.hombre}{Cadena de texto con la etiqueta para hombres.
+Por defecto "Hombre".}
+
+\item{etiq.mujer}{Cadena de texto con la etiqueta para mujeres.
+Por defecto "Mujer".}
+
+\item{colorear}{Cadena de texto que indica la variable para el color
+de las barras: "Sexo", "Edad" o "Poblacion". Por defecto "Sexo".}
+
+\item{colores}{Vector opcional de colores para las barras.}
+
+\item{nfilas}{Valor numérico opcional para el número de filas de la
+cuadrícula de facetas.}
+
+\item{ncols}{Valor numérico opcional para el número de columnas de la
+cuadrícula de facetas.}
+}
+\value{
+Objeto ggplot2 con las pirámides enfrentadas en facetas.
 }
 \description{
-DemBas_piramides_enfrentadas_ggplot2
+Genera varias pirámides poblacionales organizadas en una cuadrícula de
+facetas, permitiendo comparar pirámides de diferentes categorías o
+períodos. Utiliza internamente \code{\link{DemBas_piramide_ggplot2}}.
+}
+\seealso{
+\code{\link{DemBas_piramide_ggplot2}} para la función base.
 }

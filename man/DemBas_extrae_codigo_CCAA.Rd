@@ -2,13 +2,26 @@
 % Please edit documentation in R/demografia.R
 \name{DemBas_extrae_codigo_CCAA}
 \alias{DemBas_extrae_codigo_CCAA}
-\title{DemBas_extrae_codigo_CCAA}
+\title{Extrae el código numérico de comunidad autónoma de una columna de texto}
 \usage{
 DemBas_extrae_codigo_CCAA(columna)
 }
 \arguments{
-\item{columna}{}
+\item{columna}{Vector de tipo character con los nombres que incluyen
+el código de comunidad autónoma al inicio (ej. "01 Andalucía",
+"02 Aragón").}
+}
+\value{
+Vector de tipo character con los códigos de comunidad
+  autónoma de dos dígitos (ej. "01", "02", "03").
 }
 \description{
-DemBas_extrae_codigo_CCAA
+Obtiene los dos dígitos iniciales de código de comunidad autónoma
+de los nombres de territorios que aparecen en los datos del INE.
+}
+\examples{
+nombres_con_codigo <- c("01 Andalucía", "02 Aragón", "03 Asturias")
+codigos <- DemBas_extrae_codigo_CCAA(nombres_con_codigo)
+codigos
+
 }

@@ -2,20 +2,36 @@
 % Please edit documentation in R/pxR2.R
 \name{DemBas_leer_metadatos_px_IECA}
 \alias{DemBas_leer_metadatos_px_IECA}
-\title{DemBas_leer_metadatos_px_IECA}
+\title{Lee los metadatos de un archivo PC-Axis del IECA (Andalucía)}
 \usage{
 DemBas_leer_metadatos_px_IECA(ficheropx)
 }
 \arguments{
-\item{ficheropx}{character with the name of the file px}
+\item{ficheropx}{Cadena de texto con la ruta al archivo .px del IECA
+a procesar. El archivo debe estar codificado en UTF-8.}
 }
 \value{
-data.frame with the metadata, column 1 is the name of the variable and column 2 is the content
+data.frame con dos columnas:
+  \describe{
+    \item{Claves}{Nombre del atributo o variable (ej. "VALUES", "CODES", "TIME")}
+    \item{Valores}{Contenido del atributo (ej. los valores o categorías asociados)}
+  }
 }
 \description{
-Leer metadatos de un fichero px del IECA
+Extrae la información de metadatos (cabeceras, variables, valores)
+de un archivo PC-Axis publicado por el Instituto de Estadística y
+Cartografía de Andalucía (IECA). Similar a \code{\link{DemBas_leer_metadatos_px_INE}}
+pero adaptada a la codificación UTF-8 de los archivos del IECA.
 }
 \examples{
-df103965 = DemBas_import_px_IECA("103965", "ieca_export_103965_ff4.px")
-df103965_meta = DemBas_leer_metadatos_px_IECA("ieca_export_103965_ff4.px")
+\dontrun{
+# Descargar e importar un archivo del IECA
+df103965 <- DemBas_import_px_IECA("103965", "ieca_export_103965.px")
+head(df103965)
+
+# Leer los metadatos del archivo
+metadatos <- DemBas_leer_metadatos_px_IECA("ieca_export_103965.px")
+head(metadatos)
+}
+
 }

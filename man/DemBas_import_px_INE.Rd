@@ -2,24 +2,39 @@
 % Please edit documentation in R/pxR2.R
 \name{DemBas_import_px_INE}
 \alias{DemBas_import_px_INE}
-\title{DemBas_import_px_INE}
+\title{Descarga e importa archivos PC-Axis del INE (España)}
 \usage{
 DemBas_import_px_INE(id, ficheropx = NULL)
 }
 \arguments{
-\item{id}{character with the id of the px file in the INE web}
+\item{id}{Cadena de texto con el identificador del archivo PC-Axis
+en el portal del INE.}
 
-\item{ficheropx}{character with the name of the file px to save.
-If is NULL, a temporal file is created}
+\item{ficheropx}{Cadena de texto opcional con el nombre del archivo
+donde guardar la descarga. Si es NULL, se crea un archivo temporal
+que se elimina al terminar la sesión. Por defecto NULL.}
 }
 \value{
-data.frame with the data
+data.frame con los datos importados. Todas las columnas son
+  de tipo character para facilitar el procesamiento.
 }
 \description{
-Importa un fichero px de la web del INE a partir de su identificador
+Función convenience que combina la descarga de un archivo PC-Axis
+desde el portal del INE con su importación directa a R. Utiliza
+la codificación estándar del INE (CP437) sin necesidad de conversión.
 }
 \examples{
-df2855_ine = DemBas_import_px_INE("2855")
+\dontrun{
+# Importar usando archivo temporal
+df2855 <- DemBas_import_px_INE("2855")
+head(df2855)
 
-df2855_ine2 = DemBas_import_px_INE("2855", "2855_ine.px")
+# Importar guardando el archivo para reuse
+df2855 <- DemBas_import_px_INE("2855", "2855_ine.px")
+}
+
+}
+\seealso{
+\code{\link{DemBas_url_px_INE}} para单独的 descarga,
+  \code{\link{DemBas_read_px}} para importar archivos locales.
 }

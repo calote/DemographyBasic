@@ -2,13 +2,27 @@
 % Please edit documentation in R/demografia.R
 \name{DemBas_extrae_Num_Edad}
 \alias{DemBas_extrae_Num_Edad}
-\title{DemBas_extrae_Num_Edad}
+\title{Extrae la edad numérica de una columna de texto con formato}
 \usage{
 DemBas_extrae_Num_Edad(columna)
 }
 \arguments{
-\item{columna}{}
+\item{columna}{Vector de tipo character con las cadenas de texto
+que contienen la edad al inicio (ej. "25 años", "0 edad").}
+}
+\value{
+Vector de tipo character con los números de edad extraídos
+  (ej. "25", "0").
 }
 \description{
-DemBas_extrae_Num_Edad
+Extrae el número inicial de edad de cadenas de texto que contienen
+la edad seguida de texto descriptivo (ej. "25 años", "3 años",
+"0 meses"). Útil para limpiar datos de edad provenientes de fuentes
+estadísticas.
+}
+\examples{
+textos_edad <- c("25 años", "3 años", "0 edad", "75 años")
+edades <- DemBas_extrae_Num_Edad(textos_edad)
+edades
+
 }

@@ -8,23 +8,35 @@ library(kableExtra)
 
 # Formatear números bonitos -----------------------------------------------
 
-#' @title DemBas_fmt_num
-#' @description Formatea un número para presentación
+#' Formatea números para presentación visual
 #'
-#' @param x
-#' @param ndigitos
-#' @param quitacerosderecha
+#' Convierte un número a formato de texto con separadores de miles
+#' y decimales personalizables. Utiliza la función \code{formatC} de R
+#' para formateo consistente entre plataformas.
 #'
-#' @returns devuelve un character con el número formateado
+#' @param x Vector o valor numérico a formatear. Puede ser un solo
+#'   número o un vector de números.
+#' @param ndigitos Valor entero con el número máximo de dígitos
+#'   significativos o decimales a mostrar. Por defecto 5.
+#' @param quitacerosderecha Valor lógico. Si TRUE, elimina los ceros
+#'   finales innecesarios en la parte decimal (ej. "123.50" se muestra
+#'   como "123.5"). Si FALSE, mantiene todos los decimales especificados.
+#'   Por defecto TRUE.
+#'
+#' @return Vector de tipo character con los números formateados.
+#'   Los valores mantienen el separador de miles (espacio) y el punto
+#'   como separador decimal.
+#'
 #' @examples
 #' DemBas_fmt_num(5654.0832)
 #' DemBas_fmt_num(5654)
-#' DemBas_fmt_num(565400982.3000,2,T)
-#' DemBas_fmt_num(565400982.3000,2,F)
+#' DemBas_fmt_num(565400982.3000, 2, TRUE)
+#' DemBas_fmt_num(565400982.3000, 2, FALSE)
 #' DemBas_fmt_num(565400982.23713830023)
-#' DemBas_fmt_num(565400982.23713830023,2)
+#' DemBas_fmt_num(565400982.23713830023, 2)
+#'
 #' @export
-DemBas_fmt_num = function(x,ndigitos=5,quitacerosderecha=TRUE) {
+DemBas_fmt_num <- function(x, ndigitos = 5, quitacerosderecha = TRUE) {
   # Sí redondea
   #prettyNum(x,big.mark=" ",decimal.mark = ".")
   formatC(x,format="f",big.mark = " ",drop0trailing=quitacerosderecha,digits = ndigitos,zero.print = T)
@@ -38,31 +50,57 @@ DemBas_fmt_num = function(x,ndigitos=5,quitacerosderecha=TRUE) {
 
 
 
-#' @title DemBas_redondear
-#' @description Redondea un vector numérico
-#' @param x vector numérico
-#' @param digitos número de decimales
-#' @return vector numérico redondeado
+#' Redondea un vector numérico con corrección de error de punto flotante
+#'
+#' Redondea los valores de un vector numérico al número especificado de
+#' decimales. Añade una pequeña corrección para evitar problemas de
+#' representación de punto flotante que pueden causar redondeos
+#' incorrectos (ej. 2.5 redondeado a 2 en lugar de 3).
+#'
+#' El ajuste \code{sign(x) * 1e-10} compensa el error de representación
+#' en números de punto flotante que puede hacer que valores como
+#' 2.9999999 no se redondeen correctamente.
+#'
+#' @param x Vector numérico con los valores a redondear.
+#' @param digitos Valor entero con el número de decimales a mantener.
+#'   Si es 0, redondea al entero más cercano. Por defecto 0.
+#'
+#' @return Vector numérico con los valores redondeados.
+#'
 #' @examples
-#' v1 = DemBas_redondear(rnorm(20), 2)
+#' v1 <- DemBas_redondear(rnorm(20), 2)
 #' v1
+#'
 #' @export
-DemBas_redondear = function(x, digitos = 0) {
+DemBas_redondear <- function(x, digitos = 0) {
   round(x + sign(x) * 1e-10, digitos)
 }
 
 
 
-#' @title DemBas_redondear_df
-#' @description Redondea las columnas numéricas de un data.frame
-#' @param df data.frame a redondear
-#' @param digitos número de decimales
-#' @return data.frame con las columnas numéricas redondeadas
+#' Redondea las columnas numéricas de un data.frame
+#'
+#' Aplica redondeo a todas las columnas de tipo numérico en un
+#' data.frame, manteniendo las columnas no numéricas sin cambios.
+#' Utiliza la misma corrección de punto flotante que
+#' \code{\link{DemBas_redondear}}.
+#'
+#' @param df data.frame con columnas numéricas y no numéricas.
+#' @param digitos Valor entero con el número de decimales a mantener
+#'   en las columnas numéricas. Por defecto 0.
+#'
+#' @return data.frame con las columnas numéricas redondeadas y las
+#'   columnas no numéricas sin cambios.
+#'
 #' @examples
-#' df = data.frame(nombres = sample(letters,20), x = rnorm(20), y = rnorm(20))
-#' df2 = DemBas_redondear_df(df, 2)
+#' df <- data.frame(nombres = sample(letters, 20),
+#'                  x = rnorm(20),
+#'                  y = rnorm(20))
+#' df2 <- DemBas_redondear_df(df, 2)
+#' df2
+#'
 #' @export
-DemBas_redondear_df = function(df, digitos = 0) {
+DemBas_redondear_df <- function(df, digitos = 0) {
   df2 = lapply(df, function(x) {
     if (is.numeric(x)) {
       round(x + sign(x) * 1e-10, digitos)
@@ -81,25 +119,47 @@ DemBas_redondear_df = function(df, digitos = 0) {
 library(knitr,warn.conflicts = F)
 library(kableExtra)
 
-#' @title DemBas_presentadf
-#' @description Presenta un data.frame en formato LaTeX o HTML con kableExtra
+#' Presenta un data.frame como tabla formateada (LaTeX o HTML)
 #'
-#' @param datos1
-#' @param scaption
-#' @param apaisadalatex
-#' @param variaspaginas
-#' @param fuentesize
-#' @param CompletaAncho
+#' Genera una tabla formateada para presentación en documentos LaTeX
+#' o HTML usando los paquetes knitr y kableExtra. La tabla se puede
+#' diseñar en formato apaisado (landscape) y se divide automáticamente
+#' en varias páginas si es necesario.
 #'
-#' @returns devuelve una tabla para ser presentada en formato LaTeX o HTML
+#' @param datos1 data.frame o tibble con los datos a presentar.
+#' @param scaption Cadena de texto opcional con el título (caption)
+#'   de la tabla. Si es NULL, no se añade título. Por defecto NULL.
+#' @param apaisadalatex Valor lógico. Si TRUE, la tabla se muestra
+#'   en formato apaisado (horizontal) usando landscape. Por defecto FALSE.
+#' @param variaspaginas Valor lógico. Si TRUE, la tabla se divide en
+#'   múltiples páginas si es necesario (usando longtable). Por defecto TRUE.
+#' @param fuentesize Valor numérico opcional con el tamaño de fuente
+#'   para la tabla (ej. 8, 10, 12). Si es NULL, se usa el tamaño por
+#'   defecto. Por defecto NULL.
+#' @param CompletaAncho Valor lógico. Si TRUE, la tabla ocupa el ancho
+#'   completo de la página. Por defecto FALSE.
+#'
+#' @return Objeto kableExtra de tipo R markdown/chunk que puede ser
+#'   visualizado en documentos R Markdown, LaTeX o HTML según el formato
+#'   de salida del documento.
+#'
 #' @examples
+#' \dontrun{
+#' # Ejemplo básico
 #' DemBas_presentadf(mtcars)
+#'
+#' # Con título y formato apaisado
+#' DemBas_presentadf(mtcars,
+#'                  scaption = "Datos del dataset mtcars",
+#'                  apaisadalatex = TRUE)
+#' }
+#'
 #' @export
-DemBas_presentadf = function(datos1,scaption = NULL,
-                              apaisadalatex=FALSE,
-                              variaspaginas=TRUE,
-                              fuentesize=NULL, # 8, 2, 12, ...
-                              CompletaAncho = FALSE) {
+DemBas_presentadf <- function(datos1, scaption = NULL,
+                               apaisadalatex = FALSE,
+                               variaspaginas = TRUE,
+                               fuentesize = NULL,
+                               CompletaAncho = FALSE) {
   if (apaisadalatex) {
     if (variaspaginas) {
       if (!is.null(fuentesize)) {
@@ -161,25 +221,51 @@ DemBas_presentadf = function(datos1,scaption = NULL,
 # Tabla: kableExtra 1 -------------------------------------------------------------------------
 
 
-#' @title DemBas_presentadf_modelo01
-#' @description Presenta un data.frame en formato LaTeX o HTML con kableExtra
+#' Presenta un data.frame como tabla formateada (modelo 01)
 #'
-#' @param df_tabla
-#' @param tablavariaspaginas
-#' @param tfuente
-#' @param leyendatabla
-#' @param vCabecera
-#' @param valigncol
+#' Versión alternativa de \code{\link{DemBas_presentadf}} con opciones
+#' de personalización adicionales para el formato de la tabla. Incluye
+#' soporte para centrado de cabeceras, alineación personalizada de
+#' columnas y leyenda de tabla.
 #'
-#' @returns
+#' @param df_tabla data.frame o tibble con los datos a presentar.
+#' @param tablavariaspaginas Valor lógico. Si TRUE, la tabla se divide
+#'   en múltiples páginas si es necesario (usando longtable). Por defecto TRUE.
+#' @param tfuente Valor numérico con el tamaño de fuente para la tabla.
+#'   Valores típicos son 8, 10 o 12. Por defecto 8.
+#' @param leyendatabla Cadena de texto opcional con el título (caption)
+#'   de la tabla. Si es NULL, no se añade leyenda. Por defecto NULL.
+#' @param vCabecera Vector de caracteres opcional con los nombres de
+#'   columnas a usar en lugar de los nombres originales del data.frame.
+#'   Debe tener la misma longitud que el número de columnas. Por defecto NULL.
+#' @param valigncol Cadena de texto opcional que especifica la alineación
+#'   de cada columna (ej. "clclc" para izquierda, centro, izquierda, centro,
+#'   centro). Si es NULL, se usa la alineación por defecto. Por defecto NULL.
+#'
+#' @return Objeto kableExtra de tipo R markdown/chunk con la tabla
+#'   formateada lista para incluir en documentos LaTeX o HTML.
+#'
 #' @examples
+#' \dontrun{
+#' # Ejemplo básico
 #' DemBas_presentadf_modelo01(mtcars)
+#'
+#' # Con leyenda y nombres de columnas personalizados
+#' DemBas_presentadf_modelo01(mtcars,
+#'                            tablavariaspaginas = TRUE,
+#'                            tfuente = 10,
+#'                            leyendatabla = "Vehículos del dataset mtcars",
+#'                            vCabecera = c("Marca", "Millas/gal", "Cilindros",
+#'                                          "Disp.", "Eje", "Peso"))
+#' }
+#'
 #' @export
-DemBas_presentadf_modelo01 = function(df_tabla,
-                                      tablavariaspaginas = T,
-                                      tfuente = 8,
-                                      leyendatabla = NULL,
-                                      vCabecera=NULL,valigncol=NULL) {
+DemBas_presentadf_modelo01 <- function(df_tabla,
+                                        tablavariaspaginas = TRUE,
+                                        tfuente = 8,
+                                        leyendatabla = NULL,
+                                        vCabecera = NULL,
+                                        valigncol = NULL) {
 
   tb01 = df_tabla
   options(knitr.kable.NA = '--',scipen=10)

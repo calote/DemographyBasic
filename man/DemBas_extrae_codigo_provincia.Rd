@@ -2,16 +2,27 @@
 % Please edit documentation in R/demografia.R
 \name{DemBas_extrae_codigo_provincia}
 \alias{DemBas_extrae_codigo_provincia}
-\title{DemBas_extrae_codigo_provincia}
+\title{Extrae el código numérico de provincia del nombre}
 \usage{
 DemBas_extrae_codigo_provincia(vprovincias)
 }
 \arguments{
-\item{vprovincias}{}
+\item{vprovincias}{Vector de tipo character con los nombres de
+provincia que incluyen el código al inicio (ej. "01 Albacete",
+"02 Alicante").}
 }
 \value{
-vector character
+Vector de tipo character con los códigos de provincia
+  extraídos (ej. "01", "02").
 }
 \description{
-DemBas_extrae_codigo_provincia
+Obtiene los dígitos iniciales de código de provincia de los
+nombres de provincia que aparecen en los datos del INE. El código
+va separado del nombre por un espacio en blanco.
+}
+\examples{
+nombres_provincias <- c("01 Albacete", "02 Alicante", "03 Almería")
+codigos <- DemBas_extrae_codigo_provincia(nombres_provincias)
+codigos
+
 }

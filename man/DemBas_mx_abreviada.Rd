@@ -2,35 +2,43 @@
 % Please edit documentation in R/tablavida.R
 \name{DemBas_mx_abreviada}
 \alias{DemBas_mx_abreviada}
-\title{Calcula las tasas especificas de mortalidad para edades agrupadas}
+\title{Calcula las tasas centralizadas de mortalidad para edades agrupadas}
 \usage{
 DemBas_mx_abreviada(Px, Dx, N0, D0)
 }
 \arguments{
-\item{Px}{vector de población media por edad}
+\item{Px}{Vector numérico con la población media por grupo de edad
+quinquenal. El primer elemento corresponde a edad 0, el segundo a 1-4,
+y así sucesivamente hasta 100+.}
 
-\item{Dx}{vector de defunciones por edad}
+\item{Dx}{Vector numérico con las defunciones por grupo de edad
+quinquenal, con el mismo formato que Px.}
 
-\item{N0}{nacimientos en el periodo}
+\item{N0}{Número de nacimientos en el periodo (usados para calcular la TMI).}
 
-\item{D0}{defunciones en el periodo}
+\item{D0}{Número de defunciones de menores de un año en el periodo.}
 }
 \value{
-devuelve un vector con las tasas especificas de mortalidad
+Vector numérico con las tasas centralizadas de mortalidad (nMx)
+  para cada grupo de edad. El primer elemento corresponde a la tasa de
+  mortalidad infantil (D0/N0) y los restantes son Dx/Px.
 }
 \description{
-Calcula las tasas especificas de mortalidad para edades agrupadas a partir de las defunciones y población
+Calcula las tasas centralizadas de mortalidad (nMx) para grupos de edad
+quinquenales a partir de defunciones y población media, incluyendo el
+tratamiento especial para el grupo de menores de un año (TMI).
 }
 \examples{
-x = c(0,1,seq(5,100,by=5))
-Px = c(NA,1627456,1938350,2104636,2388049,3070467,3614444,3545550,
-       3431304,3182840,2791972,2498361,2334676,1953022,1978465,
-       1898370,1492487,974162,495260,203924,46078,5139)
-Dx = c(NA,442,254,341,1032,1746,2136,2872,
-       2933,5545,7193,9401,13294,15972,26636,
-       41879,57377,68007,63007,44198,14609,2480)
-N0 = 441881 # Nacimientos en España en 2003: 441881
-D0 = 1733 # Defunciones de menores de un año durante 2003: 1733
-mx = DemBas_mx_abreviada(Px,Dx,N0,D0)
+# Datos de España 2003
+Px <- c(NA, 1627456, 1938350, 2104636, 2388049, 3070467, 3614444, 3545550,
+        3431304, 3182840, 2791972, 2498361, 2334676, 1953022, 1978465,
+        1898370, 1492487, 974162, 495260, 203924, 46078, 5139)
+Dx <- c(NA, 442, 254, 341, 1032, 1746, 2136, 2872,
+        2933, 5545, 7193, 9401, 13294, 15972, 26636,
+        41879, 57377, 68007, 63007, 44198, 14609, 2480)
+N0 <- 441881
+D0 <- 1733
+mx <- DemBas_mx_abreviada(Px, Dx, N0, D0)
 mx
+
 }

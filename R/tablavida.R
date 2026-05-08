@@ -1,37 +1,65 @@
 
-# @title Calcula la tabla de vida para edades simples o completa
-# @description Calcula la tabla de vida a partir de las tasas de mortalidad para edades simples: 0,1,2,...
-# @param mx vector de tasas de mortalidad para edades simples: 0,1,2,...
-#
-# @returns devuelve un data.frame con la tabla de vida
-# @examples
-# Mx1000 = c(9.12160, 0.84807,0.49502,0.33352,0.27296,
-# 0.23258,0.20229,0.19221,0.19225,0.18219,
-# 0.18219,0.18223,0.19239,0.21268,0.25325,
-# 0.31411,0.38518,0.44618,0.47682,0.48721,
-# 0.48744,0.48768,0.48792,0.48816,0.48840,
-# 0.48864,0.49907,0.49932,0.49957,0.51002,
-# 0.52049,0.55140,0.58236,0.62360,0.67515,
-# 0.72681,0.79907,0.89203,0.99549,1.09927,
-# 1.22398,1.35944,1.50578,1.68380,1.87305,
-# 2.07374,2.28609,2.52075,2.76762,3.04801,
-# 3.34149,3.64844,3.99052,4.35799,4.76231,
-# 5.19386,5.68611,6.20842,6.79514,7.42672,
-# 8.12774,8.89053,9.74129,10.68500,11.73947,
-# 12.91226,14.22468,15.71228,17.35403,19.16595,
-# 21.20612,23.43628,25.96366,28.83038,32.10259,
-# 35.83456,40.09691,44.96477,50.47392,56.71130,
-# 63.73696,71.61161,80.38833,90.15169,100.87032,
-# 112.56462,125.25733,138.92967,153.57492,169.22923,
-# 185.87183,203.41806,222.05303,241.69867,262.24030,
-# 283.83279,306.41026,329.80973,354.16667,379.65616,
-# 406.15058,434.57189,462.12121,491.86992,832.50000)
-# mx = Mx1000/1000
-# tb01 = DemBas_tablavida(mx)
-# tb01
-
+#' Calcula la tabla de vida para edades simples o completa
+#'
+#' Construye una tabla de vida a partir de las tasas de mortalidad para edades
+#' simples (0, 1, 2, ...). Utiliza el método de Chiang para el cálculo de qx
+#' y coeficientes de Greville para las personas-año vividas (Lx).
+#'
+#' @param mx Vector numérico con las tasas centralizadas de mortalidad para
+#'   cada edad simple (desde 0 hasta la edad máxima observada).
+#'   Los valores deben ser tasas (no probabilidades), expresadas por persona
+#'   (valores entre 0 y 1).
+#'
+#' @return Data frame con la tabla de vida que contiene las siguientes columnas:
+#'   \describe{
+#'     \item{x}{Edad simple (0, 1, 2, ..., n)}
+#'     \item{mx}{Tasa centralizada de mortalidad (redondeada a 5 decimales)}
+#'     \item{qx}{Probabilidad de muerte entre edad x y x+1}
+#'     \item{px}{Probabilidad de sobrevivir de edad x a x+1}
+#'     \item{lx}{Supervivientes a la edad x (radix = 100000)}
+#'     \item{dx}{Defunciones en el intervalo [x, x+1)}
+#'     \item{Lx}{Personas-año vividas en el intervalo [x, x+1)}
+#'     \item{Tx}{Personas-año restantes desde edad x}
+#'     \item{ex}{Esperanza de vida a la edad x}
+#'     \item{Sx}{Fracción de supervivencia (proporción que pasa de x a x+1)}
+#'   }
+#'
+#' @references
+#'   Chiang, C. L. (1984). The Life Table and Its Applications.
+#'   Malabar, FL: Robert E. Krieger Publishing Company.
+#'
+#'   Greville, T. N. E. (1948). Mortality tables analyzed by cause of death.
+#'   The American Statistician, 2(4), 23-27.
+#'
+#' @examples
+#' # Ejemplo con tasas de mortalidad por 1000 (convertir a tasas por persona)
+#' Mx1000 <- c(9.12160, 0.84807, 0.49502, 0.33352, 0.27296,
+#'             0.23258, 0.20229, 0.19221, 0.19225, 0.18219,
+#'             0.18219, 0.18223, 0.19239, 0.21268, 0.25325,
+#'             0.31411, 0.38518, 0.44618, 0.47682, 0.48721,
+#'             0.48744, 0.48768, 0.48792, 0.48816, 0.48840,
+#'             0.48864, 0.49907, 0.49932, 0.49957, 0.51002,
+#'             0.52049, 0.55140, 0.58236, 0.62360, 0.67515,
+#'             0.72681, 0.79907, 0.89203, 0.99549, 1.09927,
+#'             1.22398, 1.35944, 1.50578, 1.68380, 1.87305,
+#'             2.07374, 2.28609, 2.52075, 2.76762, 3.04801,
+#'             3.34149, 3.64844, 3.99052, 4.35799, 4.76231,
+#'             5.19386, 5.68611, 6.20842, 6.79514, 7.42672,
+#'             8.12774, 8.89053, 9.74129, 10.68500, 11.73947,
+#'             12.91226, 14.22468, 15.71228, 17.35403, 19.16595,
+#'             21.20612, 23.43628, 25.96366, 28.83038, 32.10259,
+#'             35.83456, 40.09691, 44.96477, 50.47392, 56.71130,
+#'             63.73696, 71.61161, 80.38833, 90.15169, 100.87032,
+#'             112.56462, 125.25733, 138.92967, 153.57492, 169.22923,
+#'             185.87183, 203.41806, 222.05303, 241.69867, 262.24030,
+#'             283.83279, 306.41026, 329.80973, 354.16667, 379.65616,
+#'             406.15058, 434.57189, 462.12121, 491.86992, 832.50000)
+#' mx <- Mx1000 / 1000
+#' tb01 <- DemBas_tablavida2(mx)
+#' head(tb01, 10)
+#'
 #' @export
-DemBas_tablavida2 = function(mx) {
+DemBas_tablavida2 <- function(mx) {
 
   nn = length(mx)  # cuantos: 0,1,2, ..., 100+  -> nn=101
   ## Paso 1
@@ -117,16 +145,33 @@ DemBas_tablavida2 = function(mx) {
 
 
 
-#' @title Calcula las tasas especificas de mortalidad para edades simples
-#' @description Calcula las tasas especificas de mortalidad para edades simplex a partir de las defunciones y población
-#' @param Px vector de población media por edad
-#' @param Dx vector de defunciones por edad
-#' @param N0 nacimientos en el periodo
-#' @param D0 defunciones en el periodo
+#' Calcula las tasas centralizadas de mortalidad para edades simples
 #'
-#' @returns devuelve un vector con las tasas especificas de mortalidad
+#' Calcula las tasas centralizadas de mortalidad (mx) para edades simples
+#' a partir de defunciones y población media, incluyendo el tratamiento
+#' especial para el grupo de menores de un año (TMI).
+#'
+#' @param Px Vector numérico con la población media por edad simple.
+#' @param Dx Vector numérico con las defunciones por edad simple.
+#' @param N0 Número de nacimientos en el periodo (usados para calcular la TMI).
+#' @param D0 Número de defunciones de menores de un año en el periodo.
+#'
+#' @return Vector numérico con las tasas centralizadas de mortalidad (mx)
+#'   para cada edad simple. El primer elemento corresponde a la tasa de
+#'   mortalidad infantil (D0/N0) y los restantes son Dx/Px. Los nombres
+#'   del vector indican la edad, con el último grupo etiquetado como "100+".
+#'
+#' @examples
+#' # Datos ficticios
+#' Px <- c(441881, rep(1627456, 100))
+#' Dx <- c(1733, rep(1000, 100))
+#' N0 <- 441881
+#' D0 <- 1733
+#' mx <- DemBas_mx(Px, Dx, N0, D0)
+#' mx[1:5]
+#'
 #' @export
-DemBas_mx = function(Px,Dx,N0,D0) {
+DemBas_mx <- function(Px, Dx, N0, D0) {
   nn = length(Px)  # cuantos: 0,1,2, ..., 100+  -> nn=101
   x = c(0:(nn-1))
   mx0 = D0/N0
@@ -143,21 +188,47 @@ DemBas_mx = function(Px,Dx,N0,D0) {
 
 
 
-# @title Calcula la tabla de vida para edades agrupadas
-# @description Calcula la tabla de vida abreviada a partir de las tasas de mortalidad para edades agrupadas: 0,1,2,...
-# @param mx vector de tasas de mortalidad para edades simples: 0,1,2,...
-#
-# @returns devuelve un data.frame con la tabla de vida
-# @export
-# @examples
-# (mx0 = 1733/441881) # TMI = D^t_0/N^t
-# # Defunciones de menores de un año durante 2003: 1733
-# # Nacimientos en España en 2003: 441881
-# mx = c(mx0,0.00027, 0.00013, 0.00016, 0.00043, 0.00057, 0.00059, 0.00081,
-#      0.00115, 0.00174, 0.00258, 0.00376, 0.00569, 0.00818, 0.01346,
-#      0.02206, 0.03844, 0.06981, 0.12872, 0.21674, 0.31705, 0.48258)
-# tv = DemBas_tablavida_abreviada2(mx)
-DemBas_tablavida_abreviada2 = function(mx) {
+#' Calcula la tabla de vida abreviada para edades agrupadas
+#'
+#' Construye una tabla de vida abreviada a partir de las tasas de mortalidad
+#' para edades agrupadas (0, 1-4, 5-9, 10-14, ...). El método aplica
+#' coeficientes de separación de Greville para el cálculo de las personas-año
+#' vividas (nLx).
+#'
+#' @param mx Vector numérico con las tasas centralizadas de mortalidad para
+#'   cada grupo de edad. Los grupos deben corresponderse con: 0, 1-4, 5-9,
+#'   10-14, ..., 95-99, 100+.
+#'
+#' @return Data frame con la tabla de vida abreviada que contiene las columnas:
+#'   \describe{
+#'     \item{x}{Edad inicial de cada grupo (0, 1, 5, 10, ..., 100)}
+#'     \item{mx}{Tasa centralizada de mortalidad (redondeada a 5 decimales)}
+#'     \item{qx}{Probabilidad de muerte en el intervalo n}
+#'     \item{px}{Probabilidad de sobrevivir en el intervalo n}
+#'     \item{lx}{Supervivientes al inicio del intervalo}
+#'     \item{dx}{Defunciones en el intervalo}
+#'     \item{Lx}{Personas-año vividas en el intervalo}
+#'     \item{Tx}{Personas-año restantes desde el inicio del intervalo}
+#'     \item{ex}{Esperanza de vida a la edad x}
+#'     \item{Sx}{Fracción de supervivencia del intervalo}
+#'   }
+#'
+#' @references
+#'   Greville, T. N. E. (1948). Mortality tables analyzed by cause of death.
+#'   The American Statistician, 2(4), 23-27.
+#'
+#' @examples
+#' # Tasas de mortalidad para España 2003
+#' mx0 <- 1733 / 441881
+#' mx <- c(mx0, 0.00027, 0.00013, 0.00016, 0.00043, 0.00057, 0.00059,
+#'         0.00081, 0.00115, 0.00174, 0.00258, 0.00376, 0.00569, 0.00818,
+#'         0.01346, 0.02206, 0.03844, 0.06981, 0.12872, 0.21674, 0.31705,
+#'         0.48258)
+#' tv <- DemBas_tablavida_abreviada2(mx)
+#' tv
+#'
+#' @export
+DemBas_tablavida_abreviada2 <- function(mx) {
 
   ## Paso 1
   x = c(0,1,seq(5,100,by=5))
@@ -242,28 +313,39 @@ DemBas_tablavida_abreviada2 = function(mx) {
 
 
 
-#' @title Calcula las tasas especificas de mortalidad para edades agrupadas
-#' @description Calcula las tasas especificas de mortalidad para edades agrupadas a partir de las defunciones y población
-#' @param Px vector de población media por edad
-#' @param Dx vector de defunciones por edad
-#' @param N0 nacimientos en el periodo
-#' @param D0 defunciones en el periodo
+#' Calcula las tasas centralizadas de mortalidad para edades agrupadas
 #'
-#' @returns devuelve un vector con las tasas especificas de mortalidad
-#' @export
+#' Calcula las tasas centralizadas de mortalidad (nMx) para grupos de edad
+#' quinquenales a partir de defunciones y población media, incluyendo el
+#' tratamiento especial para el grupo de menores de un año (TMI).
+#'
+#' @param Px Vector numérico con la población media por grupo de edad
+#'   quinquenal. El primer elemento corresponde a edad 0, el segundo a 1-4,
+#'   y así sucesivamente hasta 100+.
+#' @param Dx Vector numérico con las defunciones por grupo de edad
+#'   quinquenal, con el mismo formato que Px.
+#' @param N0 Número de nacimientos en el periodo (usados para calcular la TMI).
+#' @param D0 Número de defunciones de menores de un año en el periodo.
+#'
+#' @return Vector numérico con las tasas centralizadas de mortalidad (nMx)
+#'   para cada grupo de edad. El primer elemento corresponde a la tasa de
+#'   mortalidad infantil (D0/N0) y los restantes son Dx/Px.
+#'
 #' @examples
-#' x = c(0,1,seq(5,100,by=5))
-#' Px = c(NA,1627456,1938350,2104636,2388049,3070467,3614444,3545550,
-#'        3431304,3182840,2791972,2498361,2334676,1953022,1978465,
-#'        1898370,1492487,974162,495260,203924,46078,5139)
-#' Dx = c(NA,442,254,341,1032,1746,2136,2872,
-#'        2933,5545,7193,9401,13294,15972,26636,
-#'        41879,57377,68007,63007,44198,14609,2480)
-#' N0 = 441881 # Nacimientos en España en 2003: 441881
-#' D0 = 1733 # Defunciones de menores de un año durante 2003: 1733
-#' mx = DemBas_mx_abreviada(Px,Dx,N0,D0)
+#' # Datos de España 2003
+#' Px <- c(NA, 1627456, 1938350, 2104636, 2388049, 3070467, 3614444, 3545550,
+#'         3431304, 3182840, 2791972, 2498361, 2334676, 1953022, 1978465,
+#'         1898370, 1492487, 974162, 495260, 203924, 46078, 5139)
+#' Dx <- c(NA, 442, 254, 341, 1032, 1746, 2136, 2872,
+#'         2933, 5545, 7193, 9401, 13294, 15972, 26636,
+#'         41879, 57377, 68007, 63007, 44198, 14609, 2480)
+#' N0 <- 441881
+#' D0 <- 1733
+#' mx <- DemBas_mx_abreviada(Px, Dx, N0, D0)
 #' mx
-DemBas_mx_abreviada = function(Px,Dx,N0,D0) {
+#'
+#' @export
+DemBas_mx_abreviada <- function(Px, Dx, N0, D0) {
 
   x = c(0,1,seq(5,100,by=5))
   mx0 = D0/N0
@@ -278,52 +360,87 @@ DemBas_mx_abreviada = function(Px,Dx,N0,D0) {
 
 # tabla de vida completa (Rowland) ------------------------------------------------------------
 
-# Mx expresadas sin multiplicar por 1000 (valores < 1)
-f_tb_qx = function(Mx) {
-  qx = (2*Mx)/(2+Mx)
-  qx[length(qx)] = 1
+#' Funciones auxiliares para cálculo de tablas de vida
+#'
+#' Estas funciones calculan diferentes columnas de una tabla de vida
+#' a partir de las tasas de mortalidad centralizadas.
+#'
+#' @param Mx Vector de tasas centralizadas de mortalidad.
+#' @param qx Vector de probabilidades de muerte.
+#' @param px Vector de probabilidades de supervivencia.
+#' @param lx Vector de supervivientes.
+#' @param qx Vector de probabilidades de muerte (para f_tb_dx).
+#' @param dx Vector de defunciones en el intervalo.
+#' @param Mx Vector de tasas de mortalidad (para f_tb_Lx).
+#' @param Lx Vector de personas-año vividas (para f_tb_Tx, f_tb_ex, f_tb_Sx).
+#' @param lx Vector de supervivientes (para f_tb_ex, f_tb_Sx).
+#' @param l0 Población inicial o radix (para f_tb_lx). Por defecto 100000.
+#'
+#' @name f_tb_qx
+#' @aliases f_tb_qx f_tb_px f_tb_lx f_tb_dx f_tb_Lx f_tb_Tx f_tb_ex f_tb_Sx
+NULL
+
+#' @rdname f_tb_qx
+#' @export
+f_tb_qx <- function(Mx) {
+  qx <- (2 * Mx) / (2 + Mx)
+  qx[length(qx)] <- 1
   qx
 }
 
-f_tb_px = function(qx) {
-  px = 1-qx
+#' @rdname f_tb_qx
+#' @export
+f_tb_px <- function(qx) {
+  px <- 1 - qx
   px
 }
 
-f_tb_lx = function(px,l0=100000) {
-  lx = rep(NA,length(px))
-  lx[1] = l0
+#' @rdname f_tb_qx
+#' @export
+f_tb_lx <- function(px, l0 = 100000) {
+  lx <- rep(NA, length(px))
+  lx[1] <- l0
   for (i in 2:length(px)) {
-    lx[i] = lx[i-1] * px[i-1]
+    lx[i] <- lx[i - 1] * px[i - 1]
   }
   lx
 }
 
-f_tb_dx = function(lx,qx) {
-  dx = lx * qx
+#' @rdname f_tb_qx
+#' @export
+f_tb_dx <- function(lx, qx) {
+  dx <- lx * qx
   dx
 }
 
-f_tb_Lx = function(lx,dx,Mx) {
-  Lx = lx - 0.5*dx
-  Lx[1] = 0.3*lx[1] + 0.7*lx[2]
-  Lx[2] = 0.4*lx[2] + 0.6*lx[3]
-  Lx[length(Lx)] = lx[length(lx)]/Mx[length(Mx)]
+#' @rdname f_tb_qx
+#' @export
+f_tb_Lx <- function(lx, dx, Mx) {
+  Lx <- lx - 0.5 * dx
+  Lx[1] <- 0.3 * lx[1] + 0.7 * lx[2]
+  Lx[2] <- 0.4 * lx[2] + 0.6 * lx[3]
+  Lx[length(Lx)] <- lx[length(lx)] / Mx[length(Mx)]
   Lx
 }
 
-f_tb_Tx = function(Lx) {
-  Tx = cumsum(rev(Lx))
-  Tx = rev(Tx)
+#' @rdname f_tb_qx
+#' @export
+f_tb_Tx <- function(Lx) {
+  Tx <- cumsum(rev(Lx))
+  Tx <- rev(Tx)
   Tx
 }
 
-f_tb_ex = function(Tx,lx) {
-  ex = Tx/lx
+#' @rdname f_tb_qx
+#' @export
+f_tb_ex <- function(Tx, lx) {
+  ex <- Tx / lx
   ex
 }
 
-f_tb_Sx = function(Lx,lx) {
+#' @rdname f_tb_qx
+#' @export
+f_tb_Sx <- function(Lx, lx) {
   ult = length(Lx)
   Sx = rep(NA,ult)
   Sx[1] = (Lx[2])/(Lx[1])
@@ -333,43 +450,68 @@ f_tb_Sx = function(Lx,lx) {
 
 }
 
-#' @title Calcula la tabla de vida para edades simples o completa
-#' @description Calcula la tabla de vida a partir de las tasas de mortalidad para edades simples: 0,1,2,...
-#' @param mx vector de tasas de mortalidad para edades simples: 0,1,2,...
-#' @param l0 población inicial o radix de la tabla
-#' @param redondeo si TRUE redondea los valores
-#' @param muestraSx si TRUE muestra la columna Sx (no incluye SN)
+#' Calcula la tabla de vida completa (Rowland)
 #'
-#' @returns devuelve un data.frame con la tabla de vida
-#' @Import tibble tibble
+#' Construye una tabla de vida completa a partir de las tasas de mortalidad
+#' para edades simples (0, 1, 2, ...). Utiliza el método de Chiang para qx
+#' y coeficientes de Greville para Lx.
+#'
+#' @param Mx Vector numérico con las tasas centralizadas de mortalidad para
+#'   cada edad simple. Valores menores que 1 (tasas por persona).
+#' @param l0 Valor numérico con la población inicial (radix). Por defecto 100000.
+#' @param redondeo Valor lógico. Si TRUE, redondea los resultados según
+#'   convenciones demográficas estándar.
+#' @param muestraSx Valor lógico. Si TRUE, incluye la columna Sx en el resultado.
+#'
+#' @return tibble con la tabla de vida que contiene las columnas:
+#'   \describe{
+#'     \item{Edad}{Edad simple (0, 1, 2, ..., n+)}
+#'     \item{Mx1000}{Tasa centralizada de mortalidad por 1000}
+#'     \item{qx}{Probabilidad de muerte entre edad x y x+1}
+#'     \item{px}{Probabilidad de sobrevivir de edad x a x+1}
+#'     \item{lx}{Supervivientes a la edad x}
+#'     \item{dx}{Defunciones en el intervalo [x, x+1)}
+#'     \item{Lx}{Personas-año vividas en el intervalo [x, x+1)}
+#'     \item{Tx}{Personas-año restantes desde edad x}
+#'     \item{ex}{Esperanza de vida a la edad x}
+#'     \item{Sx}{Fracción de supervivencia (solo si muestraSx=TRUE)}
+#'   }
+#'
+#' @references
+#'   Rowland, D. T. (2003). Demographic Techniques. Sydney: Pergamon Press.
+#'
+#'   Chiang, C. L. (1984). The Life Table and Its Applications.
+#'   Malabar, FL: Robert E. Krieger Publishing Company.
+#'
 #' @examples
-#' Mx1000 = c(9.12160, 0.84807,0.49502,0.33352,0.27296,
-#' 0.23258,0.20229,0.19221,0.19225,0.18219,
-#' 0.18219,0.18223,0.19239,0.21268,0.25325,
-#' 0.31411,0.38518,0.44618,0.47682,0.48721,
-#' 0.48744,0.48768,0.48792,0.48816,0.48840,
-#' 0.48864,0.49907,0.49932,0.49957,0.51002,
-#' 0.52049,0.55140,0.58236,0.62360,0.67515,
-#' 0.72681,0.79907,0.89203,0.99549,1.09927,
-#' 1.22398,1.35944,1.50578,1.68380,1.87305,
-#' 2.07374,2.28609,2.52075,2.76762,3.04801,
-#' 3.34149,3.64844,3.99052,4.35799,4.76231,
-#' 5.19386,5.68611,6.20842,6.79514,7.42672,
-#' 8.12774,8.89053,9.74129,10.68500,11.73947,
-#' 12.91226,14.22468,15.71228,17.35403,19.16595,
-#' 21.20612,23.43628,25.96366,28.83038,32.10259,
-#' 35.83456,40.09691,44.96477,50.47392,56.71130,
-#' 63.73696,71.61161,80.38833,90.15169,100.87032,
-#' 112.56462,125.25733,138.92967,153.57492,169.22923,
-#' 185.87183,203.41806,222.05303,241.69867,262.24030,
-#' 283.83279,306.41026,329.80973,354.16667,379.65616,
-#' 406.15058,434.57189,462.12121,491.86992,832.50000)
-#' mx = Mx1000/1000
-#' tb01 = DemBas_tablavida_completa(mx)
-#' tb01
+#' Mx1000 <- c(9.12160, 0.84807, 0.49502, 0.33352, 0.27296,
+#'             0.23258, 0.20229, 0.19221, 0.19225, 0.18219,
+#'             0.18219, 0.18223, 0.19239, 0.21268, 0.25325,
+#'             0.31411, 0.38518, 0.44618, 0.47682, 0.48721,
+#'             0.48744, 0.48768, 0.48792, 0.48816, 0.48840,
+#'             0.48864, 0.49907, 0.49932, 0.49957, 0.51002,
+#'             0.52049, 0.55140, 0.58236, 0.62360, 0.67515,
+#'             0.72681, 0.79907, 0.89203, 0.99549, 1.09927,
+#'             1.22398, 1.35944, 1.50578, 1.68380, 1.87305,
+#'             2.07374, 2.28609, 2.52075, 2.76762, 3.04801,
+#'             3.34149, 3.64844, 3.99052, 4.35799, 4.76231,
+#'             5.19386, 5.68611, 6.20842, 6.79514, 7.42672,
+#'             8.12774, 8.89053, 9.74129, 10.68500, 11.73947,
+#'             12.91226, 14.22468, 15.71228, 17.35403, 19.16595,
+#'             21.20612, 23.43628, 25.96366, 28.83038, 32.10259,
+#'             35.83456, 40.09691, 44.96477, 50.47392, 56.71130,
+#'             63.73696, 71.61161, 80.38833, 90.15169, 100.87032,
+#'             112.56462, 125.25733, 138.92967, 153.57492, 169.22923,
+#'             185.87183, 203.41806, 222.05303, 241.69867, 262.24030,
+#'             283.83279, 306.41026, 329.80973, 354.16667, 379.65616,
+#'             406.15058, 434.57189, 462.12121, 491.86992, 832.50000)
+#' mx <- Mx1000 / 1000
+#' tb01 <- DemBas_tablavida_completa(mx)
+#' head(tb01, 10)
 #'
 #' @export
-DemBas_tablavida_completa = function(Mx,l0=100000,redondeo=TRUE,muestraSx = TRUE) {
+DemBas_tablavida_completa <- function(Mx, l0 = 100000, redondeo = TRUE,
+                                      muestraSx = TRUE) {
   noredondeo=!redondeo
   edades = as.character((1:length(Mx))-1)
   edades[length(edades)] = paste0(edades[length(edades)],"+")
@@ -412,42 +554,52 @@ DemBas_tablavida_completa = function(Mx,l0=100000,redondeo=TRUE,muestraSx = TRUE
 
 
 
-#' @title Calcula la tabla de vida para edades simples o completa pero simulando cálculos con una calculadora
-#' @description Calcula la tabla de vida a partir de las tasas de mortalidad para edades simples: 0,1,2,... y simula los cálculos con una calculadora
-#' @param mx vector de tasas de mortalidad para edades simples: 0,1,2,...
-#' @param l0 población inicial o radix de la tabla
-#' @param muestraSx si TRUE muestra la columna Sx (no incluye SN)
+#' Calcula la tabla de vida completa con redondeo manual
 #'
-#' @returns devuelve un data.frame con la tabla de vida
-#' @Import tibble tibble
+#' Versión de \code{\link{DemBas_tablavida_completa}} que simula el proceso
+#' de redondeo manual típico de los cálculos demográficos tradicionales.
+#' Redondea cada columna de forma independiente en cada paso, imitando
+#' el proceso que se realizaría con una calculadora.
+#'
+#' @param Mx Vector numérico con las tasas centralizadas de mortalidad para
+#'   cada edad simple.
+#' @param l0 Valor numérico con la población inicial (radix). Por defecto 100000.
+#' @param muestraSx Valor lógico. Si TRUE, incluye la columna Sx en el resultado.
+#'
+#' @return tibble con la tabla de vida calculada con redondeo manual.
+#'
+#' @seealso \code{\link{DemBas_tablavida_completa}} para la versión sin
+#'   redondeo manual.
+#'
 #' @examples
-#' Mx1000 = c(9.12160, 0.84807,0.49502,0.33352,0.27296,
-#' 0.23258,0.20229,0.19221,0.19225,0.18219,
-#' 0.18219,0.18223,0.19239,0.21268,0.25325,
-#' 0.31411,0.38518,0.44618,0.47682,0.48721,
-#' 0.48744,0.48768,0.48792,0.48816,0.48840,
-#' 0.48864,0.49907,0.49932,0.49957,0.51002,
-#' 0.52049,0.55140,0.58236,0.62360,0.67515,
-#' 0.72681,0.79907,0.89203,0.99549,1.09927,
-#' 1.22398,1.35944,1.50578,1.68380,1.87305,
-#' 2.07374,2.28609,2.52075,2.76762,3.04801,
-#' 3.34149,3.64844,3.99052,4.35799,4.76231,
-#' 5.19386,5.68611,6.20842,6.79514,7.42672,
-#' 8.12774,8.89053,9.74129,10.68500,11.73947,
-#' 12.91226,14.22468,15.71228,17.35403,19.16595,
-#' 21.20612,23.43628,25.96366,28.83038,32.10259,
-#' 35.83456,40.09691,44.96477,50.47392,56.71130,
-#' 63.73696,71.61161,80.38833,90.15169,100.87032,
-#' 112.56462,125.25733,138.92967,153.57492,169.22923,
-#' 185.87183,203.41806,222.05303,241.69867,262.24030,
-#' 283.83279,306.41026,329.80973,354.16667,379.65616,
-#' 406.15058,434.57189,462.12121,491.86992,832.50000)
-#' mx = Mx1000/1000
-#' tb01 = DemBas_tablavida_completa_calculadora(mx)
-#' tb01
+#' Mx1000 <- c(9.12160, 0.84807, 0.49502, 0.33352, 0.27296,
+#'             0.23258, 0.20229, 0.19221, 0.19225, 0.18219,
+#'             0.18219, 0.18223, 0.19239, 0.21268, 0.25325,
+#'             0.31411, 0.38518, 0.44618, 0.47682, 0.48721,
+#'             0.48744, 0.48768, 0.48792, 0.48816, 0.48840,
+#'             0.48864, 0.49907, 0.49932, 0.49957, 0.51002,
+#'             0.52049, 0.55140, 0.58236, 0.62360, 0.67515,
+#'             0.72681, 0.79907, 0.89203, 0.99549, 1.09927,
+#'             1.22398, 1.35944, 1.50578, 1.68380, 1.87305,
+#'             2.07374, 2.28609, 2.52075, 2.76762, 3.04801,
+#'             3.34149, 3.64844, 3.99052, 4.35799, 4.76231,
+#'             5.19386, 5.68611, 6.20842, 6.79514, 7.42672,
+#'             8.12774, 8.89053, 9.74129, 10.68500, 11.73947,
+#'             12.91226, 14.22468, 15.71228, 17.35403, 19.16595,
+#'             21.20612, 23.43628, 25.96366, 28.83038, 32.10259,
+#'             35.83456, 40.09691, 44.96477, 50.47392, 56.71130,
+#'             63.73696, 71.61161, 80.38833, 90.15169, 100.87032,
+#'             112.56462, 125.25733, 138.92967, 153.57492, 169.22923,
+#'             185.87183, 203.41806, 222.05303, 241.69867, 262.24030,
+#'             283.83279, 306.41026, 329.80973, 354.16667, 379.65616,
+#'             406.15058, 434.57189, 462.12121, 491.86992, 832.50000)
+#' mx <- Mx1000 / 1000
+#' tb01 <- DemBas_tablavida_completa_calculadora(mx)
+#' head(tb01, 10)
 #'
 #' @export
-DemBas_tablavida_completa_calculadora = function(Mx,l0=100000,muestraSx = TRUE) {
+DemBas_tablavida_completa_calculadora <- function(Mx, l0 = 100000,
+                                                   muestraSx = TRUE) {
   edades = as.character((1:length(Mx))-1)
   edades[length(edades)] = paste0(edades[length(edades)],"+")
   Mx = DemBas_redondear(Mx,5)
@@ -487,54 +639,94 @@ DemBas_tablavida_completa_calculadora = function(Mx,l0=100000,muestraSx = TRUE) 
 
 # tabla de vida abreviada (Rowland) -----------------------------------------------------------
 
-f_tba_nqx = function(nMx,vn) {
-  nqx = (2*vn*nMx)/(2+vn*nMx)
-  nqx[length(nqx)] = 1
+#' Funciones auxiliares para cálculo de tablas de vida abreviadas
+#'
+#' Estas funciones calculan diferentes columnas de una tabla de vida
+#' abreviada a partir de las tasas de mortalidad centralizadas para
+#' grupos de edad.
+#'
+#' @param nMx Vector de tasas centralizadas de mortalidad por grupo de edad.
+#' @param vn Vector con las longitudes de cada intervalo de edad.
+#' @param nqx Vector de probabilidades de muerte en el intervalo n.
+#' @param npx Vector de probabilidades de supervivencia en el intervalo.
+#' @param npx Vector de probabilidades de supervivencia (para f_tba_lx).
+#' @param l0 Población inicial o radix (para f_tba_lx). Por defecto 100000.
+#' @param lx Vector de supervivientes (para f_tba_ndx).
+#' @param nqx Vector de probabilidades de muerte (para f_tba_ndx).
+#' @param lx Vector de supervivientes (para f_tba_nLx).
+#' @param nMx Vector de tasas de mortalidad (para f_tba_nLx).
+#' @param nLx Vector de personas-año vividas (para f_tba_Tx, f_tba_ex, f_tba_Sx).
+#' @param lx Vector de supervivientes (para f_tba_ex, f_tba_Sx).
+#' @param Lx Vector de personas-año vividas (para f_tba_Sx).
+#'
+#' @name f_tba_nqx
+#' @aliases f_tba_nqx f_tba_npx f_tba_lx f_tba_ndx f_tba_nLx f_tba_Tx f_tba_ex f_tba_Sx
+NULL
+
+#' @rdname f_tba_nqx
+#' @export
+f_tba_nqx <- function(nMx, vn) {
+  nqx <- (2 * vn * nMx) / (2 + vn * nMx)
+  nqx[length(nqx)] <- 1
   nqx
 }
 
-f_tba_npx = function(nqx) {
-  npx = 1-nqx
+#' @rdname f_tba_nqx
+#' @export
+f_tba_npx <- function(nqx) {
+  npx <- 1 - nqx
   npx
 }
 
-f_tba_lx = function(npx,l0=100000) {
-  lx = rep(NA,length(npx))
-  lx[1] = l0
+#' @rdname f_tba_nqx
+#' @export
+f_tba_lx <- function(npx, l0 = 100000) {
+  lx <- rep(NA, length(npx))
+  lx[1] <- l0
   for (i in 2:length(npx)) {
-    lx[i] = lx[i-1] * npx[i-1]
+    lx[i] <- lx[i - 1] * npx[i - 1]
   }
   lx
 }
 
-f_tba_ndx = function(lx,nqx) {
-  ndx = lx * nqx
+#' @rdname f_tba_nqx
+#' @export
+f_tba_ndx <- function(lx, nqx) {
+  ndx <- lx * nqx
   ndx
 }
 
-f_tba_nLx = function(lx,nMx,vn) {
-  nLx = rep(NA,length(lx))
-  for (i in 3:(length(lx)-1)) {
-    nLx[i] = (vn[i]/2)*(lx[i]+lx[i+1])
+#' @rdname f_tba_nqx
+#' @export
+f_tba_nLx <- function(lx, nMx, vn) {
+  nLx <- rep(NA, length(lx))
+  for (i in 3:(length(lx) - 1)) {
+    nLx[i] <- (vn[i] / 2) * (lx[i] + lx[i + 1])
   }
-  nLx[1] = 0.3*lx[1] + 0.7*lx[2]
-  nLx[2] = (4/2)*(lx[2] + lx[3])
-  nLx[length(nLx)] = lx[length(lx)]/nMx[length(nMx)]
+  nLx[1] <- 0.3 * lx[1] + 0.7 * lx[2]
+  nLx[2] <- (4 / 2) * (lx[2] + lx[3])
+  nLx[length(nLx)] <- lx[length(lx)] / nMx[length(nMx)]
   nLx
 }
 
-f_tba_Tx = function(nLx) {
-  Tx = cumsum(rev(nLx))
-  Tx = rev(Tx)
+#' @rdname f_tba_nqx
+#' @export
+f_tba_Tx <- function(nLx) {
+  Tx <- cumsum(rev(nLx))
+  Tx <- rev(Tx)
   Tx
 }
 
-f_tba_ex = function(Tx,lx) {
-  ex = Tx/lx
+#' @rdname f_tba_nqx
+#' @export
+f_tba_ex <- function(Tx, lx) {
+  ex <- Tx / lx
   ex
 }
 
-f_tba_Sx = function(Lx,lx) {
+#' @rdname f_tba_nqx
+#' @export
+f_tba_Sx <- function(Lx, lx) {
   ult = length(Lx)
   Sx = rep(NA,ult)
   Sx[1] = (Lx[1] + Lx[2])/(5*lx[1])
@@ -545,24 +737,53 @@ f_tba_Sx = function(Lx,lx) {
 
 }
 
-#' @title Calcula la tabla de vida para edades agrupadas
-#' @description Calcula la tabla de vida abreviada a partir de las tasas de mortalidad para edades agrupadas: 0,1,2,...
-#' @param mx vector de tasas de mortalidad para edades simples: 0,1,2,...
-#' @param l0 población inicial o radix de la tabla
-#' @param redondeo si TRUE redondea los valores
-#' @param muestraSx si TRUE muestra la columna Sx
+#' Calcula la tabla de vida abreviada (Rowland)
 #'
-#' @returns devuelve un data.frame con la tabla de vida
-#' @export
+#' Construye una tabla de vida abreviada a partir de las tasas de mortalidad
+#' para grupos de edad quinquenales. El método aplica coeficientes de
+#' separación de Greville para el cálculo de las personas-año vividas (nLx).
+#'
+#' @param nMx Vector numérico con las tasas centralizadas de mortalidad para
+#'   cada grupo de edad quinquenal. Los grupos deben corresponderse con:
+#'   0, 1-4, 5-9, 10-14, ..., 95-99, 100+.
+#' @param l0 Valor numérico con la población inicial (radix). Por defecto 100000.
+#' @param redondeo Valor lógico. Si TRUE, redondea los resultados según
+#'   convenciones demográficas estándar.
+#' @param muestraSx Valor lógico. Si TRUE, incluye la columna Sx en el resultado.
+#'
+#' @return tibble con la tabla de vida abreviada que contiene las columnas:
+#'   \describe{
+#'     \item{Edad}{Edad inicial de cada grupo (0, 1, 5, 10, ..., 100+)}
+#'     \item{n}{Longitud del intervalo de edad}
+#'     \item{nMx1000}{Tasa centralizada de mortalidad por 1000}
+#'     \item{nqx}{Probabilidad de muerte en el intervalo n}
+#'     \item{npx}{Probabilidad de sobrevivir en el intervalo n}
+#'     \item{lx}{Supervivientes al inicio del intervalo}
+#'     \item{ndx}{Defunciones en el intervalo}
+#'     \item{nLx}{Personas-año vividas en el intervalo}
+#'     \item{Tx}{Personas-año restantes desde el inicio del intervalo}
+#'     \item{ex}{Esperanza de vida a la edad x}
+#'     \item{Sx}{Fracción de supervivencia del intervalo}
+#'   }
+#'
+#' @references
+#'   Rowland, D. T. (2003). Demographic Techniques. Sydney: Pergamon Press.
+#'
+#'   Greville, T. N. E. (1948). Mortality tables analyzed by cause of death.
+#'   The American Statistician, 2(4), 23-27.
+#'
 #' @examples
-#' (mx0 = 1733/441881) # TMI = D^t_0/N^t
-#' # Defunciones de menores de un año durante 2003: 1733
-#' # Nacimientos en España en 2003: 441881
-#' mx = c(mx0,0.00027, 0.00013, 0.00016, 0.00043, 0.00057, 0.00059, 0.00081,
-#'      0.00115, 0.00174, 0.00258, 0.00376, 0.00569, 0.00818, 0.01346,
-#'      0.02206, 0.03844, 0.06981, 0.12872, 0.21674, 0.31705, 0.48258)
-#' tv = DemBas_tablavida_abreviada(mx)
-DemBas_tablavida_abreviada = function(nMx,l0=100000,redondeo=TRUE,muestraSx = TRUE) {
+#' mx0 <- 1733 / 441881
+#' mx <- c(mx0, 0.00027, 0.00013, 0.00016, 0.00043, 0.00057, 0.00059,
+#'         0.00081, 0.00115, 0.00174, 0.00258, 0.00376, 0.00569, 0.00818,
+#'         0.01346, 0.02206, 0.03844, 0.06981, 0.12872, 0.21674, 0.31705,
+#'         0.48258)
+#' tv <- DemBas_tablavida_abreviada(mx)
+#' tv
+#'
+#' @export
+DemBas_tablavida_abreviada <- function(nMx, l0 = 100000, redondeo = TRUE,
+                                       muestraSx = TRUE) {
   noredondeo=!redondeo
   vn = rep(5,length(nMx))
   vn[1] = 1
@@ -611,23 +832,35 @@ DemBas_tablavida_abreviada = function(nMx,l0=100000,redondeo=TRUE,muestraSx = TR
 }
 
 
-#' @title Calcula la tabla de vida para edades agrupadas pero simulando cálculos con una calculadora
-#' @description Calcula la tabla de vida abreviada a partir de las tasas de mortalidad para edades agrupadas: 0,1,2,... y simula los cálculos con una calculadora
-#' @param mx vector de tasas de mortalidad para edades simples: 0,1,2,...
-#' @param l0 población inicial o radix de la tabla
-#' @param muestraSx si TRUE muestra la columna Sx
+#' Calcula la tabla de vida abreviada con redondeo manual
 #'
-#' @returns devuelve un data.frame con la tabla de vida
-#' @export
+#' Versión de \code{\link{DemBas_tablavida_abreviada}} que simula el proceso
+#' de redondeo manual típico de los cálculos demográficos tradicionales.
+#' Redondea cada columna de forma independiente en cada paso, imitando
+#' el proceso que se realizaría con una calculadora.
+#'
+#' @param nMx Vector numérico con las tasas centralizadas de mortalidad para
+#'   cada grupo de edad quinquenal.
+#' @param l0 Valor numérico con la población inicial (radix). Por defecto 100000.
+#' @param muestraSx Valor lógico. Si TRUE, incluye la columna Sx en el resultado.
+#'
+#' @return tibble con la tabla de vida abreviada calculada con redondeo manual.
+#'
+#' @seealso \code{\link{DemBas_tablavida_abreviada}} para la versión sin
+#'   redondeo manual.
+#'
 #' @examples
-#' (mx0 = 1733/441881) # TMI = D^t_0/N^t
-#' # Defunciones de menores de un año durante 2003: 1733
-#' # Nacimientos en España en 2003: 441881
-#' mx = c(mx0,0.00027, 0.00013, 0.00016, 0.00043, 0.00057, 0.00059, 0.00081,
-#'      0.00115, 0.00174, 0.00258, 0.00376, 0.00569, 0.00818, 0.01346,
-#'      0.02206, 0.03844, 0.06981, 0.12872, 0.21674, 0.31705, 0.48258)
-#' tv = DemBas_tablavida_abreviada_calculadora(mx)
-DemBas_tablavida_abreviada_calculadora = function(nMx,l0=100000,muestraSx = TRUE) {
+#' mx0 <- 1733 / 441881
+#' mx <- c(mx0, 0.00027, 0.00013, 0.00016, 0.00043, 0.00057, 0.00059,
+#'         0.00081, 0.00115, 0.00174, 0.00258, 0.00376, 0.00569, 0.00818,
+#'         0.01346, 0.02206, 0.03844, 0.06981, 0.12872, 0.21674, 0.31705,
+#'         0.48258)
+#' tv <- DemBas_tablavida_abreviada_calculadora(mx)
+#' tv
+#'
+#' @export
+DemBas_tablavida_abreviada_calculadora <- function(nMx, l0 = 100000,
+                                                    muestraSx = TRUE) {
   vn = rep(5,length(nMx))
   vn[1] = 1
   vn[2] = 4

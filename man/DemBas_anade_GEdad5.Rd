@@ -2,41 +2,61 @@
 % Please edit documentation in R/demografia.R
 \name{DemBas_anade_GEdad5}
 \alias{DemBas_anade_GEdad5}
-\title{DemBas_anade_GEdad5}
+\title{Añade columnas de grupos de edad quinquenales a un data.frame}
 \usage{
 DemBas_anade_GEdad5(datos, varEdad)
 }
 \arguments{
-\item{datos}{data.frame o tibble con una variable de edad}
+\item{datos}{data.frame o tibble que contiene una columna de edad
+numérica.}
 
-\item{varEdad}{debe ser de tipo: numeric o integer}
+\item{varEdad}{El nombre de la columna de edad (de tipo numeric o
+integer) presente en datos. Se especifica sin comillas (operador
+de evaluación no estándar de tidyselect).}
+}
+\value{
+El mismo data.frame de entrada con dos columnas adicionales:
+  \describe{
+    \item{GEdad5}{Vector de caracteres con las etiquetas de los
+      grupos quinquenales (ej. " 0-4", " 5-9", ..., "100+")}
+    \item{GEdad5Num}{Vector numérico con la edad inicial de cada
+      grupo (ej. 0, 5, 10, ..., 100)}
+  }
 }
 \description{
-Añade una variable de grupos quinquenales de edad
+Añade dos nuevas columnas a un data.frame: una con etiquetas
+de grupos de edad quinquenales (ej. " 0-4", " 5-9", "10-14", ...)
+y otra con el valor numérico inicial de cada grupo (ej. 0, 5, 10, ...).
+Esta función es útil para preparar datos para la construcción de
+pirámides poblacionales.
 }
 \examples{
-datos = DemBas_read_px(system.file("examples/9663.px", package = "DemographyBasic"))
-datosPob = datos |>
+\dontrun{
+# Requiere datos del paquete
+datos <- DemBas_read_px(system.file("examples/9663.px",
+                                    package = "DemographyBasic"))
+datosPob <- datos |>
   dplyr::filter(Periodo == "1 de enero de  2018",
                 Edad.simple != "Total",
                 Sexo != "Ambos sexos") |>
   dplyr::select(Sexo, Edad.simple, Poblacion = value)
 
-datosPob2 = datosPob |>
+datosPob2 <- datosPob |>
   dplyr::mutate(
     Edad = as.numeric(gsub("[años|año]", "", Edad.simple)),
     Poblacion = round(Poblacion, 0)
   )
 
-datosPob2_conGruposEdad = DemBas_anade_GEdad5(datosPob2, Edad)
-head(datosPob2_conGruposEdad,15)
+datosPob2_conGruposEdad <- DemBas_anade_GEdad5(datosPob2, Edad)
+head(datosPob2_conGruposEdad, 15)
 
-
-datosPirAgru = DemBas_anade_GEdad5(datosPob2, Edad) |>
+# Agrupar para pirámide
+datosPirAgru <- DemBas_anade_GEdad5(datosPob2, Edad) |>
   dplyr::select(Sexo, Edad, Poblacion, GEdad5) |>
   dplyr::group_by(GEdad5, Sexo) |>
   dplyr::summarise(Poblacion = sum(Poblacion), .groups = "keep")
 
 head(datosPirAgru)
+}
 
 }

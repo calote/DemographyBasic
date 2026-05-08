@@ -2,13 +2,29 @@
 % Please edit documentation in R/demografia.R
 \name{DemBas_extrae_notienen_codigos}
 \alias{DemBas_extrae_notienen_codigos}
-\title{DemBas_extrae_notienen_codigos}
+\title{Identifica los valores que no tienen código asignado}
 \usage{
 DemBas_extrae_notienen_codigos(columna, columnacodigos)
 }
 \arguments{
-\item{columnacodigos}{}
+\item{columna}{Vector de tipo character con los nombres originales.}
+
+\item{columnacodigos}{Vector de tipo character o numeric con los
+códigos correspondientes. Los valores NA indican elementos sin código.}
+}
+\value{
+Vector de tipo character con los valores únicos de columna
+  que no tienen código asignado (es decir, cuyo código es NA).
 }
 \description{
-DemBas_extrae_notienen_codigos
+Encuentra los elementos de una columna que no tienen un código
+correspondiente en la columna de códigos (valores NA en la columna
+de códigos).
+}
+\examples{
+nombres <- c("Andorra", "España", "Francia", "Alemania")
+codigos <- c(NA, "724", "250", NA)
+sin_codigo <- DemBas_extrae_notienen_codigos(nombres, codigos)
+sin_codigo
+
 }

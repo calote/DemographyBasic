@@ -2,7 +2,7 @@
 % Please edit documentation in R/piramidespoblacion.R
 \name{DemBas_datos_piramidePorc}
 \alias{DemBas_datos_piramidePorc}
-\title{DemBas_datos_piramidePorc}
+\title{Prepara datos de pirámide para visualización con porcentajes}
 \usage{
 DemBas_datos_piramidePorc(
   datosPiramide,
@@ -11,10 +11,29 @@ DemBas_datos_piramidePorc(
 )
 }
 \arguments{
-\item{datosPiramide}{data.frame o tibble con columnas: Edad (fac,num, simples: 0,1,2,...), Sexo (factor), Poblacion (num)}
+\item{datosPiramide}{data.frame o tibble con columnas:
+\describe{
+  \item{Edad}{Variable categórica o numérica (simples: 0, 1, 2,...)}
+  \item{Sexo}{Variable categórica (factor)}
+  \item{Poblacion}{Variable numérica (absolutos)}
+}}
 
-\item{etiq.hombre}{}
+\item{GEdad_final}{Valor numérico con la edad máxima final para el
+último grupo de edad. Por defecto 100.}
+
+\item{etiq.hombre}{Cadena de texto con la etiqueta para hombres.
+Por defecto "Hombres".}
+}
+\value{
+Un tibble con columnas: Edad (grupo de edad, factor), Sexo
+  (categoria de sexo, factor), Poblacion (poblacion absoluta,
+  numerico), Porcentajes (porcentaje respecto al total, numerico),
+  Pob (poblacion original antes de aplicar signo). Los valores de
+  poblacion para hombres tienen signo negativo para su representacion
+  en la piramide.
 }
 \description{
-DemBas_datos_piramidePorc
+Transforma los datos de población para que estén listos para graficar
+una pirámide con porcentajes. Agrupa las edades en intervalos,
+calcula porcentajes respecto al total y adiciona columnas derivadas.
 }

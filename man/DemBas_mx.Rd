@@ -2,22 +2,37 @@
 % Please edit documentation in R/tablavida.R
 \name{DemBas_mx}
 \alias{DemBas_mx}
-\title{Calcula las tasas especificas de mortalidad para edades simples}
+\title{Calcula las tasas centralizadas de mortalidad para edades simples}
 \usage{
 DemBas_mx(Px, Dx, N0, D0)
 }
 \arguments{
-\item{Px}{vector de población media por edad}
+\item{Px}{Vector numérico con la población media por edad simple.}
 
-\item{Dx}{vector de defunciones por edad}
+\item{Dx}{Vector numérico con las defunciones por edad simple.}
 
-\item{N0}{nacimientos en el periodo}
+\item{N0}{Número de nacimientos en el periodo (usados para calcular la TMI).}
 
-\item{D0}{defunciones en el periodo}
+\item{D0}{Número de defunciones de menores de un año en el periodo.}
 }
 \value{
-devuelve un vector con las tasas especificas de mortalidad
+Vector numérico con las tasas centralizadas de mortalidad (mx)
+  para cada edad simple. El primer elemento corresponde a la tasa de
+  mortalidad infantil (D0/N0) y los restantes son Dx/Px. Los nombres
+  del vector indican la edad, con el último grupo etiquetado como "100+".
 }
 \description{
-Calcula las tasas especificas de mortalidad para edades simplex a partir de las defunciones y población
+Calcula las tasas centralizadas de mortalidad (mx) para edades simples
+a partir de defunciones y población media, incluyendo el tratamiento
+especial para el grupo de menores de un año (TMI).
+}
+\examples{
+# Datos ficticios
+Px <- c(441881, rep(1627456, 100))
+Dx <- c(1733, rep(1000, 100))
+N0 <- 441881
+D0 <- 1733
+mx <- DemBas_mx(Px, Dx, N0, D0)
+mx[1:5]
+
 }

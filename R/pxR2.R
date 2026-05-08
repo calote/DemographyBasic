@@ -1,4 +1,4 @@
-library(pxR,quietly = TRUE)
+library(pxR, quietly = TRUE)
 # if (!requireNamespace("somepackage", quietly = TRUE)) {
 #   stop("Please install 'somepackage' from GitHub: remotes::install_github('username/repo')")
 # }
@@ -226,22 +226,45 @@ read_px <- function(filename, encoding = NULL,
 }
 
 
-#' @title DemBas_read_px
-#' @description read a file px (INE, Eurostat, etc) and return a data.frame
+#' Lee archivos en formato PC-Axis (.px)
 #'
-#' @param filename
-#' @param encoding
-#' @param na.strings
+#' Importa datos desde archivos en formato PC-Axis utilizados por
+#' instituciones estadísticas como el INE (España), Eurostat, y otras.
+#' Esta función corrige un problema de memoria en sistemas Mac que
+#' afectaba a la función original de pxR.
 #'
-#' @returns data.frame
+#' @param filename Cadena de texto con la ruta al archivo .px a leer.
+#'   Puede ser una ruta local o una URL.
+#' @param encoding Cadena de texto opcional con la codificación del
+#'   archivo. Si es NULL, se detecta automáticamente (CP437 o latin1).
+#'   Por defecto NULL.
+#' @param na.strings Vector de cadenas de texto que representan valores
+#'   missing en el archivo. Por defecto c('"."', '".."', '"..."',
+#'   '"...."', '":"').
+#'
+#' @return data.frame con los datos importados. Las columnas содержат
+#'   valores de tipo character en lugar de factors para mayor facilidad
+#'   de uso.
+#'
+#' @references
+#'   PC-Axis es un formato de intercambio de datos estadísticos
+#'   desarrollado por Statistics Sweden y utilizado por oficinas de
+#'   estadísticas nacionales.
+#'
 #' @examples
-#' # example code
-#' # Importing a .px file
-#' example_data_px <- DemBas_read_px(system.file("examples/56940.px", package = "DemographyBasic"))
-#' head(example_data_px)
+#' \dontrun{
+#' # Importar un archivo .px del sistema de ejemplos del paquete
+#' datos <- DemBas_read_px(system.file("examples/56940.px",
+#'                                    package = "DemographyBasic"))
+#' head(datos)
+#'
+#' # Importar desde URL
+#' # datos_url <- DemBas_read_px("https://www.ine.es/jaxiT3/files/t/es/px/2855.px")
+#' }
+#'
 #' @export
 DemBas_read_px <- function(filename, encoding = NULL,
-                     na.strings = c('"."', '".."', '"..."', '"...."', '":"')) {
+                           na.strings = c('"."', '".."', '"..."', '"...."', '":"')) {
   dt1 = as.data.frame(read_px(filename, encoding = encoding, na.strings = na.strings), stringsAsFactors = FALSE)
   #  dt2 = as.data.frame(lapply(dt1,function(x) if (is.factor(x)) as.character(x) else x ), stringsAsFactors = FALSE)
 
@@ -260,16 +283,31 @@ DemBas_read_px <- function(filename, encoding = NULL,
 
 
 
-#' @title DemBas_read_px_encodingIECA
-#' @description read a file px (IECA) and return a data.frame
+#' Lee archivos PC-Axis del IECA (Andalucía) con codificación automática
 #'
-#' @param ficheropx character with the name of the file px
+#' Importa datos desde archivos en formato PC-Axis publicados por el
+#' Instituto de Estadística y Cartografía de Andalucía (IECA). Maneja
+#' automáticamente la conversión de codificación UTF-8 a Windows-1252,
+#' que es la codificación típica de estos archivos.
 #'
-#' @return data.frame with the data
+#' @param ficheropx Cadena de texto con la ruta al archivo .px del IECA
+#'   a leer. Debe estar en formato UTF-8.
+#'
+#' @return data.frame con los datos importados, con todas las columnas
+#'   convertidas a tipo character.
+#'
 #' @examples
-#' d103965windows4 = DemBas_read_px_encodingIECA("ieca_export_103965.px")
+#' \dontrun{
+#' # Descargar primero el archivo desde la web del IECA
+#' url <- DemBas_url_px_IECA("103965", "ieca_export_103965.px")
+#' datos <- DemBas_read_px_encodingIECA("ieca_export_103965.px")
+#' }
+#'
+#' @seealso \code{\link{DemBas_url_px_IECA}} para descargar archivos desde
+#'   la web del IECA.
+#'
 #' @export
-DemBas_read_px_encodingIECA = function(ficheropx) {
+DemBas_read_px_encodingIECA <- function(ficheropx) {
   datos <- readLines(ficheropx)
   datos_convertidos <- iconv(datos, from = "UTF-8", to = "Windows-1252")
   fichero_tmp = tempfile()
@@ -282,18 +320,30 @@ DemBas_read_px_encodingIECA = function(ficheropx) {
 
 
 
-#' @title DemBas_url_px_IECA
-#' @description Descarga un fichero px de la web del IECA a partir de su identificador
+#' Construye la URL para descargar archivos PC-Axis del IECA
 #'
-#' @param id character with the id of the px file in the IECA web
-#' @param ficheropx character with the name of the file px to save
+#' Genera la URL necesaria para descargar un archivo PC-Axis desde el
+#' portal de datos del Instituto de Estadística y Cartografía de
+#' Andalucía (IECA) a partir de su identificador.
 #'
-#' @return character with the url of the file px
+#' @param id Cadena de texto con el identificador del archivo PC-Axis
+#'   en el portal del IECA.
+#' @param ficheropx Cadena de texto con el nombre del archivo donde se
+#'   guardará la descarga. Si el archivo ya existe, será sobrescrito.
+#'
+#' @return Cadena de texto con la URL del archivo PC-Axis.
+#'
 #' @examples
-#' url1 = DemBas_url_px_IECA("103965", "ieca_export_103965_ff.px")
-#' df103965_ff = DemBas_read_px_encodingIECA("ieca_export_103965_ff.px")
+#' \dontrun{
+#' url <- DemBas_url_px_IECA("103965", "ieca_export_103965.px")
+#' datos <- DemBas_read_px_encodingIECA("ieca_export_103965.px")
+#' }
+#'
+#' @seealso \code{\link{DemBas_import_px_IECA}} para descargar e importar
+#'   en un solo paso.
+#'
 #' @export
-DemBas_url_px_IECA = function(id, ficheropx) {
+DemBas_url_px_IECA <- function(id, ficheropx) {
   url = paste0("https://www.juntadeandalucia.es/institutodeestadisticaycartografia/badea/stpivot/stpivot/Print?cube=ac06fd14-e977-4799-ab4f-aa2c53ccf15c&type=2&foto=si&ejecutaDesde=&codConsulta=",id,"&consTipoVisua=JP")
 
   fichero = download.file(url,
@@ -304,20 +354,38 @@ DemBas_url_px_IECA = function(id, ficheropx) {
 }
 
 
-#' @title DemBas_import_px_IECA
-#' @description Importa un fichero px de la web del IECA a partir de su identificador
+#' Descarga e importa archivos PC-Axis del IECA (Andalucía)
 #'
-#' @param id character with the id of the px file in the IECA web
-#' @param ficheropx character with the name of the file px to save.
-#' If is NULL, a temporal file is created
-#' @return data.frame with the data
+#' Función convenience que combina la descarga de un archivo PC-Axis
+#' desde el portal del IECA con su importación directa a R. Maneja
+#' automáticamente la conversión de codificación y la creación de
+#' archivos temporales si no se especifica un destino.
+#'
+#' @param id Cadena de texto con el identificador del archivo PC-Axis
+#'   en el portal del IECA.
+#' @param ficheropx Cadena de texto opcional con el nombre del archivo
+#'   donde guardar la descarga. Si es NULL, se crea un archivo temporal
+#'   que se elimina al terminar la sesión. Por defecto NULL.
+#'
+#' @return data.frame con los datos importados. Todas las columnas son
+#'   de tipo character para facilitar el procesamiento.
+#'
 #' @examples
-#' df103965 = DemBas_import_px_IECA("103965")
+#' \dontrun{
+#' # Importar usando archivo temporal
+#' df103965 <- DemBas_import_px_IECA("103965")
+#' head(df103965)
 #'
-#' df103965 = DemBas_import_px_IECA("103965", "ieca_export_103965_ff4.px")
+#' # Importar guardando el archivo para reuse
+#' df103965 <- DemBas_import_px_IECA("103965", "ieca_export_103965.px")
+#' }
+#'
+#' @seealso \code{\link{DemBas_url_px_IECA}} para单独的 descarga,
+#'   \code{\link{DemBas_read_px_encodingIECA}} para importar archivos
+#'   locales.
 #'
 #' @export
-DemBas_import_px_IECA = function(id, ficheropx = NULL) {
+DemBas_import_px_IECA <- function(id, ficheropx = NULL) {
   if (is.null(ficheropx)) {
     ficheropx2 = tempfile()
   } else {
@@ -329,15 +397,30 @@ DemBas_import_px_IECA = function(id, ficheropx = NULL) {
 }
 
 
-#' @title DemBas_url_px_INE
-#' @description Descarga un fichero px de la web del INE a partir de su identificador
-#' @param id character with the id of the px file in the INE web
-#' @param ficheropx character with the name of the file px to save
-#' @return character with the url of the file px
+#' Construye la URL para descargar archivos PC-Axis del INE (España)
+#'
+#' Genera la URL necesaria para descargar un archivo PC-Axis desde el
+#' portal del Instituto Nacional de Estadística (INE) de España a partir
+#' de su identificador.
+#'
+#' @param id Cadena de texto con el identificador del archivo PC-Axis
+#'   en el portal del INE (por ejemplo, el código del juego de datos).
+#' @param ficheropx Cadena de texto con el nombre del archivo donde se
+#'   guardará la descarga. Si el archivo ya existe, será sobrescrito.
+#'
+#' @return Cadena de texto con la URL del archivo PC-Axis.
+#'
 #' @examples
-#' url1 = DemBas_url_px_INE("2855", "2855_ine.px")
+#' \dontrun{
+#' url <- DemBas_url_px_INE("2855", "2855_ine.px")
+#' datos <- DemBas_read_px("2855_ine.px")
+#' }
+#'
+#' @seealso \code{\link{DemBas_import_px_INE}} para descargar e importar
+#'   en un solo paso.
+#'
 #' @export
-DemBas_url_px_INE = function(id, ficheropx) {
+DemBas_url_px_INE <- function(id, ficheropx) {
   url = paste0("https://www.ine.es/jaxiT3/files/t/es/px/",id,".px?nocab=1")
   download.file(url,
                 destfile = ficheropx,
@@ -348,18 +431,36 @@ DemBas_url_px_INE = function(id, ficheropx) {
 
 
 
-#' @title DemBas_import_px_INE
-#' @description Importa un fichero px de la web del INE a partir de su identificador
-#' @param id character with the id of the px file in the INE web
-#' @param ficheropx character with the name of the file px to save.
-#' If is NULL, a temporal file is created
-#' @return data.frame with the data
-#' @examples
-#' df2855_ine = DemBas_import_px_INE("2855")
+#' Descarga e importa archivos PC-Axis del INE (España)
 #'
-#' df2855_ine2 = DemBas_import_px_INE("2855", "2855_ine.px")
+#' Función convenience que combina la descarga de un archivo PC-Axis
+#' desde el portal del INE con su importación directa a R. Utiliza
+#' la codificación estándar del INE (CP437) sin necesidad de conversión.
+#'
+#' @param id Cadena de texto con el identificador del archivo PC-Axis
+#'   en el portal del INE.
+#' @param ficheropx Cadena de texto opcional con el nombre del archivo
+#'   donde guardar la descarga. Si es NULL, se crea un archivo temporal
+#'   que se elimina al terminar la sesión. Por defecto NULL.
+#'
+#' @return data.frame con los datos importados. Todas las columnas son
+#'   de tipo character para facilitar el procesamiento.
+#'
+#' @examples
+#' \dontrun{
+#' # Importar usando archivo temporal
+#' df2855 <- DemBas_import_px_INE("2855")
+#' head(df2855)
+#'
+#' # Importar guardando el archivo para reuse
+#' df2855 <- DemBas_import_px_INE("2855", "2855_ine.px")
+#' }
+#'
+#' @seealso \code{\link{DemBas_url_px_INE}} para单独的 descarga,
+#'   \code{\link{DemBas_read_px}} para importar archivos locales.
+#'
 #' @export
-DemBas_import_px_INE = function(id, ficheropx = NULL) {
+DemBas_import_px_INE <- function(id, ficheropx = NULL) {
   if (is.null(ficheropx)) {
     ficheropx2 = tempfile()
   } else {
@@ -372,15 +473,35 @@ DemBas_import_px_INE = function(id, ficheropx = NULL) {
 
 
 
-#' @title DemBas_leer_metadatos_px_INE
-#' @description Leer metadatos de un fichero px del INE
-#' @param ficheropx character with the name of the file px
-#' @return data.frame with the metadata, column 1 is the name of the variable and column 2 is the content
+#' Lee los metadatos de un archivo PC-Axis del INE
+#'
+#' Extrae la información de metadatos (cabeceras, variables, valores)
+#' de un archivo PC-Axis publicado por el INE de España. Los metadatos
+#' incluyen información sobre las variables, sus categorías y otros
+#' atributos del conjunto de datos.
+#'
+#' @param ficheropx Cadena de texto con la ruta al archivo .px del INE
+#'   a procesar. El archivo debe estar codificado en Windows-1252.
+#'
+#' @return data.frame con dos columnas:
+#'   \describe{
+#'     \item{Claves}{Nombre del atributo o variable (ej. "VALUES", "CODES", "TIME")  }
+#'     \item{Valores}{Contenido del atributo (ej. los valores o categorías asociados)}
+#'   }
+#'
 #' @examples
-#' df2855 = DemBas_import_px_INE("2855", "2855_ine.px")
-#' df2855_meta = DemBas_leer_metadatos_px_INE("ieca_export_103965_ff4.px")
+#' \dontrun{
+#' # Descargar e importar un archivo del INE
+#' df2855 <- DemBas_import_px_INE("2855", "2855_ine.px")
+#' head(df2855)
+#'
+#' # Leer los metadatos del archivo
+#' metadatos <- DemBas_leer_metadatos_px_INE("2855_ine.px")
+#' head(metadatos)
+#' }
+#'
 #' @export
-DemBas_leer_metadatos_px_INE = function(ficheropx) {
+DemBas_leer_metadatos_px_INE <- function(ficheropx) {
   #ficheropx = "2855_ine.px"
   meta_px = readLines(ficheropx, n = 100)
   n_max = suppressWarnings(grep("VALUES(", meta_px, fixed = TRUE))
@@ -409,15 +530,35 @@ DemBas_leer_metadatos_px_INE = function(ficheropx) {
 
 
 
-#' @title DemBas_leer_metadatos_px_IECA
-#' @description Leer metadatos de un fichero px del IECA
-#' @param ficheropx character with the name of the file px
-#' @return data.frame with the metadata, column 1 is the name of the variable and column 2 is the content
+#' Lee los metadatos de un archivo PC-Axis del IECA (Andalucía)
+#'
+#' Extrae la información de metadatos (cabeceras, variables, valores)
+#' de un archivo PC-Axis publicado por el Instituto de Estadística y
+#' Cartografía de Andalucía (IECA). Similar a \code{\link{DemBas_leer_metadatos_px_INE}}
+#' pero adaptada a la codificación UTF-8 de los archivos del IECA.
+#'
+#' @param ficheropx Cadena de texto con la ruta al archivo .px del IECA
+#'   a procesar. El archivo debe estar codificado en UTF-8.
+#'
+#' @return data.frame con dos columnas:
+#'   \describe{
+#'     \item{Claves}{Nombre del atributo o variable (ej. "VALUES", "CODES", "TIME")}
+#'     \item{Valores}{Contenido del atributo (ej. los valores o categorías asociados)}
+#'   }
+#'
 #' @examples
-#' df103965 = DemBas_import_px_IECA("103965", "ieca_export_103965_ff4.px")
-#' df103965_meta = DemBas_leer_metadatos_px_IECA("ieca_export_103965_ff4.px")
+#' \dontrun{
+#' # Descargar e importar un archivo del IECA
+#' df103965 <- DemBas_import_px_IECA("103965", "ieca_export_103965.px")
+#' head(df103965)
+#'
+#' # Leer los metadatos del archivo
+#' metadatos <- DemBas_leer_metadatos_px_IECA("ieca_export_103965.px")
+#' head(metadatos)
+#' }
+#'
 #' @export
-DemBas_leer_metadatos_px_IECA = function(ficheropx) {
+DemBas_leer_metadatos_px_IECA <- function(ficheropx) {
   meta_px = readLines(ficheropx, n = 100)
   #meta_px
   n_max = suppressWarnings(grep("DATA=", meta_px, fixed = TRUE))
@@ -446,19 +587,44 @@ DemBas_leer_metadatos_px_IECA = function(ficheropx) {
 
 
 
-#' @title DemBas_num_decimales_px_IECA
-#' @description Redondea un vector numérico para corregir el número de decimales que viene de un fichero px del IECA
-#' @param v1 vector numérico a redondear
-#' @param num_decimales número de decimales especificados en el fichero px de metadatos del IECA
-#' @return
+#' Corrige el número de decimales en datos importados del IECA
+#'
+#' Los archivos PC-Axis del IECA codifican los valores numéricos con
+#' un formato que requiere aplicar un factor de escala para obtener los
+#' decimales correctos. Esta función implementa la corrección necesaria
+#' basándose en el número de decimales especificado en los metadatos.
+#'
+#' El problema surge porque el IECA codifica los números de forma diferente
+#' según su magnitud: valores grandes incluyen todos los decimales en la
+#' parte entera, mientras que valores pequeños pueden tener formato mixto.
+#'
+#' @param v1 Vector numérico con los valores a corregir. Estos valores
+#'   provienen de la columna "value" de un data.frame importado con
+#'   \code{\link{DemBas_import_px_IECA}}.
+#' @param num_decimales Valor entero con el número de decimales que
+#'   deben tener los valores. Este valor se obtiene de los metadatos
+#'   del archivo (campo "DECIMALS" o "SHOWDECIMALS"). Por defecto 2.
+#'
+#' @return Vector numérico con los valores corregidos, expresados con
+#'   el número de decimales especificado.
+#'
 #' @examples
-#' df_19824 = DemBas_import_px_IECA("19824", "ieca_19824.px")
-#' df_19824_meta = DemBas_leer_metadatos_px_IECA("ieca_19824.px")
-#' df_19824_meta[df_19824_meta$Claves %in% c("DECIMALS", "SHOWDECIMALS"),]
-#' df_19824$value = DemBas_num_decimales_px_IECA(df_19824$value)
-#' head(df_19824,15)
+#' \dontrun{
+#' # Importar datos del IECA
+#' df19824 <- DemBas_import_px_IECA("19824", "ieca_19824.px")
+#'
+#' # Obtener el número de decimales de los metadatos
+#' metadatos <- DemBas_leer_metadatos_px_IECA("ieca_19824.px")
+#' decimales_row <- metadatos[metadatos$Claves %in% c("DECIMALS", "SHOWDECIMALS"), ]
+#' num_dec <- as.integer(decimales_row$Valores)
+#'
+#' # Corregir los valores
+#' df19824$value <- DemBas_num_decimales_px_IECA(df19824$value, num_dec)
+#' head(df19824, 15)
+#' }
+#'
 #' @export
-DemBas_num_decimales_px_IECA = function(v1, num_decimales = 2) {
+DemBas_num_decimales_px_IECA <- function(v1, num_decimales = 2) {
   v2a = v1/10^(round(log10(v1),0)-num_decimales)
   v2b = v1/10^(round(log10(v1),0)-(num_decimales-1))
   v1b = ifelse(v1>100, ifelse(v2a>100, v2b, v2a), v1)

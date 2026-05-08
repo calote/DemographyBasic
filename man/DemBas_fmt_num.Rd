@@ -2,24 +2,38 @@
 % Please edit documentation in R/presentardf.R
 \name{DemBas_fmt_num}
 \alias{DemBas_fmt_num}
-\title{DemBas_fmt_num}
+\title{Formatea números para presentación visual}
 \usage{
 DemBas_fmt_num(x, ndigitos = 5, quitacerosderecha = TRUE)
 }
 \arguments{
-\item{quitacerosderecha}{}
+\item{x}{Vector o valor numérico a formatear. Puede ser un solo
+número o un vector de números.}
+
+\item{ndigitos}{Valor entero con el número máximo de dígitos
+significativos o decimales a mostrar. Por defecto 5.}
+
+\item{quitacerosderecha}{Valor lógico. Si TRUE, elimina los ceros
+finales innecesarios en la parte decimal (ej. "123.50" se muestra
+como "123.5"). Si FALSE, mantiene todos los decimales especificados.
+Por defecto TRUE.}
 }
 \value{
-devuelve un character con el número formateado
+Vector de tipo character con los números formateados.
+  Los valores mantienen el separador de miles (espacio) y el punto
+  como separador decimal.
 }
 \description{
-Formatea un número para presentación
+Convierte un número a formato de texto con separadores de miles
+y decimales personalizables. Utiliza la función \code{formatC} de R
+para formateo consistente entre plataformas.
 }
 \examples{
 DemBas_fmt_num(5654.0832)
 DemBas_fmt_num(5654)
-DemBas_fmt_num(565400982.3000,2,T)
-DemBas_fmt_num(565400982.3000,2,F)
+DemBas_fmt_num(565400982.3000, 2, TRUE)
+DemBas_fmt_num(565400982.3000, 2, FALSE)
 DemBas_fmt_num(565400982.23713830023)
-DemBas_fmt_num(565400982.23713830023,2)
+DemBas_fmt_num(565400982.23713830023, 2)
+
 }

@@ -2,19 +2,33 @@
 % Please edit documentation in R/pxR2.R
 \name{DemBas_read_px_encodingIECA}
 \alias{DemBas_read_px_encodingIECA}
-\title{DemBas_read_px_encodingIECA}
+\title{Lee archivos PC-Axis del IECA (Andalucía) con codificación automática}
 \usage{
 DemBas_read_px_encodingIECA(ficheropx)
 }
 \arguments{
-\item{ficheropx}{character with the name of the file px}
+\item{ficheropx}{Cadena de texto con la ruta al archivo .px del IECA
+a leer. Debe estar en formato UTF-8.}
 }
 \value{
-data.frame with the data
+data.frame con los datos importados, con todas las columnas
+  convertidas a tipo character.
 }
 \description{
-read a file px (IECA) and return a data.frame
+Importa datos desde archivos en formato PC-Axis publicados por el
+Instituto de Estadística y Cartografía de Andalucía (IECA). Maneja
+automáticamente la conversión de codificación UTF-8 a Windows-1252,
+que es la codificación típica de estos archivos.
 }
 \examples{
-d103965windows4 = DemBas_read_px_encodingIECA("ieca_export_103965.px")
+\dontrun{
+# Descargar primero el archivo desde la web del IECA
+url <- DemBas_url_px_IECA("103965", "ieca_export_103965.px")
+datos <- DemBas_read_px_encodingIECA("ieca_export_103965.px")
+}
+
+}
+\seealso{
+\code{\link{DemBas_url_px_IECA}} para descargar archivos desde
+  la web del IECA.
 }

@@ -2,13 +2,28 @@
 % Please edit documentation in R/demografia.R
 \name{DemBas_dem_TasaBruta_t}
 \alias{DemBas_dem_TasaBruta_t}
-\title{DemBas_dem_TasaBruta_t}
+\title{Calcula la tasa bruta de un evento demográfico}
 \usage{
 DemBas_dem_TasaBruta_t(NumEventos_t, PobMedia_t)
 }
 \arguments{
-\item{PobMedia_t}{}
+\item{NumEventos_t}{Valor numérico o vector con el número de eventos
+demográficos (defunciones, nacimientos, etc.) en el período t.}
+
+\item{PobMedia_t}{Valor numérico o vector con la población media
+durante el período t.}
+}
+\value{
+Vector numérico con las tasas brutas por 1000 habitantes.
 }
 \description{
-DemBas_dem_TasaBruta_t
+Calcula la tasa bruta de mortalidad, natalidad u otro evento
+demográfico por cada 1000 habitantes. La tasa bruta es el cociente
+entre el número de eventos en un período y la población media
+de ese período, multiplicado por 1000.
+}
+\examples{
+# Tasa bruta de mortalidad de España en 2020
+DemBas_dem_TasaBruta_t(NumEventos_t = 492930, PobMedia_t = 47415750)
+
 }

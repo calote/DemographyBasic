@@ -2,21 +2,33 @@
 % Please edit documentation in R/pxR2.R
 \name{DemBas_url_px_INE}
 \alias{DemBas_url_px_INE}
-\title{DemBas_url_px_INE}
+\title{Construye la URL para descargar archivos PC-Axis del INE (España)}
 \usage{
 DemBas_url_px_INE(id, ficheropx)
 }
 \arguments{
-\item{id}{character with the id of the px file in the INE web}
+\item{id}{Cadena de texto con el identificador del archivo PC-Axis
+en el portal del INE (por ejemplo, el código del juego de datos).}
 
-\item{ficheropx}{character with the name of the file px to save}
+\item{ficheropx}{Cadena de texto con el nombre del archivo donde se
+guardará la descarga. Si el archivo ya existe, será sobrescrito.}
 }
 \value{
-character with the url of the file px
+Cadena de texto con la URL del archivo PC-Axis.
 }
 \description{
-Descarga un fichero px de la web del INE a partir de su identificador
+Genera la URL necesaria para descargar un archivo PC-Axis desde el
+portal del Instituto Nacional de Estadística (INE) de España a partir
+de su identificador.
 }
 \examples{
-url1 = DemBas_url_px_INE("2855", "2855_ine.px")
+\dontrun{
+url <- DemBas_url_px_INE("2855", "2855_ine.px")
+datos <- DemBas_read_px("2855_ine.px")
+}
+
+}
+\seealso{
+\code{\link{DemBas_import_px_INE}} para descargar e importar
+  en un solo paso.
 }

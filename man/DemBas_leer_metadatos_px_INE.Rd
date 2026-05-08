@@ -2,20 +2,36 @@
 % Please edit documentation in R/pxR2.R
 \name{DemBas_leer_metadatos_px_INE}
 \alias{DemBas_leer_metadatos_px_INE}
-\title{DemBas_leer_metadatos_px_INE}
+\title{Lee los metadatos de un archivo PC-Axis del INE}
 \usage{
 DemBas_leer_metadatos_px_INE(ficheropx)
 }
 \arguments{
-\item{ficheropx}{character with the name of the file px}
+\item{ficheropx}{Cadena de texto con la ruta al archivo .px del INE
+a procesar. El archivo debe estar codificado en Windows-1252.}
 }
 \value{
-data.frame with the metadata, column 1 is the name of the variable and column 2 is the content
+data.frame con dos columnas:
+  \describe{
+    \item{Claves}{Nombre del atributo o variable (ej. "VALUES", "CODES", "TIME")  }
+    \item{Valores}{Contenido del atributo (ej. los valores o categorías asociados)}
+  }
 }
 \description{
-Leer metadatos de un fichero px del INE
+Extrae la información de metadatos (cabeceras, variables, valores)
+de un archivo PC-Axis publicado por el INE de España. Los metadatos
+incluyen información sobre las variables, sus categorías y otros
+atributos del conjunto de datos.
 }
 \examples{
-df2855 = DemBas_import_px_INE("2855", "2855_ine.px")
-df2855_meta = DemBas_leer_metadatos_px_INE("ieca_export_103965_ff4.px")
+\dontrun{
+# Descargar e importar un archivo del INE
+df2855 <- DemBas_import_px_INE("2855", "2855_ine.px")
+head(df2855)
+
+# Leer los metadatos del archivo
+metadatos <- DemBas_leer_metadatos_px_INE("2855_ine.px")
+head(metadatos)
+}
+
 }

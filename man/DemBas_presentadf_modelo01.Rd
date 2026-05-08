@@ -2,11 +2,11 @@
 % Please edit documentation in R/presentardf.R
 \name{DemBas_presentadf_modelo01}
 \alias{DemBas_presentadf_modelo01}
-\title{DemBas_presentadf_modelo01}
+\title{Presenta un data.frame como tabla formateada (modelo 01)}
 \usage{
 DemBas_presentadf_modelo01(
   df_tabla,
-  tablavariaspaginas = T,
+  tablavariaspaginas = TRUE,
   tfuente = 8,
   leyendatabla = NULL,
   vCabecera = NULL,
@@ -14,11 +14,47 @@ DemBas_presentadf_modelo01(
 )
 }
 \arguments{
-\item{valigncol}{}
+\item{df_tabla}{data.frame o tibble con los datos a presentar.}
+
+\item{tablavariaspaginas}{Valor lógico. Si TRUE, la tabla se divide
+en múltiples páginas si es necesario (usando longtable). Por defecto TRUE.}
+
+\item{tfuente}{Valor numérico con el tamaño de fuente para la tabla.
+Valores típicos son 8, 10 o 12. Por defecto 8.}
+
+\item{leyendatabla}{Cadena de texto opcional con el título (caption)
+de la tabla. Si es NULL, no se añade leyenda. Por defecto NULL.}
+
+\item{vCabecera}{Vector de caracteres opcional con los nombres de
+columnas a usar en lugar de los nombres originales del data.frame.
+Debe tener la misma longitud que el número de columnas. Por defecto NULL.}
+
+\item{valigncol}{Cadena de texto opcional que especifica la alineación
+de cada columna (ej. "clclc" para izquierda, centro, izquierda, centro,
+centro). Si es NULL, se usa la alineación por defecto. Por defecto NULL.}
+}
+\value{
+Objeto kableExtra de tipo R markdown/chunk con la tabla
+  formateada lista para incluir en documentos LaTeX o HTML.
 }
 \description{
-Presenta un data.frame en formato LaTeX o HTML con kableExtra
+Versión alternativa de \code{\link{DemBas_presentadf}} con opciones
+de personalización adicionales para el formato de la tabla. Incluye
+soporte para centrado de cabeceras, alineación personalizada de
+columnas y leyenda de tabla.
 }
 \examples{
+\dontrun{
+# Ejemplo básico
 DemBas_presentadf_modelo01(mtcars)
+
+# Con leyenda y nombres de columnas personalizados
+DemBas_presentadf_modelo01(mtcars,
+                           tablavariaspaginas = TRUE,
+                           tfuente = 10,
+                           leyendatabla = "Vehículos del dataset mtcars",
+                           vCabecera = c("Marca", "Millas/gal", "Cilindros",
+                                         "Disp.", "Eje", "Peso"))
+}
+
 }

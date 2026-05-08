@@ -2,7 +2,7 @@
 % Please edit documentation in R/piramidespoblacion.R
 \name{DemBas_piramide_compuestasCateg_ggplot2}
 \alias{DemBas_piramide_compuestasCateg_ggplot2}
-\title{DemBas_piramide_compuestasCateg_ggplot2}
+\title{Crea pirámides poblacionales compuestas por categorías}
 \usage{
 DemBas_piramide_compuestasCateg_ggplot2(
   datosPiramide,
@@ -18,8 +18,47 @@ DemBas_piramide_compuestasCateg_ggplot2(
 )
 }
 \arguments{
-\item{etiq.mujer}{}
+\item{datosPiramide}{data.frame o tibble con columnas:
+\describe{
+  \item{Edad}{Variable categórica con edades}
+  \item{Sexo}{Variable categórica ("Hombre" o "Mujer")}
+  \item{Poblacion}{Variable numérica (absolutos)}
+  \item{Caso}{Variable categórica que identifica cada segmento
+    (ej. grupo de nacionalidad)}
+}}
+
+\item{porcentajes}{Valor lógico. Si TRUE, muestra la población en
+porcentajes. Por defecto TRUE.}
+
+\item{etiquetas}{Valor lógico. Si TRUE, muestra etiquetas con los
+valores. Por defecto FALSE.}
+
+\item{etiquetas.size}{Valor numérico para el tamaño del texto de
+las etiquetas. Por defecto 4.}
+
+\item{colores}{Vector opcional de colores para cada categoría.}
+
+\item{ordeninverso}{Valor lógico. Si TRUE, invierte el orden de
+apilamiento de los segmentos. Por defecto FALSE.}
+
+\item{alfa}{Valor numérico entre 0 y 1 para la transparencia de
+las barras. Por defecto 1 (sin transparencia).}
+
+\item{bar.size}{Valor numérico para el grosor del borde de las
+barras. Por defecto 1.}
+
+\item{etiq.hombre}{Cadena de texto con la etiqueta para hombres.
+Por defecto "Hombre".}
+
+\item{etiq.mujer}{Cadena de texto con la etiqueta para mujeres.
+Por defecto "Mujer".}
+}
+\value{
+Objeto ggplot2 con la pirámide compuesta.
 }
 \description{
-DemBas_piramide_compuestasCateg_ggplot2
+Genera una pirámide de población donde cada barra está subdividida
+en segmentos que representan diferentes categorías (ej. españoles/
+extranjeros, nacionalidades). A diferencia de las pirámides
+superpuestas, aquí los segmentos se apilan dentro de cada barra.
 }
