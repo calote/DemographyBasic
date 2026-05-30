@@ -1,4 +1,3 @@
-library(pxR, quietly = TRUE)
 # if (!requireNamespace("somepackage", quietly = TRUE)) {
 #   stop("Please install 'somepackage' from GitHub: remotes::install_github('username/repo')")
 # }

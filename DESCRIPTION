@@ -15,18 +15,25 @@ License: MIT + file LICENSE
 Encoding: UTF-8
 Depends:
     pxR,
-    tidyverse,
-    ggthemes,
-    ggh4x,
-    glue,
-    mapSpain,
     kableExtra,
+    legendry,
+    dplyr,
+    ggplot2,
+    tibble,
+    stringr,
+    forcats
+Imports:
+    knitr,
+    RColorBrewer,
+    ggh4x,
+    glue
+Suggests:
+    rmarkdown,
+    ggthemes,
+    mapSpain,
     LexisPlotR,
-    legendry
+    tidyr
 URL: https://github.com/calote/DemographyBasic
 BugReports: https://github.com/calote/DemographyBasic/issues
-Suggests:
-    knitr,
-    rmarkdown
 VignetteBuilder: knitr
 RoxygenNote: 8.0.0.9000

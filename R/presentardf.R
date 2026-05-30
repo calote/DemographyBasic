@@ -1,8 +1,5 @@
 
 
-library(tibble)
-library(kableExtra)
-
 ### UTILIDADES
 
 
@@ -116,8 +113,7 @@ DemBas_redondear_df <- function(df, digitos = 0) {
 
 # Estaba en fichero: funciones_tablas.R  -------
 
-library(knitr,warn.conflicts = F)
-library(kableExtra)
+
 
 #' Presenta un data.frame como tabla formateada (LaTeX o HTML)
 #'

@@ -1,7 +1,5 @@
 # funciones de Demografía
 
-library(stringr)
-
 # Tasas calculadas y multiplicadas por mil
 
 

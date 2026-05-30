@@ -1,6 +1,4 @@
-library(tidyverse)
-library(ggthemes)
-library(glue)
+
 
 #' Estructura de datos esperada para funciones de pirámides
 #'

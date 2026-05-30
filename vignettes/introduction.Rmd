@@ -37,8 +37,17 @@ remotes::install_github("calote/DemographyBasic")
 # Use
 
 ```{r setup}
-#library(DemographyBasic)
 suppressWarnings(suppressMessages(library(DemographyBasic)))
+```
+
+```{r setup-suggests, results = "hide", message = FALSE}
+suggests <- c("ggthemes", "LexisPlotR", "mapSpain", "tidyr")
+for (pkg in suggests) {
+  if (!requireNamespace(pkg, quietly = TRUE)) {
+    install.packages(pkg, quiet = TRUE)
+  }
+  library(pkg, character.only = TRUE)
+}
 ```
 
 
@@ -476,7 +485,7 @@ Vamos a construir un **diagrama de líneas con el que representaremos la evoluci
 
 Manipulamos los datos que vamos a necesitar:
 ```{r}
-# library(dplyr)  # ya cargado con library(tidyverse)
+# library(dplyr)  # ya cargado al cargar DemographyBasic
 Nac_And = Nacimientos_CCAA_EdadMadre_2010a2016 %>% 
   filter(Edades=="Todas las edades",CCAA=="Andalucía") %>% 
   select(Nacimientos)
@@ -500,8 +509,7 @@ head(df.rep) |>
 
 El código para el gráfico se recoge a continuación:
 ```{r}
-#library(ggplot2)   # ya cargado con library(tidyverse)
-#library(ggthemes)
+library(ggthemes)
 ggplot(df.rep, aes(x = Año, y=TBN)) + 
   geom_line(alpha = 1,linetype = "solid", colour="blue",linewidth = 1) +
   geom_point(size = 2) +
@@ -846,7 +854,6 @@ Se puede utilizar con el operador de "tubería" del paquete "magrittr" (incluido
 
 
 ```{r fig.align='center', out.width="50%",warning=FALSE,message=FALSE}
-library(magrittr)
 library(ggplot2)
 
 p <- lexis_grid(year_start = 1990, year_end = 2000, 
@@ -937,8 +944,7 @@ En primer lugar obtenemos los datos necesarios con ayuda de tidyverse:
 ```{r}
 #| message: false
 library(mapSpain)
-#library(ggplot2)
-library(tidyverse)
+library(dplyr)
 
 provs = esp_get_prov(df_a_mapa$Codigo) |> # nombres provincias o codes
   left_join(df_a_mapa, by = c("cpro" = "Codigo"))
