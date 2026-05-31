@@ -917,7 +917,7 @@ DemBas_datos_piramidePorc <- function(datosPiramide,
   df2 = df2 %>%
     dplyr::mutate(
       Total = sum(abs(Poblacion)),
-      Porcentajes = 100*round(Poblacion/Total,4)
+      Porcentajes = 100 * Poblacion / Total
     )
 
   df2 = df2 %>%
@@ -1413,9 +1413,9 @@ DemBas_piramidePorc_Generaciones <- function(
 
   if (GpresentaResumen) {
     ResumenEstadistico <- paste0(
-      "Porcentajes: Hombres=", Est_PorSexo[1], "%, Mujeres=", Est_PorSexo[2], "%,",
-      " Jóvenes=", Est_PorGGEdad["Jóvenes"], "%, Adultos=", Est_PorGGEdad["Adultos"],
-      "%, Mayores=", Est_PorGGEdad["Mayores"], "%.",
+      "Porcentajes: Hombres=", round(Est_PorSexo[1], 2), "%, Mujeres=", round(Est_PorSexo[2], 2), "%,",
+      " Jóvenes=", round(Est_PorGGEdad["Jóvenes"], 2), "%, Adultos=", round(Est_PorGGEdad["Adultos"], 2),
+      "%, Mayores=", round(Est_PorGGEdad["Mayores"], 2), "%.",
       "\nHombres-Jóvenes=", round(Est_PorGGEdadSexo[3,3], 2), "%, Mujeres-Jóvenes=", round(Est_PorGGEdadSexo[4,3], 2),
       "%, Hombres-Adultos=", round(Est_PorGGEdadSexo[1,3], 2), "%, Mujeres-Adultas=", round(Est_PorGGEdadSexo[2,3], 2), "%.",
       "\nHombres-Mayores=", round(Est_PorGGEdadSexo[5,3], 2), "%, Mujeres-Mayores=", round(Est_PorGGEdadSexo[6,3], 2),
