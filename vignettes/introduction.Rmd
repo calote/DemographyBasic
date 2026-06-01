@@ -44,7 +44,26 @@ suppressWarnings(suppressMessages(library(DemographyBasic)))
 suggests <- c("ggthemes", "LexisPlotR", "mapSpain", "tidyr")
 for (pkg in suggests) {
   if (!requireNamespace(pkg, quietly = TRUE)) {
-    install.packages(pkg, quiet = TRUE)
+    msg <- switch(
+      tolower(Sys.info()["sysname"]),
+      linux = paste0(
+        "Package '", pkg, "' is required.\n",
+        "On Ubuntu/Debian, first install system libraries:\n",
+        "  sudo apt-get install -y libudunits2-dev libproj-dev libgdal-dev libgeos-dev\n",
+        "Then run: install.packages('", pkg, "')"
+      ),
+      darwin = paste0(
+        "Package '", pkg, "' is required.\n",
+        "On macOS, first install system libraries with Homebrew:\n",
+        "  brew install pkg-config gdal proj geos udunits\n",
+        "Then run: install.packages('", pkg, "')"
+      ),
+      windows = paste0(
+        "Package '", pkg, "' is required.\n",
+        "Install it with: install.packages('", pkg, "')"
+      )
+    )
+    stop(msg)
   }
   library(pkg, character.only = TRUE)
 }
