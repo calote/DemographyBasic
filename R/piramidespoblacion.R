@@ -1086,7 +1086,7 @@ DemBas_piramidePorc <- function(datosPiramide,
     geom_bar(stat="identity",
              position="identity"
     ) +
-    geom_hline(yintercept = 0, size = 1, colour="#ff0000") +
+    geom_hline(yintercept = 0, linewidth = 1, colour="#ff0000") +
     labs(title=Gtitulo,
          subtitle = Gsubtitulo,
          y = Gtitulo.X,
@@ -1137,10 +1137,10 @@ DemBas_piramidePorc <- function(datosPiramide,
     g_pirpob = bars1 +
       geom_segment(aes(x = 3.5, y = Gext_izq, xend = 3.5, yend = Gext_der),
                    colour = "#00ff00",
-                   size=1.5) +
+                   linewidth=1.5) +
       geom_segment(aes(x = 13.5, y = Gext_izq, xend = 13.5, yend = Gext_der),
                    colour = "#00ff00",
-                   size=1.5)
+                   linewidth=1.5)
 
   } else {
     g_pirpob = bars1
@@ -1638,12 +1638,12 @@ colores_defecto <- c("hombre" = "#4CA4DE", "mujer" = "#D342CE")
 #'   hombre     = c(450000, 280000, 320000, 150000),
 #'   mujer      = c(480000, 310000, 380000, 200000)
 #' )
-#' r <- crear_piramide_absoluta(datos, "Ejemplo")
+#' r <- DemBas_piramide_absoluta(datos, "Ejemplo")
 #' r$grafico
 #' }
 #'
 #' @export
-crear_piramide_absoluta <- function(datos, titulo = "Pirámide de Población", mostrar_limites = FALSE, colores = colores_defecto, intervalos = NULL, saltos_y = NULL, limite_x = NULL, etiqueta_x = NULL, etiqueta_y = NULL) {
+DemBas_piramide_absoluta <- function(datos, titulo = "Pirámide de Población", mostrar_limites = FALSE, colores = colores_defecto, intervalos = NULL, saltos_y = NULL, limite_x = NULL, etiqueta_x = NULL, etiqueta_y = NULL) {
   # Validar que los datos tengan las columnas necesarias
   if (!all(c("edad_grupo", "amplitud", "hombre", "mujer") %in% names(datos))) {
     stop("Los datos deben contener: edad_grupo, amplitud, hombre, mujer")
@@ -1735,7 +1735,7 @@ crear_piramide_absoluta <- function(datos, titulo = "Pirámide de Población", m
 #' (porcentaje de población por unidad de edad). Los hombres se representan
 #' a la izquierda del eje X y las mujeres a la derecha.
 #'
-#' @inheritParams crear_piramide_absoluta
+#' @inheritParams DemBas_piramide_absoluta
 #' @param unidad_densidad Unidad para el cálculo de densidad. Puede ser un
 #'   número (ej. \code{5} para densidad por quinquenio) o un texto descriptivo
 #'   (ej. \code{"quinquenio"}). Por defecto \code{"años"} (densidad anual).
@@ -1759,12 +1759,12 @@ crear_piramide_absoluta <- function(datos, titulo = "Pirámide de Población", m
 #'   hombre     = c(520000, 350000, 280000, 120000),
 #'   mujer      = c(560000, 385000, 340000, 180000)
 #' )
-#' r <- crear_piramide_relativa(datos, "Ejemplo", unidad_densidad = 5)
+#' r <- DemBas_piramide_relativa(datos, "Ejemplo", unidad_densidad = 5)
 #' r$grafico
 #' }
 #'
 #' @export
-crear_piramide_relativa <- function(datos, titulo = "Pirámide de Población", unidad_densidad = "años", mostrar_limites = FALSE, colores = colores_defecto, intervalos = NULL, saltos_y = NULL, limite_x = NULL, etiqueta_x = NULL, etiqueta_y = NULL) {
+DemBas_piramide_relativa <- function(datos, titulo = "Pirámide de Población", unidad_densidad = "años", mostrar_limites = FALSE, colores = colores_defecto, intervalos = NULL, saltos_y = NULL, limite_x = NULL, etiqueta_x = NULL, etiqueta_y = NULL) {
   # Validar que los datos tengan las columnas necesarias
   if (!all(c("edad_grupo", "amplitud", "hombre", "mujer") %in% names(datos))) {
     stop("Los datos deben contener: edad_grupo, amplitud, hombre, mujer")
@@ -1866,5 +1866,234 @@ crear_piramide_relativa <- function(datos, titulo = "Pirámide de Población", u
       select(edad_grupo, sexo, poblacion, amplitud, porcentaje, densidad_ajustada) |>
       arrange(edad_grupo, sexo)
   )
+}
+
+#' Pirámide superpuesta con perfiles de línea
+#'
+#' Genera una pirámide de población superpuesta utilizando líneas en lugar
+#' de barras, mostrando la evolución o comparación de dos o más períodos
+#' o categorías. Los hombres se representan a la izquierda (valores negativos)
+#' y las mujeres a la derecha (valores positivos), usando facetas separadas
+#' y coordenadas volteadas.
+#'
+#' @param datosPiramide data.frame o tibble con columnas:
+#'   \describe{
+#'     \item{Edad}{Variable numérica con las edades simples}
+#'     \item{Sexo}{Variable categórica con valores \code{"Hombres"} y \code{"Mujeres"}}
+#'     \item{Poblacion}{Variable numérica con datos de población absolutos}
+#'     \item{Caso}{Variable categórica que identifica cada período/categoría
+#'       (ej. año de referencia)}
+#'   }
+#' @param titulo Cadena de texto con el título del gráfico.
+#'   Por defecto \code{"Pirámide superpuesta"}.
+#' @param subtitulo Cadena de texto con el subtítulo del gráfico.
+#'   Por defecto \code{NULL}.
+#' @param colores Vector nombrado con colores para cada valor de \code{Caso}.
+#'   Por defecto \code{NULL} (usa la paleta por defecto de ggplot2).
+#' @param etiq.hombre Cadena de texto con la etiqueta para hombres.
+#'   Por defecto \code{"Hombres"}.
+#' @param etiq.mujer Cadena de texto con la etiqueta para mujeres.
+#'   Por defecto \code{"Mujeres"}.
+#' @param tamaño.linea Valor numérico para el grosor de las líneas.
+#'   Por defecto \code{0.8}.
+#'
+#' @return Objeto ggplot2 con la pirámide superpuesta de perfiles.
+#'
+#' @examples
+#' \dontrun{
+#' set.seed(42)
+#' edades <- 0:85
+#' n <- length(edades)
+#'
+#' base_2010 <- dnorm(edades, mean = 40, sd = 22) * 1000
+#' base_2019 <- dnorm(edades, mean = 45, sd = 23) * 1100
+#'
+#' datos <- rbind(
+#'   data.frame(Edad = edades, Sexo = "Hombres", Caso = 2010,
+#'              Poblacion = base_2010 * 0.48 * (1 + rnorm(n, 0, 0.02))),
+#'   data.frame(Edad = edades, Sexo = "Mujeres", Caso = 2010,
+#'              Poblacion = base_2010 * 0.52 * (1 + rnorm(n, 0, 0.02))),
+#'   data.frame(Edad = edades, Sexo = "Hombres", Caso = 2019,
+#'              Poblacion = base_2019 * 0.47 * (1 + rnorm(n, 0, 0.02))),
+#'   data.frame(Edad = edades, Sexo = "Mujeres", Caso = 2019,
+#'              Poblacion = base_2019 * 0.53 * (1 + rnorm(n, 0, 0.02)))
+#' )
+#'
+#' DemBas_piramide_superpuesta_lineas(
+#'   datos,
+#'   titulo = "Pirámide superpuesta",
+#'   subtitulo = "Datos sintéticos 2010 y 2019",
+#'   colores = c("2010" = "#4CA4DE", "2019" = "#D342CE")
+#' )
+#' }
+#'
+#' @export
+DemBas_piramide_superpuesta_lineas <- function(datosPiramide,
+                                                titulo = "Pirámide superpuesta",
+                                                subtitulo = NULL,
+                                                colores = NULL,
+                                                etiq.hombre = "Hombres",
+                                                etiq.mujer = "Mujeres",
+                                                tamaño.linea = 0.8) {
+  if (!all(c("Edad", "Sexo", "Poblacion", "Caso") %in% names(datosPiramide))) {
+    stop("datosPiramide debe contener: Edad, Sexo, Poblacion, Caso")
+  }
+
+  df <- datosPiramide |>
+    mutate(
+      Edad = as.numeric(Edad),
+      Caso = factor(Caso)
+    )
+
+  df <- df |>
+    group_by(Caso) |>
+    mutate(
+      total = sum(Poblacion),
+      porcentaje = Poblacion / total * 100,
+      porcentaje_grafico = ifelse(Sexo == etiq.hombre, -porcentaje, porcentaje)
+    ) |>
+    ungroup()
+
+  g <- ggplot(df, aes(x = Edad, y = porcentaje_grafico, colour = Caso)) +
+    geom_line(linewidth = tamaño.linea) +
+    facet_wrap(~ Sexo) +
+    coord_flip() +
+    scale_y_continuous(labels = function(x) paste0(abs(round(x, 1)), "%")) +
+    labs(
+      title = titulo,
+      subtitle = subtitulo,
+      x = "Edad simple",
+      y = "Porcentaje sobre la población total",
+      colour = "Caso"
+    ) +
+    theme_minimal()
+
+  if (!is.null(colores)) {
+    g <- g + scale_color_manual(values = colores)
+  }
+
+  g
+}
+
+#' Pirámide superpuesta mixta (barras + línea escalonada)
+#'
+#' Genera una pirámide de población que combina barras para un período
+#' y una línea escalonada para otro, permitiendo comparar la estructura
+#' por edades entre dos momentos. Los hombres se representan a la
+#' izquierda (valores negativos) y las mujeres a la derecha (positivos).
+#'
+#' @param datosPiramide data.frame o tibble con columnas:
+#'   \describe{
+#'     \item{Edad}{Variable numérica con las edades simples}
+#'     \item{Sexo}{Variable categórica con valores \code{"Hombres"} y \code{"Mujeres"}}
+#'     \item{Poblacion}{Variable numérica con datos de población absolutos}
+#'     \item{Caso}{Variable categórica que identifica cada período/categoría}
+#'   }
+#' @param Caso.referencia Valor de \code{Caso} que se representará como
+#'   línea escalonada (referencia). Los demás valores se muestran como barras.
+#'   Por defecto el primer nivel de \code{Caso}.
+#' @param titulo Cadena de texto con el título del gráfico.
+#'   Por defecto \code{"Pirámide superpuesta mixta"}.
+#' @param subtitulo Cadena de texto con el subtítulo del gráfico.
+#'   Por defecto \code{NULL}.
+#' @param colores.barra Vector nombrado con colores de relleno para cada
+#'   \code{Sexo} en las barras. Por defecto \code{c("Hombres" = "#2c3e50", "Mujeres" = "#e74c3c")}.
+#' @param colores.linea Vector nombrado con colores de línea para cada
+#'   \code{Sexo} en la línea escalonada. Por defecto \code{c("Hombres" = "black", "Mujeres" = "black")}.
+#' @param alpha Valor numérico entre 0 y 1 para la transparencia de las
+#'   barras. Por defecto \code{0.4}.
+#' @param tamaño.linea Valor numérico para el grosor de la línea escalonada.
+#'   Por defecto \code{1}.
+#' @param etiq.hombre Cadena de texto con la etiqueta para hombres.
+#'   Por defecto \code{"Hombres"}.
+#' @param etiq.mujer Cadena de texto con la etiqueta para mujeres.
+#'   Por defecto \code{"Mujeres"}.
+#'
+#' @return Objeto ggplot2 con la pirámide superpuesta mixta.
+#'
+#' @examples
+#' \dontrun{
+#' set.seed(42)
+#' edades <- 0:85
+#' n <- length(edades)
+#'
+#' base_2010 <- dnorm(edades, mean = 40, sd = 22) * 1000
+#' base_2020 <- dnorm(edades, mean = 45, sd = 23) * 1100
+#'
+#' datos <- rbind(
+#'   data.frame(Edad = edades, Sexo = "Hombres", Caso = 2010,
+#'              Poblacion = base_2010 * 0.48 * (1 + rnorm(n, 0, 0.02))),
+#'   data.frame(Edad = edades, Sexo = "Mujeres", Caso = 2010,
+#'              Poblacion = base_2010 * 0.52 * (1 + rnorm(n, 0, 0.02))),
+#'   data.frame(Edad = edades, Sexo = "Hombres", Caso = 2020,
+#'              Poblacion = base_2020 * 0.47 * (1 + rnorm(n, 0, 0.02))),
+#'   data.frame(Edad = edades, Sexo = "Mujeres", Caso = 2020,
+#'              Poblacion = base_2020 * 0.53 * (1 + rnorm(n, 0, 0.02)))
+#' )
+#'
+#' DemBas_piramide_superpuesta_mixta(
+#'   datos,
+#'   Caso.referencia = 2010,
+#'   titulo = "Superposición mixta: 2010 (línea) vs 2020 (barras)"
+#' )
+#' }
+#'
+#' @export
+DemBas_piramide_superpuesta_mixta <- function(datosPiramide,
+                                               Caso.referencia = NULL,
+                                               titulo = "Pirámide superpuesta mixta",
+                                               subtitulo = NULL,
+                                               colores.barra = c("Hombres" = "#2c3e50", "Mujeres" = "#e74c3c"),
+                                               colores.linea = c("Hombres" = "black", "Mujeres" = "black"),
+                                               alpha = 0.4,
+                                               tamaño.linea = 1,
+                                               etiq.hombre = "Hombres",
+                                               etiq.mujer = "Mujeres") {
+  if (!all(c("Edad", "Sexo", "Poblacion", "Caso") %in% names(datosPiramide))) {
+    stop("datosPiramide debe contener: Edad, Sexo, Poblacion, Caso")
+  }
+
+  df <- datosPiramide |>
+    mutate(
+      Edad = as.numeric(Edad),
+      Caso = factor(Caso)
+    )
+
+  if (is.null(Caso.referencia)) {
+    Caso.referencia <- levels(df$Caso)[1]
+  }
+
+  df <- df |>
+    mutate(
+      Pop = ifelse(Sexo == etiq.hombre, -Poblacion, Poblacion),
+      tipo = ifelse(Caso == Caso.referencia, "linea", "barra")
+    )
+
+  g <- ggplot() +
+    geom_col(
+      data = df |> filter(tipo == "barra"),
+      aes(x = Edad, y = Pop, fill = Sexo),
+      alpha = alpha
+    ) +
+    geom_step(
+      data = df |> filter(tipo == "linea"),
+      aes(x = Edad, y = Pop, color = Sexo),
+      linewidth = tamaño.linea
+    ) +
+    coord_flip() +
+    scale_y_continuous(labels = abs) +
+    scale_fill_manual(values = colores.barra) +
+    scale_color_manual(values = colores.linea) +
+    labs(
+      title = titulo,
+      subtitle = subtitulo,
+      x = "Edad",
+      y = "Población",
+      fill = "Sexo",
+      color = "Sexo"
+    ) +
+    theme_minimal()
+
+  g
 }
 
