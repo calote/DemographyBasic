@@ -4,13 +4,17 @@
 \alias{DemBas_tablavida_completa_tidyverse}
 \title{Calcula la tabla de vida completa (método tidyverse)}
 \usage{
-DemBas_tablavida_completa_tidyverse(Mx, l0 = 1e+05)
+DemBas_tablavida_completa_tidyverse(Mx, l0 = 1e+05, redondeo = TRUE)
 }
 \arguments{
 \item{Mx}{Vector numérico con las tasas centralizadas de mortalidad para
 cada edad simple (desde 0 hasta la edad máxima observada).}
 
 \item{l0}{Valor numérico con la población inicial (radix). Por defecto 100000.}
+
+\item{redondeo}{Lógico. Si \code{TRUE} (por defecto), aplica \code{DemBas_redondear}
+a los resultados: Mx (5 dígitos), qx (5), px (5), lx (0), dx (0), Lx (0), Tx (0), ex (2).
+Si \code{FALSE}, retorna valores sin redondear para ver precisión completa.}
 }
 \value{
 tibble con columnas: Edad, Mx, qx, px, lx, dx, Lx, Tx, ex.
@@ -20,6 +24,16 @@ Versión de \code{\link{DemBas_tablavida_completa}} que replica el estilo
 de cálculo con \code{tidyverse} usado en prácticas docentes.
 Utiliza \code{cumprod(lag(px))} para \code{lx} y coeficientes fijos
 (0.3/0.7 para edad 0, 0.4/0.6 para edad 1) para \code{Lx}.
+}
+\details{
+La función opera en dos fases:
+\enumerate{
+  \item \strong{Cálculo}: Todos los valores se calculan sin redondeo intermedio,
+        permitiendo precisión máxima en los cálculos intermedios.
+  \item \strong{Presentación}: Si \code{redondeo = TRUE} (por defecto),
+        se aplica \code{\link{DemBas_redondear}} (redondeo con epsilon) a cada columna.
+        Si \code{redondeo = FALSE}, se retornan los valores sin redondear.
+}
 }
 \examples{
 \dontrun{
@@ -47,6 +61,10 @@ Mx1000 <- c(9.12160, 0.84807, 0.49502, 0.33352, 0.27296,
 mx <- Mx1000 / 1000
 tv <- DemBas_tablavida_completa_tidyverse(mx)
 head(tv, 10)
+
+# Ver valores sin redondear
+tv_sin_redondeo <- DemBas_tablavida_completa_tidyverse(mx, redondeo = FALSE)
+head(tv_sin_redondeo, 10)
 }
 
 }

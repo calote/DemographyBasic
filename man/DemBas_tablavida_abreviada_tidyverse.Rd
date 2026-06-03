@@ -4,22 +4,36 @@
 \alias{DemBas_tablavida_abreviada_tidyverse}
 \title{Calcula la tabla de vida abreviada (método tidyverse)}
 \usage{
-DemBas_tablavida_abreviada_tidyverse(nMx, l0 = 1e+05)
+DemBas_tablavida_abreviada_tidyverse(nMx, l0 = 1e+05, redondeo = TRUE)
 }
 \arguments{
 \item{nMx}{Vector numérico con las tasas centralizadas de mortalidad para
 cada grupo de edad (0, 1-4, 5-9, 10-14, ..., 100+).}
 
 \item{l0}{Valor numérico con la población inicial (radix). Por defecto 100000.}
+
+\item{redondeo}{Lógico. Si \code{TRUE} (por defecto), aplica \code{DemBas_redondear}
+a los resultados: nMx (5 dígitos), nqx (5), npx (5), lx (0), ndx (0), nLx (0), Tx (0), ex (2).
+Si \code{FALSE}, retorna valores sin redondear para ver precisión completa.}
 }
 \value{
-tibble con columnas: Edad, n, nMx, nqx, npx, lx, ndx, nLx, Tx, ex.
+tibble con columnas: Edad, nMx, nqx, npx, lx, ndx, nLx, Tx, ex.
 }
 \description{
 Versión de \code{\link{DemBas_tablavida_abreviada}} que replica el estilo
 de cálculo con \code{tidyverse} usado en prácticas docentes.
 Utiliza \code{cumprod(lag(npx))} para \code{lx} y ajusta \code{nqx}
 según la amplitud de cada grupo de edad.
+}
+\details{
+La función opera en dos fases:
+\enumerate{
+  \item \strong{Cálculo}: Todos los valores se calculan sin redondeo intermedio,
+        permitiendo precisión máxima en los cálculos intermedios.
+  \item \strong{Presentación}: Si \code{redondeo = TRUE} (por defecto),
+        se aplica \code{\link{DemBas_redondear}} (redondeo con epsilon) a cada columna.
+        Si \code{redondeo = FALSE}, se retornan los valores sin redondear.
+}
 }
 \examples{
 \dontrun{
@@ -30,6 +44,10 @@ mx <- c(mx0, 0.00027, 0.00013, 0.00016, 0.00043, 0.00057, 0.00059,
         0.48258)
 tv <- DemBas_tablavida_abreviada_tidyverse(mx)
 tv
+
+# Ver valores sin redondear
+tv_sin_redondeo <- DemBas_tablavida_abreviada_tidyverse(mx, redondeo = FALSE)
+tv_sin_redondeo
 }
 
 }

@@ -909,9 +909,21 @@ DemBas_tablavida_abreviada_calculadora <- function(nMx, l0 = 100000,
 #' Utiliza \code{cumprod(lag(px))} para \code{lx} y coeficientes fijos
 #' (0.3/0.7 para edad 0, 0.4/0.6 para edad 1) para \code{Lx}.
 #'
+#' La función opera en dos fases:
+#' \enumerate{
+#'   \item \strong{Cálculo}: Todos los valores se calculan sin redondeo intermedio,
+#'         permitiendo precisión máxima en los cálculos intermedios.
+#'   \item \strong{Presentación}: Si \code{redondeo = TRUE} (por defecto),
+#'         se aplica \code{\link{DemBas_redondear}} (redondeo con epsilon) a cada columna.
+#'         Si \code{redondeo = FALSE}, se retornan los valores sin redondear.
+#' }
+#'
 #' @param Mx Vector numérico con las tasas centralizadas de mortalidad para
 #'   cada edad simple (desde 0 hasta la edad máxima observada).
 #' @param l0 Valor numérico con la población inicial (radix). Por defecto 100000.
+#' @param redondeo Lógico. Si \code{TRUE} (por defecto), aplica \code{DemBas_redondear}
+#'   a los resultados: Mx (5 dígitos), qx (5), px (5), lx (0), dx (0), Lx (0), Tx (0), ex (2).
+#'   Si \code{FALSE}, retorna valores sin redondear para ver precisión completa.
 #'
 #' @return tibble con columnas: Edad, Mx, qx, px, lx, dx, Lx, Tx, ex.
 #'
@@ -941,34 +953,55 @@ DemBas_tablavida_abreviada_calculadora <- function(nMx, l0 = 100000,
 #' mx <- Mx1000 / 1000
 #' tv <- DemBas_tablavida_completa_tidyverse(mx)
 #' head(tv, 10)
+#'
+#' # Ver valores sin redondear
+#' tv_sin_redondeo <- DemBas_tablavida_completa_tidyverse(mx, redondeo = FALSE)
+#' head(tv_sin_redondeo, 10)
 #' }
 #'
 #' @export
-DemBas_tablavida_completa_tidyverse <- function(Mx, l0 = 100000) {
+DemBas_tablavida_completa_tidyverse <- function(Mx, l0 = 100000, redondeo = TRUE) {
   n <- length(Mx)
   edades <- as.character(0:(n - 1))
   edades[n] <- paste0(n - 1, "+")
   ult <- edades[n]
 
-  tibble(Edad = edades, Mx = Mx) |>
+  # Fase 1: Cálculos sin redondeo intermedio
+  tabla <- tibble(Edad = edades, Mx = Mx) |>
     mutate(
-      Mx = round(Mx, 5),
       qx = case_when(
         Edad == ult ~ 1,
-        TRUE ~ round(2 * Mx / (2 + Mx), 5)
+        TRUE ~ 2 * Mx / (2 + Mx)
       ),
-      px = round(1 - qx, 5),
-      lx = round(l0 * cumprod(lag(px, default = 1))),
-      dx = round(lx * qx),
+      px = 1 - qx,
+      lx = l0 * cumprod(lag(px, default = 1)),
+      dx = lx * qx,
       Lx = case_when(
-        Edad == "0" ~ round(0.3 * lx + 0.7 * lead(lx)),
-        Edad == "1" ~ round(0.4 * lx + 0.6 * lead(lx)),
-        Edad == ult ~ round(lx / Mx),
-        TRUE ~ round((lx + lead(lx)) / 2)
+        Edad == "0" ~ 0.3 * lx + 0.7 * lead(lx),
+        Edad == "1" ~ 0.4 * lx + 0.6 * lead(lx),
+        Edad == ult ~ lx / Mx,
+        TRUE ~ (lx + lead(lx)) / 2
       ),
       Tx = rev(cumsum(rev(Lx))),
-      ex = round(Tx / lx, 2)
+      ex = Tx / lx
     )
+
+  # Fase 2: Redondeo para presentación
+  if (redondeo) {
+    tabla <- tabla |>
+      mutate(
+        Mx = DemBas_redondear(Mx, 5),
+        qx = DemBas_redondear(qx, 5),
+        px = DemBas_redondear(px, 5),
+        lx = DemBas_redondear(lx, 0),
+        dx = DemBas_redondear(dx, 0),
+        Lx = DemBas_redondear(Lx, 0),
+        Tx = DemBas_redondear(Tx, 0),
+        ex = DemBas_redondear(ex, 2)
+      )
+  }
+
+  tabla
 }
 
 #' Calcula la tabla de vida abreviada (método tidyverse)
@@ -978,11 +1011,23 @@ DemBas_tablavida_completa_tidyverse <- function(Mx, l0 = 100000) {
 #' Utiliza \code{cumprod(lag(npx))} para \code{lx} y ajusta \code{nqx}
 #' según la amplitud de cada grupo de edad.
 #'
+#' La función opera en dos fases:
+#' \enumerate{
+#'   \item \strong{Cálculo}: Todos los valores se calculan sin redondeo intermedio,
+#'         permitiendo precisión máxima en los cálculos intermedios.
+#'   \item \strong{Presentación}: Si \code{redondeo = TRUE} (por defecto),
+#'         se aplica \code{\link{DemBas_redondear}} (redondeo con epsilon) a cada columna.
+#'         Si \code{redondeo = FALSE}, se retornan los valores sin redondear.
+#' }
+#'
 #' @param nMx Vector numérico con las tasas centralizadas de mortalidad para
 #'   cada grupo de edad (0, 1-4, 5-9, 10-14, ..., 100+).
 #' @param l0 Valor numérico con la población inicial (radix). Por defecto 100000.
+#' @param redondeo Lógico. Si \code{TRUE} (por defecto), aplica \code{DemBas_redondear}
+#'   a los resultados: nMx (5 dígitos), nqx (5), npx (5), lx (0), ndx (0), nLx (0), Tx (0), ex (2).
+#'   Si \code{FALSE}, retorna valores sin redondear para ver precisión completa.
 #'
-#' @return tibble con columnas: Edad, n, nMx, nqx, npx, lx, ndx, nLx, Tx, ex.
+#' @return tibble con columnas: Edad, nMx, nqx, npx, lx, ndx, nLx, Tx, ex.
 #'
 #' @examples
 #' \dontrun{
@@ -993,10 +1038,14 @@ DemBas_tablavida_completa_tidyverse <- function(Mx, l0 = 100000) {
 #'         0.48258)
 #' tv <- DemBas_tablavida_abreviada_tidyverse(mx)
 #' tv
+#'
+#' # Ver valores sin redondear
+#' tv_sin_redondeo <- DemBas_tablavida_abreviada_tidyverse(mx, redondeo = FALSE)
+#' tv_sin_redondeo
 #' }
 #'
 #' @export
-DemBas_tablavida_abreviada_tidyverse <- function(nMx, l0 = 100000) {
+DemBas_tablavida_abreviada_tidyverse <- function(nMx, l0 = 100000, redondeo = TRUE) {
   n <- length(nMx)
 
   etiquetas <- c("0", "1-4", "5-9", "10-14", "15-19", "20-24", "25-29",
@@ -1006,25 +1055,42 @@ DemBas_tablavida_abreviada_tidyverse <- function(nMx, l0 = 100000) {
   etiquetas <- etiquetas[1:n]
   ult <- etiquetas[n]
 
-  tibble(Edad = etiquetas, nMx = nMx) |>
+  # Fase 1: Cálculos sin redondeo intermedio
+  tabla <- tibble(Edad = etiquetas, nMx = nMx) |>
     mutate(
-      nMx = round(nMx, 5),
       nqx = case_when(
         Edad == ult ~ 1,
-        Edad == "0" ~ round(2 * nMx / (2 + nMx), 5),
-        Edad == "1-4" ~ round(2 * 4 * nMx / (2 + 4 * nMx), 5),
-        TRUE ~ round(2 * 5 * nMx / (2 + 5 * nMx), 5)
+        Edad == "0" ~ 2 * nMx / (2 + nMx),
+        Edad == "1-4" ~ 2 * 4 * nMx / (2 + 4 * nMx),
+        TRUE ~ 2 * 5 * nMx / (2 + 5 * nMx)
       ),
-      npx = round(1 - nqx, 5),
-      lx = round(l0 * cumprod(lag(npx, default = 1))),
-      ndx = round(lx * nqx),
+      npx = 1 - nqx,
+      lx = l0 * cumprod(lag(npx, default = 1)),
+      ndx = lx * nqx,
       nLx = case_when(
-        Edad == "0" ~ round(0.3 * lx + 0.7 * lead(lx)),
-        Edad == "1-4" ~ round(4 / 2 * (lx + lead(lx))),
-        Edad == ult ~ round(lx / nMx),
-        TRUE ~ round(5 / 2 * (lx + lead(lx)))
+        Edad == "0" ~ 0.3 * lx + 0.7 * lead(lx),
+        Edad == "1-4" ~ 4 / 2 * (lx + lead(lx)),
+        Edad == ult ~ lx / nMx,
+        TRUE ~ 5 / 2 * (lx + lead(lx))
       ),
       Tx = rev(cumsum(rev(nLx))),
-      ex = round(Tx / lx, 2)
+      ex = Tx / lx
     )
+
+  # Fase 2: Redondeo para presentación
+  if (redondeo) {
+    tabla <- tabla |>
+      mutate(
+        nMx = DemBas_redondear(nMx, 5),
+        nqx = DemBas_redondear(nqx, 5),
+        npx = DemBas_redondear(npx, 5),
+        lx = DemBas_redondear(lx, 0),
+        ndx = DemBas_redondear(ndx, 0),
+        nLx = DemBas_redondear(nLx, 0),
+        Tx = DemBas_redondear(Tx, 0),
+        ex = DemBas_redondear(ex, 2)
+      )
+  }
+
+  tabla
 }
