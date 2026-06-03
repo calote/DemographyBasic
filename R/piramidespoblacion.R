@@ -1741,7 +1741,7 @@ crear_piramide_absoluta <- function(datos, titulo = "Pirámide de Población", m
 #'   (ej. \code{"quinquenio"}). Por defecto \code{"años"} (densidad anual).
 #' @param etiqueta_x Texto personalizado para el eje X. Si es \code{NULL}
 #'   (default), se genera automáticamente como
-#'   \code{"Densidad Relativa (%/<unidad>)"}.
+#'   \code{"Densidad Relativa (\%/<unidad>)"}.
 #'
 #' @return Lista con dos elementos:
 #'   \describe{
