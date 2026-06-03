@@ -6,8 +6,8 @@
 \usage{
 DemBas_piramidePorc(
   datosPiramide,
-  Gtitulo = "Pirámide Población",
-  Gsubtitulo = "Año 2020",
+  Gtitulo = "Pir<U+00E1>mide Poblaci<U+00F3>n",
+  Gsubtitulo = "A<U+00F1>o 2020",
   Gtitulo.X = "Porcentajes",
   GHombresEtiq = "Hombres",
   GMujeresEtiq = "Mujeres",

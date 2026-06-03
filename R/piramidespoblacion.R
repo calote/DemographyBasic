@@ -1894,7 +1894,7 @@ DemBas_piramide_relativa <- function(datos, titulo = "Pirámide de Población", 
 #'   Por defecto \code{"Hombres"}.
 #' @param etiq.mujer Cadena de texto con la etiqueta para mujeres.
 #'   Por defecto \code{"Mujeres"}.
-#' @param tamaño.linea Valor numérico para el grosor de las líneas.
+#' @param tamano.linea Valor numérico para el grosor de las líneas.
 #'   Por defecto \code{0.8}.
 #'
 #' @return Objeto ggplot2 con la pirámide superpuesta de perfiles.
@@ -1929,12 +1929,12 @@ DemBas_piramide_relativa <- function(datos, titulo = "Pirámide de Población", 
 #'
 #' @export
 DemBas_piramide_superpuesta_lineas <- function(datosPiramide,
-                                                titulo = "Pirámide superpuesta",
+                                                titulo = "Piramide superpuesta",
                                                 subtitulo = NULL,
                                                 colores = NULL,
                                                 etiq.hombre = "Hombres",
                                                 etiq.mujer = "Mujeres",
-                                                tamaño.linea = 0.8) {
+                                                tamano.linea = 0.8) {
   if (!all(c("Edad", "Sexo", "Poblacion", "Caso") %in% names(datosPiramide))) {
     stop("datosPiramide debe contener: Edad, Sexo, Poblacion, Caso")
   }
@@ -1955,7 +1955,7 @@ DemBas_piramide_superpuesta_lineas <- function(datosPiramide,
     ungroup()
 
   g <- ggplot(df, aes(x = Edad, y = porcentaje_grafico, colour = Caso)) +
-    geom_line(linewidth = tamaño.linea) +
+    geom_line(linewidth = tamano.linea) +
     facet_wrap(~ Sexo) +
     coord_flip() +
     scale_y_continuous(labels = function(x) paste0(abs(round(x, 1)), "%")) +
@@ -2002,7 +2002,7 @@ DemBas_piramide_superpuesta_lineas <- function(datosPiramide,
 #'   \code{Sexo} en la línea escalonada. Por defecto \code{c("Hombres" = "black", "Mujeres" = "black")}.
 #' @param alpha Valor numérico entre 0 y 1 para la transparencia de las
 #'   barras. Por defecto \code{0.4}.
-#' @param tamaño.linea Valor numérico para el grosor de la línea escalonada.
+#' @param tamano.linea Valor numérico para el grosor de la línea escalonada.
 #'   Por defecto \code{1}.
 #' @param etiq.hombre Cadena de texto con la etiqueta para hombres.
 #'   Por defecto \code{"Hombres"}.
@@ -2041,12 +2041,12 @@ DemBas_piramide_superpuesta_lineas <- function(datosPiramide,
 #' @export
 DemBas_piramide_superpuesta_mixta <- function(datosPiramide,
                                                Caso.referencia = NULL,
-                                               titulo = "Pirámide superpuesta mixta",
+                                               titulo = "Piramide superpuesta mixta",
                                                subtitulo = NULL,
                                                colores.barra = c("Hombres" = "#2c3e50", "Mujeres" = "#e74c3c"),
                                                colores.linea = c("Hombres" = "black", "Mujeres" = "black"),
                                                alpha = 0.4,
-                                               tamaño.linea = 1,
+                                               tamano.linea = 1,
                                                etiq.hombre = "Hombres",
                                                etiq.mujer = "Mujeres") {
   if (!all(c("Edad", "Sexo", "Poblacion", "Caso") %in% names(datosPiramide))) {
@@ -2078,7 +2078,7 @@ DemBas_piramide_superpuesta_mixta <- function(datosPiramide,
     geom_step(
       data = df |> filter(tipo == "linea"),
       aes(x = Edad, y = Pop, color = Sexo),
-      linewidth = tamaño.linea
+      linewidth = tamano.linea
     ) +
     coord_flip() +
     scale_y_continuous(labels = abs) +

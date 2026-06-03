@@ -7,12 +7,12 @@
 DemBas_piramide_superpuesta_mixta(
   datosPiramide,
   Caso.referencia = NULL,
-  titulo = "Pirámide superpuesta mixta",
+  titulo = "Piramide superpuesta mixta",
   subtitulo = NULL,
   colores.barra = c(Hombres = "#2c3e50", Mujeres = "#e74c3c"),
   colores.linea = c(Hombres = "black", Mujeres = "black"),
   alpha = 0.4,
-  tamaño.linea = 1,
+  tamano.linea = 1,
   etiq.hombre = "Hombres",
   etiq.mujer = "Mujeres"
 )
@@ -45,7 +45,7 @@ Por defecto \code{NULL}.}
 \item{alpha}{Valor numérico entre 0 y 1 para la transparencia de las
 barras. Por defecto \code{0.4}.}
 
-\item{tamaño.linea}{Valor numérico para el grosor de la línea escalonada.
+\item{tamano.linea}{Valor numérico para el grosor de la línea escalonada.
 Por defecto \code{1}.}
 
 \item{etiq.hombre}{Cadena de texto con la etiqueta para hombres.

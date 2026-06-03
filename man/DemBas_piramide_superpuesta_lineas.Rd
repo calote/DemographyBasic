@@ -6,12 +6,12 @@
 \usage{
 DemBas_piramide_superpuesta_lineas(
   datosPiramide,
-  titulo = "Pirámide superpuesta",
+  titulo = "Piramide superpuesta",
   subtitulo = NULL,
   colores = NULL,
   etiq.hombre = "Hombres",
   etiq.mujer = "Mujeres",
-  tamaño.linea = 0.8
+  tamano.linea = 0.8
 )
 }
 \arguments{
@@ -39,7 +39,7 @@ Por defecto \code{"Hombres"}.}
 \item{etiq.mujer}{Cadena de texto con la etiqueta para mujeres.
 Por defecto \code{"Mujeres"}.}
 
-\item{tamaño.linea}{Valor numérico para el grosor de las líneas.
+\item{tamano.linea}{Valor numérico para el grosor de las líneas.
 Por defecto \code{0.8}.}
 }
 \value{
