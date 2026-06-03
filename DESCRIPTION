@@ -26,13 +26,13 @@ Imports:
     knitr,
     RColorBrewer,
     ggh4x,
-    glue
+    glue,
+    tidyr
 Suggests:
     rmarkdown,
     ggthemes,
     mapSpain,
-    LexisPlotR,
-    tidyr
+    LexisPlotR
 URL: https://github.com/calote/DemographyBasic
 BugReports: https://github.com/calote/DemographyBasic/issues
 VignetteBuilder: knitr

@@ -1523,3 +1523,348 @@ DemBas_piramidePorc_Generaciones <- function(
 #g_pir3gen = DemBas_piramidePorc_Generaciones(pop3,GpresentaResumen=F)
 #g_pir3gen = DemBas_piramidePorc_Generaciones(pop3,GpresentaResumen=T)
 
+# Intervalos estándar para agrupación
+intervalos_estandar1 <- c("0-4", "5-9", "10-14", "15-19", "20-24", "25-29",
+                          "30-34", "35-39", "40-44", "45-49", "50-54", "55-59",
+                          "60-64", "65-69", "70-74", "75-79", "80-84", "85-89",
+                          "90-94", "95-99", "100+")
+
+#' Agrupa datos etarios en intervalos
+#'
+#' Toma datos con edades individuales (o ya agrupados) y los reagrupa en los
+#' intervalos de edad especificados, sumando las poblaciones de hombres y mujeres
+#' dentro de cada grupo y calculando la amplitud correspondiente.
+#'
+#' @param datos Data frame con columnas \code{edad_grupo}, \code{hombre},
+#'   \code{mujer} y \code{amplitud}.
+#' @param intervalos Vector de caracteres con las etiquetas de los intervalos
+#'   destino (ej. \code{c("0-4", "5-9", ...)}). También acepta la cadena
+#'   \code{"estandar1"} para usar los intervalos quinquenales estándar
+#'   predefinidos.
+#'
+#' @return Data frame con columnas \code{edad_grupo}, \code{hombre},
+#'   \code{mujer} y \code{amplitud}, ordenado según \code{intervalos}.
+#'
+#' @keywords internal
+agrupar_edad <- function(datos, intervalos) {
+  if (length(intervalos) == 1 && intervalos == "estandar1") {
+    intervalos <- intervalos_estandar1
+  }
+
+  n_int <- length(intervalos)
+  inicio_int <- as.numeric(gsub("[^0-9].*", "", intervalos))
+
+  # Tabla de amplitudes
+  fin_int <- suppressWarnings(as.numeric(gsub(".*-", "", intervalos)))
+  amplitud_int <- ifelse(grepl("-", intervalos), fin_int - inicio_int + 1, NA_real_)
+  ultima_ok <- tail(amplitud_int[!is.na(amplitud_int)], 1)
+  amplitud_int[is.na(amplitud_int)] <- if (length(ultima_ok) > 0) ultima_ok else 5
+
+  # Asignar cada fila a su intervalo
+  edad_num <- as.numeric(gsub("[^0-9].*", "", datos$edad_grupo))
+  idx <- findInterval(edad_num, inicio_int)
+  idx <- pmax(idx, 1L)
+  idx <- pmin(idx, n_int)
+  edad_grupo_new <- intervalos[idx]
+
+  # Agregar con R base
+  hombre_agg <- tapply(datos$hombre, edad_grupo_new, sum)
+  mujer_agg <- tapply(datos$mujer, edad_grupo_new, sum)
+  etiquetas <- names(hombre_agg)
+
+  datos_agrupados <- data.frame(
+    edad_grupo = etiquetas,
+    hombre = as.numeric(hombre_agg),
+    mujer = as.numeric(mujer_agg),
+    stringsAsFactors = FALSE
+  )
+
+  # Unir amplitudes
+  datos_agrupados$amplitud <- amplitud_int[match(datos_agrupados$edad_grupo, intervalos)]
+
+  # Reordenar según intervalos originales
+  datos_agrupados[match(intervalos, datos_agrupados$edad_grupo), ]
+}
+
+# Colores por defecto para las barras
+colores_defecto <- c("hombre" = "#4CA4DE", "mujer" = "#D342CE")
+# colores_anteriores <- c("hombre" = "#1f77b4", "mujer" = "#ff7f0e")
+
+#' Pirámide de población con valores absolutos
+#'
+#' Genera una pirámide de población mostrando valores absolutos (densidad de
+#' población por grupo etario). Los hombres se representan a la izquierda del
+#' eje X y las mujeres a la derecha.
+#'
+#' @param datos Data frame con columnas obligatorias:
+#'   \code{edad_grupo} (etiquetas de intervalo, ej. \code{"60-69"}),
+#'   \code{amplitud} (años que abarca cada intervalo),
+#'   \code{hombre} y \code{mujer} (población total de cada sexo en el intervalo).
+#' @param titulo Título del gráfico. Por defecto \code{"Pirámide de Población"}.
+#' @param mostrar_limites Lógico. Si \code{TRUE}, el eje Y muestra los límites
+#'   de los intervalos (ej. \code{60, 70, 75, ...}) en vez de las etiquetas
+#'   de rango (ej. \code{60-69, 70-74, ...}). Por defecto \code{FALSE}.
+#' @param colores Vector nombrado con los colores para cada sexo:
+#'   \code{c(hombre = "#color", mujer = "#color")}. Por defecto usa
+#'   \code{#4CA4DE} para hombres y \code{#D342CE} para mujeres.
+#' @param intervalos Vector de caracteres con intervalos destino para
+#'   reagrupar los datos (ej. \code{"estandar1"} o un vector personalizado).
+#'   Si es \code{NULL} (default), se usa la agrupación original de \code{datos}.
+#' @param saltos_y Número entero que indica cada cuántos años mostrar un tick
+#'   en el eje Y. Útil cuando los datos tienen granularidad anual para evitar
+#'   etiquetas superpuestas. Por defecto \code{NULL} (desactivado).
+#' @param limite_x Número que fija el valor máximo absoluto del eje X de forma
+#'   simétrica (\code{c(-limite_x, limite_x)}). Permite comparar varias
+#'   pirámides con la misma escala horizontal. Por defecto \code{NULL}
+#'   (escala automática).
+#' @param etiqueta_x Texto personalizado para el eje X. Si es \code{NULL}
+#'   (default), se usa \code{"Población (densidad)"}.
+#' @param etiqueta_y Texto personalizado para el eje Y. Si es \code{NULL}
+#'   (default), se usa \code{"Grupo de Edad"}.
+#'
+#' @return Lista con dos elementos:
+#'   \describe{
+#'     \item{grafico}{Objeto \code{ggplot} con la pirámide de población.}
+#'     \item{datos}{Data frame procesado usado para construir el gráfico,
+#'       con columnas \code{edad_grupo}, \code{sexo}, \code{poblacion},
+#'       \code{amplitud} y \code{poblacion_ajustada}.}
+#'   }
+#'
+#' @examples
+#' \dontrun{
+#' datos <- data.frame(
+#'   edad_grupo = c("60-69", "70-74", "75-84", "85-99"),
+#'   amplitud   = c(10, 5, 10, 15),
+#'   hombre     = c(450000, 280000, 320000, 150000),
+#'   mujer      = c(480000, 310000, 380000, 200000)
+#' )
+#' r <- crear_piramide_absoluta(datos, "Ejemplo")
+#' r$grafico
+#' }
+#'
+#' @export
+crear_piramide_absoluta <- function(datos, titulo = "Pirámide de Población", mostrar_limites = FALSE, colores = colores_defecto, intervalos = NULL, saltos_y = NULL, limite_x = NULL, etiqueta_x = NULL, etiqueta_y = NULL) {
+  # Validar que los datos tengan las columnas necesarias
+  if (!all(c("edad_grupo", "amplitud", "hombre", "mujer") %in% names(datos))) {
+    stop("Los datos deben contener: edad_grupo, amplitud, hombre, mujer")
+  }
+
+  # Agrupar en intervalos si se solicita
+  if (!is.null(intervalos)) {
+    datos <- agrupar_edad(datos, intervalos)
+  }
+  
+  # Guardar el orden original
+  orden_edades <- datos$edad_grupo
+  
+  # Extraer edad inicial y final de cada intervalo
+  edad_inicial <- as.numeric(gsub("[^0-9].*", "", orden_edades))
+  edad_final <- edad_inicial + datos$amplitud
+  edad_media <- (edad_inicial + edad_final) / 2
+  
+  # Configurar breaks y labels del eje Y
+  if (!is.null(saltos_y)) {
+    min_y <- floor(min(edad_inicial))
+    max_y <- ceiling(max(edad_final))
+    breaks_y <- seq(min_y, max_y, by = saltos_y)
+    labels_y <- as.character(breaks_y)
+  } else if (mostrar_limites) {
+    limites_y <- sort(unique(c(edad_inicial, edad_final)))
+    breaks_y <- limites_y
+    labels_y <- as.character(limites_y)
+  } else {
+    breaks_y <- edad_media
+    labels_y <- orden_edades
+  }
+  
+  # Procesar datos
+  datos_procesados <- datos |>
+    mutate(
+      edad_inicial = edad_inicial,
+      edad_final = edad_final
+    ) |>
+    tidyr::pivot_longer(cols = c(hombre, mujer), names_to = "sexo", values_to = "poblacion") |>
+    mutate(
+      poblacion_ajustada = ifelse(sexo == "mujer",
+                                  poblacion / amplitud,
+                                  -(poblacion / amplitud))
+    )
+  
+  # Crear la pirámide
+  grafico <- ggplot(datos_procesados, aes(fill = sexo)) +
+    geom_rect(aes(xmin = 0, xmax = poblacion_ajustada, 
+                  ymin = edad_inicial, ymax = edad_final)) +
+    scale_x_continuous(
+      limits = if (!is.null(limite_x)) c(-limite_x, limite_x) else NULL,
+      labels = function(x) scales::comma(abs(x))
+    ) +
+    scale_y_continuous(
+      breaks = breaks_y,
+      labels = labels_y,
+      expand = c(0, 0)
+    ) +
+    scale_fill_manual(
+      values = colores,
+      labels = c("hombre" = "Hombres", "mujer" = "Mujeres")
+    ) +
+    labs(
+      title = titulo,
+      x = if (!is.null(etiqueta_x)) etiqueta_x else "Población (densidad)",
+      y = if (!is.null(etiqueta_y)) etiqueta_y else "Grupo de Edad",
+      fill = "Sexo"
+    ) +
+    theme_minimal() +
+    theme(
+      axis.text.x = element_text(angle = 0),
+      panel.grid.major.y = element_blank(),
+      plot.title = element_text(hjust = 0.5, face = "bold")
+    )
+  
+  # Devolver lista con gráfico y datos procesados
+  list(
+    grafico = grafico,
+    datos = datos_procesados |>
+      select(edad_grupo, sexo, poblacion, amplitud, poblacion_ajustada) |>
+      arrange(edad_grupo, sexo)
+  )
+}
+
+#' Pirámide de población con valores relativos
+#'
+#' Genera una pirámide de población mostrando densidades relativas
+#' (porcentaje de población por unidad de edad). Los hombres se representan
+#' a la izquierda del eje X y las mujeres a la derecha.
+#'
+#' @inheritParams crear_piramide_absoluta
+#' @param unidad_densidad Unidad para el cálculo de densidad. Puede ser un
+#'   número (ej. \code{5} para densidad por quinquenio) o un texto descriptivo
+#'   (ej. \code{"quinquenio"}). Por defecto \code{"años"} (densidad anual).
+#' @param etiqueta_x Texto personalizado para el eje X. Si es \code{NULL}
+#'   (default), se genera automáticamente como
+#'   \code{"Densidad Relativa (%/<unidad>)"}.
+#'
+#' @return Lista con dos elementos:
+#'   \describe{
+#'     \item{grafico}{Objeto \code{ggplot} con la pirámide de población.}
+#'     \item{datos}{Data frame procesado usado para construir el gráfico,
+#'       con columnas \code{edad_grupo}, \code{sexo}, \code{poblacion},
+#'       \code{amplitud}, \code{porcentaje} y \code{densidad_ajustada}.}
+#'   }
+#'
+#' @examples
+#' \dontrun{
+#' datos <- data.frame(
+#'   edad_grupo = c("65-69", "70-74", "75-84", "85-99"),
+#'   amplitud   = c(5, 5, 10, 15),
+#'   hombre     = c(520000, 350000, 280000, 120000),
+#'   mujer      = c(560000, 385000, 340000, 180000)
+#' )
+#' r <- crear_piramide_relativa(datos, "Ejemplo", unidad_densidad = 5)
+#' r$grafico
+#' }
+#'
+#' @export
+crear_piramide_relativa <- function(datos, titulo = "Pirámide de Población", unidad_densidad = "años", mostrar_limites = FALSE, colores = colores_defecto, intervalos = NULL, saltos_y = NULL, limite_x = NULL, etiqueta_x = NULL, etiqueta_y = NULL) {
+  # Validar que los datos tengan las columnas necesarias
+  if (!all(c("edad_grupo", "amplitud", "hombre", "mujer") %in% names(datos))) {
+    stop("Los datos deben contener: edad_grupo, amplitud, hombre, mujer")
+  }
+
+  # Agrupar en intervalos si se solicita
+  if (!is.null(intervalos)) {
+    datos <- agrupar_edad(datos, intervalos)
+  }
+  
+  # Guardar el orden original
+  orden_edades <- datos$edad_grupo
+  
+  # Extraer edad inicial y final de cada intervalo
+  edad_inicial <- as.numeric(gsub("[^0-9].*", "", orden_edades))
+  edad_final <- edad_inicial + datos$amplitud
+  edad_media <- (edad_inicial + edad_final) / 2
+  
+  # Configurar breaks y labels del eje Y
+  if (!is.null(saltos_y)) {
+    min_y <- floor(min(edad_inicial))
+    max_y <- ceiling(max(edad_final))
+    breaks_y <- seq(min_y, max_y, by = saltos_y)
+    labels_y <- as.character(breaks_y)
+  } else if (mostrar_limites) {
+    limites_y <- sort(unique(c(edad_inicial, edad_final)))
+    breaks_y <- limites_y
+    labels_y <- as.character(limites_y)
+  } else {
+    breaks_y <- edad_media
+    labels_y <- orden_edades
+  }
+  
+  # Convertir unidad_densidad a número si es posible (ANTES de usarlo en mutate)
+  unidad_numerica <- suppressWarnings(as.numeric(unidad_densidad))
+  if (is.na(unidad_numerica)) {
+    factor_escala <- 1
+    etiqueta_unidad <- unidad_densidad
+  } else {
+    factor_escala <- unidad_numerica
+    etiqueta_unidad <- paste0(unidad_numerica, " años")
+  }
+  
+  # Procesar datos
+  datos_procesados <- datos |>
+    mutate(
+      edad_inicial = edad_inicial,
+      edad_final = edad_final
+    ) |>
+    tidyr::pivot_longer(cols = c(hombre, mujer), names_to = "sexo", values_to = "poblacion") |>
+    mutate(
+      # Calcular porcentaje relativo
+      poblacion_total = sum(poblacion),
+      porcentaje = (poblacion / poblacion_total) * 100,
+      # Ajustar por amplitud del intervalo dividida por unidad_densidad
+      densidad = porcentaje / (amplitud / factor_escala),
+      # Aplicar signo negativo para hombres
+      densidad_ajustada = ifelse(sexo == "mujer", densidad, -densidad)
+    )
+  
+  # Crear etiqueta para el eje X
+  etiqueta_eje_x <- paste0("Densidad Relativa (%/", etiqueta_unidad, ")")
+  
+    # Crear la pirámide
+  grafico <- ggplot(datos_procesados, aes(fill = sexo)) +
+    geom_rect(aes(xmin = 0, xmax = densidad_ajustada, 
+                  ymin = edad_inicial, ymax = edad_final)) +
+    scale_x_continuous(
+      limits = if (!is.null(limite_x)) c(-limite_x, limite_x) else NULL,
+      breaks = scales::pretty_breaks(n = 10),
+      labels = function(x) paste0(abs(round(x, 2)), "%")
+    ) +
+    scale_y_continuous(
+      breaks = breaks_y,
+      labels = labels_y,
+      expand = c(0, 0)
+    ) +
+    scale_fill_manual(
+      values = colores,
+      labels = c("hombre" = "Hombres", "mujer" = "Mujeres")
+    ) +
+    labs(
+      title = titulo,
+      x = if (!is.null(etiqueta_x)) etiqueta_x else etiqueta_eje_x,
+      y = if (!is.null(etiqueta_y)) etiqueta_y else "Grupo de Edad",
+      fill = "Sexo"
+    ) +
+    theme_minimal() +
+    theme(
+      axis.text.x = element_text(angle = 0),
+      panel.grid.major.y = element_blank(),
+      plot.title = element_text(hjust = 0.5, face = "bold")
+    )
+  
+  # Devolver lista con gráfico y datos procesados
+  list(
+    grafico = grafico,
+    datos = datos_procesados |>
+      select(edad_grupo, sexo, poblacion, amplitud, porcentaje, densidad_ajustada) |>
+      arrange(edad_grupo, sexo)
+  )
+}
+
