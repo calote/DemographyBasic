@@ -901,3 +901,130 @@ DemBas_tablavida_abreviada_calculadora <- function(nMx, l0 = 100000,
   }
   tba
 }
+
+#' Calcula la tabla de vida completa (método tidyverse)
+#'
+#' Versión de \code{\link{DemBas_tablavida_completa}} que replica el estilo
+#' de cálculo con \code{tidyverse} usado en prácticas docentes.
+#' Utiliza \code{cumprod(lag(px))} para \code{lx} y coeficientes fijos
+#' (0.3/0.7 para edad 0, 0.4/0.6 para edad 1) para \code{Lx}.
+#'
+#' @param Mx Vector numérico con las tasas centralizadas de mortalidad para
+#'   cada edad simple (desde 0 hasta la edad máxima observada).
+#' @param l0 Valor numérico con la población inicial (radix). Por defecto 100000.
+#'
+#' @return tibble con columnas: Edad, Mx, qx, px, lx, dx, Lx, Tx, ex.
+#'
+#' @examples
+#' \dontrun{
+#' Mx1000 <- c(9.12160, 0.84807, 0.49502, 0.33352, 0.27296,
+#'             0.23258, 0.20229, 0.19221, 0.19225, 0.18219,
+#'             0.18219, 0.18223, 0.19239, 0.21268, 0.25325,
+#'             0.31411, 0.38518, 0.44618, 0.47682, 0.48721,
+#'             0.48744, 0.48768, 0.48792, 0.48816, 0.48840,
+#'             0.48864, 0.49907, 0.49932, 0.49957, 0.51002,
+#'             0.52049, 0.55140, 0.58236, 0.62360, 0.67515,
+#'             0.72681, 0.79907, 0.89203, 0.99549, 1.09927,
+#'             1.22398, 1.35944, 1.50578, 1.68380, 1.87305,
+#'             2.07374, 2.28609, 2.52075, 2.76762, 3.04801,
+#'             3.34149, 3.64844, 3.99052, 4.35799, 4.76231,
+#'             5.19386, 5.68611, 6.20842, 6.79514, 7.42672,
+#'             8.12774, 8.89053, 9.74129, 10.68500, 11.73947,
+#'             12.91226, 14.22468, 15.71228, 17.35403, 19.16595,
+#'             21.20612, 23.43628, 25.96366, 28.83038, 32.10259,
+#'             35.83456, 40.09691, 44.96477, 50.47392, 56.71130,
+#'             63.73696, 71.61161, 80.38833, 90.15169, 100.87032,
+#'             112.56462, 125.25733, 138.92967, 153.57492, 169.22923,
+#'             185.87183, 203.41806, 222.05303, 241.69867, 262.24030,
+#'             283.83279, 306.41026, 329.80973, 354.16667, 379.65616,
+#'             406.15058, 434.57189, 462.12121, 491.86992, 832.50000)
+#' mx <- Mx1000 / 1000
+#' tv <- DemBas_tablavida_completa_tidyverse(mx)
+#' head(tv, 10)
+#' }
+#'
+#' @export
+DemBas_tablavida_completa_tidyverse <- function(Mx, l0 = 100000) {
+  n <- length(Mx)
+  edades <- as.character(0:(n - 1))
+  edades[n] <- paste0(n - 1, "+")
+  ult <- edades[n]
+
+  tibble(Edad = edades, Mx = Mx) |>
+    mutate(
+      Mx = round(Mx, 5),
+      qx = case_when(
+        Edad == ult ~ 1,
+        TRUE ~ round(2 * Mx / (2 + Mx), 5)
+      ),
+      px = round(1 - qx, 5),
+      lx = round(l0 * cumprod(lag(px, default = 1))),
+      dx = round(lx * qx),
+      Lx = case_when(
+        Edad == "0" ~ round(0.3 * lx + 0.7 * lead(lx)),
+        Edad == "1" ~ round(0.4 * lx + 0.6 * lead(lx)),
+        Edad == ult ~ round(lx / Mx),
+        TRUE ~ round((lx + lead(lx)) / 2)
+      ),
+      Tx = rev(cumsum(rev(Lx))),
+      ex = round(Tx / lx, 2)
+    )
+}
+
+#' Calcula la tabla de vida abreviada (método tidyverse)
+#'
+#' Versión de \code{\link{DemBas_tablavida_abreviada}} que replica el estilo
+#' de cálculo con \code{tidyverse} usado en prácticas docentes.
+#' Utiliza \code{cumprod(lag(npx))} para \code{lx} y ajusta \code{nqx}
+#' según la amplitud de cada grupo de edad.
+#'
+#' @param nMx Vector numérico con las tasas centralizadas de mortalidad para
+#'   cada grupo de edad (0, 1-4, 5-9, 10-14, ..., 100+).
+#' @param l0 Valor numérico con la población inicial (radix). Por defecto 100000.
+#'
+#' @return tibble con columnas: Edad, n, nMx, nqx, npx, lx, ndx, nLx, Tx, ex.
+#'
+#' @examples
+#' \dontrun{
+#' mx0 <- 1733 / 441881
+#' mx <- c(mx0, 0.00027, 0.00013, 0.00016, 0.00043, 0.00057, 0.00059,
+#'         0.00081, 0.00115, 0.00174, 0.00258, 0.00376, 0.00569, 0.00818,
+#'         0.01346, 0.02206, 0.03844, 0.06981, 0.12872, 0.21674, 0.31705,
+#'         0.48258)
+#' tv <- DemBas_tablavida_abreviada_tidyverse(mx)
+#' tv
+#' }
+#'
+#' @export
+DemBas_tablavida_abreviada_tidyverse <- function(nMx, l0 = 100000) {
+  n <- length(nMx)
+
+  etiquetas <- c("0", "1-4", "5-9", "10-14", "15-19", "20-24", "25-29",
+                  "30-34", "35-39", "40-44", "45-49", "50-54", "55-59",
+                  "60-64", "65-69", "70-74", "75-79", "80-84", "85-89",
+                  "90-94", "95-99", "100+")
+  etiquetas <- etiquetas[1:n]
+  ult <- etiquetas[n]
+
+  tibble(Edad = etiquetas, nMx = nMx) |>
+    mutate(
+      nMx = round(nMx, 5),
+      nqx = case_when(
+        Edad == ult ~ 1,
+        Edad == "0" ~ round(2 * nMx / (2 + nMx), 5),
+        Edad == "1-4" ~ round(2 * 4 * nMx / (2 + 4 * nMx), 5),
+        TRUE ~ round(2 * 5 * nMx / (2 + 5 * nMx), 5)
+      ),
+      npx = round(1 - nqx, 5),
+      lx = round(l0 * cumprod(lag(npx, default = 1))),
+      ndx = round(lx * nqx),
+      nLx = case_when(
+        Edad == "0" ~ round(0.3 * lx + 0.7 * lead(lx)),
+        Edad == "1-4" ~ round(4 / 2 * (lx + lead(lx))),
+        Edad == ult ~ round(lx / nMx),
+        TRUE ~ round(5 / 2 * (lx + lead(lx)))
+      ),
+      Tx = rev(cumsum(rev(nLx))),
+      ex = round(Tx / lx, 2)
+    )
+}
