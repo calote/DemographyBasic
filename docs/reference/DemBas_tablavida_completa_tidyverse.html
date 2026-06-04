@@ -13,7 +13,7 @@ Utiliza cumprod(lag(px)) para lx y coeficientes fijos
 
     <a class="navbar-brand me-2" href="../index.html">DemographyBasic</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.1.12</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.1.13</small>
 
 
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -88,37 +88,38 @@ Si <code>FALSE</code>, retorna valores sin redondear para ver precisión complet
 
     <div class="section level2">
     <h2 id="ref-examples">Examples<a class="anchor" aria-label="anchor" href="#ref-examples"></a></h2>
-    <div class="sourceCode"><pre class="sourceCode r"><code><span><span class="kw">if</span> <span class="op">(</span><span class="cn">FALSE</span><span class="op">)</span> <span class="op">{</span> <span class="co"># \dontrun{</span></span>
-<span><span class="va">Mx1000</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">9.12160</span>, <span class="fl">0.84807</span>, <span class="fl">0.49502</span>, <span class="fl">0.33352</span>, <span class="fl">0.27296</span>,</span>
-<span>            <span class="fl">0.23258</span>, <span class="fl">0.20229</span>, <span class="fl">0.19221</span>, <span class="fl">0.19225</span>, <span class="fl">0.18219</span>,</span>
-<span>            <span class="fl">0.18219</span>, <span class="fl">0.18223</span>, <span class="fl">0.19239</span>, <span class="fl">0.21268</span>, <span class="fl">0.25325</span>,</span>
-<span>            <span class="fl">0.31411</span>, <span class="fl">0.38518</span>, <span class="fl">0.44618</span>, <span class="fl">0.47682</span>, <span class="fl">0.48721</span>,</span>
-<span>            <span class="fl">0.48744</span>, <span class="fl">0.48768</span>, <span class="fl">0.48792</span>, <span class="fl">0.48816</span>, <span class="fl">0.48840</span>,</span>
-<span>            <span class="fl">0.48864</span>, <span class="fl">0.49907</span>, <span class="fl">0.49932</span>, <span class="fl">0.49957</span>, <span class="fl">0.51002</span>,</span>
-<span>            <span class="fl">0.52049</span>, <span class="fl">0.55140</span>, <span class="fl">0.58236</span>, <span class="fl">0.62360</span>, <span class="fl">0.67515</span>,</span>
-<span>            <span class="fl">0.72681</span>, <span class="fl">0.79907</span>, <span class="fl">0.89203</span>, <span class="fl">0.99549</span>, <span class="fl">1.09927</span>,</span>
-<span>            <span class="fl">1.22398</span>, <span class="fl">1.35944</span>, <span class="fl">1.50578</span>, <span class="fl">1.68380</span>, <span class="fl">1.87305</span>,</span>
-<span>            <span class="fl">2.07374</span>, <span class="fl">2.28609</span>, <span class="fl">2.52075</span>, <span class="fl">2.76762</span>, <span class="fl">3.04801</span>,</span>
-<span>            <span class="fl">3.34149</span>, <span class="fl">3.64844</span>, <span class="fl">3.99052</span>, <span class="fl">4.35799</span>, <span class="fl">4.76231</span>,</span>
-<span>            <span class="fl">5.19386</span>, <span class="fl">5.68611</span>, <span class="fl">6.20842</span>, <span class="fl">6.79514</span>, <span class="fl">7.42672</span>,</span>
-<span>            <span class="fl">8.12774</span>, <span class="fl">8.89053</span>, <span class="fl">9.74129</span>, <span class="fl">10.68500</span>, <span class="fl">11.73947</span>,</span>
-<span>            <span class="fl">12.91226</span>, <span class="fl">14.22468</span>, <span class="fl">15.71228</span>, <span class="fl">17.35403</span>, <span class="fl">19.16595</span>,</span>
-<span>            <span class="fl">21.20612</span>, <span class="fl">23.43628</span>, <span class="fl">25.96366</span>, <span class="fl">28.83038</span>, <span class="fl">32.10259</span>,</span>
-<span>            <span class="fl">35.83456</span>, <span class="fl">40.09691</span>, <span class="fl">44.96477</span>, <span class="fl">50.47392</span>, <span class="fl">56.71130</span>,</span>
-<span>            <span class="fl">63.73696</span>, <span class="fl">71.61161</span>, <span class="fl">80.38833</span>, <span class="fl">90.15169</span>, <span class="fl">100.87032</span>,</span>
-<span>            <span class="fl">112.56462</span>, <span class="fl">125.25733</span>, <span class="fl">138.92967</span>, <span class="fl">153.57492</span>, <span class="fl">169.22923</span>,</span>
-<span>            <span class="fl">185.87183</span>, <span class="fl">203.41806</span>, <span class="fl">222.05303</span>, <span class="fl">241.69867</span>, <span class="fl">262.24030</span>,</span>
-<span>            <span class="fl">283.83279</span>, <span class="fl">306.41026</span>, <span class="fl">329.80973</span>, <span class="fl">354.16667</span>, <span class="fl">379.65616</span>,</span>
-<span>            <span class="fl">406.15058</span>, <span class="fl">434.57189</span>, <span class="fl">462.12121</span>, <span class="fl">491.86992</span>, <span class="fl">832.50000</span><span class="op">)</span></span>
-<span><span class="va">mx</span> <span class="op">&lt;-</span> <span class="va">Mx1000</span> <span class="op">/</span> <span class="fl">1000</span></span>
-<span><span class="va">tv</span> <span class="op">&lt;-</span> <span class="fu">DemBas_tablavida_completa_tidyverse</span><span class="op">(</span><span class="va">mx</span><span class="op">)</span></span>
-<span><span class="fu"><a href="https://rdrr.io/r/utils/head.html" class="external-link">head</a></span><span class="op">(</span><span class="va">tv</span>, <span class="fl">10</span><span class="op">)</span></span>
-<span></span>
-<span><span class="co"># Ver valores sin redondear</span></span>
-<span><span class="va">tv_sin_redondeo</span> <span class="op">&lt;-</span> <span class="fu">DemBas_tablavida_completa_tidyverse</span><span class="op">(</span><span class="va">mx</span>, redondeo <span class="op">=</span> <span class="cn">FALSE</span><span class="op">)</span></span>
-<span><span class="fu"><a href="https://rdrr.io/r/utils/head.html" class="external-link">head</a></span><span class="op">(</span><span class="va">tv_sin_redondeo</span>, <span class="fl">10</span><span class="op">)</span></span>
-<span><span class="op">}</span> <span class="co"># }</span></span>
-<span></span></code></pre></div>
+    <div class="sourceCode"><pre class="sourceCode r"><code><span class="r-in"><span><span class="kw">if</span> <span class="op">(</span><span class="cn">FALSE</span><span class="op">)</span> <span class="op">{</span> <span class="co"># \dontrun{</span></span></span>
+<span class="r-in"><span><span class="va">Mx1000</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">9.12160</span>, <span class="fl">0.84807</span>, <span class="fl">0.49502</span>, <span class="fl">0.33352</span>, <span class="fl">0.27296</span>,</span></span>
+<span class="r-in"><span>            <span class="fl">0.23258</span>, <span class="fl">0.20229</span>, <span class="fl">0.19221</span>, <span class="fl">0.19225</span>, <span class="fl">0.18219</span>,</span></span>
+<span class="r-in"><span>            <span class="fl">0.18219</span>, <span class="fl">0.18223</span>, <span class="fl">0.19239</span>, <span class="fl">0.21268</span>, <span class="fl">0.25325</span>,</span></span>
+<span class="r-in"><span>            <span class="fl">0.31411</span>, <span class="fl">0.38518</span>, <span class="fl">0.44618</span>, <span class="fl">0.47682</span>, <span class="fl">0.48721</span>,</span></span>
+<span class="r-in"><span>            <span class="fl">0.48744</span>, <span class="fl">0.48768</span>, <span class="fl">0.48792</span>, <span class="fl">0.48816</span>, <span class="fl">0.48840</span>,</span></span>
+<span class="r-in"><span>            <span class="fl">0.48864</span>, <span class="fl">0.49907</span>, <span class="fl">0.49932</span>, <span class="fl">0.49957</span>, <span class="fl">0.51002</span>,</span></span>
+<span class="r-in"><span>            <span class="fl">0.52049</span>, <span class="fl">0.55140</span>, <span class="fl">0.58236</span>, <span class="fl">0.62360</span>, <span class="fl">0.67515</span>,</span></span>
+<span class="r-in"><span>            <span class="fl">0.72681</span>, <span class="fl">0.79907</span>, <span class="fl">0.89203</span>, <span class="fl">0.99549</span>, <span class="fl">1.09927</span>,</span></span>
+<span class="r-in"><span>            <span class="fl">1.22398</span>, <span class="fl">1.35944</span>, <span class="fl">1.50578</span>, <span class="fl">1.68380</span>, <span class="fl">1.87305</span>,</span></span>
+<span class="r-in"><span>            <span class="fl">2.07374</span>, <span class="fl">2.28609</span>, <span class="fl">2.52075</span>, <span class="fl">2.76762</span>, <span class="fl">3.04801</span>,</span></span>
+<span class="r-in"><span>            <span class="fl">3.34149</span>, <span class="fl">3.64844</span>, <span class="fl">3.99052</span>, <span class="fl">4.35799</span>, <span class="fl">4.76231</span>,</span></span>
+<span class="r-in"><span>            <span class="fl">5.19386</span>, <span class="fl">5.68611</span>, <span class="fl">6.20842</span>, <span class="fl">6.79514</span>, <span class="fl">7.42672</span>,</span></span>
+<span class="r-in"><span>            <span class="fl">8.12774</span>, <span class="fl">8.89053</span>, <span class="fl">9.74129</span>, <span class="fl">10.68500</span>, <span class="fl">11.73947</span>,</span></span>
+<span class="r-in"><span>            <span class="fl">12.91226</span>, <span class="fl">14.22468</span>, <span class="fl">15.71228</span>, <span class="fl">17.35403</span>, <span class="fl">19.16595</span>,</span></span>
+<span class="r-in"><span>            <span class="fl">21.20612</span>, <span class="fl">23.43628</span>, <span class="fl">25.96366</span>, <span class="fl">28.83038</span>, <span class="fl">32.10259</span>,</span></span>
+<span class="r-in"><span>            <span class="fl">35.83456</span>, <span class="fl">40.09691</span>, <span class="fl">44.96477</span>, <span class="fl">50.47392</span>, <span class="fl">56.71130</span>,</span></span>
+<span class="r-in"><span>            <span class="fl">63.73696</span>, <span class="fl">71.61161</span>, <span class="fl">80.38833</span>, <span class="fl">90.15169</span>, <span class="fl">100.87032</span>,</span></span>
+<span class="r-in"><span>            <span class="fl">112.56462</span>, <span class="fl">125.25733</span>, <span class="fl">138.92967</span>, <span class="fl">153.57492</span>, <span class="fl">169.22923</span>,</span></span>
+<span class="r-in"><span>            <span class="fl">185.87183</span>, <span class="fl">203.41806</span>, <span class="fl">222.05303</span>, <span class="fl">241.69867</span>, <span class="fl">262.24030</span>,</span></span>
+<span class="r-in"><span>            <span class="fl">283.83279</span>, <span class="fl">306.41026</span>, <span class="fl">329.80973</span>, <span class="fl">354.16667</span>, <span class="fl">379.65616</span>,</span></span>
+<span class="r-in"><span>            <span class="fl">406.15058</span>, <span class="fl">434.57189</span>, <span class="fl">462.12121</span>, <span class="fl">491.86992</span>, <span class="fl">832.50000</span><span class="op">)</span></span></span>
+<span class="r-in"><span><span class="va">mx</span> <span class="op">&lt;-</span> <span class="va">Mx1000</span> <span class="op">/</span> <span class="fl">1000</span></span></span>
+<span class="r-in"><span><span class="va">tv</span> <span class="op">&lt;-</span> <span class="fu">DemBas_tablavida_completa_tidyverse</span><span class="op">(</span><span class="va">mx</span><span class="op">)</span></span></span>
+<span class="r-in"><span><span class="fu"><a href="https://rdrr.io/r/utils/head.html" class="external-link">head</a></span><span class="op">(</span><span class="va">tv</span>, <span class="fl">10</span><span class="op">)</span></span></span>
+<span class="r-in"><span></span></span>
+<span class="r-in"><span><span class="co"># Ver valores sin redondear</span></span></span>
+<span class="r-in"><span><span class="va">tv_sin_redondeo</span> <span class="op">&lt;-</span> <span class="fu">DemBas_tablavida_completa_tidyverse</span><span class="op">(</span><span class="va">mx</span>, redondeo <span class="op">=</span> <span class="cn">FALSE</span><span class="op">)</span></span></span>
+<span class="r-in"><span><span class="fu"><a href="https://rdrr.io/r/utils/head.html" class="external-link">head</a></span><span class="op">(</span><span class="va">tv_sin_redondeo</span>, <span class="fl">10</span><span class="op">)</span></span></span>
+<span class="r-in"><span><span class="op">}</span> <span class="co"># }</span></span></span>
+<span class="r-in"><span></span></span>
+</code></pre></div>
     </div>
   </main><aside class="col-md-3"><nav id="toc" aria-label="Table of contents"><h2>On this page</h2>
     </nav></aside></div>

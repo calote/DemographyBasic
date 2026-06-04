@@ -11,7 +11,7 @@ va separado del nombre por un espacio en blanco."><link rel="stylesheet" href="h
 
     <a class="navbar-brand me-2" href="../index.html">DemographyBasic</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.1.12</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.1.13</small>
 
 
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -69,10 +69,13 @@ provincia que incluyen el código al inicio (ej. "01 Albacete",
 
     <div class="section level2">
     <h2 id="ref-examples">Examples<a class="anchor" aria-label="anchor" href="#ref-examples"></a></h2>
-    <div class="sourceCode"><pre class="sourceCode r"><code><span><span class="va">nombres_provincias</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"01 Albacete"</span>, <span class="st">"02 Alicante"</span>, <span class="st">"03 Almería"</span><span class="op">)</span></span>
-<span><span class="va">codigos</span> <span class="op">&lt;-</span> <span class="fu">DemBas_extrae_codigo_provincia</span><span class="op">(</span><span class="va">nombres_provincias</span><span class="op">)</span></span>
-<span><span class="va">codigos</span></span>
-<span></span></code></pre></div>
+    <div class="sourceCode"><pre class="sourceCode r"><code><span class="r-in"><span><span class="va">nombres_provincias</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"01 Albacete"</span>, <span class="st">"02 Alicante"</span>, <span class="st">"03 Almería"</span><span class="op">)</span></span></span>
+<span class="r-in"><span><span class="va">codigos</span> <span class="op">&lt;-</span> <span class="fu">DemBas_extrae_codigo_provincia</span><span class="op">(</span><span class="va">nombres_provincias</span><span class="op">)</span></span></span>
+<span class="r-in"><span><span class="va">codigos</span></span></span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 01 Albacete 02 Alicante  03 Almería </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>        "01"        "02"        "03" </span>
+<span class="r-in"><span></span></span>
+</code></pre></div>
     </div>
   </main><aside class="col-md-3"><nav id="toc" aria-label="Table of contents"><h2>On this page</h2>
     </nav></aside></div>

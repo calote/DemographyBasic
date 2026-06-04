@@ -11,7 +11,7 @@ de códigos)."><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/hack-fo
 
     <a class="navbar-brand me-2" href="../index.html">DemographyBasic</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.1.12</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.1.13</small>
 
 
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -72,11 +72,13 @@ códigos correspondientes. Los valores NA indican elementos sin código.</p></dd
 
     <div class="section level2">
     <h2 id="ref-examples">Examples<a class="anchor" aria-label="anchor" href="#ref-examples"></a></h2>
-    <div class="sourceCode"><pre class="sourceCode r"><code><span><span class="va">nombres</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"Andorra"</span>, <span class="st">"España"</span>, <span class="st">"Francia"</span>, <span class="st">"Alemania"</span><span class="op">)</span></span>
-<span><span class="va">codigos</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="cn">NA</span>, <span class="st">"724"</span>, <span class="st">"250"</span>, <span class="cn">NA</span><span class="op">)</span></span>
-<span><span class="va">sin_codigo</span> <span class="op">&lt;-</span> <span class="fu">DemBas_extrae_notienen_codigos</span><span class="op">(</span><span class="va">nombres</span>, <span class="va">codigos</span><span class="op">)</span></span>
-<span><span class="va">sin_codigo</span></span>
-<span></span></code></pre></div>
+    <div class="sourceCode"><pre class="sourceCode r"><code><span class="r-in"><span><span class="va">nombres</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"Andorra"</span>, <span class="st">"España"</span>, <span class="st">"Francia"</span>, <span class="st">"Alemania"</span><span class="op">)</span></span></span>
+<span class="r-in"><span><span class="va">codigos</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="cn">NA</span>, <span class="st">"724"</span>, <span class="st">"250"</span>, <span class="cn">NA</span><span class="op">)</span></span></span>
+<span class="r-in"><span><span class="va">sin_codigo</span> <span class="op">&lt;-</span> <span class="fu">DemBas_extrae_notienen_codigos</span><span class="op">(</span><span class="va">nombres</span>, <span class="va">codigos</span><span class="op">)</span></span></span>
+<span class="r-in"><span><span class="va">sin_codigo</span></span></span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [1] "Andorra"  "Alemania"</span>
+<span class="r-in"><span></span></span>
+</code></pre></div>
     </div>
   </main><aside class="col-md-3"><nav id="toc" aria-label="Table of contents"><h2>On this page</h2>
     </nav></aside></div>

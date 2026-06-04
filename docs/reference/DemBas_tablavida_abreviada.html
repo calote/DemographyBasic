@@ -11,7 +11,7 @@ separación de Greville para el cálculo de las personas-año vividas (nLx)."><l
 
     <a class="navbar-brand me-2" href="../index.html">DemographyBasic</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.1.12</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.1.13</small>
 
 
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -120,14 +120,29 @@ convenciones demográficas estándar.</p></dd>
 
     <div class="section level2">
     <h2 id="ref-examples">Examples<a class="anchor" aria-label="anchor" href="#ref-examples"></a></h2>
-    <div class="sourceCode"><pre class="sourceCode r"><code><span><span class="va">mx0</span> <span class="op">&lt;-</span> <span class="fl">1733</span> <span class="op">/</span> <span class="fl">441881</span></span>
-<span><span class="va">mx</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="va">mx0</span>, <span class="fl">0.00027</span>, <span class="fl">0.00013</span>, <span class="fl">0.00016</span>, <span class="fl">0.00043</span>, <span class="fl">0.00057</span>, <span class="fl">0.00059</span>,</span>
-<span>        <span class="fl">0.00081</span>, <span class="fl">0.00115</span>, <span class="fl">0.00174</span>, <span class="fl">0.00258</span>, <span class="fl">0.00376</span>, <span class="fl">0.00569</span>, <span class="fl">0.00818</span>,</span>
-<span>        <span class="fl">0.01346</span>, <span class="fl">0.02206</span>, <span class="fl">0.03844</span>, <span class="fl">0.06981</span>, <span class="fl">0.12872</span>, <span class="fl">0.21674</span>, <span class="fl">0.31705</span>,</span>
-<span>        <span class="fl">0.48258</span><span class="op">)</span></span>
-<span><span class="va">tv</span> <span class="op">&lt;-</span> <span class="fu">DemBas_tablavida_abreviada</span><span class="op">(</span><span class="va">mx</span><span class="op">)</span></span>
-<span><span class="va">tv</span></span>
-<span></span></code></pre></div>
+    <div class="sourceCode"><pre class="sourceCode r"><code><span class="r-in"><span><span class="va">mx0</span> <span class="op">&lt;-</span> <span class="fl">1733</span> <span class="op">/</span> <span class="fl">441881</span></span></span>
+<span class="r-in"><span><span class="va">mx</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="va">mx0</span>, <span class="fl">0.00027</span>, <span class="fl">0.00013</span>, <span class="fl">0.00016</span>, <span class="fl">0.00043</span>, <span class="fl">0.00057</span>, <span class="fl">0.00059</span>,</span></span>
+<span class="r-in"><span>        <span class="fl">0.00081</span>, <span class="fl">0.00115</span>, <span class="fl">0.00174</span>, <span class="fl">0.00258</span>, <span class="fl">0.00376</span>, <span class="fl">0.00569</span>, <span class="fl">0.00818</span>,</span></span>
+<span class="r-in"><span>        <span class="fl">0.01346</span>, <span class="fl">0.02206</span>, <span class="fl">0.03844</span>, <span class="fl">0.06981</span>, <span class="fl">0.12872</span>, <span class="fl">0.21674</span>, <span class="fl">0.31705</span>,</span></span>
+<span class="r-in"><span>        <span class="fl">0.48258</span><span class="op">)</span></span></span>
+<span class="r-in"><span><span class="va">tv</span> <span class="op">&lt;-</span> <span class="fu">DemBas_tablavida_abreviada</span><span class="op">(</span><span class="va">mx</span><span class="op">)</span></span></span>
+<span class="r-in"><span><span class="va">tv</span></span></span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #949494;"># A tibble: 22 × 11</span></span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>    Edad      n nMx1000     nqx   npx     lx   ndx    nLx      Tx    ex    Sx</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>    <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span> <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span>   <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span>   <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span> <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span>  <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span> <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span>  <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span>   <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span> <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span> <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span></span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 1</span> 0         1    3.92 0.003<span style="text-decoration: underline;">91</span> 0.996 <span style="text-decoration: underline;">100</span>000   391  <span style="text-decoration: underline;">99</span>726 7<span style="text-decoration: underline;">959</span>151  79.6 0.996</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 2</span> 1         4    0.27 0.001<span style="text-decoration: underline;">08</span> 0.999  <span style="text-decoration: underline;">99</span>609   108 <span style="text-decoration: underline;">398</span>219 7<span style="text-decoration: underline;">859</span>425  78.9 0.999</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 3</span> 5         5    0.13 0.000<span style="text-decoration: underline;">65</span> 0.999  <span style="text-decoration: underline;">99</span>501    65 <span style="text-decoration: underline;">497</span>344 7<span style="text-decoration: underline;">461</span>205  75.0 0.999</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 4</span> 10        5    0.16 0.000<span style="text-decoration: underline;">8</span>  0.999  <span style="text-decoration: underline;">99</span>436    80 <span style="text-decoration: underline;">496</span>983 6<span style="text-decoration: underline;">963</span>862  70.0 0.999</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 5</span> 15        5    0.43 0.002<span style="text-decoration: underline;">15</span> 0.998  <span style="text-decoration: underline;">99</span>357   213 <span style="text-decoration: underline;">496</span>251 6<span style="text-decoration: underline;">466</span>879  65.1 0.998</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 6</span> 20        5    0.57 0.002<span style="text-decoration: underline;">85</span> 0.997  <span style="text-decoration: underline;">99</span>144   282 <span style="text-decoration: underline;">495</span>012 5<span style="text-decoration: underline;">970</span>628  60.2 0.997</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 7</span> 25        5    0.59 0.002<span style="text-decoration: underline;">95</span> 0.997  <span style="text-decoration: underline;">98</span>861   291 <span style="text-decoration: underline;">493</span>579 5<span style="text-decoration: underline;">475</span>615  55.4 0.997</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 8</span> 30        5    0.81 0.004<span style="text-decoration: underline;">04</span> 0.996  <span style="text-decoration: underline;">98</span>570   398 <span style="text-decoration: underline;">491</span>855 4<span style="text-decoration: underline;">982</span>037  50.5 0.995</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 9</span> 35        5    1.15 0.005<span style="text-decoration: underline;">73</span> 0.994  <span style="text-decoration: underline;">98</span>172   563 <span style="text-decoration: underline;">489</span>451 4<span style="text-decoration: underline;">490</span>182  45.7 0.993</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;">10</span> 40        5    1.74 0.008<span style="text-decoration: underline;">66</span> 0.991  <span style="text-decoration: underline;">97</span>609   846 <span style="text-decoration: underline;">485</span>931 4<span style="text-decoration: underline;">000</span>731  41.0 0.989</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #949494;"># ℹ 12 more rows</span></span>
+<span class="r-in"><span></span></span>
+</code></pre></div>
     </div>
   </main><aside class="col-md-3"><nav id="toc" aria-label="Table of contents"><h2>On this page</h2>
     </nav></aside></div>

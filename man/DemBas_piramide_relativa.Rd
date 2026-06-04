@@ -6,8 +6,8 @@
 \usage{
 DemBas_piramide_relativa(
   datos,
-  titulo = "Pir<U+00E1>mide de Poblaci<U+00F3>n",
-  unidad_densidad = "a<U+00F1>os",
+  titulo = "Pirámide de Población",
+  unidad_densidad = "años",
   mostrar_limites = FALSE,
   colores = colores_defecto,
   intervalos = NULL,

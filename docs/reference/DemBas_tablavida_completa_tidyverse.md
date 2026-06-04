@@ -1,0 +1,82 @@
+# Calcula la tabla de vida completa (método tidyverse)
+
+Versión de
+[`DemBas_tablavida_completa`](https://DemographyBasic.github.io/reference/DemBas_tablavida_completa.md)
+que replica el estilo de cálculo con `tidyverse` usado en prácticas
+docentes. Utiliza `cumprod(lag(px))` para `lx` y coeficientes fijos
+(0.3/0.7 para edad 0, 0.4/0.6 para edad 1) para `Lx`.
+
+## Usage
+
+``` r
+DemBas_tablavida_completa_tidyverse(Mx, l0 = 1e+05, redondeo = TRUE)
+```
+
+## Arguments
+
+- Mx:
+
+  Vector numérico con las tasas centralizadas de mortalidad para cada
+  edad simple (desde 0 hasta la edad máxima observada).
+
+- l0:
+
+  Valor numérico con la población inicial (radix). Por defecto 100000.
+
+- redondeo:
+
+  Lógico. Si `TRUE` (por defecto), aplica `DemBas_redondear` a los
+  resultados: Mx (5 dígitos), qx (5), px (5), lx (0), dx (0), Lx (0), Tx
+  (0), ex (2). Si `FALSE`, retorna valores sin redondear para ver
+  precisión completa.
+
+## Value
+
+tibble con columnas: Edad, Mx, qx, px, lx, dx, Lx, Tx, ex.
+
+## Details
+
+La función opera en dos fases:
+
+1.  **Cálculo**: Todos los valores se calculan sin redondeo intermedio,
+    permitiendo precisión máxima en los cálculos intermedios.
+
+2.  **Presentación**: Si `redondeo = TRUE` (por defecto), se aplica
+    [`DemBas_redondear`](https://DemographyBasic.github.io/reference/DemBas_redondear.md)
+    (redondeo con epsilon) a cada columna. Si `redondeo = FALSE`, se
+    retornan los valores sin redondear.
+
+## Examples
+
+``` r
+if (FALSE) { # \dontrun{
+Mx1000 <- c(9.12160, 0.84807, 0.49502, 0.33352, 0.27296,
+            0.23258, 0.20229, 0.19221, 0.19225, 0.18219,
+            0.18219, 0.18223, 0.19239, 0.21268, 0.25325,
+            0.31411, 0.38518, 0.44618, 0.47682, 0.48721,
+            0.48744, 0.48768, 0.48792, 0.48816, 0.48840,
+            0.48864, 0.49907, 0.49932, 0.49957, 0.51002,
+            0.52049, 0.55140, 0.58236, 0.62360, 0.67515,
+            0.72681, 0.79907, 0.89203, 0.99549, 1.09927,
+            1.22398, 1.35944, 1.50578, 1.68380, 1.87305,
+            2.07374, 2.28609, 2.52075, 2.76762, 3.04801,
+            3.34149, 3.64844, 3.99052, 4.35799, 4.76231,
+            5.19386, 5.68611, 6.20842, 6.79514, 7.42672,
+            8.12774, 8.89053, 9.74129, 10.68500, 11.73947,
+            12.91226, 14.22468, 15.71228, 17.35403, 19.16595,
+            21.20612, 23.43628, 25.96366, 28.83038, 32.10259,
+            35.83456, 40.09691, 44.96477, 50.47392, 56.71130,
+            63.73696, 71.61161, 80.38833, 90.15169, 100.87032,
+            112.56462, 125.25733, 138.92967, 153.57492, 169.22923,
+            185.87183, 203.41806, 222.05303, 241.69867, 262.24030,
+            283.83279, 306.41026, 329.80973, 354.16667, 379.65616,
+            406.15058, 434.57189, 462.12121, 491.86992, 832.50000)
+mx <- Mx1000 / 1000
+tv <- DemBas_tablavida_completa_tidyverse(mx)
+head(tv, 10)
+
+# Ver valores sin redondear
+tv_sin_redondeo <- DemBas_tablavida_completa_tidyverse(mx, redondeo = FALSE)
+head(tv_sin_redondeo, 10)
+} # }
+```

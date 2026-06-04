@@ -6,7 +6,7 @@
 \usage{
 DemBas_piramide_absoluta(
   datos,
-  titulo = "Pir<U+00E1>mide de Poblaci<U+00F3>n",
+  titulo = "Pirámide de Población",
   mostrar_limites = FALSE,
   colores = colores_defecto,
   intervalos = NULL,

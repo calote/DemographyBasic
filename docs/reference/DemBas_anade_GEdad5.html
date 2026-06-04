@@ -15,7 +15,7 @@ pirámides poblacionales.'><link rel="stylesheet" href="https://cdn.jsdelivr.net
 
     <a class="navbar-brand me-2" href="../index.html">DemographyBasic</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.1.12</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.1.13</small>
 
 
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -87,34 +87,35 @@ de evaluación no estándar de tidyselect).</p></dd>
 
     <div class="section level2">
     <h2 id="ref-examples">Examples<a class="anchor" aria-label="anchor" href="#ref-examples"></a></h2>
-    <div class="sourceCode"><pre class="sourceCode r"><code><span><span class="kw">if</span> <span class="op">(</span><span class="cn">FALSE</span><span class="op">)</span> <span class="op">{</span> <span class="co"># \dontrun{</span></span>
-<span><span class="co"># Requiere datos del paquete</span></span>
-<span><span class="va">datos</span> <span class="op">&lt;-</span> <span class="fu"><a href="DemBas_read_px.html">DemBas_read_px</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/system.file.html" class="external-link">system.file</a></span><span class="op">(</span><span class="st">"examples/9663.px"</span>,</span>
-<span>                                    package <span class="op">=</span> <span class="st">"DemographyBasic"</span><span class="op">)</span><span class="op">)</span></span>
-<span><span class="va">datosPob</span> <span class="op">&lt;-</span> <span class="va">datos</span> <span class="op">|&gt;</span></span>
-<span>  <span class="fu">dplyr</span><span class="fu">::</span><span class="fu"><a href="https://dplyr.tidyverse.org/reference/filter.html" class="external-link">filter</a></span><span class="op">(</span><span class="va">Periodo</span> <span class="op">==</span> <span class="st">"1 de enero de  2018"</span>,</span>
-<span>                <span class="va">Edad.simple</span> <span class="op">!=</span> <span class="st">"Total"</span>,</span>
-<span>                <span class="va">Sexo</span> <span class="op">!=</span> <span class="st">"Ambos sexos"</span><span class="op">)</span> <span class="op">|&gt;</span></span>
-<span>  <span class="fu">dplyr</span><span class="fu">::</span><span class="fu"><a href="https://dplyr.tidyverse.org/reference/select.html" class="external-link">select</a></span><span class="op">(</span><span class="va">Sexo</span>, <span class="va">Edad.simple</span>, Poblacion <span class="op">=</span> <span class="va">value</span><span class="op">)</span></span>
-<span></span>
-<span><span class="va">datosPob2</span> <span class="op">&lt;-</span> <span class="va">datosPob</span> <span class="op">|&gt;</span></span>
-<span>  <span class="fu">dplyr</span><span class="fu">::</span><span class="fu"><a href="https://dplyr.tidyverse.org/reference/mutate.html" class="external-link">mutate</a></span><span class="op">(</span></span>
-<span>    Edad <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/numeric.html" class="external-link">as.numeric</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/grep.html" class="external-link">gsub</a></span><span class="op">(</span><span class="st">"[años|año]"</span>, <span class="st">""</span>, <span class="va">Edad.simple</span><span class="op">)</span><span class="op">)</span>,</span>
-<span>    Poblacion <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/Round.html" class="external-link">round</a></span><span class="op">(</span><span class="va">Poblacion</span>, <span class="fl">0</span><span class="op">)</span></span>
-<span>  <span class="op">)</span></span>
-<span></span>
-<span><span class="va">datosPob2_conGruposEdad</span> <span class="op">&lt;-</span> <span class="fu">DemBas_anade_GEdad5</span><span class="op">(</span><span class="va">datosPob2</span>, <span class="va">Edad</span><span class="op">)</span></span>
-<span><span class="fu"><a href="https://rdrr.io/r/utils/head.html" class="external-link">head</a></span><span class="op">(</span><span class="va">datosPob2_conGruposEdad</span>, <span class="fl">15</span><span class="op">)</span></span>
-<span></span>
-<span><span class="co"># Agrupar para pirámide</span></span>
-<span><span class="va">datosPirAgru</span> <span class="op">&lt;-</span> <span class="fu">DemBas_anade_GEdad5</span><span class="op">(</span><span class="va">datosPob2</span>, <span class="va">Edad</span><span class="op">)</span> <span class="op">|&gt;</span></span>
-<span>  <span class="fu">dplyr</span><span class="fu">::</span><span class="fu"><a href="https://dplyr.tidyverse.org/reference/select.html" class="external-link">select</a></span><span class="op">(</span><span class="va">Sexo</span>, <span class="va">Edad</span>, <span class="va">Poblacion</span>, <span class="va">GEdad5</span><span class="op">)</span> <span class="op">|&gt;</span></span>
-<span>  <span class="fu">dplyr</span><span class="fu">::</span><span class="fu"><a href="https://dplyr.tidyverse.org/reference/group_by.html" class="external-link">group_by</a></span><span class="op">(</span><span class="va">GEdad5</span>, <span class="va">Sexo</span><span class="op">)</span> <span class="op">|&gt;</span></span>
-<span>  <span class="fu">dplyr</span><span class="fu">::</span><span class="fu"><a href="https://dplyr.tidyverse.org/reference/summarise.html" class="external-link">summarise</a></span><span class="op">(</span>Poblacion <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/sum.html" class="external-link">sum</a></span><span class="op">(</span><span class="va">Poblacion</span><span class="op">)</span>, .groups <span class="op">=</span> <span class="st">"keep"</span><span class="op">)</span></span>
-<span></span>
-<span><span class="fu"><a href="https://rdrr.io/r/utils/head.html" class="external-link">head</a></span><span class="op">(</span><span class="va">datosPirAgru</span><span class="op">)</span></span>
-<span><span class="op">}</span> <span class="co"># }</span></span>
-<span></span></code></pre></div>
+    <div class="sourceCode"><pre class="sourceCode r"><code><span class="r-in"><span><span class="kw">if</span> <span class="op">(</span><span class="cn">FALSE</span><span class="op">)</span> <span class="op">{</span> <span class="co"># \dontrun{</span></span></span>
+<span class="r-in"><span><span class="co"># Requiere datos del paquete</span></span></span>
+<span class="r-in"><span><span class="va">datos</span> <span class="op">&lt;-</span> <span class="fu"><a href="DemBas_read_px.html">DemBas_read_px</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/system.file.html" class="external-link">system.file</a></span><span class="op">(</span><span class="st">"examples/9663.px"</span>,</span></span>
+<span class="r-in"><span>                                    package <span class="op">=</span> <span class="st">"DemographyBasic"</span><span class="op">)</span><span class="op">)</span></span></span>
+<span class="r-in"><span><span class="va">datosPob</span> <span class="op">&lt;-</span> <span class="va">datos</span> <span class="op">|&gt;</span></span></span>
+<span class="r-in"><span>  <span class="fu">dplyr</span><span class="fu">::</span><span class="fu"><a href="https://dplyr.tidyverse.org/reference/filter.html" class="external-link">filter</a></span><span class="op">(</span><span class="va">Periodo</span> <span class="op">==</span> <span class="st">"1 de enero de  2018"</span>,</span></span>
+<span class="r-in"><span>                <span class="va">Edad.simple</span> <span class="op">!=</span> <span class="st">"Total"</span>,</span></span>
+<span class="r-in"><span>                <span class="va">Sexo</span> <span class="op">!=</span> <span class="st">"Ambos sexos"</span><span class="op">)</span> <span class="op">|&gt;</span></span></span>
+<span class="r-in"><span>  <span class="fu">dplyr</span><span class="fu">::</span><span class="fu"><a href="https://dplyr.tidyverse.org/reference/select.html" class="external-link">select</a></span><span class="op">(</span><span class="va">Sexo</span>, <span class="va">Edad.simple</span>, Poblacion <span class="op">=</span> <span class="va">value</span><span class="op">)</span></span></span>
+<span class="r-in"><span></span></span>
+<span class="r-in"><span><span class="va">datosPob2</span> <span class="op">&lt;-</span> <span class="va">datosPob</span> <span class="op">|&gt;</span></span></span>
+<span class="r-in"><span>  <span class="fu">dplyr</span><span class="fu">::</span><span class="fu"><a href="https://dplyr.tidyverse.org/reference/mutate.html" class="external-link">mutate</a></span><span class="op">(</span></span></span>
+<span class="r-in"><span>    Edad <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/numeric.html" class="external-link">as.numeric</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/grep.html" class="external-link">gsub</a></span><span class="op">(</span><span class="st">"[años|año]"</span>, <span class="st">""</span>, <span class="va">Edad.simple</span><span class="op">)</span><span class="op">)</span>,</span></span>
+<span class="r-in"><span>    Poblacion <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/Round.html" class="external-link">round</a></span><span class="op">(</span><span class="va">Poblacion</span>, <span class="fl">0</span><span class="op">)</span></span></span>
+<span class="r-in"><span>  <span class="op">)</span></span></span>
+<span class="r-in"><span></span></span>
+<span class="r-in"><span><span class="va">datosPob2_conGruposEdad</span> <span class="op">&lt;-</span> <span class="fu">DemBas_anade_GEdad5</span><span class="op">(</span><span class="va">datosPob2</span>, <span class="va">Edad</span><span class="op">)</span></span></span>
+<span class="r-in"><span><span class="fu"><a href="https://rdrr.io/r/utils/head.html" class="external-link">head</a></span><span class="op">(</span><span class="va">datosPob2_conGruposEdad</span>, <span class="fl">15</span><span class="op">)</span></span></span>
+<span class="r-in"><span></span></span>
+<span class="r-in"><span><span class="co"># Agrupar para pirámide</span></span></span>
+<span class="r-in"><span><span class="va">datosPirAgru</span> <span class="op">&lt;-</span> <span class="fu">DemBas_anade_GEdad5</span><span class="op">(</span><span class="va">datosPob2</span>, <span class="va">Edad</span><span class="op">)</span> <span class="op">|&gt;</span></span></span>
+<span class="r-in"><span>  <span class="fu">dplyr</span><span class="fu">::</span><span class="fu"><a href="https://dplyr.tidyverse.org/reference/select.html" class="external-link">select</a></span><span class="op">(</span><span class="va">Sexo</span>, <span class="va">Edad</span>, <span class="va">Poblacion</span>, <span class="va">GEdad5</span><span class="op">)</span> <span class="op">|&gt;</span></span></span>
+<span class="r-in"><span>  <span class="fu">dplyr</span><span class="fu">::</span><span class="fu"><a href="https://dplyr.tidyverse.org/reference/group_by.html" class="external-link">group_by</a></span><span class="op">(</span><span class="va">GEdad5</span>, <span class="va">Sexo</span><span class="op">)</span> <span class="op">|&gt;</span></span></span>
+<span class="r-in"><span>  <span class="fu">dplyr</span><span class="fu">::</span><span class="fu"><a href="https://dplyr.tidyverse.org/reference/summarise.html" class="external-link">summarise</a></span><span class="op">(</span>Poblacion <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/sum.html" class="external-link">sum</a></span><span class="op">(</span><span class="va">Poblacion</span><span class="op">)</span>, .groups <span class="op">=</span> <span class="st">"keep"</span><span class="op">)</span></span></span>
+<span class="r-in"><span></span></span>
+<span class="r-in"><span><span class="fu"><a href="https://rdrr.io/r/utils/head.html" class="external-link">head</a></span><span class="op">(</span><span class="va">datosPirAgru</span><span class="op">)</span></span></span>
+<span class="r-in"><span><span class="op">}</span> <span class="co"># }</span></span></span>
+<span class="r-in"><span></span></span>
+</code></pre></div>
     </div>
   </main><aside class="col-md-3"><nav id="toc" aria-label="Table of contents"><h2>On this page</h2>
     </nav></aside></div>

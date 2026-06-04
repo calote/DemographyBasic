@@ -11,7 +11,7 @@ para formateo consistente entre plataformas."><link rel="stylesheet" href="https
 
     <a class="navbar-brand me-2" href="../index.html">DemographyBasic</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.1.12</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.1.13</small>
 
 
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -81,13 +81,20 @@ Por defecto TRUE.</p></dd>
 
     <div class="section level2">
     <h2 id="ref-examples">Examples<a class="anchor" aria-label="anchor" href="#ref-examples"></a></h2>
-    <div class="sourceCode"><pre class="sourceCode r"><code><span><span class="fu">DemBas_fmt_num</span><span class="op">(</span><span class="fl">5654.0832</span><span class="op">)</span></span>
-<span><span class="fu">DemBas_fmt_num</span><span class="op">(</span><span class="fl">5654</span><span class="op">)</span></span>
-<span><span class="fu">DemBas_fmt_num</span><span class="op">(</span><span class="fl">565400982.3000</span>, <span class="fl">2</span>, <span class="cn">TRUE</span><span class="op">)</span></span>
-<span><span class="fu">DemBas_fmt_num</span><span class="op">(</span><span class="fl">565400982.3000</span>, <span class="fl">2</span>, <span class="cn">FALSE</span><span class="op">)</span></span>
-<span><span class="fu">DemBas_fmt_num</span><span class="op">(</span><span class="fl">565400982.23713830023</span><span class="op">)</span></span>
-<span><span class="fu">DemBas_fmt_num</span><span class="op">(</span><span class="fl">565400982.23713830023</span>, <span class="fl">2</span><span class="op">)</span></span>
-<span></span></code></pre></div>
+    <div class="sourceCode"><pre class="sourceCode r"><code><span class="r-in"><span><span class="fu">DemBas_fmt_num</span><span class="op">(</span><span class="fl">5654.0832</span><span class="op">)</span></span></span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [1] "5 654.0832"</span>
+<span class="r-in"><span><span class="fu">DemBas_fmt_num</span><span class="op">(</span><span class="fl">5654</span><span class="op">)</span></span></span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [1] "5 654"</span>
+<span class="r-in"><span><span class="fu">DemBas_fmt_num</span><span class="op">(</span><span class="fl">565400982.3000</span>, <span class="fl">2</span>, <span class="cn">TRUE</span><span class="op">)</span></span></span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [1] "565 400 982.3"</span>
+<span class="r-in"><span><span class="fu">DemBas_fmt_num</span><span class="op">(</span><span class="fl">565400982.3000</span>, <span class="fl">2</span>, <span class="cn">FALSE</span><span class="op">)</span></span></span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [1] "565 400 982.30"</span>
+<span class="r-in"><span><span class="fu">DemBas_fmt_num</span><span class="op">(</span><span class="fl">565400982.23713830023</span><span class="op">)</span></span></span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [1] "565 400 982.23714"</span>
+<span class="r-in"><span><span class="fu">DemBas_fmt_num</span><span class="op">(</span><span class="fl">565400982.23713830023</span>, <span class="fl">2</span><span class="op">)</span></span></span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [1] "565 400 982.24"</span>
+<span class="r-in"><span></span></span>
+</code></pre></div>
     </div>
   </main><aside class="col-md-3"><nav id="toc" aria-label="Table of contents"><h2>On this page</h2>
     </nav></aside></div>

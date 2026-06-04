@@ -1,0 +1,71 @@
+# Añade columnas de grupos de edad quinquenales a un data.frame
+
+Añade dos nuevas columnas a un data.frame: una con etiquetas de grupos
+de edad quinquenales (ej. " 0-4", " 5-9", "10-14", ...) y otra con el
+valor numérico inicial de cada grupo (ej. 0, 5, 10, ...). Esta función
+es útil para preparar datos para la construcción de pirámides
+poblacionales.
+
+## Usage
+
+``` r
+DemBas_anade_GEdad5(datos, varEdad)
+```
+
+## Arguments
+
+- datos:
+
+  data.frame o tibble que contiene una columna de edad numérica.
+
+- varEdad:
+
+  El nombre de la columna de edad (de tipo numeric o integer) presente
+  en datos. Se especifica sin comillas (operador de evaluación no
+  estándar de tidyselect).
+
+## Value
+
+El mismo data.frame de entrada con dos columnas adicionales:
+
+- GEdad5:
+
+  Vector de caracteres con las etiquetas de los grupos quinquenales (ej.
+  " 0-4", " 5-9", ..., "100+")
+
+- GEdad5Num:
+
+  Vector numérico con la edad inicial de cada grupo (ej. 0, 5, 10, ...,
+  100)
+
+## Examples
+
+``` r
+if (FALSE) { # \dontrun{
+# Requiere datos del paquete
+datos <- DemBas_read_px(system.file("examples/9663.px",
+                                    package = "DemographyBasic"))
+datosPob <- datos |>
+  dplyr::filter(Periodo == "1 de enero de  2018",
+                Edad.simple != "Total",
+                Sexo != "Ambos sexos") |>
+  dplyr::select(Sexo, Edad.simple, Poblacion = value)
+
+datosPob2 <- datosPob |>
+  dplyr::mutate(
+    Edad = as.numeric(gsub("[años|año]", "", Edad.simple)),
+    Poblacion = round(Poblacion, 0)
+  )
+
+datosPob2_conGruposEdad <- DemBas_anade_GEdad5(datosPob2, Edad)
+head(datosPob2_conGruposEdad, 15)
+
+# Agrupar para pirámide
+datosPirAgru <- DemBas_anade_GEdad5(datosPob2, Edad) |>
+  dplyr::select(Sexo, Edad, Poblacion, GEdad5) |>
+  dplyr::group_by(GEdad5, Sexo) |>
+  dplyr::summarise(Poblacion = sum(Poblacion), .groups = "keep")
+
+head(datosPirAgru)
+} # }
+```

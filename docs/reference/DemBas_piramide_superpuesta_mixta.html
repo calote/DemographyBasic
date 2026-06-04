@@ -13,7 +13,7 @@ izquierda (valores negativos) y las mujeres a la derecha (positivos)."><link rel
 
     <a class="navbar-brand me-2" href="../index.html">DemographyBasic</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.1.12</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.1.13</small>
 
 
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -139,32 +139,33 @@ Por defecto <code>"Mujeres"</code>.</p></dd>
 
     <div class="section level2">
     <h2 id="ref-examples">Examples<a class="anchor" aria-label="anchor" href="#ref-examples"></a></h2>
-    <div class="sourceCode"><pre class="sourceCode r"><code><span><span class="kw">if</span> <span class="op">(</span><span class="cn">FALSE</span><span class="op">)</span> <span class="op">{</span> <span class="co"># \dontrun{</span></span>
-<span><span class="fu"><a href="https://rdrr.io/r/base/Random.html" class="external-link">set.seed</a></span><span class="op">(</span><span class="fl">42</span><span class="op">)</span></span>
-<span><span class="va">edades</span> <span class="op">&lt;-</span> <span class="fl">0</span><span class="op">:</span><span class="fl">85</span></span>
-<span><span class="va">n</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/length.html" class="external-link">length</a></span><span class="op">(</span><span class="va">edades</span><span class="op">)</span></span>
-<span></span>
-<span><span class="va">base_2010</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/stats/Normal.html" class="external-link">dnorm</a></span><span class="op">(</span><span class="va">edades</span>, mean <span class="op">=</span> <span class="fl">40</span>, sd <span class="op">=</span> <span class="fl">22</span><span class="op">)</span> <span class="op">*</span> <span class="fl">1000</span></span>
-<span><span class="va">base_2020</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/stats/Normal.html" class="external-link">dnorm</a></span><span class="op">(</span><span class="va">edades</span>, mean <span class="op">=</span> <span class="fl">45</span>, sd <span class="op">=</span> <span class="fl">23</span><span class="op">)</span> <span class="op">*</span> <span class="fl">1100</span></span>
-<span></span>
-<span><span class="va">datos</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/cbind.html" class="external-link">rbind</a></span><span class="op">(</span></span>
-<span>  <span class="fu"><a href="https://rdrr.io/r/base/data.frame.html" class="external-link">data.frame</a></span><span class="op">(</span>Edad <span class="op">=</span> <span class="va">edades</span>, Sexo <span class="op">=</span> <span class="st">"Hombres"</span>, Caso <span class="op">=</span> <span class="fl">2010</span>,</span>
-<span>             Poblacion <span class="op">=</span> <span class="va">base_2010</span> <span class="op">*</span> <span class="fl">0.48</span> <span class="op">*</span> <span class="op">(</span><span class="fl">1</span> <span class="op">+</span> <span class="fu"><a href="https://rdrr.io/r/stats/Normal.html" class="external-link">rnorm</a></span><span class="op">(</span><span class="va">n</span>, <span class="fl">0</span>, <span class="fl">0.02</span><span class="op">)</span><span class="op">)</span><span class="op">)</span>,</span>
-<span>  <span class="fu"><a href="https://rdrr.io/r/base/data.frame.html" class="external-link">data.frame</a></span><span class="op">(</span>Edad <span class="op">=</span> <span class="va">edades</span>, Sexo <span class="op">=</span> <span class="st">"Mujeres"</span>, Caso <span class="op">=</span> <span class="fl">2010</span>,</span>
-<span>             Poblacion <span class="op">=</span> <span class="va">base_2010</span> <span class="op">*</span> <span class="fl">0.52</span> <span class="op">*</span> <span class="op">(</span><span class="fl">1</span> <span class="op">+</span> <span class="fu"><a href="https://rdrr.io/r/stats/Normal.html" class="external-link">rnorm</a></span><span class="op">(</span><span class="va">n</span>, <span class="fl">0</span>, <span class="fl">0.02</span><span class="op">)</span><span class="op">)</span><span class="op">)</span>,</span>
-<span>  <span class="fu"><a href="https://rdrr.io/r/base/data.frame.html" class="external-link">data.frame</a></span><span class="op">(</span>Edad <span class="op">=</span> <span class="va">edades</span>, Sexo <span class="op">=</span> <span class="st">"Hombres"</span>, Caso <span class="op">=</span> <span class="fl">2020</span>,</span>
-<span>             Poblacion <span class="op">=</span> <span class="va">base_2020</span> <span class="op">*</span> <span class="fl">0.47</span> <span class="op">*</span> <span class="op">(</span><span class="fl">1</span> <span class="op">+</span> <span class="fu"><a href="https://rdrr.io/r/stats/Normal.html" class="external-link">rnorm</a></span><span class="op">(</span><span class="va">n</span>, <span class="fl">0</span>, <span class="fl">0.02</span><span class="op">)</span><span class="op">)</span><span class="op">)</span>,</span>
-<span>  <span class="fu"><a href="https://rdrr.io/r/base/data.frame.html" class="external-link">data.frame</a></span><span class="op">(</span>Edad <span class="op">=</span> <span class="va">edades</span>, Sexo <span class="op">=</span> <span class="st">"Mujeres"</span>, Caso <span class="op">=</span> <span class="fl">2020</span>,</span>
-<span>             Poblacion <span class="op">=</span> <span class="va">base_2020</span> <span class="op">*</span> <span class="fl">0.53</span> <span class="op">*</span> <span class="op">(</span><span class="fl">1</span> <span class="op">+</span> <span class="fu"><a href="https://rdrr.io/r/stats/Normal.html" class="external-link">rnorm</a></span><span class="op">(</span><span class="va">n</span>, <span class="fl">0</span>, <span class="fl">0.02</span><span class="op">)</span><span class="op">)</span><span class="op">)</span></span>
-<span><span class="op">)</span></span>
-<span></span>
-<span><span class="fu">DemBas_piramide_superpuesta_mixta</span><span class="op">(</span></span>
-<span>  <span class="va">datos</span>,</span>
-<span>  Caso.referencia <span class="op">=</span> <span class="fl">2010</span>,</span>
-<span>  titulo <span class="op">=</span> <span class="st">"Superposición mixta: 2010 (línea) vs 2020 (barras)"</span></span>
-<span><span class="op">)</span></span>
-<span><span class="op">}</span> <span class="co"># }</span></span>
-<span></span></code></pre></div>
+    <div class="sourceCode"><pre class="sourceCode r"><code><span class="r-in"><span><span class="kw">if</span> <span class="op">(</span><span class="cn">FALSE</span><span class="op">)</span> <span class="op">{</span> <span class="co"># \dontrun{</span></span></span>
+<span class="r-in"><span><span class="fu"><a href="https://rdrr.io/r/base/Random.html" class="external-link">set.seed</a></span><span class="op">(</span><span class="fl">42</span><span class="op">)</span></span></span>
+<span class="r-in"><span><span class="va">edades</span> <span class="op">&lt;-</span> <span class="fl">0</span><span class="op">:</span><span class="fl">85</span></span></span>
+<span class="r-in"><span><span class="va">n</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/length.html" class="external-link">length</a></span><span class="op">(</span><span class="va">edades</span><span class="op">)</span></span></span>
+<span class="r-in"><span></span></span>
+<span class="r-in"><span><span class="va">base_2010</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/stats/Normal.html" class="external-link">dnorm</a></span><span class="op">(</span><span class="va">edades</span>, mean <span class="op">=</span> <span class="fl">40</span>, sd <span class="op">=</span> <span class="fl">22</span><span class="op">)</span> <span class="op">*</span> <span class="fl">1000</span></span></span>
+<span class="r-in"><span><span class="va">base_2020</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/stats/Normal.html" class="external-link">dnorm</a></span><span class="op">(</span><span class="va">edades</span>, mean <span class="op">=</span> <span class="fl">45</span>, sd <span class="op">=</span> <span class="fl">23</span><span class="op">)</span> <span class="op">*</span> <span class="fl">1100</span></span></span>
+<span class="r-in"><span></span></span>
+<span class="r-in"><span><span class="va">datos</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/cbind.html" class="external-link">rbind</a></span><span class="op">(</span></span></span>
+<span class="r-in"><span>  <span class="fu"><a href="https://rdrr.io/r/base/data.frame.html" class="external-link">data.frame</a></span><span class="op">(</span>Edad <span class="op">=</span> <span class="va">edades</span>, Sexo <span class="op">=</span> <span class="st">"Hombres"</span>, Caso <span class="op">=</span> <span class="fl">2010</span>,</span></span>
+<span class="r-in"><span>             Poblacion <span class="op">=</span> <span class="va">base_2010</span> <span class="op">*</span> <span class="fl">0.48</span> <span class="op">*</span> <span class="op">(</span><span class="fl">1</span> <span class="op">+</span> <span class="fu"><a href="https://rdrr.io/r/stats/Normal.html" class="external-link">rnorm</a></span><span class="op">(</span><span class="va">n</span>, <span class="fl">0</span>, <span class="fl">0.02</span><span class="op">)</span><span class="op">)</span><span class="op">)</span>,</span></span>
+<span class="r-in"><span>  <span class="fu"><a href="https://rdrr.io/r/base/data.frame.html" class="external-link">data.frame</a></span><span class="op">(</span>Edad <span class="op">=</span> <span class="va">edades</span>, Sexo <span class="op">=</span> <span class="st">"Mujeres"</span>, Caso <span class="op">=</span> <span class="fl">2010</span>,</span></span>
+<span class="r-in"><span>             Poblacion <span class="op">=</span> <span class="va">base_2010</span> <span class="op">*</span> <span class="fl">0.52</span> <span class="op">*</span> <span class="op">(</span><span class="fl">1</span> <span class="op">+</span> <span class="fu"><a href="https://rdrr.io/r/stats/Normal.html" class="external-link">rnorm</a></span><span class="op">(</span><span class="va">n</span>, <span class="fl">0</span>, <span class="fl">0.02</span><span class="op">)</span><span class="op">)</span><span class="op">)</span>,</span></span>
+<span class="r-in"><span>  <span class="fu"><a href="https://rdrr.io/r/base/data.frame.html" class="external-link">data.frame</a></span><span class="op">(</span>Edad <span class="op">=</span> <span class="va">edades</span>, Sexo <span class="op">=</span> <span class="st">"Hombres"</span>, Caso <span class="op">=</span> <span class="fl">2020</span>,</span></span>
+<span class="r-in"><span>             Poblacion <span class="op">=</span> <span class="va">base_2020</span> <span class="op">*</span> <span class="fl">0.47</span> <span class="op">*</span> <span class="op">(</span><span class="fl">1</span> <span class="op">+</span> <span class="fu"><a href="https://rdrr.io/r/stats/Normal.html" class="external-link">rnorm</a></span><span class="op">(</span><span class="va">n</span>, <span class="fl">0</span>, <span class="fl">0.02</span><span class="op">)</span><span class="op">)</span><span class="op">)</span>,</span></span>
+<span class="r-in"><span>  <span class="fu"><a href="https://rdrr.io/r/base/data.frame.html" class="external-link">data.frame</a></span><span class="op">(</span>Edad <span class="op">=</span> <span class="va">edades</span>, Sexo <span class="op">=</span> <span class="st">"Mujeres"</span>, Caso <span class="op">=</span> <span class="fl">2020</span>,</span></span>
+<span class="r-in"><span>             Poblacion <span class="op">=</span> <span class="va">base_2020</span> <span class="op">*</span> <span class="fl">0.53</span> <span class="op">*</span> <span class="op">(</span><span class="fl">1</span> <span class="op">+</span> <span class="fu"><a href="https://rdrr.io/r/stats/Normal.html" class="external-link">rnorm</a></span><span class="op">(</span><span class="va">n</span>, <span class="fl">0</span>, <span class="fl">0.02</span><span class="op">)</span><span class="op">)</span><span class="op">)</span></span></span>
+<span class="r-in"><span><span class="op">)</span></span></span>
+<span class="r-in"><span></span></span>
+<span class="r-in"><span><span class="fu">DemBas_piramide_superpuesta_mixta</span><span class="op">(</span></span></span>
+<span class="r-in"><span>  <span class="va">datos</span>,</span></span>
+<span class="r-in"><span>  Caso.referencia <span class="op">=</span> <span class="fl">2010</span>,</span></span>
+<span class="r-in"><span>  titulo <span class="op">=</span> <span class="st">"Superposición mixta: 2010 (línea) vs 2020 (barras)"</span></span></span>
+<span class="r-in"><span><span class="op">)</span></span></span>
+<span class="r-in"><span><span class="op">}</span> <span class="co"># }</span></span></span>
+<span class="r-in"><span></span></span>
+</code></pre></div>
     </div>
   </main><aside class="col-md-3"><nav id="toc" aria-label="Table of contents"><h2>On this page</h2>
     </nav></aside></div>

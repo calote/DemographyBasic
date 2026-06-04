@@ -1,0 +1,65 @@
+# Genera etiquetas para grupos de edad quinquenales
+
+Crea un vector de etiquetas de texto para grupos de edad quinquenales,
+útil para etiquetar resultados de agrupaciones o crear tablas de
+referencia. Admite dos métodos de etiquetado.
+
+## Usage
+
+``` r
+DemBas_etiquetas_gruposEdad(metodo = 1, final = 85, labelfinal = NULL)
+```
+
+## Arguments
+
+- metodo:
+
+  Valor entero que indica el método de generación:
+
+  1
+
+  :   Etiquetas: "0", "1-4", "5-9", "10-14", ... (edad 0 separada)
+
+  2
+
+  :   Etiquetas: "0-4", "5-9", "10-14", "15-19", ... (todos
+      quinquenales)
+
+  Por defecto 1.
+
+- final:
+
+  Valor numérico con la edad final para la última etiqueta antes del
+  grupo abierto. Por defecto 85.
+
+- labelfinal:
+
+  Cadena de texto opcional con la etiqueta para el grupo final abierto.
+  Si es NULL, se usa paste0(final, "+"). Por defecto NULL.
+
+## Value
+
+Vector de caracteres con las etiquetas de los grupos de edad (ej. c("0",
+"1-4", "5-9", ..., "85+")).
+
+## Examples
+
+``` r
+# Método 1: 0 separado
+etiquetas1 <- DemBas_etiquetas_gruposEdad(metodo = 1, final = 85)
+head(etiquetas1, 10)
+#>  [1] "0"     "1-4"   "5-9"   "10-14" "15-19" "20-24" "25-29" "30-34" "35-39"
+#> [10] "40-44"
+
+# Método 2: todos quinquenales
+etiquetas2 <- DemBas_etiquetas_gruposEdad(metodo = 2, final = 85)
+head(etiquetas2, 10)
+#>  [1] "0-4"   "5-9"   "10-14" "15-19" "20-24" "25-29" "30-34" "35-39" "40-44"
+#> [10] "45-49"
+
+# Grupo final personalizado
+etiquetas_custom <- DemBas_etiquetas_gruposEdad(final = 100,
+                                                 labelfinal = "100+")
+tail(etiquetas_custom)
+#> [1] "75-79" "80-84" "85-89" "90-94" "95-99" "100+" 
+```

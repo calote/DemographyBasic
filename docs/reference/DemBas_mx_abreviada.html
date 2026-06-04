@@ -11,7 +11,7 @@ tratamiento especial para el grupo de menores de un año (TMI)."><link rel="styl
 
     <a class="navbar-brand me-2" href="../index.html">DemographyBasic</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.1.12</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.1.13</small>
 
 
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -83,18 +83,22 @@ quinquenal, con el mismo formato que Px.</p></dd>
 
     <div class="section level2">
     <h2 id="ref-examples">Examples<a class="anchor" aria-label="anchor" href="#ref-examples"></a></h2>
-    <div class="sourceCode"><pre class="sourceCode r"><code><span><span class="co"># Datos de España 2003</span></span>
-<span><span class="va">Px</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="cn">NA</span>, <span class="fl">1627456</span>, <span class="fl">1938350</span>, <span class="fl">2104636</span>, <span class="fl">2388049</span>, <span class="fl">3070467</span>, <span class="fl">3614444</span>, <span class="fl">3545550</span>,</span>
-<span>        <span class="fl">3431304</span>, <span class="fl">3182840</span>, <span class="fl">2791972</span>, <span class="fl">2498361</span>, <span class="fl">2334676</span>, <span class="fl">1953022</span>, <span class="fl">1978465</span>,</span>
-<span>        <span class="fl">1898370</span>, <span class="fl">1492487</span>, <span class="fl">974162</span>, <span class="fl">495260</span>, <span class="fl">203924</span>, <span class="fl">46078</span>, <span class="fl">5139</span><span class="op">)</span></span>
-<span><span class="va">Dx</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="cn">NA</span>, <span class="fl">442</span>, <span class="fl">254</span>, <span class="fl">341</span>, <span class="fl">1032</span>, <span class="fl">1746</span>, <span class="fl">2136</span>, <span class="fl">2872</span>,</span>
-<span>        <span class="fl">2933</span>, <span class="fl">5545</span>, <span class="fl">7193</span>, <span class="fl">9401</span>, <span class="fl">13294</span>, <span class="fl">15972</span>, <span class="fl">26636</span>,</span>
-<span>        <span class="fl">41879</span>, <span class="fl">57377</span>, <span class="fl">68007</span>, <span class="fl">63007</span>, <span class="fl">44198</span>, <span class="fl">14609</span>, <span class="fl">2480</span><span class="op">)</span></span>
-<span><span class="va">N0</span> <span class="op">&lt;-</span> <span class="fl">441881</span></span>
-<span><span class="va">D0</span> <span class="op">&lt;-</span> <span class="fl">1733</span></span>
-<span><span class="va">mx</span> <span class="op">&lt;-</span> <span class="fu">DemBas_mx_abreviada</span><span class="op">(</span><span class="va">Px</span>, <span class="va">Dx</span>, <span class="va">N0</span>, <span class="va">D0</span><span class="op">)</span></span>
-<span><span class="va">mx</span></span>
-<span></span></code></pre></div>
+    <div class="sourceCode"><pre class="sourceCode r"><code><span class="r-in"><span><span class="co"># Datos de España 2003</span></span></span>
+<span class="r-in"><span><span class="va">Px</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="cn">NA</span>, <span class="fl">1627456</span>, <span class="fl">1938350</span>, <span class="fl">2104636</span>, <span class="fl">2388049</span>, <span class="fl">3070467</span>, <span class="fl">3614444</span>, <span class="fl">3545550</span>,</span></span>
+<span class="r-in"><span>        <span class="fl">3431304</span>, <span class="fl">3182840</span>, <span class="fl">2791972</span>, <span class="fl">2498361</span>, <span class="fl">2334676</span>, <span class="fl">1953022</span>, <span class="fl">1978465</span>,</span></span>
+<span class="r-in"><span>        <span class="fl">1898370</span>, <span class="fl">1492487</span>, <span class="fl">974162</span>, <span class="fl">495260</span>, <span class="fl">203924</span>, <span class="fl">46078</span>, <span class="fl">5139</span><span class="op">)</span></span></span>
+<span class="r-in"><span><span class="va">Dx</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="cn">NA</span>, <span class="fl">442</span>, <span class="fl">254</span>, <span class="fl">341</span>, <span class="fl">1032</span>, <span class="fl">1746</span>, <span class="fl">2136</span>, <span class="fl">2872</span>,</span></span>
+<span class="r-in"><span>        <span class="fl">2933</span>, <span class="fl">5545</span>, <span class="fl">7193</span>, <span class="fl">9401</span>, <span class="fl">13294</span>, <span class="fl">15972</span>, <span class="fl">26636</span>,</span></span>
+<span class="r-in"><span>        <span class="fl">41879</span>, <span class="fl">57377</span>, <span class="fl">68007</span>, <span class="fl">63007</span>, <span class="fl">44198</span>, <span class="fl">14609</span>, <span class="fl">2480</span><span class="op">)</span></span></span>
+<span class="r-in"><span><span class="va">N0</span> <span class="op">&lt;-</span> <span class="fl">441881</span></span></span>
+<span class="r-in"><span><span class="va">D0</span> <span class="op">&lt;-</span> <span class="fl">1733</span></span></span>
+<span class="r-in"><span><span class="va">mx</span> <span class="op">&lt;-</span> <span class="fu">DemBas_mx_abreviada</span><span class="op">(</span><span class="va">Px</span>, <span class="va">Dx</span>, <span class="va">N0</span>, <span class="va">D0</span><span class="op">)</span></span></span>
+<span class="r-in"><span><span class="va">mx</span></span></span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  [1] 0.00392 0.00027 0.00013 0.00016 0.00043 0.00057 0.00059 0.00081 0.00085</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [10] 0.00174 0.00258 0.00376 0.00569 0.00818 0.01346 0.02206 0.03844 0.06981</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [19] 0.12722 0.21674 0.31705 0.48258</span>
+<span class="r-in"><span></span></span>
+</code></pre></div>
     </div>
   </main><aside class="col-md-3"><nav id="toc" aria-label="Table of contents"><h2>On this page</h2>
     </nav></aside></div>

@@ -11,7 +11,7 @@ estructuras demográficas controlando por la distribución por edades."><link re
 
     <a class="navbar-brand me-2" href="../index.html">DemographyBasic</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.1.12</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.1.13</small>
 
 
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -74,12 +74,15 @@ que vNumEventos_x_t.</p></dd>
 
     <div class="section level2">
     <h2 id="ref-examples">Examples<a class="anchor" aria-label="anchor" href="#ref-examples"></a></h2>
-    <div class="sourceCode"><pre class="sourceCode r"><code><span><span class="co"># Tasas específicas de mortalidad por edades</span></span>
-<span><span class="va">eventos</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">1200</span>, <span class="fl">800</span>, <span class="fl">600</span>, <span class="fl">400</span>, <span class="fl">300</span>, <span class="fl">200</span>, <span class="fl">150</span>, <span class="fl">100</span>, <span class="fl">80</span>, <span class="fl">70</span><span class="op">)</span></span>
-<span><span class="va">poblacion</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">50000</span>, <span class="fl">60000</span>, <span class="fl">70000</span>, <span class="fl">80000</span>, <span class="fl">90000</span>, <span class="fl">95000</span>, <span class="fl">100000</span>, <span class="fl">85000</span>, <span class="fl">70000</span>, <span class="fl">60000</span><span class="op">)</span></span>
-<span><span class="va">tasas</span> <span class="op">&lt;-</span> <span class="fu">DemBas_dem_TasaEspecifica_t</span><span class="op">(</span><span class="va">eventos</span>, <span class="va">poblacion</span><span class="op">)</span></span>
-<span><span class="va">tasas</span></span>
-<span></span></code></pre></div>
+    <div class="sourceCode"><pre class="sourceCode r"><code><span class="r-in"><span><span class="co"># Tasas específicas de mortalidad por edades</span></span></span>
+<span class="r-in"><span><span class="va">eventos</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">1200</span>, <span class="fl">800</span>, <span class="fl">600</span>, <span class="fl">400</span>, <span class="fl">300</span>, <span class="fl">200</span>, <span class="fl">150</span>, <span class="fl">100</span>, <span class="fl">80</span>, <span class="fl">70</span><span class="op">)</span></span></span>
+<span class="r-in"><span><span class="va">poblacion</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">50000</span>, <span class="fl">60000</span>, <span class="fl">70000</span>, <span class="fl">80000</span>, <span class="fl">90000</span>, <span class="fl">95000</span>, <span class="fl">100000</span>, <span class="fl">85000</span>, <span class="fl">70000</span>, <span class="fl">60000</span><span class="op">)</span></span></span>
+<span class="r-in"><span><span class="va">tasas</span> <span class="op">&lt;-</span> <span class="fu">DemBas_dem_TasaEspecifica_t</span><span class="op">(</span><span class="va">eventos</span>, <span class="va">poblacion</span><span class="op">)</span></span></span>
+<span class="r-in"><span><span class="va">tasas</span></span></span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  [1] 24.000000 13.333333  8.571429  5.000000  3.333333  2.105263  1.500000</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  [8]  1.176471  1.142857  1.166667</span>
+<span class="r-in"><span></span></span>
+</code></pre></div>
     </div>
   </main><aside class="col-md-3"><nav id="toc" aria-label="Table of contents"><h2>On this page</h2>
     </nav></aside></div>

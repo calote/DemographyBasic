@@ -13,7 +13,7 @@ según la amplitud de cada grupo de edad."><link rel="stylesheet" href="https://
 
     <a class="navbar-brand me-2" href="../index.html">DemographyBasic</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.1.12</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.1.13</small>
 
 
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -88,20 +88,21 @@ Si <code>FALSE</code>, retorna valores sin redondear para ver precisión complet
 
     <div class="section level2">
     <h2 id="ref-examples">Examples<a class="anchor" aria-label="anchor" href="#ref-examples"></a></h2>
-    <div class="sourceCode"><pre class="sourceCode r"><code><span><span class="kw">if</span> <span class="op">(</span><span class="cn">FALSE</span><span class="op">)</span> <span class="op">{</span> <span class="co"># \dontrun{</span></span>
-<span><span class="va">mx0</span> <span class="op">&lt;-</span> <span class="fl">1733</span> <span class="op">/</span> <span class="fl">441881</span></span>
-<span><span class="va">mx</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="va">mx0</span>, <span class="fl">0.00027</span>, <span class="fl">0.00013</span>, <span class="fl">0.00016</span>, <span class="fl">0.00043</span>, <span class="fl">0.00057</span>, <span class="fl">0.00059</span>,</span>
-<span>        <span class="fl">0.00081</span>, <span class="fl">0.00115</span>, <span class="fl">0.00174</span>, <span class="fl">0.00258</span>, <span class="fl">0.00376</span>, <span class="fl">0.00569</span>, <span class="fl">0.00818</span>,</span>
-<span>        <span class="fl">0.01346</span>, <span class="fl">0.02206</span>, <span class="fl">0.03844</span>, <span class="fl">0.06981</span>, <span class="fl">0.12872</span>, <span class="fl">0.21674</span>, <span class="fl">0.31705</span>,</span>
-<span>        <span class="fl">0.48258</span><span class="op">)</span></span>
-<span><span class="va">tv</span> <span class="op">&lt;-</span> <span class="fu">DemBas_tablavida_abreviada_tidyverse</span><span class="op">(</span><span class="va">mx</span><span class="op">)</span></span>
-<span><span class="va">tv</span></span>
-<span></span>
-<span><span class="co"># Ver valores sin redondear</span></span>
-<span><span class="va">tv_sin_redondeo</span> <span class="op">&lt;-</span> <span class="fu">DemBas_tablavida_abreviada_tidyverse</span><span class="op">(</span><span class="va">mx</span>, redondeo <span class="op">=</span> <span class="cn">FALSE</span><span class="op">)</span></span>
-<span><span class="va">tv_sin_redondeo</span></span>
-<span><span class="op">}</span> <span class="co"># }</span></span>
-<span></span></code></pre></div>
+    <div class="sourceCode"><pre class="sourceCode r"><code><span class="r-in"><span><span class="kw">if</span> <span class="op">(</span><span class="cn">FALSE</span><span class="op">)</span> <span class="op">{</span> <span class="co"># \dontrun{</span></span></span>
+<span class="r-in"><span><span class="va">mx0</span> <span class="op">&lt;-</span> <span class="fl">1733</span> <span class="op">/</span> <span class="fl">441881</span></span></span>
+<span class="r-in"><span><span class="va">mx</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="va">mx0</span>, <span class="fl">0.00027</span>, <span class="fl">0.00013</span>, <span class="fl">0.00016</span>, <span class="fl">0.00043</span>, <span class="fl">0.00057</span>, <span class="fl">0.00059</span>,</span></span>
+<span class="r-in"><span>        <span class="fl">0.00081</span>, <span class="fl">0.00115</span>, <span class="fl">0.00174</span>, <span class="fl">0.00258</span>, <span class="fl">0.00376</span>, <span class="fl">0.00569</span>, <span class="fl">0.00818</span>,</span></span>
+<span class="r-in"><span>        <span class="fl">0.01346</span>, <span class="fl">0.02206</span>, <span class="fl">0.03844</span>, <span class="fl">0.06981</span>, <span class="fl">0.12872</span>, <span class="fl">0.21674</span>, <span class="fl">0.31705</span>,</span></span>
+<span class="r-in"><span>        <span class="fl">0.48258</span><span class="op">)</span></span></span>
+<span class="r-in"><span><span class="va">tv</span> <span class="op">&lt;-</span> <span class="fu">DemBas_tablavida_abreviada_tidyverse</span><span class="op">(</span><span class="va">mx</span><span class="op">)</span></span></span>
+<span class="r-in"><span><span class="va">tv</span></span></span>
+<span class="r-in"><span></span></span>
+<span class="r-in"><span><span class="co"># Ver valores sin redondear</span></span></span>
+<span class="r-in"><span><span class="va">tv_sin_redondeo</span> <span class="op">&lt;-</span> <span class="fu">DemBas_tablavida_abreviada_tidyverse</span><span class="op">(</span><span class="va">mx</span>, redondeo <span class="op">=</span> <span class="cn">FALSE</span><span class="op">)</span></span></span>
+<span class="r-in"><span><span class="va">tv_sin_redondeo</span></span></span>
+<span class="r-in"><span><span class="op">}</span> <span class="co"># }</span></span></span>
+<span class="r-in"><span></span></span>
+</code></pre></div>
     </div>
   </main><aside class="col-md-3"><nav id="toc" aria-label="Table of contents"><h2>On this page</h2>
     </nav></aside></div>
