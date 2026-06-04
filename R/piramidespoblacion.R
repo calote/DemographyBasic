@@ -53,15 +53,15 @@
 #' dfej02a <- DemBas_read_px(system.file("examples/9663.px",
 #'                                       package = "DemographyBasic"))
 #' head(dfej02a)
-#' tp1 <- dfej02a |>
+#' tp1 <- dfej02a %>%
 #'   dplyr::filter(Periodo == "1 de enero de  2017",
-#'                 Edad.simple == "Total") |>
+#'                 Edad.simple == "Total") %>%
 #'   dplyr::select("Sexo", "value")
 #'
-#' dfPir2017 <- dfej02a |>
+#' dfPir2017 <- dfej02a %>%
 #'   dplyr::filter(Periodo == "1 de enero de  2017",
 #'                 !Sexo == "Ambos sexos",
-#'                 !Edad.simple %in% c("100 y más años", "Total")) |>
+#'                 !Edad.simple %in% c("100 y más años", "Total")) %>%
 #'   dplyr::select(Edadchar = Edad.simple, Sexo, Poblacion = value)
 #' dfPir2017$Edad <- DemBas_extrae_codigo_provincia(dfPir2017$Edadchar)
 #' dfPir2017$Edad <- factor(dfPir2017$Edad, levels = unique(dfPir2017$Edad))
@@ -317,10 +317,10 @@ DemBas_piramides_enfrentadas_ggplot2 <- function(datosPiramide,
 #' dfej02a <- DemBas_read_px(system.file("examples/9663.px",
 #'                                       package = "DemographyBasic"))
 #'
-#' dfPir2002 <- dfej02a |>
+#' dfPir2002 <- dfej02a %>%
 #'   dplyr::filter(Periodo == "1 de enero de  2002",
 #'                 !Sexo == "Ambos sexos",
-#'                 !Edad.simple %in% c("100 y más años", "Total")) |>
+#'                 !Edad.simple %in% c("100 y más años", "Total")) %>%
 #'   dplyr::select(Edadchar = Edad.simple, Sexo, Poblacion = value)
 #' dfPir2002$Edad <- DemBas_extrae_codigo_provincia(dfPir2002$Edadchar)
 #' dfPir2002$Edad <- factor(dfPir2002$Edad, levels = unique(dfPir2002$Edad))
@@ -926,7 +926,7 @@ DemBas_datos_piramidePorc <- function(datosPiramide,
     )
   df2$Poblacion = abs(df2$Pob)
 
-  df2 = df2 |>
+  df2 = df2 %>%
     dplyr::select(Edad, Sexo, Poblacion, Porcentajes, Pob)
 
   return(df2)
@@ -1013,13 +1013,13 @@ DemBas_datos_piramidePorc <- function(datosPiramide,
 #' load(file = system.file("examples/04003px.RData",
 #'                         package = "DemographyBasic"))
 #'
-#' datosPiramide <- datos |>
+#' datosPiramide <- datos %>%
 #'   dplyr::filter(Ano == 2020,
 #'                 Sexo %in% c("Mujeres", "Hombres"),
 #'                 Edad != "TOTAL",
 #'                 CCAA.Prov == "Sevilla",
-#'                 Espanoles.Extranjeros == "Españoles") |>
-#'   dplyr::rename(Poblacion = value) |>
+#'                 Espanoles.Extranjeros == "Españoles") %>%
+#'   dplyr::rename(Poblacion = value) %>%
 #'   dplyr::select(Edad, Sexo, Poblacion)
 #'
 #' DemBas_piramidePorc(datosPiramide,
@@ -1306,13 +1306,13 @@ DemBas_v_generaciones <- function(x, Ano_ref = 2020) {
 #' load(file = system.file("examples/04003px.RData",
 #'                         package = "DemographyBasic"))
 #'
-#' datosPiramide <- datos |>
+#' datosPiramide <- datos %>%
 #'   dplyr::filter(Ano == 2020,
 #'                 Sexo %in% c("Mujeres", "Hombres"),
 #'                 Edad != "TOTAL",
 #'                 CCAA.Prov == "Sevilla",
-#'                 Espanoles.Extranjeros == "Españoles") |>
-#'   dplyr::rename(Poblacion = value) |>
+#'                 Espanoles.Extranjeros == "Españoles") %>%
+#'   dplyr::rename(Poblacion = value) %>%
 #'   dplyr::select(Edad, Sexo, Poblacion)
 #'
 #' g_pir1 <- DemBas_piramidePorc_Generaciones(datosPiramide,
@@ -1678,12 +1678,12 @@ DemBas_piramide_absoluta <- function(datos, titulo = "Pirámide de Población", 
   }
   
   # Procesar datos
-  datos_procesados <- datos |>
+  datos_procesados <- datos %>%
     mutate(
       edad_inicial = edad_inicial,
       edad_final = edad_final
-    ) |>
-    tidyr::pivot_longer(cols = c(hombre, mujer), names_to = "sexo", values_to = "poblacion") |>
+    ) %>%
+    tidyr::pivot_longer(cols = c(hombre, mujer), names_to = "sexo", values_to = "poblacion") %>%
     mutate(
       poblacion_ajustada = ifelse(sexo == "mujer",
                                   poblacion / amplitud,
@@ -1723,8 +1723,8 @@ DemBas_piramide_absoluta <- function(datos, titulo = "Pirámide de Población", 
   # Devolver lista con gráfico y datos procesados
   list(
     grafico = grafico,
-    datos = datos_procesados |>
-      select(edad_grupo, sexo, poblacion, amplitud, poblacion_ajustada) |>
+    datos = datos_procesados %>%
+      select(edad_grupo, sexo, poblacion, amplitud, poblacion_ajustada) %>%
       arrange(edad_grupo, sexo)
   )
 }
@@ -1809,12 +1809,12 @@ DemBas_piramide_relativa <- function(datos, titulo = "Pirámide de Población", 
   }
   
   # Procesar datos
-  datos_procesados <- datos |>
+  datos_procesados <- datos %>%
     mutate(
       edad_inicial = edad_inicial,
       edad_final = edad_final
-    ) |>
-    tidyr::pivot_longer(cols = c(hombre, mujer), names_to = "sexo", values_to = "poblacion") |>
+    ) %>%
+    tidyr::pivot_longer(cols = c(hombre, mujer), names_to = "sexo", values_to = "poblacion") %>%
     mutate(
       # Calcular porcentaje relativo
       poblacion_total = sum(poblacion),
@@ -1862,8 +1862,8 @@ DemBas_piramide_relativa <- function(datos, titulo = "Pirámide de Población", 
   # Devolver lista con gráfico y datos procesados
   list(
     grafico = grafico,
-    datos = datos_procesados |>
-      select(edad_grupo, sexo, poblacion, amplitud, porcentaje, densidad_ajustada) |>
+    datos = datos_procesados %>%
+      select(edad_grupo, sexo, poblacion, amplitud, porcentaje, densidad_ajustada) %>%
       arrange(edad_grupo, sexo)
   )
 }
@@ -1939,19 +1939,19 @@ DemBas_piramide_superpuesta_lineas <- function(datosPiramide,
     stop("datosPiramide debe contener: Edad, Sexo, Poblacion, Caso")
   }
 
-  df <- datosPiramide |>
+  df <- datosPiramide %>%
     mutate(
       Edad = as.numeric(Edad),
       Caso = factor(Caso)
     )
 
-  df <- df |>
-    group_by(Caso) |>
+  df <- df %>%
+    group_by(Caso) %>%
     mutate(
       total = sum(Poblacion),
       porcentaje = Poblacion / total * 100,
       porcentaje_grafico = ifelse(Sexo == etiq.hombre, -porcentaje, porcentaje)
-    ) |>
+    ) %>%
     ungroup()
 
   g <- ggplot(df, aes(x = Edad, y = porcentaje_grafico, colour = Caso)) +
@@ -2053,7 +2053,7 @@ DemBas_piramide_superpuesta_mixta <- function(datosPiramide,
     stop("datosPiramide debe contener: Edad, Sexo, Poblacion, Caso")
   }
 
-  df <- datosPiramide |>
+  df <- datosPiramide %>%
     mutate(
       Edad = as.numeric(Edad),
       Caso = factor(Caso)
@@ -2063,7 +2063,7 @@ DemBas_piramide_superpuesta_mixta <- function(datosPiramide,
     Caso.referencia <- levels(df$Caso)[1]
   }
 
-  df <- df |>
+  df <- df %>%
     mutate(
       Pop = ifelse(Sexo == etiq.hombre, -Poblacion, Poblacion),
       tipo = ifelse(Caso == Caso.referencia, "linea", "barra")
@@ -2071,12 +2071,12 @@ DemBas_piramide_superpuesta_mixta <- function(datosPiramide,
 
   g <- ggplot() +
     geom_col(
-      data = df |> filter(tipo == "barra"),
+      data = df %>% filter(tipo == "barra"),
       aes(x = Edad, y = Pop, fill = Sexo),
       alpha = alpha
     ) +
     geom_step(
-      data = df |> filter(tipo == "linea"),
+      data = df %>% filter(tipo == "linea"),
       aes(x = Edad, y = Pop, color = Sexo),
       linewidth = tamano.linea
     ) +

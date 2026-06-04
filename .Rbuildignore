@@ -8,3 +8,4 @@
 ^inst/tutoriales.*\.html$
 ^inst/tutoriales.*\.css$
 ^inst/tutoriales/_files$
+^R/funciones_nuevas_provisionales\.R$

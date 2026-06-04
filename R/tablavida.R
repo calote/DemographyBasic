@@ -967,7 +967,7 @@ DemBas_tablavida_completa_tidyverse <- function(Mx, l0 = 100000, redondeo = TRUE
   ult <- edades[n]
 
   # Fase 1: Cálculos sin redondeo intermedio
-  tabla <- tibble(Edad = edades, Mx = Mx) |>
+  tabla <- tibble(Edad = edades, Mx = Mx) %>%
     mutate(
       qx = case_when(
         Edad == ult ~ 1,
@@ -988,7 +988,7 @@ DemBas_tablavida_completa_tidyverse <- function(Mx, l0 = 100000, redondeo = TRUE
 
   # Fase 2: Redondeo para presentación
   if (redondeo) {
-    tabla <- tabla |>
+    tabla <- tabla %>%
       mutate(
         Mx = DemBas_redondear(Mx, 5),
         qx = DemBas_redondear(qx, 5),
@@ -1056,7 +1056,7 @@ DemBas_tablavida_abreviada_tidyverse <- function(nMx, l0 = 100000, redondeo = TR
   ult <- etiquetas[n]
 
   # Fase 1: Cálculos sin redondeo intermedio
-  tabla <- tibble(Edad = etiquetas, nMx = nMx) |>
+  tabla <- tibble(Edad = etiquetas, nMx = nMx) %>%
     mutate(
       nqx = case_when(
         Edad == ult ~ 1,
@@ -1079,7 +1079,7 @@ DemBas_tablavida_abreviada_tidyverse <- function(nMx, l0 = 100000, redondeo = TR
 
   # Fase 2: Redondeo para presentación
   if (redondeo) {
-    tabla <- tabla |>
+    tabla <- tabla %>%
       mutate(
         nMx = DemBas_redondear(nMx, 5),
         nqx = DemBas_redondear(nqx, 5),

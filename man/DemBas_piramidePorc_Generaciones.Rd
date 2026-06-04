@@ -115,13 +115,13 @@ También puede presentar un resumen estadístico con índices demográficos.
 load(file = system.file("examples/04003px.RData",
                         package = "DemographyBasic"))
 
-datosPiramide <- datos |>
+datosPiramide <- datos \%>\%
   dplyr::filter(Ano == 2020,
                 Sexo \%in\% c("Mujeres", "Hombres"),
                 Edad != "TOTAL",
                 CCAA.Prov == "Sevilla",
-                Espanoles.Extranjeros == "Españoles") |>
-  dplyr::rename(Poblacion = value) |>
+                Espanoles.Extranjeros == "Españoles") \%>\%
+  dplyr::rename(Poblacion = value) \%>\%
   dplyr::select(Edad, Sexo, Poblacion)
 
 g_pir1 <- DemBas_piramidePorc_Generaciones(datosPiramide,

@@ -159,37 +159,37 @@ DemBas_presentadf <- function(datos1, scaption = NULL,
   if (apaisadalatex) {
     if (variaspaginas) {
       if (!is.null(fuentesize)) {
-        kable(datos1,longtable=TRUE,booktabs=TRUE, caption = scaption) |>
+        kable(datos1,longtable=TRUE,booktabs=TRUE, caption = scaption) %>%
           kable_styling(
             bootstrap_options = c("striped", "hover",
                                   "condensed","responsive"),
             latex_options = c("striped","repeat_header","HOLD_position"),
             font_size = fuentesize,
-            repeat_header_text="(continúa)") |>
+            repeat_header_text="(continúa)") %>%
           landscape()
 
       } else {
-        kable(datos1,longtable=TRUE,booktabs=TRUE, caption = scaption) |>
+        kable(datos1,longtable=TRUE,booktabs=TRUE, caption = scaption) %>%
           kable_styling(
             bootstrap_options = c("striped", "hover",
                                   "condensed","responsive"),
             latex_options = c("striped","repeat_header","HOLD_position"),
             repeat_header_text="(continúa)",
-            full_width = CompletaAncho) |>
+            full_width = CompletaAncho) %>%
           landscape()
       }
     } else {
-      kable(datos1,booktabs=TRUE, caption = scaption) |>
+      kable(datos1,booktabs=TRUE, caption = scaption) %>%
         kable_styling(
           bootstrap_options = c("striped", "hover",
                                 "condensed","responsive"),
           latex_options = c("striped", "scale_down","HOLD_position"),
-          full_width = CompletaAncho) |>
+          full_width = CompletaAncho) %>%
         landscape()
     }
   } else {
     if (!is.null(fuentesize)) {
-      kable(datos1,longtable=TRUE,booktabs=TRUE, caption = scaption) |>
+      kable(datos1,longtable=TRUE,booktabs=TRUE, caption = scaption) %>%
         kable_styling(
           bootstrap_options = c("striped", "hover",
                                 "condensed","responsive"),
@@ -198,7 +198,7 @@ DemBas_presentadf <- function(datos1, scaption = NULL,
           repeat_header_text="(continúa)")
     } else {
 
-      kable(datos1,longtable=TRUE,booktabs=TRUE, caption = scaption)  |>
+      kable(datos1,longtable=TRUE,booktabs=TRUE, caption = scaption)  %>%
         kable_styling(
           bootstrap_options = c("striped", "hover",
                                 "condensed","responsive"),

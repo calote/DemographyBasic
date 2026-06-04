@@ -82,15 +82,15 @@ esquema de color por edad, sexo o población.
 dfej02a <- DemBas_read_px(system.file("examples/9663.px",
                                       package = "DemographyBasic"))
 head(dfej02a)
-tp1 <- dfej02a |>
+tp1 <- dfej02a \%>\%
   dplyr::filter(Periodo == "1 de enero de  2017",
-                Edad.simple == "Total") |>
+                Edad.simple == "Total") \%>\%
   dplyr::select("Sexo", "value")
 
-dfPir2017 <- dfej02a |>
+dfPir2017 <- dfej02a \%>\%
   dplyr::filter(Periodo == "1 de enero de  2017",
                 !Sexo == "Ambos sexos",
-                !Edad.simple \%in\% c("100 y más años", "Total")) |>
+                !Edad.simple \%in\% c("100 y más años", "Total")) \%>\%
   dplyr::select(Edadchar = Edad.simple, Sexo, Poblacion = value)
 dfPir2017$Edad <- DemBas_extrae_codigo_provincia(dfPir2017$Edadchar)
 dfPir2017$Edad <- factor(dfPir2017$Edad, levels = unique(dfPir2017$Edad))

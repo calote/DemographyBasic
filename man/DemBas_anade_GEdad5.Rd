@@ -35,13 +35,13 @@ pirámides poblacionales.
 # Requiere datos del paquete
 datos <- DemBas_read_px(system.file("examples/9663.px",
                                     package = "DemographyBasic"))
-datosPob <- datos |>
+datosPob <- datos \%>\%
   dplyr::filter(Periodo == "1 de enero de  2018",
                 Edad.simple != "Total",
-                Sexo != "Ambos sexos") |>
+                Sexo != "Ambos sexos") \%>\%
   dplyr::select(Sexo, Edad.simple, Poblacion = value)
 
-datosPob2 <- datosPob |>
+datosPob2 <- datosPob \%>\%
   dplyr::mutate(
     Edad = as.numeric(gsub("[años|año]", "", Edad.simple)),
     Poblacion = round(Poblacion, 0)
@@ -51,9 +51,9 @@ datosPob2_conGruposEdad <- DemBas_anade_GEdad5(datosPob2, Edad)
 head(datosPob2_conGruposEdad, 15)
 
 # Agrupar para pirámide
-datosPirAgru <- DemBas_anade_GEdad5(datosPob2, Edad) |>
-  dplyr::select(Sexo, Edad, Poblacion, GEdad5) |>
-  dplyr::group_by(GEdad5, Sexo) |>
+datosPirAgru <- DemBas_anade_GEdad5(datosPob2, Edad) \%>\%
+  dplyr::select(Sexo, Edad, Poblacion, GEdad5) \%>\%
+  dplyr::group_by(GEdad5, Sexo) \%>\%
   dplyr::summarise(Poblacion = sum(Poblacion), .groups = "keep")
 
 head(datosPirAgru)

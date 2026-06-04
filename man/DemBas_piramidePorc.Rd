@@ -90,13 +90,13 @@ que separen grupos de edad (jóvenes, adultos, mayores).
 load(file = system.file("examples/04003px.RData",
                         package = "DemographyBasic"))
 
-datosPiramide <- datos |>
+datosPiramide <- datos \%>\%
   dplyr::filter(Ano == 2020,
                 Sexo \%in\% c("Mujeres", "Hombres"),
                 Edad != "TOTAL",
                 CCAA.Prov == "Sevilla",
-                Espanoles.Extranjeros == "Españoles") |>
-  dplyr::rename(Poblacion = value) |>
+                Espanoles.Extranjeros == "Españoles") \%>\%
+  dplyr::rename(Poblacion = value) \%>\%
   dplyr::select(Edad, Sexo, Poblacion)
 
 DemBas_piramidePorc(datosPiramide,

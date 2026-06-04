@@ -76,10 +76,10 @@ temporales en la estructura demográfica.
 dfej02a <- DemBas_read_px(system.file("examples/9663.px",
                                       package = "DemographyBasic"))
 
-dfPir2002 <- dfej02a |>
+dfPir2002 <- dfej02a \%>\%
   dplyr::filter(Periodo == "1 de enero de  2002",
                 !Sexo == "Ambos sexos",
-                !Edad.simple \%in\% c("100 y más años", "Total")) |>
+                !Edad.simple \%in\% c("100 y más años", "Total")) \%>\%
   dplyr::select(Edadchar = Edad.simple, Sexo, Poblacion = value)
 dfPir2002$Edad <- DemBas_extrae_codigo_provincia(dfPir2002$Edadchar)
 dfPir2002$Edad <- factor(dfPir2002$Edad, levels = unique(dfPir2002$Edad))
